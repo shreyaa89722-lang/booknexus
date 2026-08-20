@@ -18,7 +18,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error("A user with this email already exists");
     }
 
-    const allowedRole = ["student", "owner"].includes(role) ? role : "student";
+    const allowedRole = ["student", "owner", "admin"].includes(role) ? role : "student";
 
     const user = await User.create({
         name,
@@ -76,4 +76,17 @@ const getMe = asyncHandler(async (req, res) => {
     res.json({ success: true, data: req.user });
 });
 
-module.exports = { registerUser, loginUser, getMe };
+// @desc   Update user preferences
+// @route  PUT /api/auth/preferences
+const updatePreferences = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+        res.status(404);
+        throw new Error("User not found");
+    }
+    user.preferences = req.body.preferences || user.preferences;
+    await user.save();
+    res.json({ success: true, data: user.preferences });
+});
+
+module.exports = { registerUser, loginUser, getMe, updatePreferences };
