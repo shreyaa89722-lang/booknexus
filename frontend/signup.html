@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>BookNexus - Create Account</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Join BookNexus - Every book holds a world. Every reader deserves a key. Create your chapter today."/>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&amp;family=DM+Serif+Display:ital@0;1&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#6c3b3d",
+                        "secondary-fixed-dim": "#f9b5b7",
+                        "tertiary-fixed": "#ffdeac",
+                        "surface-container": "#261f13",
+                        "on-tertiary-container": "#9f7b3d",
+                        "secondary-fixed": "#ffdada",
+                        "surface-bright": "#40382b",
+                        "tertiary": "#ebc07a",
+                        "tertiary-fixed-dim": "#ebc07a",
+                        "on-secondary-container": "#eaa7a9",
+                        "secondary": "#f9b5b7",
+                        "on-primary": "#46282a",
+                        "surface-container-lowest": "#130d04",
+                        "primary-container": "#2a1012",
+                        "on-surface-variant": "#d4c2c2",
+                        "surface-container-highest": "#3c3427",
+                        "primary-fixed-dim": "#ebbbbc",
+                        "on-tertiary-fixed": "#281900",
+                        "tertiary-container": "#231500",
+                        "outline": "#9d8d8d",
+                        "on-secondary-fixed-variant": "#69393b",
+                        "surface-container-low": "#211b0f",
+                        "on-tertiary-fixed-variant": "#5e4105",
+                        "error-container": "#93000a",
+                        "primary": "#ebbbbc",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed-variant": "#603e3f",
+                        "inverse-primary": "#7a5556",
+                        "primary-fixed": "#ffdada",
+                        "on-tertiary": "#432c00",
+                        "on-background": "#efe0ce",
+                        "surface-container-high": "#31291d",
+                        "on-secondary": "#4f2326",
+                        "surface-tint": "#ebbbbc",
+                        "on-primary-fixed": "#2e1415",
+                        "surface-variant": "#3c3427",
+                        "inverse-on-surface": "#372f23",
+                        "on-primary-container": "#a07778",
+                        "surface": "#191208",
+                        "outline-variant": "#504444",
+                        "on-secondary-fixed": "#350f12",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#efe0ce",
+                        "on-error": "#690005",
+                        "on-surface": "#efe0ce",
+                        "background": "#191208",
+                        "surface-dim": "#191208"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "unit": "8px",
+                        "margin-desktop": "80px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Bodoni Moda"],
+                        "display-lg": ["Bodoni Moda"],
+                        "label-caps": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "subheading-display": ["DM Serif Display"],
+                        "display-lg-mobile": ["Bodoni Moda"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "subheading-display": ["24px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .parchment-texture {
+            background-color: #efe0ce;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+        
+        .ornamental-corner {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-color: #ebc07a;
+            border-style: solid;
+        }
+        .corner-tl { top: 0; left: 0; border-width: 1px 0 0 1px; }
+        .corner-tr { top: 0; right: 0; border-width: 1px 1px 0 0; }
+        .corner-bl { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+        .corner-br { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+        
+        .input-field {
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid #9d8d8d;
+            border-radius: 0;
+            color: #46282a;
+            padding: 12px 0;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            box-shadow: none;
+            border-bottom-color: #ebc07a;
+            background-color: rgba(235, 192, 122, 0.05);
+        }
+        .input-field.error {
+            border-bottom-color: #93000a;
+            background-color: rgba(147, 0, 10, 0.05);
+        }
+        .input-field::placeholder {
+            color: #69393b;
+            opacity: 0.6;
+        }
+        
+        .role-card {
+            transition: all 0.3s ease;
+        }
+        .role-card.active {
+            background-color: #350f12;
+            color: #efe0ce;
+            border-color: #ebc07a;
+            box-shadow: 0 0 15px rgba(235, 192, 122, 0.2);
+        }
+        .role-card.active .material-symbols-outlined {
+            color: #ebc07a;
+        }
+        .role-card.active .role-desc {
+            color: #d4c2c2;
+        }
+
+        .req-met {
+            color: #46282a !important;
+            font-weight: 600;
+        }
+        .req-met .material-symbols-outlined {
+            color: #6c3b3d;
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row overflow-hidden font-body-md selection:bg-tertiary/30">
+    <!-- LEFT SIDE: Cinematic Image -->
+    <div class="hidden md:flex flex-col w-[45%] h-screen relative border-r border-outline-variant/30 shadow-[10px_0_30px_rgba(0,0,0,0.5)] z-10">
+        <div class="absolute inset-0 z-0">
+            <img class="object-cover w-full h-full opacity-80" 
+                 alt="Luxury dark academia library at midnight with mahogany bookshelves and warm amber lamp light" 
+                 src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=1600"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/60 to-transparent"></div>
+        </div>
+        <div class="relative z-10 flex flex-col justify-between h-full p-margin-desktop text-on-surface md:p-20">
+            <div>
+                <a href="index.html" class="font-headline-md text-headline-md tracking-widest uppercase text-tertiary hover:opacity-80 transition-opacity">
+                    BookNexus
+                </a>
+                <div class="w-12 h-[1px] bg-tertiary mt-4 opacity-50"></div>
+            </div>
+            <div class="max-w-md">
+                <p class="font-display-lg text-display-lg leading-tight mb-6">
+                    Every book holds a world.<br/>
+                    <span class="text-tertiary italic">Every reader deserves a key.</span>
+                </p>
+                <div class="flex items-center space-x-4">
+                    <div class="h-[1px] flex-grow bg-outline-variant/50"></div>
+                    <p class="font-label-caps text-label-caps text-on-surface-variant tracking-[0.2em] uppercase">
+                        Your campus. Your stories. Your library.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE: Form Area -->
+    <div class="w-full md:w-[55%] min-h-screen parchment-texture flex items-center justify-center relative overflow-y-auto z-0 text-on-primary flex-col">
+        <div class="absolute top-margin-mobile left-margin-mobile md:hidden z-20">
+            <a href="index.html" class="font-headline-md text-headline-md tracking-widest uppercase text-on-primary">
+                BookNexus
+            </a>
+        </div>
+        <div class="w-full max-w-xl p-margin-mobile md:p-margin-desktop relative my-12 md:my-0">
+            <div class="ornamental-corner corner-tl opacity-50 hidden md:block"></div>
+            <div class="ornamental-corner corner-tr opacity-50 hidden md:block"></div>
+            <div class="ornamental-corner corner-bl opacity-50 hidden md:block"></div>
+            <div class="ornamental-corner corner-br opacity-50 hidden md:block"></div>
+            <div class="md:p-8">
+                <div class="mb-12 text-center md:text-left">
+                    <h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-secondary-container mb-2">
+                        Create your chapter.
+                    </h2>
+                    <p class="font-body-lg text-body-lg text-on-primary-fixed-variant italic">
+                        Join a community where books continue their journey.
+                    </p>
+                </div>
+                <form class="space-y-8" id="registerForm">
+                    <div class="space-y-6">
+                        <div class="relative">
+                            <input class="input-field w-full font-body-md text-body-md placeholder-on-secondary-fixed-variant/50" id="fullName" placeholder="Full Name" required="" type="text"/>
+                            <p class="text-error-container text-sm mt-1 hidden" id="fullNameError">Full name is required.</p>
+                        </div>
+                        <div class="relative">
+                            <input class="input-field w-full font-body-md text-body-md placeholder-on-secondary-fixed-variant/50" id="email" placeholder="Email Address" required="" type="email"/>
+                            <p class="text-error-container text-sm mt-1 hidden" id="emailError">Please enter a valid email address.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="relative group">
+                                <input class="input-field w-full font-body-md text-body-md placeholder-on-secondary-fixed-variant/50 pr-10" id="password" placeholder="Password" required="" type="password"/>
+                                <button class="absolute right-0 top-1/2 -translate-y-1/2 text-on-primary-fixed-variant/60 hover:text-secondary-container transition-colors" id="togglePassword" type="button">
+                                    <span class="material-symbols-outlined text-[20px]" id="iconPassword">visibility</span>
+                                </button>
+                            </div>
+                            <div class="relative group">
+                                <input class="input-field w-full font-body-md text-body-md placeholder-on-secondary-fixed-variant/50 pr-10" id="confirmPassword" placeholder="Confirm Password" required="" type="password"/>
+                                <button class="absolute right-0 top-1/2 -translate-y-1/2 text-on-primary-fixed-variant/60 hover:text-secondary-container transition-colors" id="toggleConfirmPassword" type="button">
+                                    <span class="material-symbols-outlined text-[20px]" id="iconConfirmPassword">visibility</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 space-y-2">
+                            <p class="font-label-caps text-[10px] text-secondary-container/70 uppercase tracking-widest mb-2">Security Requirements</p>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+                                <div class="flex items-center gap-2 text-[11px] text-on-primary-fixed-variant/60 transition-colors" id="req-length">
+                                    <span class="material-symbols-outlined text-[14px]">circle</span>
+                                    <span>8+ Characters</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[11px] text-on-primary-fixed-variant/60 transition-colors" id="req-upper">
+                                    <span class="material-symbols-outlined text-[14px]">circle</span>
+                                    <span>Uppercase Letter</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[11px] text-on-primary-fixed-variant/60 transition-colors" id="req-lower">
+                                    <span class="material-symbols-outlined text-[14px]">circle</span>
+                                    <span>Lowercase Letter</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[11px] text-on-primary-fixed-variant/60 transition-colors" id="req-number">
+                                    <span class="material-symbols-outlined text-[14px]">circle</span>
+                                    <span>One Number</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[11px] text-on-primary-fixed-variant/60 transition-colors" id="req-special">
+                                    <span class="material-symbols-outlined text-[14px]">circle</span>
+                                    <span>Special Character</span>
+                                </div>
+                            </div>
+                            <div class="hidden mt-2 flex items-center gap-2 text-[11px] text-secondary-container italic font-bold" id="match-indicator">
+                                <span class="material-symbols-outlined text-[14px] font-bold">check_circle</span>
+                                <span>Passwords match</span>
+                            </div>
+                            <p class="text-error-container text-sm mt-1 hidden" id="passwordError">Please meet all password requirements.</p>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <p class="font-label-caps text-label-caps text-secondary-container mb-4 text-center md:text-left">How will you begin your story?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+                            <label class="cursor-pointer">
+                                <input checked="" class="peer sr-only" name="role" type="radio" value="student"/>
+                                <div class="role-card active p-6 border border-outline/30 flex flex-col items-center text-center h-full hover:bg-surface-container-low hover:text-on-surface">
+                                    <span class="material-symbols-outlined text-3xl mb-3 text-secondary-container" data-weight="fill">school</span>
+                                    <h3 class="font-headline-md text-[20px] mb-2 font-semibold tracking-wide">STUDENT</h3>
+                                    <p class="role-desc font-body-md text-sm text-on-primary-fixed-variant/80 italic">Discover, borrow and explore</p>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input class="peer sr-only" name="role" type="radio" value="owner"/>
+                                <div class="role-card p-6 border border-outline/30 flex flex-col items-center text-center h-full hover:bg-surface-container-low hover:text-on-surface text-on-primary">
+                                    <span class="material-symbols-outlined text-3xl mb-3 text-secondary-container" data-weight="fill">menu_book</span>
+                                    <h3 class="font-headline-md text-[20px] mb-2 font-semibold tracking-wide">BOOK OWNER</h3>
+                                    <p class="role-desc font-body-md text-sm text-on-primary-fixed-variant/80 italic">Share books and continue their journey</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="pt-8 flex flex-col items-center space-y-6">
+                        <div class="w-full text-center hidden text-secondary-container font-bold" id="successMessage">
+                            Account created successfully ✓ Redirecting to Sanctuary...
+                        </div>
+                        <button class="w-full bg-secondary-container text-on-surface py-4 px-8 border border-tertiary font-label-caps text-label-caps hover:bg-on-secondary-fixed-variant transition-colors shadow-lg relative overflow-hidden group flex justify-center items-center gap-2" id="submitBtn" type="submit">
+                            <span class="material-symbols-outlined hidden spinner text-[20px]" id="submitSpinner">progress_activity</span>
+                            <span class="relative z-10" id="submitText">Create My Account</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-tertiary/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out"></div>
+                        </button>
+                        <p class="font-body-md text-sm text-on-primary-fixed-variant">
+                            Already part of the story? 
+                            <a class="text-secondary-container font-semibold hover:text-tertiary-container relative inline-block group pb-1 cursor-pointer" href="index.html">
+                                Log in
+                                <span class="absolute bottom-0 left-0 w-0 h-[1px] bg-tertiary-container transition-all duration-300 group-hover:w-full"></span>
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password Visibility Toggle
+        function setupPasswordToggle(inputId, toggleId, iconId) {
+            const input = document.getElementById(inputId);
+            const toggle = document.getElementById(toggleId);
+            const icon = document.getElementById(iconId);
+            
+            toggle.addEventListener('click', () => {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.textContent = 'visibility_off';
+                } else {
+                    input.type = 'password';
+                    icon.textContent = 'visibility';
+                }
+            });
+        }
+        setupPasswordToggle('password', 'togglePassword', 'iconPassword');
+        setupPasswordToggle('confirmPassword', 'toggleConfirmPassword', 'iconConfirmPassword');
+
+        // Password Validation
+        const pwdInput = document.getElementById('password');
+        const confirmPwdInput = document.getElementById('confirmPassword');
+        const matchIndicator = document.getElementById('match-indicator');
+        
+        const reqs = {
+            length: { id: 'req-length', regex: /.{8,}/ },
+            upper: { id: 'req-upper', regex: /[A-Z]/ },
+            lower: { id: 'req-lower', regex: /[a-z]/ },
+            number: { id: 'req-number', regex: /[0-9]/ },
+            special: { id: 'req-special', regex: /[^A-Za-z0-9]/ }
+        };
+
+        function validatePassword() {
+            const val = pwdInput.value;
+            let allValid = true;
+            for (const key in reqs) {
+                const el = document.getElementById(reqs[key].id);
+                const icon = el.querySelector('.material-symbols-outlined');
+                if (reqs[key].regex.test(val)) {
+                    el.classList.add('req-met');
+                    icon.textContent = 'check_circle';
+                } else {
+                    el.classList.remove('req-met');
+                    icon.textContent = 'circle';
+                    allValid = false;
+                }
+            }
+            return allValid;
+        }
+
+        function validateMatch() {
+            if (pwdInput.value && confirmPwdInput.value && pwdInput.value === confirmPwdInput.value) {
+                matchIndicator.classList.remove('hidden');
+                return true;
+            } else {
+                matchIndicator.classList.add('hidden');
+                return false;
+            }
+        }
+
+        pwdInput.addEventListener('input', () => {
+            validatePassword();
+            validateMatch();
+        });
+        confirmPwdInput.addEventListener('input', validateMatch);
+
+        // Role Selection
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.role-card').forEach(card => card.classList.remove('active'));
+                if (this.checked) {
+                    this.nextElementSibling.classList.add('active');
+                }
+            });
+        });
+
+        // Form Validation and Submission
+        const form = document.getElementById('registerForm');
+        const emailInput = document.getElementById('email');
+        const nameInput = document.getElementById('fullName');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const submitSpinner = document.getElementById('submitSpinner');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Reset errors
+            document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+            document.querySelectorAll('.text-error-container').forEach(el => el.classList.add('hidden'));
+            
+            let isValid = true;
+            
+            if (!nameInput.value.trim()) {
+                nameInput.classList.add('error');
+                document.getElementById('fullNameError').classList.remove('hidden');
+                isValid = false;
+            }
+            
+            if (!emailInput.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+                emailInput.classList.add('error');
+                document.getElementById('emailError').classList.remove('hidden');
+                isValid = false;
+            } else if (emailInput.value.trim() === 'existing@booknexus.com') {
+                emailInput.classList.add('error');
+                const err = document.getElementById('emailError');
+                err.textContent = 'An account with this email already exists.';
+                err.classList.remove('hidden');
+                isValid = false;
+            }
+            
+            if (!validatePassword()) {
+                pwdInput.classList.add('error');
+                document.getElementById('passwordError').classList.remove('hidden');
+                isValid = false;
+            }
+            
+            if (!validateMatch()) {
+                confirmPwdInput.classList.add('error');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Loading state
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+                submitText.textContent = 'Creating your account...';
+                submitSpinner.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    submitBtn.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1200);
+                }, 1800);
+            }
+        });
+    </script>
+</body>
+</html>
