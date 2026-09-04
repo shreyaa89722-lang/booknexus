@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
+const { sendEmail } = require("../services/emailService");
+const { welcomeEmail } = require("../services/emailTemplates");
 
 // @desc   Register a new user
 // @route  POST /api/auth/register
@@ -27,6 +29,15 @@ const registerUser = asyncHandler(async (req, res) => {
         role: allowedRole,
         preferences: preferences || {},
     });
+    try {
+    await sendEmail(
+        user.email,
+        "Welcome to Book Nexus!",
+        welcomeEmail(user.name)
+    );
+} catch (error) {
+    console.error("Welcome email failed:", error.message);
+}
 
     res.status(201).json({
         success: true,
