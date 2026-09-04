@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>BookNexus - Academic Sanctuary & Book Exchange</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="BookNexus - Connect one mind to another. The premier academic sanctuary and peer-to-peer textbook exchange platform for university students."/>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-on-surface": "#faeeed",
+                        "on-secondary-fixed-variant": "#613d3e",
+                        "secondary-fixed": "#ffdad9",
+                        "surface-container": "#f7ebea",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#fdf1f0",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#4f3800",
+                        "on-secondary-fixed": "#2f1314",
+                        "tertiary": "#342300",
+                        "on-tertiary-fixed": "#261900",
+                        "surface-container-highest": "#ebe0df",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#fecbcb",
+                        "inverse-primary": "#fbb5b3",
+                        "primary-container": "#5d2e2e",
+                        "on-secondary-container": "#7a5354",
+                        "surface-dim": "#e3d7d7",
+                        "on-primary-container": "#d79594",
+                        "on-primary-fixed-variant": "#6a3938",
+                        "surface-bright": "#fff8f7",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#fbb5b3",
+                        "background": "#fff8f7",
+                        "on-primary-fixed": "#350f10",
+                        "inverse-surface": "#352f2f",
+                        "primary-fixed": "#ffdad8",
+                        "primary": "#43191a",
+                        "tertiary-fixed-dim": "#e9c176",
+                        "on-surface-variant": "#524343",
+                        "on-tertiary-fixed-variant": "#5d4201",
+                        "surface": "#fff8f7",
+                        "surface-tint": "#864f4f",
+                        "on-tertiary-container": "#c6a15a",
+                        "tertiary-fixed": "#ffdea5",
+                        "on-background": "#201a1a",
+                        "on-surface": "#201a1a",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "outline": "#847372",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#d6c2c1",
+                        "surface-variant": "#ebe0df",
+                        "on-primary": "#ffffff",
+                        "secondary": "#7b5455",
+                        "surface-container-high": "#f1e6e5",
+                        "secondary-fixed-dim": "#ecbaba"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "unit-2": "0.5rem",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "unit-8": "2rem",
+                        "unit-12": "3rem",
+                        "unit-1": "0.25rem",
+                        "unit-4": "1rem"
+                    },
+                    fontFamily: {
+                        "body-md": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Playfair Display", "serif"],
+                        "headline-display": ["Playfair Display", "serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "label-sm": ["Manrope", "sans-serif"],
+                        "headline-lg-mobile": ["Playfair Display", "serif"],
+                        "headline-md": ["Playfair Display", "serif"],
+                        "label-md": ["Manrope", "sans-serif"]
+                    },
+                    fontSize: {
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-display": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .texture-bg {
+            background-color: #1a0f0f;
+            background-image: radial-gradient(rgba(218, 165, 32, 0.08) 1px, transparent 1px);
+            background-size: 4px 4px;
+        }
+        .soft-shadow {
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(26, 11, 11, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #c6a15a;
+            border-radius: 4px;
+        }
+        .wood-carved {
+            background-image: linear-gradient(rgba(26, 11, 11, 0.85), rgba(42, 17, 17, 0.95)), url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 0 60px rgba(218, 165, 32, 0.25), inset 0 0 40px rgba(0,0,0,0.8);
+            position: relative;
+            border: none;
+        }
+        .wood-carved::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 0 20px rgba(218, 165, 32, 0.2);
+            pointer-events: none;
+        }
+        .inset-panel {
+            background: rgba(26, 11, 11, 0.7);
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.6);
+            border: 1px solid rgba(218, 165, 32, 0.15);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Magical Sparkles Animation */
+        @keyframes float-mote {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+            50% { opacity: 0.85; }
+            100% { transform: translateY(-120px) translateX(25px) scale(1.5); opacity: 0; }
+        }
+        .mote {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffd700, 0 0 20px #ffaa00;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .glow-gold {
+            text-shadow: 0 0 12px rgba(232, 205, 140, 0.6);
+        }
+        .card-hover-effect {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px -5px rgba(218, 165, 32, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-[#1a0f0f] text-on-tertiary font-body-md antialiased min-h-screen w-full texture-bg relative custom-scrollbar">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
+
+    <!-- ================= AUTHENTICATION SCREEN ================= -->
+    <div id="auth-screen" class="flex flex-col md:flex-row h-screen w-full relative z-10">
+        <!-- Left Banner (Desktop) -->
+        <div class="relative hidden md:flex md:w-1/2 lg:w-3/5 h-full bg-[#1a0f0f] items-center justify-center overflow-hidden">
+            <img class="absolute inset-0 w-full h-full object-cover opacity-75 mix-blend-luminosity" 
+                 src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=1600" 
+                 alt="Library Archive Background"/>
+            <div class="absolute inset-0 bg-gradient-to-br from-[#4a2a10]/60 via-black/40 to-black/90"></div>
+            <div class="absolute inset-0 bg-[#c6a15a]/10 mix-blend-overlay"></div>
+            
+            <div class="relative z-10 flex flex-col items-center justify-center p-gutter text-center max-w-2xl">
+                <div class="mb-unit-12 flex items-center gap-unit-2">
+                    <span class="material-symbols-outlined text-4xl text-[#e8cd8c] glow-gold" style='font-variation-settings: "FILL" 1;'>auto_stories</span>
+                    <span class="font-headline-md text-headline-md text-[#e8cd8c] italic glow-gold">BookNexus</span>
+                </div>
+                <h1 class="font-headline-display text-headline-display text-white mb-6 drop-shadow-lg leading-tight">
+                    "A good book connects<br/>one mind to another."
+                </h1>
+                <p class="text-[#c6a15a]/90 font-body-lg mb-8 max-w-lg leading-relaxed">
+                    Step into your academic sanctuary. Exchange knowledge, lend textbooks, and build connections across campus departments.
+                </p>
+                <div class="w-20 h-1 bg-[#e8cd8c] mx-auto rounded-full shadow-[0_0_15px_rgba(232,205,140,0.8)]"></div>
+            </div>
+            
+            <!-- Floating Magical Motes -->
+            <div class="mote" style="left: 20%; top: 80%; animation: float-mote 6s infinite ease-in-out 0s;"></div>
+            <div class="mote" style="left: 50%; top: 70%; animation: float-mote 7s infinite ease-in-out 1.5s;"></div>
+            <div class="mote" style="left: 70%; top: 90%; animation: float-mote 5s infinite ease-in-out 2.5s;"></div>
+            <div class="mote" style="left: 35%; top: 60%; animation: float-mote 8s infinite ease-in-out 3.5s;"></div>
+            <div class="mote" style="left: 85%; top: 75%; animation: float-mote 6.5s infinite ease-in-out 1s;"></div>
+        </div>
+
+        <!-- Right Auth Panel -->
+        <div class="w-full md:w-1/2 lg:w-2/5 h-full flex items-center justify-center p-margin-mobile md:p-gutter overflow-y-auto custom-scrollbar relative bg-[#1a0f0f]/90 md:bg-transparent">
+            <!-- Motes around the panel -->
+            <div class="mote hidden md:block" style="left: 10%; top: 40%; animation: float-mote 6s infinite ease-in-out 0.5s;"></div>
+            <div class="mote hidden md:block" style="right: 10%; top: 60%; animation: float-mote 7s infinite ease-in-out 2s;"></div>
+
+            <div class="w-full max-w-md wood-carved rounded-xl p-6 md:p-unit-8 relative z-10 ring-1 ring-[#c6a15a]/30 shadow-[0_0_20px_rgba(198,161,90,0.5)] drop-shadow-lg">
+                <!-- Mobile Brand Header -->
+                <div class="md:hidden flex items-center justify-center gap-unit-2 mb-unit-8">
+                    <span class="material-symbols-outlined text-[#e8cd8c] text-3xl glow-gold" style='font-variation-settings: "FILL" 1;'>auto_stories</span>
+                    <span class="font-headline-md text-headline-md text-[#e8cd8c] italic glow-gold">BookNexus</span>
+                </div>
+
+                <!-- View Toggle Buttons -->
+                <div class="flex inset-panel rounded-full p-1 mb-8 relative">
+                    <button class="flex-1 py-2 rounded-full font-label-md text-label-md bg-[#c6a15a] text-[#2a1111] shadow-[0_0_15px_rgba(198,161,90,0.5)] transition-all duration-300 font-bold" id="btn-login" onclick="toggleView('login')">
+                        Login
+                    </button>
+                    <button class="flex-1 py-2 rounded-full font-label-md text-label-md text-[#c6a15a] hover:bg-white/5 transition-all duration-300" id="btn-signup" onclick="toggleView('signup')">
+                        Sign Up
+                    </button>
+                </div>
+
+                <!-- LOGIN VIEW -->
+                <div class="block transition-all duration-300" id="view-login">
+                    <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#e8cd8c] mb-2 text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Welcome</h2>
+                    <p class="text-center text-[#c6a15a]/90 font-body-md mb-6 drop-shadow-md">Step into your academic sanctuary</p>
+
+                    <div class="hidden bg-red-900/40 border border-red-500/50 text-red-200 text-label-sm p-3 rounded-lg mb-4 text-center" id="login-error">
+                        Invalid credentials. Please enter your student details.
+                    </div>
+
+                    <form id="form-login" onsubmit="handleLogin(event)" class="space-y-5">
+                        <div class="group">
+                            <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 group-focus-within:text-[#e8cd8c] transition-colors drop-shadow-md">College Email or Student ID</label>
+                            <div class="relative inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                <span class="material-symbols-outlined absolute left-3 top-2.5 text-[#c6a15a]/60 group-focus-within:text-[#e8cd8c] transition-colors">person</span>
+                                <input id="login-email" class="w-full bg-transparent border-0 py-2 pl-10 pr-4 focus:ring-0 text-body-md text-white placeholder-white/40 transition-colors" placeholder="e.g. jdoe@university.edu" type="text" required/>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 group-focus-within:text-[#e8cd8c] transition-colors drop-shadow-md">Password</label>
+                            <div class="relative inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                <span class="material-symbols-outlined absolute left-3 top-2.5 text-[#c6a15a]/60 group-focus-within:text-[#e8cd8c] transition-colors">lock</span>
+                                <input id="login-password" class="w-full bg-transparent border-0 py-2 pl-10 pr-4 focus:ring-0 text-body-md text-white placeholder-white/40 transition-colors" placeholder="••••••••" type="password" required/>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between mt-4 px-1">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input class="rounded border-[#c6a15a]/50 text-[#c6a15a] focus:ring-[#c6a15a] bg-transparent w-4 h-4 shadow-[0_0_5px_rgba(198,161,90,0.3)]" type="checkbox"/>
+                                <span class="font-label-sm text-label-sm text-[#c6a15a]/90 drop-shadow-md">Remember me</span>
+                            </label>
+                            <a class="font-label-sm text-label-sm text-[#e8cd8c] hover:text-white underline underline-offset-2 transition-colors drop-shadow-md" href="#" onclick="showToast('Password reset link sent to your registered college email', 'info'); return false;">Forgot password?</a>
+                        </div>
+
+                        <button class="w-full bg-gradient-to-r from-[#b38e4b] to-[#d6b16a] text-[#1a0b0b] py-3 rounded-lg font-label-md text-label-md font-bold hover:from-[#c6a15a] hover:to-[#f8dd9c] transition-colors mt-6 shadow-[0_0_20px_rgba(198,161,90,0.5)] flex items-center justify-center gap-2 relative overflow-hidden group" type="submit">
+                            <div class="absolute inset-0 bg-white/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <span class="flex items-center justify-center gap-2 relative z-10" id="login-btn-content">
+                                <span>Login</span>
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            </span>
+                            <span class="hidden flex items-center justify-center gap-2 relative z-10" id="login-btn-loading">
+                                <span class="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+                                <span>Logging in...</span>
+                            </span>
+                        </button>
+
+                        <button class="w-full mt-3 bg-black/40 hover:bg-black/60 border border-[#c6a15a]/30 text-[#e8cd8c] py-2.5 rounded-lg font-label-md text-label-md transition-colors flex items-center justify-center gap-2" type="button" onclick="loginAsGuest()">
+                            <span class="material-symbols-outlined text-sm">explore</span>
+                            <span>Explore Sanctuary as Guest</span>
+                        </button>
+                    </form>
+
+                    <div class="mt-6 text-center">
+                        <p class="text-label-sm text-[#c6a15a]/80 drop-shadow-md">
+                            Don't have an account? 
+                            <button class="text-[#e8cd8c] font-bold hover:text-white transition-colors underline underline-offset-2" onclick="toggleView('signup')">Sign up</button>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- SIGNUP VIEW -->
+                <div class="hidden transition-all duration-300" id="view-signup">
+                    <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#e8cd8c] mb-4 text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Create Your Account</h2>
+                    
+                    <form id="form-signup" onsubmit="handleSignup(event)" class="space-y-4">
+                        <div class="group">
+                            <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 drop-shadow-md">Full Name</label>
+                            <div class="inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                <input id="signup-name" class="w-full bg-transparent border-0 py-2 px-4 focus:ring-0 text-body-md text-white placeholder-white/40 transition-colors" placeholder="Jane Doe" type="text" required/>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="group">
+                                <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 drop-shadow-md">College Email</label>
+                                <div class="inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                    <input id="signup-email" class="w-full bg-transparent border-0 py-2 px-4 focus:ring-0 text-body-md text-white placeholder-white/40 transition-colors" placeholder="jane@univ.edu" type="email" required/>
+                                </div>
+                            </div>
+                            <div class="group">
+                                <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 drop-shadow-md">Student ID</label>
+                                <div class="inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                    <input id="signup-studentid" class="w-full bg-transparent border-0 py-2 px-4 focus:ring-0 text-body-md text-white placeholder-white/40 transition-colors" placeholder="12345678" type="text" required/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="group">
+                                <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 drop-shadow-md">Department</label>
+                                <div class="inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                    <select id="signup-dept" class="w-full bg-transparent border-0 py-2 px-4 focus:ring-0 text-body-md text-white transition-colors appearance-none [&>option]:bg-[#2a1111]" required>
+                                        <option value="" disabled selected>Select Dept</option>
+                                        <option value="Literature">Literature</option>
+                                        <option value="History">History</option>
+                                        <option value="Philosophy">Philosophy</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Natural Sciences">Natural Sciences</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="group">
+                                <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 drop-shadow-md">Academic Year</label>
+                                <div class="inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                    <select id="signup-year" class="w-full bg-transparent border-0 py-2 px-4 focus:ring-0 text-body-md text-white transition-colors appearance-none [&>option]:bg-[#2a1111]" required>
+                                        <option value="" disabled selected>Select Year</option>
+                                        <option value="Freshman">Freshman</option>
+                                        <option value="Sophomore">Sophomore</option>
+                                        <option value="Junior">Junior</option>
+                                        <option value="Senior">Senior</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 drop-shadow-md">Phone Number</label>
+                            <div class="inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                <input class="w-full bg-transparent border-0 py-2 px-4 focus:ring-0 text-body-md text-white placeholder-white/40 transition-colors" placeholder="(555) 000-0000" type="tel"/>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="group">
+                                <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 drop-shadow-md">Password</label>
+                                <div class="inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                    <input class="w-full bg-transparent border-0 py-2 px-4 focus:ring-0 text-body-md text-white placeholder-white/40 transition-colors" placeholder="••••••••" type="password" required/>
+                                </div>
+                            </div>
+                            <div class="group">
+                                <label class="block font-label-sm text-label-sm text-[#c6a15a]/90 mb-1 drop-shadow-md">Confirm Password</label>
+                                <div class="inset-panel rounded-lg p-1 group-focus-within:ring-1 group-focus-within:ring-[#c6a15a]/50 transition-all">
+                                    <input class="w-full bg-transparent border-0 py-2 px-4 focus:ring-0 text-body-md text-white placeholder-white/40 transition-colors" placeholder="••••••••" type="password" required/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 px-1">
+                            <label class="flex items-start gap-2 cursor-pointer">
+                                <input class="mt-1 rounded border-[#c6a15a]/50 text-[#c6a15a] focus:ring-[#c6a15a] bg-transparent w-4 h-4 shadow-[0_0_5px_rgba(198,161,90,0.3)]" type="checkbox" required/>
+                                <span class="font-label-sm text-label-sm text-[#c6a15a]/90 leading-tight drop-shadow-md">
+                                    I agree to the <a class="text-[#e8cd8c] hover:text-white underline" href="#" onclick="showToast('BookNexus Academic Honor Code: Share knowledge responsibly.', 'info'); return false;">Terms of Service</a> and <a class="text-[#e8cd8c] hover:text-white underline" href="#" onclick="showToast('Privacy Policy: Your student data remains encrypted.', 'info'); return false;">Privacy Policy</a> of the BookNexus Archive.
+                                </span>
+                            </label>
+                        </div>
+
+                        <button class="w-full bg-gradient-to-r from-[#b38e4b] to-[#d6b16a] text-[#1a0b0b] py-3 rounded-lg font-label-md text-label-md font-bold hover:from-[#c6a15a] hover:to-[#f8dd9c] transition-colors mt-6 shadow-[0_0_20px_rgba(198,161,90,0.5)] flex items-center justify-center gap-2 relative overflow-hidden group" type="submit">
+                            <div class="absolute inset-0 bg-white/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <span class="relative z-10 flex items-center justify-center gap-2">
+                                <span>Create Account</span>
+                                <span class="material-symbols-outlined text-sm">person_add</span>
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MAIN APP SANCTUARY DASHBOARD ================= -->
+    <div id="main-app" class="hidden min-h-screen flex-col w-full relative z-10">
+        <!-- Top Navigation Header -->
+        <header class="bg-[#150a0a]/90 border-b border-[#c6a15a]/20 backdrop-blur-md sticky top-0 z-40 px-4 md:px-8 py-3.5 flex items-center justify-between shadow-lg">
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="filterBooks('All')">
+                    <span class="material-symbols-outlined text-3xl text-[#e8cd8c] glow-gold" style='font-variation-settings: "FILL" 1;'>auto_stories</span>
+                    <span class="font-headline-md text-[#e8cd8c] italic text-xl glow-gold hidden sm:inline">BookNexus</span>
+                </div>
+                
+                <!-- Search Input -->
+                <div class="relative w-48 sm:w-72 md:w-96">
+                    <span class="material-symbols-outlined absolute left-3 top-2.5 text-[#c6a15a]/70 text-lg">search</span>
+                    <input id="search-input" onkeyup="handleSearch()" class="w-full bg-[#2a1111]/80 border border-[#c6a15a]/30 rounded-full py-1.5 pl-9 pr-4 text-sm text-white placeholder-white/40 focus:ring-1 focus:ring-[#c6a15a] focus:border-[#c6a15a] transition-all" placeholder="Search by title, author, or ISBN..."/>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 md:gap-4">
+                <!-- Action: List a Book -->
+                <button onclick="openModal('modal-add-book')" class="bg-gradient-to-r from-[#b38e4b] to-[#d6b16a] text-[#1a0b0b] px-3.5 py-1.5 rounded-full font-label-md text-xs md:text-sm font-bold hover:from-[#c6a15a] hover:to-[#f8dd9c] transition-all shadow-[0_0_12px_rgba(198,161,90,0.4)] flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">add_circle</span>
+                    <span class="hidden sm:inline">List a Book</span>
+                </button>
+
+                <!-- Action: My Campus Shelf Drawer -->
+                <button onclick="openShelfModal()" class="relative p-2 rounded-full text-[#c6a15a] hover:bg-white/10 transition-colors" title="My Campus Shelf">
+                    <span class="material-symbols-outlined">collections_bookmark</span>
+                    <span id="shelf-badge" class="absolute -top-1 -right-1 bg-[#c6a15a] text-[#1a0f0f] text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span>
+                </button>
+
+                <!-- Profile User Badge -->
+                <div class="flex items-center gap-2 pl-2 border-l border-[#c6a15a]/20">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#c6a15a] to-[#7b5455] flex items-center justify-center text-[#1a0f0f] font-bold text-xs shadow-md" id="user-avatar">
+                        JD
+                    </div>
+                    <div class="hidden lg:flex flex-col text-left">
+                        <span class="text-xs font-bold text-white leading-tight" id="user-name-display">Jane Doe</span>
+                        <span class="text-[11px] text-[#c6a15a]/80" id="user-dept-display">Literature</span>
+                    </div>
+                    <button onclick="handleLogout()" class="text-[#c6a15a]/70 hover:text-white p-1 ml-1 transition-colors" title="Logout">
+                        <span class="material-symbols-outlined text-sm">logout</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace Container -->
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 md:p-8 space-y-8">
+            
+            <!-- Hero Banner -->
+            <div class="wood-carved rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-2xl border border-[#c6a15a]/30">
+                <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div class="max-w-xl space-y-2">
+                        <div class="inline-flex items-center gap-2 bg-[#c6a15a]/20 border border-[#c6a15a]/40 px-3 py-1 rounded-full text-xs text-[#e8cd8c]">
+                            <span class="material-symbols-outlined text-xs">auto_awesome</span>
+                            <span>Academic Peer Exchange Active</span>
+                        </div>
+                        <h2 class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-white">Welcome back to the Archive</h2>
+                        <p class="text-[#c6a15a]/90 text-sm sm:text-base leading-relaxed">
+                            Discover available course materials, connect with students in your department, and request peer borrowings effortlessly.
+                        </p>
+                    </div>
+
+                    <!-- Quick Stats Badges -->
+                    <div class="flex items-center gap-4 sm:gap-6 bg-[#1a0f0f]/80 p-4 rounded-xl border border-[#c6a15a]/20 shadow-inner">
+                        <div class="text-center">
+                            <span class="block text-2xl font-bold text-[#e8cd8c]" id="stat-available">18</span>
+                            <span class="text-[11px] text-[#c6a15a]/80 font-medium">Books Listed</span>
+                        </div>
+                        <div class="w-px h-8 bg-[#c6a15a]/20"></div>
+                        <div class="text-center">
+                            <span class="block text-2xl font-bold text-[#e8cd8c]">5</span>
+                            <span class="text-[11px] text-[#c6a15a]/80 font-medium">Departments</span>
+                        </div>
+                        <div class="w-px h-8 bg-[#c6a15a]/20"></div>
+                        <div class="text-center">
+                            <span class="block text-2xl font-bold text-[#e8cd8c]">12</span>
+                            <span class="text-[11px] text-[#c6a15a]/80 font-medium">Active Borrows</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Filter Bar -->
+            <div class="flex items-center justify-between flex-wrap gap-4 border-b border-[#c6a15a]/15 pb-4">
+                <div class="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1 w-full sm:w-auto" id="filter-buttons">
+                    <button onclick="filterBooks('All')" class="dept-filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#c6a15a] text-[#1a0f0f] shadow-md transition-all">All Books</button>
+                    <button onclick="filterBooks('Literature')" class="dept-filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#2a1111] text-[#c6a15a] border border-[#c6a15a]/30 hover:bg-[#c6a15a]/20 transition-all">Literature</button>
+                    <button onclick="filterBooks('Philosophy')" class="dept-filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#2a1111] text-[#c6a15a] border border-[#c6a15a]/30 hover:bg-[#c6a15a]/20 transition-all">Philosophy</button>
+                    <button onclick="filterBooks('History')" class="dept-filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#2a1111] text-[#c6a15a] border border-[#c6a15a]/30 hover:bg-[#c6a15a]/20 transition-all">History</button>
+                    <button onclick="filterBooks('Computer Science')" class="dept-filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#2a1111] text-[#c6a15a] border border-[#c6a15a]/30 hover:bg-[#c6a15a]/20 transition-all">Computer Science</button>
+                </div>
+
+                <div class="text-xs text-[#c6a15a]/70 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">filter_list</span>
+                    <span id="results-count">Showing 6 textbooks</span>
+                </div>
+            </div>
+
+            <!-- Book Catalog Grid -->
+            <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Book Cards rendered dynamically via JS -->
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= MODALS ================= -->
+
+    <!-- Modal: Add / List a New Book -->
+    <div id="modal-add-book" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="wood-carved rounded-2xl p-6 sm:p-8 max-w-lg w-full relative border border-[#c6a15a]/40 shadow-2xl">
+            <button onclick="closeModal('modal-add-book')" class="absolute top-4 right-4 text-[#c6a15a] hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <div class="flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-[#e8cd8c] text-2xl">library_add</span>
+                <h3 class="font-headline-lg text-xl text-[#e8cd8c]">List a Book for Exchange</h3>
+            </div>
+
+            <form onsubmit="handleAddBook(event)" class="space-y-4">
+                <div class="group">
+                    <label class="block text-xs font-semibold text-[#c6a15a] mb-1">Book Title</label>
+                    <div class="inset-panel rounded-lg p-1">
+                        <input id="new-book-title" class="w-full bg-transparent border-0 py-2 px-3 text-sm text-white placeholder-white/40 focus:ring-0" placeholder="e.g. Structure and Interpretation of Computer Programs" required/>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="group">
+                        <label class="block text-xs font-semibold text-[#c6a15a] mb-1">Author</label>
+                        <div class="inset-panel rounded-lg p-1">
+                            <input id="new-book-author" class="w-full bg-transparent border-0 py-2 px-3 text-sm text-white placeholder-white/40 focus:ring-0" placeholder="e.g. Harold Abelson" required/>
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="block text-xs font-semibold text-[#c6a15a] mb-1">Department</label>
+                        <div class="inset-panel rounded-lg p-1">
+                            <select id="new-book-dept" class="w-full bg-transparent border-0 py-2 px-3 text-sm text-white focus:ring-0 [&>option]:bg-[#2a1111]" required>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Literature">Literature</option>
+                                <option value="Philosophy">Philosophy</option>
+                                <option value="History">History</option>
+                                <option value="Natural Sciences">Natural Sciences</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="group">
+                        <label class="block text-xs font-semibold text-[#c6a15a] mb-1">Condition</label>
+                        <div class="inset-panel rounded-lg p-1">
+                            <select id="new-book-condition" class="w-full bg-transparent border-0 py-2 px-3 text-sm text-white focus:ring-0 [&>option]:bg-[#2a1111]" required>
+                                <option value="Like New">Like New</option>
+                                <option value="Good Condition">Good Condition</option>
+                                <option value="Lightly Annotated">Lightly Annotated</option>
+                                <option value="Fair">Fair</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="block text-xs font-semibold text-[#c6a15a] mb-1">Campus Pickup</label>
+                        <div class="inset-panel rounded-lg p-1">
+                            <input id="new-book-location" class="w-full bg-transparent border-0 py-2 px-3 text-sm text-white placeholder-white/40 focus:ring-0" placeholder="e.g. Main Library Hall" required/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label class="block text-xs font-semibold text-[#c6a15a] mb-1">Cover Image URL (Optional)</label>
+                    <div class="inset-panel rounded-lg p-1">
+                        <input id="new-book-cover" class="w-full bg-transparent border-0 py-2 px-3 text-sm text-white placeholder-white/40 focus:ring-0" placeholder="https://images.unsplash.com/..."/>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('modal-add-book')" class="px-4 py-2 rounded-lg text-xs font-bold text-[#c6a15a] hover:bg-white/5 transition-colors">Cancel</button>
+                    <button type="submit" class="bg-gradient-to-r from-[#b38e4b] to-[#d6b16a] text-[#1a0b0b] px-5 py-2 rounded-lg text-xs font-bold hover:from-[#c6a15a] hover:to-[#f8dd9c] shadow-lg">List Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Book Detail & Exchange Request -->
+    <div id="modal-book-detail" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="wood-carved rounded-2xl p-6 sm:p-8 max-w-xl w-full relative border border-[#c6a15a]/40 shadow-2xl">
+            <button onclick="closeModal('modal-book-detail')" class="absolute top-4 right-4 text-[#c6a15a] hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <div id="modal-book-content" class="space-y-6">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: My Campus Shelf Drawer -->
+    <div id="modal-shelf" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="wood-carved rounded-2xl p-6 sm:p-8 max-w-lg w-full relative border border-[#c6a15a]/40 shadow-2xl">
+            <button onclick="closeModal('modal-shelf')" class="absolute top-4 right-4 text-[#c6a15a] hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <div class="flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-[#e8cd8c] text-2xl">collections_bookmark</span>
+                <h3 class="font-headline-lg text-xl text-[#e8cd8c]">My Campus Shelf</h3>
+            </div>
+
+            <div id="shelf-items-list" class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar pr-1">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // Sample Textbook Catalog
+        let books = [
+            {
+                id: 1,
+                title: "To Kill a Mockingbird",
+                author: "Harper Lee",
+                dept: "Literature",
+                condition: "Like New",
+                owner: "Jane Doe",
+                ownerEmail: "jdoe@univ.edu",
+                location: "Humanities Library 2nd Floor",
+                cover: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600",
+                description: "Annotated literature classic for LIT 201. Great condition with clean margins.",
+                borrowed: false
+            },
+            {
+                id: 2,
+                title: "Critique of Pure Reason",
+                author: "Immanuel Kant",
+                dept: "Philosophy",
+                condition: "Lightly Annotated",
+                owner: "Alex Mercer",
+                ownerEmail: "amercer@univ.edu",
+                location: "Philosophy Seminar Hall",
+                cover: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=600",
+                description: "Essential text for Modern Philosophy core course. Includes helpful margin notes.",
+                borrowed: false
+            },
+            {
+                id: 3,
+                title: "The History of the Ancient World",
+                author: "Susan Wise Bauer",
+                dept: "History",
+                condition: "Good Condition",
+                owner: "Elena Rostova",
+                ownerEmail: "elena@univ.edu",
+                location: "Student Quad Center",
+                cover: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&q=80&w=600",
+                description: "Comprehensive survey course volume. Hardcover binding intact.",
+                borrowed: false
+            },
+            {
+                id: 4,
+                title: "Introduction to Algorithms",
+                author: "Cormen, Leiserson, Rivest",
+                dept: "Computer Science",
+                condition: "Like New",
+                owner: "Marcus Vance",
+                ownerEmail: "mvance@univ.edu",
+                location: "Turing CS Lab",
+                cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=600",
+                description: "4th Edition CLRS textbook. Ideal for CS 301 Data Structures & Algorithms.",
+                borrowed: false
+            },
+            {
+                id: 5,
+                title: "The Odyssey",
+                author: "Homer (Emily Wilson Translation)",
+                dept: "Literature",
+                condition: "Like New",
+                owner: "Sophia Martinez",
+                ownerEmail: "smartinez@univ.edu",
+                location: "Campus Coffee House",
+                cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=600",
+                description: "Acclaimed translation used for Classical Literature seminar.",
+                borrowed: false
+            },
+            {
+                id: 6,
+                title: "Principles of Neural Science",
+                author: "Eric R. Kandel",
+                dept: "Natural Sciences",
+                condition: "Good Condition",
+                owner: "David Chen",
+                ownerEmail: "dchen@univ.edu",
+                location: "Science Building Atrium",
+                cover: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=600",
+                description: "Standard reference for Advanced Neuroscience.",
+                borrowed: false
+            }
+        ];
+
+        let currentUser = {
+            name: "Jane Doe",
+            email: "jane@univ.edu",
+            dept: "Literature",
+            year: "Junior"
+        };
+
+        let requestedBooks = [];
+        let currentFilter = "All";
+
+        // View Toggling between Login & Signup
+        function toggleView(view) {
+            const loginView = document.getElementById('view-login');
+            const signupView = document.getElementById('view-signup');
+            const btnLogin = document.getElementById('btn-login');
+            const btnSignup = document.getElementById('btn-signup');
+
+            const activeClass = ['bg-[#c6a15a]', 'text-[#2a1111]', 'shadow-[0_0_15px_rgba(198,161,90,0.5)]', 'font-bold'];
+            const inactiveClass = ['bg-transparent', 'text-[#c6a15a]', 'hover:bg-white/5'];
+
+            if (view === 'login') {
+                loginView.classList.remove('hidden');
+                signupView.classList.add('hidden');
+                btnLogin.classList.add(...activeClass);
+                btnLogin.classList.remove(...inactiveClass);
+                btnSignup.classList.remove(...activeClass);
+                btnSignup.classList.add(...inactiveClass);
+            } else {
+                signupView.classList.remove('hidden');
+                loginView.classList.add('hidden');
+                btnSignup.classList.add(...activeClass);
+                btnSignup.classList.remove(...inactiveClass);
+                btnLogin.classList.remove(...activeClass);
+                btnLogin.classList.add(...inactiveClass);
+            }
+        }
+
+        // Handle Login Submission
+        function handleLogin(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('login-email').value;
+            const btnContent = document.getElementById('login-btn-content');
+            const btnLoading = document.getElementById('login-btn-loading');
+
+            btnContent.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+
+            setTimeout(() => {
+                btnContent.classList.remove('hidden');
+                btnLoading.classList.add('hidden');
+
+                if (emailInput.trim()) {
+                    currentUser.email = emailInput;
+                    currentUser.name = emailInput.split('@')[0].replace('.', ' ').toUpperCase();
+                    enterApp();
+                    showToast(`Welcome back, ${currentUser.name}! Sanctuary unlocked.`, 'success');
+                } else {
+                    document.getElementById('login-error').classList.remove('hidden');
+                }
+            }, 800);
+        }
+
+        // Handle Signup Submission
+        function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const dept = document.getElementById('signup-dept').value;
+
+            if (name && email) {
+                currentUser = { name, email, dept, year: "Freshman" };
+                enterApp();
+                showToast(`Welcome to BookNexus, ${name}! Your student account is ready.`, 'success');
+            }
+        }
+
+        // Quick Guest Entry
+        function loginAsGuest() {
+            currentUser = {
+                name: "Academic Guest",
+                email: "guest@university.edu",
+                dept: "Literature",
+                year: "Visiting Scholar"
+            };
+            enterApp();
+            showToast("Entered BookNexus Archive in Guest Mode.", 'info');
+        }
+
+        // Switch Screen from Auth to Main App
+        function enterApp() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('flex');
+
+            document.getElementById('user-name-display').innerText = currentUser.name;
+            document.getElementById('user-dept-display').innerText = currentUser.dept;
+            document.getElementById('user-avatar').innerText = currentUser.name.split(' ').map(n => n[0]).join('');
+
+            renderBooks();
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('flex');
+            document.getElementById('auth-screen').classList.remove('hidden');
+            showToast("Logged out of BookNexus Sanctuary.", 'info');
+        }
+
+        // Render Book Catalog
+        function renderBooks(filteredList = null) {
+            const grid = document.getElementById('books-grid');
+            const listToRender = filteredList || books;
+            
+            document.getElementById('stat-available').innerText = books.length;
+            document.getElementById('results-count').innerText = `Showing ${listToRender.length} textbook${listToRender.length === 1 ? '' : 's'}`;
+
+            if (listToRender.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center wood-carved rounded-xl border border-[#c6a15a]/20">
+                        <span class="material-symbols-outlined text-4xl text-[#c6a15a]/60 mb-2">auto_stories</span>
+                        <p class="text-[#e8cd8c] font-bold">No textbooks found</p>
+                        <p class="text-xs text-[#c6a15a]/70">Try adjusting your search query or department filter.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = listToRender.map(book => `
+                <div class="wood-carved rounded-xl p-4 flex flex-col justify-between border border-[#c6a15a]/25 card-hover-effect group relative">
+                    <div>
+                        <!-- Cover Image -->
+                        <div class="w-full h-48 rounded-lg overflow-hidden mb-3 relative bg-[#100707] inset-panel">
+                            <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+                            <span class="absolute top-2 right-2 bg-[#1a0f0f]/90 text-[#e8cd8c] border border-[#c6a15a]/40 text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-md">
+                                ${book.condition}
+                            </span>
+                        </div>
+
+                        <!-- Info -->
+                        <span class="text-[10px] uppercase tracking-wider text-[#c6a15a] font-bold block mb-1">${book.dept}</span>
+                        <h4 class="font-headline-md text-base text-white font-bold leading-snug line-clamp-1 mb-1" title="${book.title}">${book.title}</h4>
+                        <p class="text-xs text-[#c6a15a]/80 mb-3">by ${book.author}</p>
+                    </div>
+
+                    <div class="pt-3 border-t border-[#c6a15a]/15 flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 text-[11px] text-white/70">
+                            <span class="material-symbols-outlined text-xs text-[#c6a15a]">person</span>
+                            <span class="truncate max-w-[90px]">${book.owner}</span>
+                        </div>
+
+                        <button onclick="openBookDetail(${book.id})" class="bg-[#c6a15a]/20 hover:bg-[#c6a15a] text-[#e8cd8c] hover:text-[#1a0f0f] border border-[#c6a15a]/50 text-xs px-3 py-1.5 rounded-lg font-bold transition-all">
+                            Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter Books by Department
+        function filterBooks(dept) {
+            currentFilter = dept;
+            const buttons = document.querySelectorAll('.dept-filter-btn');
+            
+            buttons.forEach(btn => {
+                if (btn.innerText.includes(dept) || (dept === 'All' && btn.innerText.includes('All'))) {
+                    btn.className = "dept-filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#c6a15a] text-[#1a0f0f] shadow-md transition-all";
+                } else {
+                    btn.className = "dept-filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#2a1111] text-[#c6a15a] border border-[#c6a15a]/30 hover:bg-[#c6a15a]/20 transition-all";
+                }
+            });
+
+            if (dept === "All") {
+                renderBooks();
+            } else {
+                renderBooks(books.filter(b => b.dept === dept));
+            }
+        }
+
+        // Handle Search
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = books.filter(b => 
+                (currentFilter === 'All' || b.dept === currentFilter) &&
+                (b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query) || b.dept.toLowerCase().includes(query))
+            );
+            renderBooks(filtered);
+        }
+
+        // Open Book Details Modal
+        function openBookDetail(id) {
+            const book = books.find(b => b.id === id);
+            if (!book) return;
+
+            const isAlreadyRequested = requestedBooks.some(rb => rb.id === id);
+
+            document.getElementById('modal-book-content').innerHTML = `
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <div class="w-full sm:w-1/3 h-56 rounded-xl overflow-hidden inset-panel relative">
+                        <img src="${book.cover}" class="w-full h-full object-cover" alt="${book.title}"/>
+                    </div>
+                    <div class="w-full sm:w-2/3 space-y-3">
+                        <span class="text-xs font-bold text-[#c6a15a] uppercase tracking-wider">${book.dept} Department</span>
+                        <h3 class="font-headline-lg text-2xl text-white font-bold">${book.title}</h3>
+                        <p class="text-sm text-[#c6a15a]/90">Author: <strong class="text-white">${book.author}</strong></p>
+                        <p class="text-xs text-white/80 leading-relaxed">${book.description}</p>
+                        
+                        <div class="p-3 rounded-lg inset-panel text-xs space-y-1">
+                            <p class="text-[#c6a15a]">Condition: <span class="text-white font-bold">${book.condition}</span></p>
+                            <p class="text-[#c6a15a]">Owner: <span class="text-white font-bold">${book.owner}</span> (${book.ownerEmail})</p>
+                            <p class="text-[#c6a15a]">Campus Location: <span class="text-white font-bold">${book.location}</span></p>
+                        </div>
+
+                        <div class="pt-2 flex gap-3">
+                            ${isAlreadyRequested ? `
+                                <button class="w-full bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 py-2 rounded-lg text-xs font-bold cursor-default flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">check_circle</span> Request Submitted
+                                </button>
+                            ` : `
+                                <button onclick="requestBorrow(${book.id})" class="w-full bg-gradient-to-r from-[#b38e4b] to-[#d6b16a] text-[#1a0b0b] py-2.5 rounded-lg text-xs font-bold hover:from-[#c6a15a] hover:to-[#f8dd9c] shadow-lg flex items-center justify-center gap-1.5">
+                                    <span class="material-symbols-outlined text-sm">swap_horiz</span> Request Peer Borrow
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+            openModal('modal-book-detail');
+        }
+
+        // Request Borrow
+        function requestBorrow(id) {
+            const book = books.find(b => b.id === id);
+            if (book && !requestedBooks.some(rb => rb.id === id)) {
+                requestedBooks.push(book);
+                updateShelfBadge();
+                closeModal('modal-book-detail');
+                showToast(`Exchange request sent to ${book.owner} for "${book.title}"!`, 'success');
+            }
+        }
+
+        // Handle Add New Book Form
+        function handleAddBook(e) {
+            e.preventDefault();
+            const title = document.getElementById('new-book-title').value;
+            const author = document.getElementById('new-book-author').value;
+            const dept = document.getElementById('new-book-dept').value;
+            const condition = document.getElementById('new-book-condition').value;
+            const location = document.getElementById('new-book-location').value;
+            const coverInput = document.getElementById('new-book-cover').value;
+
+            const newBook = {
+                id: Date.now(),
+                title,
+                author,
+                dept,
+                condition,
+                owner: currentUser.name,
+                ownerEmail: currentUser.email,
+                location,
+                cover: coverInput || "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&q=80&w=600",
+                description: `Newly listed textbook by ${currentUser.name} for the ${dept} department.`,
+                borrowed: false
+            };
+
+            books.unshift(newBook);
+            renderBooks();
+            closeModal('modal-add-book');
+            showToast(`"${title}" successfully added to the BookNexus Archive!`, 'success');
+            e.target.reset();
+        }
+
+        // Shelf Modal
+        function openShelfModal() {
+            const shelfList = document.getElementById('shelf-items-list');
+
+            if (requestedBooks.length === 0) {
+                shelfList.innerHTML = `
+                    <div class="py-8 text-center text-[#c6a15a]/70">
+                        <span class="material-symbols-outlined text-3xl mb-1">bookmarks</span>
+                        <p class="text-xs">Your requested exchange shelf is currently empty.</p>
+                    </div>
+                `;
+            } else {
+                shelfList.innerHTML = requestedBooks.map(b => `
+                    <div class="p-3 rounded-lg inset-panel flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <img src="${b.cover}" class="w-10 h-12 object-cover rounded"/>
+                            <div>
+                                <h5 class="text-sm text-white font-bold leading-tight">${b.title}</h5>
+                                <p class="text-[11px] text-[#c6a15a]">Owner: ${b.owner} • ${b.location}</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] bg-emerald-900/60 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Pending Approval</span>
+                    </div>
+                `).join('');
+            }
+            openModal('modal-shelf');
+        }
+
+        function updateShelfBadge() {
+            document.getElementById('shelf-badge').innerText = requestedBooks.length;
+        }
+
+        // Generic Modal Helpers
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+
+        // Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            const bgClass = type === 'success' 
+                ? 'bg-gradient-to-r from-amber-900 to-amber-800 border-[#c6a15a] text-amber-100' 
+                : 'bg-[#2a1111] border-[#c6a15a]/40 text-white';
+
+            toast.className = `${bgClass} border px-4 py-3 rounded-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `
+                <span class="material-symbols-outlined text-base text-[#e8cd8c]">${type === 'success' ? 'check_circle' : 'info'}</span>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
