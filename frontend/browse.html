@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>BookNexus | Browse Academic Collection</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore BookNexus's curated collection of academic texts, rare manuscripts, and peer-to-peer shared knowledge across departments."/>
+
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&amp;family=DM+Serif+Display:ital@0;1&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary": "#432c00",
+                        "on-primary-fixed-variant": "#603e3f",
+                        "on-surface-variant": "#d4c2c2",
+                        "surface-container": "#261f13",
+                        "secondary-container": "#6c3b3d",
+                        "surface-container-highest": "#3c3427",
+                        "primary-container": "#2a1012",
+                        "tertiary": "#ebc07a",
+                        "surface-variant": "#3c3427",
+                        "inverse-primary": "#7a5556",
+                        "on-tertiary-container": "#9f7b3d",
+                        "surface": "#191208",
+                        "surface-tint": "#ebbbbc",
+                        "on-primary": "#46282a",
+                        "secondary-fixed-dim": "#f9b5b7",
+                        "on-secondary": "#4f2326",
+                        "on-tertiary-fixed": "#281900",
+                        "background": "#FDFBF7",
+                        "outline-variant": "#504444",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#ffdada",
+                        "inverse-on-surface": "#372f23",
+                        "surface-bright": "#40382b",
+                        "on-surface": "#2C2626",
+                        "tertiary-fixed": "#ffdeac",
+                        "on-primary-fixed": "#2e1415",
+                        "on-secondary-fixed-variant": "#69393b",
+                        "tertiary-container": "#231500",
+                        "on-secondary-fixed": "#350f12",
+                        "secondary-fixed": "#ffdada",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#5e4105",
+                        "on-secondary-container": "#eaa7a9",
+                        "surface-dim": "#191208",
+                        "primary-fixed-dim": "#ebbbbc",
+                        "tertiary-fixed-dim": "#ebc07a",
+                        "on-error": "#690005",
+                        "on-primary-container": "#a07778",
+                        "inverse-surface": "#efe0ce",
+                        "secondary": "#f9b5b7",
+                        "surface-container-low": "#211b0f",
+                        "primary": "#ebbbbc",
+                        "outline": "#9d8d8d",
+                        "on-background": "#2C2626",
+                        "surface-container-high": "#31291d",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#130d04",
+                        "deep-rosewood": "#46282a",
+                        "warm-ivory": "#FDFBF7",
+                        "warm-parchment": "#F5EFE6",
+                        "dark-espresso": "#2C2626",
+                        "dusty-rose": "#A67B7D",
+                        "muted-green": "#4A6B53",
+                        "muted-burgundy": "#6c3b3d"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "margin-desktop": "80px",
+                        "unit": "8px",
+                        "container-max": "1200px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px"
+                    },
+                    fontFamily: {
+                        "headline-md": ["Bodoni Moda"],
+                        "display-lg-mobile": ["Bodoni Moda"],
+                        "body-lg": ["Manrope"],
+                        "label-caps": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "subheading-display": ["DM Serif Display"],
+                        "display-lg": ["Bodoni Moda"]
+                    },
+                    fontSize: {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "subheading-display": ["24px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #2C2626;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5EFE6; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #46282a; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A67B7D; 
+        }
+
+        .book-card-hover {
+            transition: all 0.3s ease;
+        }
+        .book-card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(70, 40, 42, 0.3), 0 0 0 1px #46282a;
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #F5EFE6 0px, #FDFBF7 40px, #F5EFE6 80px);
+            background-size: 600px;
+            animation: shimmer 2s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -300px; }
+            100% { background-position: 300px; }
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            min-width: 180px;
+            margin-top: 8px;
+            background-color: #FDFBF7;
+            border: 1px solid #46282a;
+            border-radius: 0.25rem;
+            z-index: 50;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .dropdown-menu.active {
+            display: block;
+        }
+        .dropdown-item {
+            padding: 12px 16px;
+            color: #46282a;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-family: 'Manrope', sans-serif;
+            font-size: 16px;
+        }
+        .dropdown-item:hover, .dropdown-item.selected {
+            background-color: #F5EFE6;
+        }
+        .custom-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #46282a;
+            border: 1px solid rgba(253, 251, 247, 0.3);
+            border-radius: 0.25rem;
+            padding: 12px 16px;
+            color: #FDFBF7;
+            cursor: pointer;
+            user-select: none;
+            min-width: 160px;
+        }
+        .custom-select-trigger:hover {
+            background-color: #381f21;
+        }
+        
+        .avail-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #46282a;
+            border: 1px solid rgba(253, 251, 247, 0.3);
+            border-radius: 0.25rem;
+            padding: 12px 16px;
+            color: #FDFBF7;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        
+        .avail-toggle.active {
+            background-color: #F5EFE6;
+            color: #46282a;
+            border-color: #46282a;
+        }
+
+        .search-suggestions {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            margin-top: 4px;
+            background-color: #FDFBF7;
+            border: 1px solid #46282a;
+            border-radius: 0.25rem;
+            z-index: 60;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .search-suggestions.active {
+            display: block;
+        }
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            gap: 12px;
+            cursor: pointer;
+            color: #46282a;
+            border-bottom: 1px solid #F5EFE6;
+        }
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .suggestion-item:hover {
+            background-color: #F5EFE6;
+        }
+        .suggestion-cover {
+            width: 36px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #46282a;
+            color: #FDFBF7;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .filter-chip button {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+        .filter-chip button:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md bg-warm-ivory">
+
+    <!-- TopNavBar -->
+    <nav class="fixed top-0 w-full z-50 bg-[#46282a] text-[#FDFBF7] shadow-md opacity-100">
+        <div class="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+            <!-- Brand -->
+            <a href="index.html" class="font-headline-md text-headline-md flex items-center gap-2 text-[#FDFBF7] hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">book_4</span>
+                BookNexus
+            </a>
+
+            <!-- Nav Links (Desktop) -->
+            <div class="hidden md:flex items-center gap-8">
+                <a class="text-[#FDFBF7] font-medium hover:text-[#F5EFE6] transition-colors duration-300" href="index.html">Home</a>
+                <a class="text-[#FDFBF7] font-bold border-b-2 border-[#FDFBF7] pb-1" href="browse.html">Browse Books</a>
+                <a class="text-[#FDFBF7]/80 font-medium hover:text-[#FDFBF7] transition-colors duration-300" href="index.html#main-app">Faculty</a>
+                <a class="text-[#FDFBF7]/80 font-medium hover:text-[#FDFBF7] transition-colors duration-300" href="index.html#main-app">Sustainability</a>
+                <a class="text-[#FDFBF7]/80 font-medium hover:text-[#FDFBF7] transition-colors duration-300" href="index.html#main-app">My Library</a>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="hidden md:block text-[#FDFBF7] font-medium hover:text-[#F5EFE6] transition-colors duration-300">Student Login</a>
+                <a href="signup.html" class="bg-[#FDFBF7] text-[#46282a] font-label-caps text-label-caps px-6 py-2 rounded-full hover:bg-[#F5EFE6] transition-colors scale-95 active:scale-90 transition-transform">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+        
+        <!-- Hero / Header -->
+        <header class="mb-12 text-center md:text-left">
+            <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-[#46282a] mb-4">Find your next chapter.</h1>
+            <p class="font-body-lg text-body-lg text-[#2C2626] max-w-2xl">Explore our curated collection of academic texts, rare manuscripts, and peer-to-peer shared knowledge.</p>
+        </header>
+
+        <!-- Search & Filters Bar -->
+        <section class="bg-[#46282a] rounded-xl p-4 md:p-6 mb-8 shadow-md relative z-40">
+            <div class="flex flex-col md:flex-row gap-4 items-end md:items-center">
+                <!-- Search -->
+                <div class="w-full md:flex-1 relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#FDFBF7]">search</span>
+                    <input autocomplete="off" id="searchInput" class="w-full bg-[#46282a] border border-[#FDFBF7]/30 rounded-lg pl-12 pr-4 py-3 text-[#FDFBF7] focus:outline-none focus:border-[#FDFBF7] focus:ring-1 focus:ring-[#FDFBF7] transition-colors placeholder:text-[#FDFBF7]/70 font-body-md relative z-10" placeholder="Search titles, authors, or ISBN..." type="text" oninput="handleSearchInput()">
+                    <div class="search-suggestions" id="searchSuggestions">
+                        <!-- Suggestions injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex gap-4 w-full md:w-auto overflow-x-visible pb-2 md:pb-0 scrollbar-hide relative z-30">
+                    <!-- Custom Genre Dropdown -->
+                    <div class="relative" id="genreDropdownContainer">
+                        <div class="custom-select-trigger" onclick="toggleDropdown('genreDropdown')">
+                            <span id="genreTriggerText" class="text-[#FDFBF7]">All Genres</span>
+                            <span class="material-symbols-outlined text-[#FDFBF7]">expand_more</span>
+                        </div>
+                        <div class="dropdown-menu" id="genreDropdown">
+                            <div class="dropdown-item selected" onclick="selectGenre('all', 'All Genres')">All Genres</div>
+                            <div class="dropdown-item" onclick="selectGenre('Computer Science', 'Computer Science')">Computer Science</div>
+                            <div class="dropdown-item" onclick="selectGenre('Engineering', 'Engineering')">Engineering</div>
+                            <div class="dropdown-item" onclick="selectGenre('Mathematics', 'Mathematics')">Mathematics</div>
+                            <div class="dropdown-item" onclick="selectGenre('Science', 'Science')">Science</div>
+                            <div class="dropdown-item" onclick="selectGenre('Business', 'Business')">Business</div>
+                            <div class="dropdown-item" onclick="selectGenre('Literature', 'Literature')">Literature</div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Type Dropdown -->
+                    <div class="relative" id="typeDropdownContainer">
+                        <div class="custom-select-trigger" onclick="toggleDropdown('typeDropdown')">
+                            <span id="typeTriggerText" class="text-[#FDFBF7]">All Types</span>
+                            <span class="material-symbols-outlined text-[#FDFBF7]">expand_more</span>
+                        </div>
+                        <div class="dropdown-menu" id="typeDropdown">
+                            <div class="dropdown-item selected" onclick="selectType('all', 'All Types')">All Types</div>
+                            <div class="dropdown-item" onclick="selectType('LIBRARY', 'Library')">Library</div>
+                            <div class="dropdown-item" onclick="selectType('RENT', 'Rent')">Rent</div>
+                        </div>
+                    </div>
+
+                    <!-- Availability Toggle -->
+                    <div class="relative" id="availDropdownContainer">
+                        <div class="avail-toggle transition-all duration-300" id="availToggle" onclick="toggleAvailability()">
+                            <span class="text-sm font-medium">Available Now</span>
+                            <div class="w-5 h-5 rounded border border-current flex items-center justify-center transition-all duration-300 bg-transparent" id="availCheckbox">
+                                <span class="material-symbols-outlined text-[16px] opacity-0" id="availCheckIcon">check</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Active Filter Chips -->
+        <div class="mb-6 flex flex-wrap gap-2 items-center min-h-[32px]" id="filterChipsContainer"></div>
+
+        <div class="mb-6 flex items-center justify-between">
+            <div class="text-[#2C2626] font-label-caps text-label-caps" id="resultsCount">Showing 16 results</div>
+        </div>
+
+        <!-- Loading State (Shown during filter changes) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 hidden" id="loadingState">
+            <div class="bg-[#F5EFE6] rounded-xl p-4 border border-[#46282a]/20 h-[360px] flex flex-col gap-4">
+                <div class="w-full h-48 rounded-lg shimmer"></div>
+                <div class="h-6 w-3/4 shimmer rounded"></div>
+                <div class="h-4 w-1/2 shimmer rounded"></div>
+            </div>
+            <div class="bg-[#F5EFE6] rounded-xl p-4 border border-[#46282a]/20 h-[360px] flex flex-col gap-4">
+                <div class="w-full h-48 rounded-lg shimmer"></div>
+                <div class="h-6 w-3/4 shimmer rounded"></div>
+                <div class="h-4 w-1/2 shimmer rounded"></div>
+            </div>
+            <div class="bg-[#F5EFE6] rounded-xl p-4 border border-[#46282a]/20 h-[360px] flex flex-col gap-4">
+                <div class="w-full h-48 rounded-lg shimmer"></div>
+                <div class="h-6 w-3/4 shimmer rounded"></div>
+                <div class="h-4 w-1/2 shimmer rounded"></div>
+            </div>
+            <div class="bg-[#F5EFE6] rounded-xl p-4 border border-[#46282a]/20 h-[360px] flex flex-col gap-4">
+                <div class="w-full h-48 rounded-lg shimmer"></div>
+                <div class="h-6 w-3/4 shimmer rounded"></div>
+                <div class="h-4 w-1/2 shimmer rounded"></div>
+            </div>
+        </div>
+
+        <!-- Book Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 relative z-0" id="bookGrid">
+            <!-- Books injected dynamically via JS -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#46282a] text-[#FDFBF7] py-12 mt-16 border-t border-[#46282a]/30">
+        <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2 font-headline-md text-xl">
+                <span class="material-symbols-outlined">book_4</span>
+                BookNexus Archive
+            </div>
+            <p class="text-xs text-[#FDFBF7]/70">© 2026 BookNexus Academic Sanctuary. Connecting minds across campus.</p>
+            <div class="flex gap-6 text-xs text-[#FDFBF7]/80">
+                <a href="index.html" class="hover:underline">Home</a>
+                <a href="browse.html" class="hover:underline">Browse Catalog</a>
+                <a href="signup.html" class="hover:underline">Join Sanctuary</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive JavaScript Logic -->
+    <script>
+        const catalogBooks = [
+            {
+                id: 1,
+                title: "Algorithms to Live By",
+                author: "Brian Christian",
+                genre: "Computer Science",
+                type: "RENT",
+                lender: "Sarah Jenkins",
+                available: true,
+                cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 2,
+                title: "The Structure of Scientific Revolutions",
+                author: "Thomas S. Kuhn",
+                genre: "Science",
+                type: "LIBRARY",
+                lender: null,
+                available: true,
+                cover: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 3,
+                title: "Principia Mathematica",
+                author: "Isaac Newton",
+                genre: "Mathematics",
+                type: "LIBRARY",
+                lender: null,
+                available: false,
+                cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 4,
+                title: "A History of Western Philosophy",
+                author: "Bertrand Russell",
+                genre: "Literature",
+                type: "RENT",
+                lender: "Prof. A. Miller",
+                available: true,
+                cover: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 5,
+                title: "Introduction to Linear Algebra",
+                author: "Gilbert Strang",
+                genre: "Mathematics",
+                type: "LIBRARY",
+                lender: null,
+                available: true,
+                cover: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 6,
+                title: "Clean Code",
+                author: "Robert C. Martin",
+                genre: "Computer Science",
+                type: "RENT",
+                lender: "David Kim",
+                available: false,
+                cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 7,
+                title: "The Origin of Species",
+                author: "Charles Darwin",
+                genre: "Science",
+                type: "LIBRARY",
+                lender: null,
+                available: true,
+                cover: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 8,
+                title: "Critique of Pure Reason",
+                author: "Immanuel Kant",
+                genre: "Literature",
+                type: "LIBRARY",
+                lender: null,
+                available: true,
+                cover: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 9,
+                title: "Design Patterns",
+                author: "Erich Gamma",
+                genre: "Computer Science",
+                type: "RENT",
+                lender: "Emma Watson",
+                available: true,
+                cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 10,
+                title: "Calculus",
+                author: "Michael Spivak",
+                genre: "Mathematics",
+                type: "LIBRARY",
+                lender: null,
+                available: false,
+                cover: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 11,
+                title: "Engineering Mechanics",
+                author: "R.C. Hibbeler",
+                genre: "Engineering",
+                type: "RENT",
+                lender: "Tom Hanks",
+                available: true,
+                cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 12,
+                title: "Fluid Mechanics",
+                author: "Frank M. White",
+                genre: "Engineering",
+                type: "LIBRARY",
+                lender: null,
+                available: true,
+                cover: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 13,
+                title: "The Wealth of Nations",
+                author: "Adam Smith",
+                genre: "Business",
+                type: "LIBRARY",
+                lender: null,
+                available: true,
+                cover: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 14,
+                title: "Thinking, Fast and Slow",
+                author: "Daniel Kahneman",
+                genre: "Business",
+                type: "RENT",
+                lender: "Lucy Liu",
+                available: false,
+                cover: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 15,
+                title: "Artificial Intelligence: A Modern Approach",
+                author: "Stuart Russell",
+                genre: "Computer Science",
+                type: "LIBRARY",
+                lender: null,
+                available: true,
+                cover: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 16,
+                title: "Quantum Mechanics",
+                author: "David J. Griffiths",
+                genre: "Science",
+                type: "RENT",
+                lender: "Alan Turing",
+                available: true,
+                cover: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=600"
+            }
+        ];
+
+        let state = {
+            query: "",
+            genre: "all",
+            genreLabel: "All Genres",
+            type: "all",
+            typeLabel: "All Types",
+            availOnly: false
+        };
+
+        function renderGrid() {
+            const grid = document.getElementById('bookGrid');
+            const resultsCount = document.getElementById('resultsCount');
+
+            const filtered = catalogBooks.filter(book => {
+                const matchesQuery = !state.query || 
+                    book.title.toLowerCase().includes(state.query.toLowerCase()) || 
+                    book.author.toLowerCase().includes(state.query.toLowerCase()) ||
+                    book.genre.toLowerCase().includes(state.query.toLowerCase());
+
+                const matchesGenre = state.genre === 'all' || book.genre.toLowerCase() === state.genre.toLowerCase();
+                const matchesType = state.type === 'all' || book.type === state.type;
+                const matchesAvail = !state.availOnly || book.available;
+
+                return matchesQuery && matchesGenre && matchesType && matchesAvail;
+            });
+
+            resultsCount.innerText = `Showing ${filtered.length} result${filtered.length === 1 ? '' : 's'}`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center bg-[#F5EFE6] rounded-xl border border-[#46282a]/20">
+                        <span class="material-symbols-outlined text-5xl text-[#46282a]/50 mb-3">search_off</span>
+                        <h3 class="font-subheading-display text-xl text-[#46282a] mb-1">No Books Found</h3>
+                        <p class="text-sm text-[#2C2626]/70">Try adjusting your filters or search keywords.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(book => `
+                <div class="bg-[#F5EFE6] rounded-xl p-4 border border-[#46282a]/20 book-card-hover flex flex-col h-full">
+                    <div class="relative w-full aspect-[3/4] rounded-lg mb-4 overflow-hidden bg-[#FDFBF7] flex-shrink-0">
+                        <div class="absolute top-2 left-2 ${book.type === 'RENT' ? 'bg-[#A67B7D] text-[#FDFBF7]' : 'bg-[#FDFBF7] text-[#46282a]'} font-label-caps text-[10px] px-2 py-1 rounded border border-[#46282a]/20 shadow-sm flex items-center gap-1 z-10 font-bold">
+                            ${book.type}
+                        </div>
+                        <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover"/>
+                    </div>
+                    
+                    <div class="flex flex-col flex-grow">
+                        <div class="mb-1">
+                            <span class="text-[10px] font-label-caps text-[#46282a] uppercase tracking-wider font-bold">${book.genre}</span>
+                        </div>
+                        <h3 class="font-subheading-display text-lg text-[#46282a] leading-tight mb-1 line-clamp-2">${book.title}</h3>
+                        <p class="font-body-md text-sm text-[#2C2626] mb-2 line-clamp-1">by ${book.author}</p>
+                        ${book.lender ? `<div class="text-xs text-[#2C2626]/80 mb-2">Listed by: <strong class="text-[#46282a]">${book.lender}</strong></div>` : ''}
+                        
+                        <div class="mt-auto pt-4 flex items-center justify-between">
+                            <span class="px-2 py-1 rounded-md text-[10px] font-bold border ${book.available ? 'bg-emerald-900/10 text-emerald-800 border-emerald-800/20' : 'bg-rose-900/10 text-rose-800 border-rose-800/20'}">
+                                ${book.available ? 'AVAILABLE' : 'RENTED'}
+                            </span>
+                            <button onclick="toggleBookmark(this)" class="text-[#46282a] hover:text-[#A67B7D] transition-colors p-1" title="Bookmark">
+                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">bookmark_add</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            renderChips();
+        }
+
+        function renderChips() {
+            const container = document.getElementById('filterChipsContainer');
+            let chips = [];
+
+            if (state.genre !== 'all') {
+                chips.push(`<div class="filter-chip"><span>Genre: ${state.genreLabel}</span><button onclick="selectGenre('all', 'All Genres')">✕</button></div>`);
+            }
+            if (state.type !== 'all') {
+                chips.push(`<div class="filter-chip"><span>Type: ${state.typeLabel}</span><button onclick="selectType('all', 'All Types')">✕</button></div>`);
+            }
+            if (state.availOnly) {
+                chips.push(`<div class="filter-chip"><span>Available Now</span><button onclick="toggleAvailability()">✕</button></div>`);
+            }
+            if (state.query) {
+                chips.push(`<div class="filter-chip"><span>Search: "${state.query}"</span><button onclick="clearSearch()">✕</button></div>`);
+            }
+
+            container.innerHTML = chips.join('');
+        }
+
+        function toggleDropdown(id) {
+            const el = document.getElementById(id);
+            const isActive = el.classList.contains('active');
+            closeAllDropdowns();
+            if (!isActive) el.classList.add('active');
+        }
+
+        function closeAllDropdowns() {
+            document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('active'));
+        }
+
+        function selectGenre(val, label) {
+            state.genre = val;
+            state.genreLabel = label;
+            document.getElementById('genreTriggerText').innerText = label;
+            closeAllDropdowns();
+            triggerLoading();
+        }
+
+        function selectType(val, label) {
+            state.type = val;
+            state.typeLabel = label;
+            document.getElementById('typeTriggerText').innerText = label;
+            closeAllDropdowns();
+            triggerLoading();
+        }
+
+        function toggleAvailability() {
+            state.availOnly = !state.availOnly;
+            const toggle = document.getElementById('availToggle');
+            const icon = document.getElementById('availCheckIcon');
+            const checkbox = document.getElementById('availCheckbox');
+
+            if (state.availOnly) {
+                toggle.classList.add('active');
+                checkbox.classList.add('bg-[#46282a]');
+                icon.classList.remove('opacity-0');
+            } else {
+                toggle.classList.remove('active');
+                checkbox.classList.remove('bg-[#46282a]');
+                icon.classList.add('opacity-0');
+            }
+            triggerLoading();
+        }
+
+        function handleSearchInput() {
+            state.query = document.getElementById('searchInput').value.trim();
+            const suggestions = document.getElementById('searchSuggestions');
+
+            if (state.query.length >= 2) {
+                const matches = catalogBooks.filter(b => 
+                    b.title.toLowerCase().includes(state.query.toLowerCase()) || 
+                    b.author.toLowerCase().includes(state.query.toLowerCase())
+                ).slice(0, 4);
+
+                if (matches.length > 0) {
+                    suggestions.innerHTML = matches.map(b => `
+                        <div class="suggestion-item" onclick="selectSuggestion('${b.title}')">
+                            <img src="${b.cover}" class="suggestion-cover"/>
+                            <div>
+                                <h5 class="text-sm font-bold text-[#46282a]">${b.title}</h5>
+                                <p class="text-xs text-[#2C2626]/70">by ${b.author} • ${b.genre}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                    suggestions.classList.add('active');
+                } else {
+                    suggestions.classList.remove('active');
+                }
+            } else {
+                suggestions.classList.remove('active');
+            }
+
+            renderGrid();
+        }
+
+        function selectSuggestion(title) {
+            document.getElementById('searchInput').value = title;
+            state.query = title;
+            document.getElementById('searchSuggestions').classList.remove('active');
+            renderGrid();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            state.query = '';
+            renderGrid();
+        }
+
+        function triggerLoading() {
+            const grid = document.getElementById('bookGrid');
+            const loading = document.getElementById('loadingState');
+
+            grid.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                grid.classList.remove('hidden');
+                renderGrid();
+            }, 300);
+        }
+
+        function toggleBookmark(btn) {
+            const icon = btn.querySelector('.material-symbols-outlined');
+            if (icon.style.fontVariationSettings.includes("'FILL' 1")) {
+                icon.style.fontVariationSettings = "'FILL' 0";
+                btn.classList.remove('text-[#A67B7D]');
+                btn.classList.add('text-[#46282a]');
+            } else {
+                icon.style.fontVariationSettings = "'FILL' 1";
+                btn.classList.add('text-[#A67B7D]');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#genreDropdownContainer') && !e.target.closest('#typeDropdownContainer')) {
+                closeAllDropdowns();
+            }
+            if (!e.target.closest('#searchInput') && !e.target.closest('#searchSuggestions')) {
+                document.getElementById('searchSuggestions').classList.remove('active');
+            }
+        });
+
+        // Initial Render
+        renderGrid();
+    </script>
+</body>
+</html>
