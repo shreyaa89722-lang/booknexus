@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>BookNexus | Transactions & Financial Ledger</title>
+    <meta name="description" content="BookNexus Financial Ledger - Track your institutional book rentals, security deposits, overdue fines, and reconciled refunds."/>
+
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&amp;family=DM+Serif+Display:ital@0;1&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#432c00",
+                        "on-primary-fixed-variant": "#603e3f",
+                        "on-surface-variant": "#ecdcdb",
+                        "surface-container": "#261f13",
+                        "secondary-container": "#6c3b3d",
+                        "surface-container-highest": "#3c3427",
+                        "primary-container": "#2a1012",
+                        "tertiary": "#ebc07a",
+                        "surface-variant": "#3c3427",
+                        "inverse-primary": "#7a5556",
+                        "on-tertiary-container": "#9f7b3d",
+                        "surface": "#191208",
+                        "surface-tint": "#ebbbbc",
+                        "on-primary": "#46282a",
+                        "secondary-fixed-dim": "#f9b5b7",
+                        "on-secondary": "#4f2326",
+                        "on-tertiary-fixed": "#281900",
+                        "background": "#FDFBF7",
+                        "outline-variant": "#504444",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#ffdada",
+                        "inverse-on-surface": "#372f23",
+                        "surface-bright": "#40382b",
+                        "on-surface": "#2C2626",
+                        "tertiary-fixed": "#ffdeac",
+                        "on-primary-fixed": "#2e1415",
+                        "on-secondary-fixed-variant": "#69393b",
+                        "tertiary-container": "#231500",
+                        "on-secondary-fixed": "#350f12",
+                        "secondary-fixed": "#ffdada",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#5e4105",
+                        "on-secondary-container": "#eaa7a9",
+                        "surface-dim": "#191208",
+                        "primary-fixed-dim": "#ebbbbc",
+                        "tertiary-fixed-dim": "#ebc07a",
+                        "on-error": "#690005",
+                        "on-primary-container": "#a07778",
+                        "inverse-surface": "#efe0ce",
+                        "secondary": "#f9b5b7",
+                        "surface-container-low": "#211b0f",
+                        "primary": "#ebbbbc",
+                        "outline": "#9d8d8d",
+                        "on-background": "#2C2626",
+                        "surface-container-high": "#31291d",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#130d04",
+                        "deep-rosewood": "#46282a",
+                        "warm-ivory": "#FDFBF7",
+                        "warm-parchment": "#F5EFE6",
+                        "dark-espresso": "#2C2626",
+                        "dusty-rose": "#A67B7D",
+                        "muted-green": "#4A6B53",
+                        "muted-burgundy": "#6c3b3d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "80px",
+                        "unit": "8px",
+                        "container-max": "1200px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Bodoni Moda", "serif"],
+                        "display-lg-mobile": ["Bodoni Moda", "serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "label-caps": ["Manrope", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"],
+                        "subheading-display": ["DM Serif Display", "serif"],
+                        "display-lg": ["Bodoni Moda", "serif"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "subheading-display": ["24px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #2C2626;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #211b0f; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6c3b3d; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a67b7d; 
+        }
+
+        .gold-accent {
+            border: 1px solid #46282a; 
+        }
+        
+        .book-card-hover {
+            transition: all 0.3s ease;
+        }
+        .book-card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(70, 40, 42, 0.3), 0 0 0 1px #46282a;
+        }
+
+        #toastContainer {
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md bg-warm-ivory">
+
+<!-- Toast Notification Container -->
+<div id="toastContainer" class="fixed top-24 right-6 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
+
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-40 bg-deep-rosewood text-warm-ivory shadow-md">
+    <div class="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <!-- Brand -->
+        <a class="font-headline-md text-headline-md flex items-center gap-2 text-warm-ivory hover:text-secondary transition-colors" href="index.html">
+            <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">book_4</span>
+            <span class="font-bold tracking-tight">BookNexus</span>
+        </a>
+        <!-- Nav Links (Desktop) -->
+        <div class="hidden md:flex items-center gap-8 ml-12">
+            <a class="text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors duration-300" href="index.html#home">Home</a>
+            <a class="text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors duration-300" href="index.html">Browse Books</a>
+            <a class="text-warm-ivory font-bold border-b-2 border-warm-ivory pb-1" href="transactions.html">Transactions</a>
+            <a class="text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors duration-300" href="index.html#faculty">Faculty</a>
+            <a class="text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors duration-300" href="index.html#sustainability">Sustainability</a>
+            <a class="text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors duration-300" href="index.html#library">My Library</a>
+        </div>
+        <!-- Actions -->
+        <div class="flex items-center gap-4">
+            <button class="hidden md:block text-warm-ivory font-medium hover:text-warm-parchment transition-colors duration-300" onclick="showToast('Student portal link opened for campus authentication.')">Student Login</button>
+            <button class="bg-warm-ivory text-deep-rosewood font-label-caps text-label-caps px-6 py-2 rounded-full hover:bg-warm-parchment transition-colors scale-95 active:scale-90 transition-transform font-bold" onclick="showToast('Authentication dialog ready.')">Sign In</button>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="flex-grow pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+    <div class="flex flex-col w-full">
+        <!-- Atmospheric Header & Banner -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8">
+            <div class="space-y-2">
+                <div class="flex items-center gap-2 text-dark-espresso/80 font-label-caps text-label-caps uppercase tracking-widest font-semibold">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim ring-2 ring-tertiary/40"></span>
+                    Financial Ledger & Escrow
+                </div>
+                <h1 class="font-headline-md text-headline-md text-deep-rosewood md:text-5xl font-serif tracking-tight font-bold">Transactions</h1>
+                <p class="font-body-md text-body-md text-dark-espresso/90 max-w-xl font-medium">
+                    Track your institutional book rentals, security deposits, overdue fines, and reconciled refunds.
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="flex items-center gap-2 bg-deep-rosewood hover:bg-on-primary text-warm-ivory px-5 py-2.5 rounded-lg shadow-md transition-all duration-200 text-xs font-bold tracking-wider uppercase font-label-caps active:scale-95 border border-primary/20 cursor-pointer" id="downloadSummaryBtn" onclick="exportStatement()">
+                    <span class="material-symbols-outlined text-sm">receipt_long</span>
+                    Export Statement
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Cards Bento Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-8">
+            <div class="bg-surface-container rounded-xl p-6 shadow-md border border-surface-container-highest flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-primary/10 transition-transform group-hover:scale-125"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="font-label-caps text-label-caps text-warm-ivory uppercase font-bold tracking-wider">Total Transactions</span>
+                    <div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-xl">receipt_long</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="font-headline-md text-3xl font-serif text-warm-ivory font-bold" id="statTotalCount">10</div>
+                    <div class="text-xs text-warm-parchment/90 font-body-md mt-1 flex items-center gap-1 font-medium">
+                        <span class="text-tertiary font-bold">Campus Academic Year</span> 2026–27
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-surface-container rounded-xl p-6 shadow-md border border-surface-container-highest flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-tertiary/10 transition-transform group-hover:scale-125"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="font-label-caps text-label-caps text-warm-ivory uppercase font-bold tracking-wider">Settled & Completed</span>
+                    <div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-tertiary">
+                        <span class="material-symbols-outlined text-xl">check_circle</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="font-headline-md text-3xl font-serif text-tertiary font-bold" id="statCompletedCount">6</div>
+                    <div class="text-xs text-warm-parchment/90 font-body-md mt-1 font-medium">Full clearance confirmed</div>
+                </div>
+            </div>
+
+            <div class="bg-surface-container rounded-xl p-6 shadow-md border border-surface-container-highest flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-secondary/10 transition-transform group-hover:scale-125"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="font-label-caps text-label-caps text-warm-ivory uppercase font-bold tracking-wider">Pending Actions</span>
+                    <div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined text-xl">schedule</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="font-headline-md text-3xl font-serif text-secondary font-bold" id="statPendingCount">1</div>
+                    <div class="text-xs text-secondary font-body-md mt-1 flex items-center gap-1 font-bold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span> Requires settlement
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-surface-container rounded-xl p-6 shadow-md border border-surface-container-highest flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-primary/10 transition-transform group-hover:scale-125"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="font-label-caps text-label-caps text-warm-ivory uppercase font-bold tracking-wider">Recorded Volume</span>
+                    <div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary-fixed-dim">
+                        <span class="material-symbols-outlined text-xl">payments</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="font-headline-md text-3xl font-serif text-primary-fixed-dim font-bold" id="statTotalAmount">₹1,140</div>
+                    <div class="text-xs text-warm-parchment/90 font-body-md mt-1 font-medium">Disbursements & dues</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Search and Filter Toolbar -->
+        <div class="bg-surface-container-low rounded-xl p-4 md:p-6 shadow-md mb-6 flex flex-col gap-4 border border-surface-container-highest">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                <!-- Search Box -->
+                <div class="md:col-span-5 relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-warm-ivory">
+                        <span class="material-symbols-outlined text-xl text-warm-ivory">search</span>
+                    </div>
+                    <input class="w-full pl-10 pr-10 py-2.5 bg-[#31291d] text-warm-ivory font-medium rounded-lg font-body-md text-sm placeholder:text-warm-ivory/70 focus:outline-none focus:ring-2 focus:ring-tertiary border border-outline-variant transition-all shadow-inner" id="tableSearchInput" placeholder="Search by transaction ID or book title..." type="text" oninput="handleSearch(this.value)">
+                    <button class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-warm-ivory hover:text-secondary cursor-pointer" id="clearSearchBtn" onclick="clearSearch()" title="Clear search">
+                        <span class="material-symbols-outlined text-lg">close</span>
+                    </button>
+                </div>
+
+                <!-- Type Filter Dropdown -->
+                <div class="md:col-span-2 relative z-30" id="typeDropdownContainer">
+                    <button class="w-full flex items-center justify-between bg-[#31291d] text-warm-ivory font-semibold py-2.5 px-3.5 rounded-lg font-body-md text-xs tracking-wide focus:outline-none focus:ring-2 focus:ring-tertiary border border-outline-variant hover:border-tertiary transition-all shadow-sm text-left" id="typeDropdownBtn" onclick="toggleFilterDropdown('typeDropdownMenu')" type="button">
+                        <span class="text-warm-ivory font-bold truncate" id="typeSelectedText">All Types</span>
+                        <span class="material-symbols-outlined text-warm-ivory text-base pointer-events-none ml-1">expand_more</span>
+                    </button>
+                    <div class="absolute top-full left-0 mt-1.5 w-full bg-[#2a1012] border-2 border-tertiary/60 rounded-lg shadow-2xl py-1 z-50 overflow-hidden hidden" id="typeDropdownMenu">
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-warm-ivory font-semibold border-b border-surface-container-highest transition-colors" onclick="selectFilterOption('type', 'all', 'All Types')">All Types</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-secondary font-semibold border-b border-surface-container-highest transition-colors flex items-center gap-1.5" onclick="selectFilterOption('type', 'Rental', 'Rental')"><span class="material-symbols-outlined text-sm">book</span> Rental</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-tertiary font-semibold border-b border-surface-container-highest transition-colors flex items-center gap-1.5" onclick="selectFilterOption('type', 'Deposit', 'Deposit')"><span class="material-symbols-outlined text-sm">lock</span> Deposit</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-error font-semibold border-b border-surface-container-highest transition-colors flex items-center gap-1.5" onclick="selectFilterOption('type', 'Fine', 'Fine')"><span class="material-symbols-outlined text-sm">warning</span> Fine</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-tertiary font-semibold transition-colors flex items-center gap-1.5" onclick="selectFilterOption('type', 'Refund', 'Refund')"><span class="material-symbols-outlined text-sm">currency_exchange</span> Refund</div>
+                    </div>
+                </div>
+
+                <!-- Status Filter Dropdown -->
+                <div class="md:col-span-2 relative z-30" id="statusDropdownContainer">
+                    <button class="w-full flex items-center justify-between bg-[#31291d] text-warm-ivory font-semibold py-2.5 px-3.5 rounded-lg font-body-md text-xs tracking-wide focus:outline-none focus:ring-2 focus:ring-tertiary border border-outline-variant hover:border-tertiary transition-all shadow-sm text-left" id="statusDropdownBtn" onclick="toggleFilterDropdown('statusDropdownMenu')" type="button">
+                        <span class="text-warm-ivory font-bold truncate" id="statusSelectedText">All Statuses</span>
+                        <span class="material-symbols-outlined text-warm-ivory text-base pointer-events-none ml-1">expand_more</span>
+                    </button>
+                    <div class="absolute top-full left-0 mt-1.5 w-full bg-[#2a1012] border-2 border-tertiary/60 rounded-lg shadow-2xl py-1 z-50 overflow-hidden hidden" id="statusDropdownMenu">
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-warm-ivory font-semibold border-b border-surface-container-highest transition-colors" onclick="selectFilterOption('status', 'all', 'All Statuses')">All Statuses</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-tertiary font-semibold border-b border-surface-container-highest transition-colors flex items-center gap-1.5" onclick="selectFilterOption('status', 'Completed', 'Completed')"><span class="w-2 h-2 rounded-full bg-tertiary"></span> Completed</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-secondary font-semibold border-b border-surface-container-highest transition-colors flex items-center gap-1.5" onclick="selectFilterOption('status', 'Pending', 'Pending')"><span class="w-2 h-2 rounded-full bg-secondary"></span> Pending</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-error font-semibold border-b border-surface-container-highest transition-colors flex items-center gap-1.5" onclick="selectFilterOption('status', 'Failed', 'Failed')"><span class="w-2 h-2 rounded-full bg-error"></span> Failed</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-primary font-semibold transition-colors flex items-center gap-1.5" onclick="selectFilterOption('status', 'Refunded', 'Refunded')"><span class="w-2 h-2 rounded-full bg-primary"></span> Refunded</div>
+                    </div>
+                </div>
+
+                <!-- Date Filter Dropdown -->
+                <div class="md:col-span-2 relative z-30" id="dateDropdownContainer">
+                    <button class="w-full flex items-center justify-between bg-[#31291d] text-warm-ivory font-semibold py-2.5 px-3.5 rounded-lg font-body-md text-xs tracking-wide focus:outline-none focus:ring-2 focus:ring-tertiary border border-outline-variant hover:border-tertiary transition-all shadow-sm text-left" id="dateDropdownBtn" onclick="toggleFilterDropdown('dateDropdownMenu')" type="button">
+                        <span class="text-warm-ivory font-bold truncate" id="dateSelectedText">All Dates</span>
+                        <span class="material-symbols-outlined text-warm-ivory text-base pointer-events-none ml-1">calendar_today</span>
+                    </button>
+                    <div class="absolute top-full left-0 mt-1.5 w-full bg-[#2a1012] border-2 border-tertiary/60 rounded-lg shadow-2xl py-1 z-50 overflow-hidden hidden" id="dateDropdownMenu">
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-warm-ivory font-semibold border-b border-surface-container-highest transition-colors" onclick="selectFilterOption('date', 'all', 'All Dates')">All Dates</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-warm-ivory font-semibold border-b border-surface-container-highest transition-colors" onclick="selectFilterOption('date', 'today', 'Today')">Today (19 Sep)</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-warm-ivory font-semibold border-b border-surface-container-highest transition-colors" onclick="selectFilterOption('date', 'week', 'This Week')">This Week</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-warm-ivory font-semibold border-b border-surface-container-highest transition-colors" onclick="selectFilterOption('date', 'month', 'This Month')">This Month (Sep 2026)</div>
+                        <div class="px-3.5 py-2.5 hover:bg-surface-container-high cursor-pointer text-xs text-tertiary font-semibold transition-colors flex items-center justify-between" onclick="openCustomDateModal()">
+                            <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">date_range</span> Custom Range</span>
+                            <span class="material-symbols-outlined text-xs text-warm-ivory/70">tune</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reset Button -->
+                <div class="md:col-span-1 flex justify-end">
+                    <button class="w-full h-10 px-3 bg-secondary-container hover:bg-on-primary text-warm-ivory border border-secondary/40 rounded-lg flex items-center justify-center gap-1.5 font-label-caps text-xs tracking-wider uppercase font-bold transition-all cursor-pointer shadow-sm active:scale-95" id="resetAllFiltersBtn" onclick="resetTransactionsToolbar()" title="Reset All Filters" type="button">
+                        <span class="material-symbols-outlined text-base">restart_alt</span>
+                        <span class="text-xs font-bold">Reset</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Active Filter Chips -->
+            <div class="flex flex-wrap items-center gap-2 pt-2 empty:hidden" id="activeChipsRow"></div>
+        </div>
+
+        <!-- Results Count & Live Sync -->
+        <div class="flex items-center justify-between px-2 mb-3">
+            <div class="font-body-md text-sm text-dark-espresso font-semibold" id="tableResultStats">
+                Showing <span class="text-deep-rosewood font-extrabold" id="visibleRowsCount">10</span> of <span class="text-deep-rosewood font-extrabold" id="totalRowsCount">10</span> transactions
+            </div>
+            <div class="flex items-center gap-2 text-dark-espresso font-label-caps text-xs font-bold">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                <span class="text-dark-espresso font-semibold">Live Ledger Synced</span>
+            </div>
+        </div>
+
+        <!-- Main Transactions Table Container -->
+        <div class="bg-[#1e170f] rounded-xl shadow-lg border border-surface-container-highest overflow-hidden transition-all duration-300">
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                        <tr class="bg-[#2a2115] border-b border-surface-container-highest text-warm-ivory font-label-caps text-label-caps uppercase tracking-wider">
+                            <th class="py-4 px-6 text-warm-ivory font-bold tracking-wider">Transaction ID</th>
+                            <th class="py-4 px-6 text-warm-ivory font-bold tracking-wider">Book Title</th>
+                            <th class="py-4 px-6 text-warm-ivory font-bold tracking-wider">Type</th>
+                            <th class="py-4 px-6 text-warm-ivory font-bold tracking-wider">Date</th>
+                            <th class="py-4 px-6 text-warm-ivory font-bold tracking-wider">Amount</th>
+                            <th class="py-4 px-6 text-warm-ivory font-bold tracking-wider">Status</th>
+                            <th class="py-4 px-6 text-right text-warm-ivory font-bold tracking-wider">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-container-highest/60 font-body-md text-sm" id="transactionTableBody">
+                        <!-- Populated dynamically via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            <div class="hidden flex-col items-center justify-center py-20 px-6 text-center" id="tableEmptyState">
+                <div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center text-tertiary mb-4 ring-2 ring-tertiary/20">
+                    <span class="material-symbols-outlined text-3xl">search_off</span>
+                </div>
+                <h3 class="font-subheading-display text-2xl text-warm-ivory mb-2 font-serif font-bold">No transactions found</h3>
+                <p class="font-body-md text-sm text-warm-parchment/80 max-w-sm mb-6 font-medium">
+                    No record matches your active query filters. Try refining your keywords or resetting filters.
+                </p>
+                <button class="bg-secondary-container text-warm-ivory hover:bg-on-primary px-6 py-2.5 rounded-lg text-xs font-label-caps uppercase tracking-wider font-bold transition-all shadow-md active:scale-95 cursor-pointer" id="emptyStateResetBtn" onclick="resetTransactionsToolbar()">
+                    Reset Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Pagination Bottom Bar -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 px-2">
+            <span class="text-xs text-dark-espresso font-semibold font-body-md flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-deep-rosewood">lock</span>
+                Encrypted Institutional Micro-Ledger v4.2 • BookNexus Security
+            </span>
+            <div class="flex items-center gap-2" id="paginationControls">
+                <button class="px-3.5 py-1.5 rounded-lg bg-deep-rosewood text-warm-ivory hover:bg-on-primary text-xs font-bold font-label-caps uppercase tracking-wider transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer" id="prevPageBtn" disabled>
+                    Previous
+                </button>
+                <span class="px-3.5 py-1.5 text-xs font-bold bg-tertiary text-on-tertiary rounded-lg font-mono" id="pageIndicator">1 / 1</span>
+                <button class="px-3.5 py-1.5 rounded-lg bg-deep-rosewood text-warm-ivory hover:bg-on-primary text-xs font-bold font-label-caps uppercase tracking-wider transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer" id="nextPageBtn" disabled>
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-deep-rosewood text-warm-ivory py-12 px-margin-mobile md:px-margin-desktop mt-auto border-t border-warm-parchment/10">
+    <div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center gap-2 font-headline-md text-headline-md text-warm-ivory">
+            <span class="material-symbols-outlined">book_4</span>
+            BookNexus
+        </div>
+        <div class="text-xs text-warm-ivory/70">
+            © 2026 BookNexus Academic Sanctuary. Connect one mind to another.
+        </div>
+        <div class="flex gap-6 text-xs text-warm-ivory/80">
+            <a href="#" class="hover:underline">Academic Honor Code</a>
+            <a href="#" class="hover:underline">Terms of Service</a>
+            <a href="#" class="hover:underline">Privacy Policy</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Custom Date Range Modal -->
+<div class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md items-center justify-center p-4 transition-opacity duration-300 hidden" id="customDateModalBackdrop" onclick="handleCustomDateBackdropClick(event)">
+    <div class="bg-[#241a13] border border-tertiary/60 rounded-2xl max-w-md w-full p-6 shadow-2xl relative overflow-hidden text-warm-ivory" id="customDateModalCard">
+        <div class="flex items-center justify-between pb-4 border-b border-surface-container-highest mb-5">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg bg-surface-container-high border border-tertiary/40 flex items-center justify-center text-tertiary">
+                    <span class="material-symbols-outlined text-lg">date_range</span>
+                </div>
+                <div>
+                    <h3 class="font-serif text-lg font-bold text-warm-ivory">Filter by Date Range</h3>
+                    <p class="text-xs text-warm-parchment/80 font-medium">Select ledger transaction window</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeCustomDateModal()" class="w-8 h-8 rounded-full bg-[#3c2a21] border border-warm-ivory/20 flex items-center justify-center text-warm-ivory hover:text-white hover:bg-secondary-container transition-all cursor-pointer shadow-md">
+                <span class="material-symbols-outlined text-base font-bold">close</span>
+            </button>      
+        </div>
+        <form id="customDateForm" onsubmit="handleApplyCustomDate(event)" class="space-y-4">
+            <div class="bg-[#2e2319] p-4 rounded-xl border border-tertiary/30 space-y-3">
+                <div>
+                    <label class="block text-xs font-label-caps uppercase tracking-wider text-tertiary font-bold mb-1.5 flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">event</span> From Date
+                    </label>
+                    <input type="date" id="customFromDate" class="w-full bg-[#31291d] text-warm-ivory text-xs font-semibold rounded-lg px-3 py-2 border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary" value="2026-09-01"/>
+                </div>
+                <div class="pt-3 border-t border-surface-container-highest/60">
+                    <label class="block text-xs font-label-caps uppercase tracking-wider text-tertiary font-bold mb-1.5 flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">event_available</span> To Date
+                    </label>
+                    <input type="date" id="customToDate" class="w-full bg-[#31291d] text-warm-ivory text-xs font-semibold rounded-lg px-3 py-2 border border-outline-variant focus:outline-none focus:ring-2 focus:ring-tertiary" value="2026-09-19"/>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <button type="button" onclick="closeCustomDateModal()" class="px-4 py-2 rounded-lg text-xs font-bold text-warm-parchment hover:text-white hover:bg-white/10 transition-colors">Cancel</button>
+                <button type="submit" class="px-5 py-2 rounded-lg bg-tertiary text-on-tertiary font-bold text-xs uppercase tracking-wider hover:bg-tertiary-fixed transition-colors shadow-md">Apply Range</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Transaction Details Modal -->
+<div class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md items-center justify-center p-4 transition-opacity duration-300 hidden" id="transactionDetailModalBackdrop" onclick="handleDetailBackdropClick(event)">
+    <div class="bg-[#241a13] border border-tertiary/60 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative overflow-hidden text-warm-ivory" id="transactionDetailModalCard">
+        <div class="flex items-center justify-between pb-4 border-b border-surface-container-highest mb-5">
+            <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-lg bg-surface-container-high border border-tertiary/40 flex items-center justify-center text-tertiary">
+                    <span class="material-symbols-outlined text-xl">receipt_long</span>
+                </div>
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-warm-ivory" id="modalTxnId">TXN-00124</h3>
+                    <p class="text-xs text-warm-parchment/80 font-medium">Institutional Micro-Ledger Entry</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeTransactionModal()" class="w-8 h-8 rounded-full bg-[#3c2a21] border border-warm-ivory/20 flex items-center justify-center text-warm-ivory hover:text-white hover:bg-secondary-container transition-all cursor-pointer shadow-md">
+                <span class="material-symbols-outlined text-base font-bold">close</span>
+            </button>
+        </div>
+
+        <div id="modalTxnContent" class="space-y-4">
+            <!-- Populated dynamically via JS -->
+        </div>
+
+        <div class="pt-5 border-t border-surface-container-highest flex justify-between items-center mt-6">
+            <button onclick="downloadSingleReceipt()" class="text-xs text-tertiary hover:underline font-bold flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">download</span> Download Receipt PDF
+            </button>
+            <button onclick="closeTransactionModal()" class="bg-deep-rosewood text-warm-ivory text-xs font-bold px-5 py-2 rounded-lg hover:bg-on-primary">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+    /* ============================================================
+       TRANSACTIONS DATA STORE
+       ============================================================ */
+    const initialTransactions = [
+        {
+            id: "TXN-00124",
+            bookTitle: "Atomic Habits",
+            author: "James Clear",
+            type: "Rental",
+            date: "19 Sep 2026",
+            rawDate: "2026-09-19",
+            amount: "₹50",
+            rawAmount: 50,
+            status: "Completed",
+            paymentMethod: "UPI / Student Wallet",
+            location: "Central Library Counter A",
+            user: "Jane Doe (LIT 202)"
+        },
+        {
+            id: "TXN-00123",
+            bookTitle: "The Alchemist",
+            author: "Paulo Coelho",
+            type: "Deposit",
+            date: "18 Sep 2026",
+            rawDate: "2026-09-18",
+            amount: "₹200",
+            rawAmount: 200,
+            status: "Completed",
+            paymentMethod: "Escrow Reserve",
+            location: "Humanities Hall",
+            user: "Jane Doe"
+        },
+        {
+            id: "TXN-00122",
+            bookTitle: "Clean Code",
+            author: "Robert C. Martin",
+            type: "Fine",
+            date: "17 Sep 2026",
+            rawDate: "2026-09-17",
+            amount: "₹30",
+            rawAmount: 30,
+            status: "Pending",
+            paymentMethod: "Overdue Charge (2 Days)",
+            location: "CS Lab Lounge",
+            user: "David Kim"
+        },
+        {
+            id: "TXN-00121",
+            bookTitle: "Deep Work",
+            author: "Cal Newport",
+            type: "Refund",
+            date: "15 Sep 2026",
+            rawDate: "2026-09-15",
+            amount: "+₹150",
+            rawAmount: 150,
+            status: "Refunded",
+            paymentMethod: "Deposit Returned to Bank",
+            location: "Library Escrow Desk",
+            user: "Jane Doe"
+        },
+        {
+            id: "TXN-00120",
+            bookTitle: "Principles of Macroeconomics",
+            author: "N. Gregory Mankiw",
+            type: "Rental",
+            date: "12 Sep 2026",
+            rawDate: "2026-09-12",
+            amount: "₹40",
+            rawAmount: 40,
+            status: "Completed",
+            paymentMethod: "Campus Credit Card",
+            location: "Econ Department Desk",
+            user: "Chloe Zhang"
+        },
+        {
+            id: "TXN-00119",
+            bookTitle: "Advanced Organic Chemistry",
+            author: "Francis A. Carey",
+            type: "Deposit",
+            date: "10 Sep 2026",
+            rawDate: "2026-09-10",
+            amount: "₹350",
+            rawAmount: 350,
+            status: "Completed",
+            paymentMethod: "Student Escrow Hold",
+            location: "Chemistry Annex",
+            user: "Marcus Vance"
+        },
+        {
+            id: "TXN-00118",
+            bookTitle: "A History of Western Philosophy",
+            author: "Bertrand Russell",
+            type: "Rental",
+            date: "08 Sep 2026",
+            rawDate: "2026-09-08",
+            amount: "₹60",
+            rawAmount: 60,
+            status: "Completed",
+            paymentMethod: "Student Wallet",
+            location: "Humanities Hall 204",
+            user: "Prof. A. Miller"
+        },
+        {
+            id: "TXN-00117",
+            bookTitle: "Algorithms to Live By",
+            author: "Brian Christian",
+            type: "Fine",
+            date: "05 Sep 2026",
+            rawDate: "2026-09-05",
+            amount: "₹45",
+            rawAmount: 45,
+            status: "Completed",
+            paymentMethod: "Late Return Fine",
+            location: "CS Department Office",
+            user: "Sarah Jenkins"
+        },
+        {
+            id: "TXN-00116",
+            bookTitle: "The Structure of Scientific Revolutions",
+            author: "Thomas S. Kuhn",
+            type: "Rental",
+            date: "01 Sep 2026",
+            rawDate: "2026-09-01",
+            amount: "₹35",
+            rawAmount: 35,
+            status: "Failed",
+            paymentMethod: "Card Declined",
+            location: "Main Stacks Desk",
+            user: "Campus Library"
+        },
+        {
+            id: "TXN-00115",
+            bookTitle: "Brief History of Time",
+            author: "Stephen Hawking",
+            type: "Refund",
+            date: "28 Aug 2026",
+            rawDate: "2026-08-28",
+            amount: "+₹200",
+            rawAmount: 200,
+            status: "Refunded",
+            paymentMethod: "Security Deposit Reconciled",
+            location: "Physics Library",
+            user: "Jane Doe"
+        }
+    ];
+
+    /* APP FILTER STATE */
+    let transactionsData = [...initialTransactions];
+    let filters = {
+        search: '',
+        type: 'all',
+        typeLabel: 'All Types',
+        status: 'all',
+        statusLabel: 'All Statuses',
+        date: 'all',
+        dateLabel: 'All Dates',
+        customFrom: '',
+        customTo: ''
+    };
+    let activeSelectedTxnId = null;
+
+    /* INITIALIZATION */
+    document.addEventListener('DOMContentLoaded', () => {
+        renderTable();
+
+        // Dismiss dropdowns on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#typeDropdownContainer')) {
+                document.getElementById('typeDropdownMenu')?.classList.add('hidden');
+            }
+            if (!e.target.closest('#statusDropdownContainer')) {
+                document.getElementById('statusDropdownMenu')?.classList.add('hidden');
+            }
+            if (!e.target.closest('#dateDropdownContainer')) {
+                document.getElementById('dateDropdownMenu')?.classList.add('hidden');
+            }
+        });
+    });
+
+    /* FILTER DROPDOWN CONTROLS */
+    function toggleFilterDropdown(menuId) {
+        const menu = document.getElementById(menuId);
+        if (!menu) return;
+        const isHidden = menu.classList.contains('hidden');
+        
+        document.getElementById('typeDropdownMenu')?.classList.add('hidden');
+        document.getElementById('statusDropdownMenu')?.classList.add('hidden');
+        document.getElementById('dateDropdownMenu')?.classList.add('hidden');
+
+        if (isHidden) {
+            menu.classList.remove('hidden');
+        }
+    }
+
+    function selectFilterOption(category, value, label) {
+        filters[category] = value;
+        filters[category + 'Label'] = label;
+
+        if (category === 'type') {
+            document.getElementById('typeSelectedText').innerText = label;
+            document.getElementById('typeDropdownMenu')?.classList.add('hidden');
+        } else if (category === 'status') {
+            document.getElementById('statusSelectedText').innerText = label;
+            document.getElementById('statusDropdownMenu')?.classList.add('hidden');
+        } else if (category === 'date') {
+            document.getElementById('dateSelectedText').innerText = label;
+            document.getElementById('dateDropdownMenu')?.classList.add('hidden');
+        }
+
+        renderTable();
+    }
+
+    function handleSearch(val) {
+        filters.search = val.trim();
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (filters.search) {
+            clearBtn?.classList.remove('hidden');
+        } else {
+            clearBtn?.classList.add('hidden');
+        }
+        renderTable();
+    }
+
+    function clearSearch() {
+        document.getElementById('tableSearchInput').value = '';
+        filters.search = '';
+        document.getElementById('clearSearchBtn')?.classList.add('hidden');
+        renderTable();
+    }
+
+    function resetTransactionsToolbar() {
+        filters = {
+            search: '',
+            type: 'all',
+            typeLabel: 'All Types',
+            status: 'all',
+            statusLabel: 'All Statuses',
+            date: 'all',
+            dateLabel: 'All Dates',
+            customFrom: '',
+            customTo: ''
+        };
+        document.getElementById('tableSearchInput').value = '';
+        document.getElementById('typeSelectedText').innerText = 'All Types';
+        document.getElementById('statusSelectedText').innerText = 'All Statuses';
+        document.getElementById('dateSelectedText').innerText = 'All Dates';
+        document.getElementById('clearSearchBtn')?.classList.add('hidden');
+        renderTable();
+        showToast('All transaction filters reset.', 'info');
+    }
+
+    /* RENDER TABLE & METRICS */
+    function renderTable() {
+        const tbody = document.getElementById('transactionTableBody');
+        const emptyState = document.getElementById('tableEmptyState');
+        const visibleCountEl = document.getElementById('visibleRowsCount');
+        const totalCountEl = document.getElementById('totalRowsCount');
+        const activeChipsRow = document.getElementById('activeChipsRow');
+
+        let filtered = transactionsData.filter(t => {
+            // Type Filter
+            if (filters.type !== 'all' && t.type.toLowerCase() !== filters.type.toLowerCase()) return false;
+            // Status Filter
+            if (filters.status !== 'all' && t.status.toLowerCase() !== filters.status.toLowerCase()) return false;
+            // Search Query
+            if (filters.search) {
+                const q = filters.search.toLowerCase();
+                const matchId = t.id.toLowerCase().includes(q);
+                const matchTitle = t.bookTitle.toLowerCase().includes(q);
+                const matchAuthor = t.author.toLowerCase().includes(q);
+                if (!matchId && !matchTitle && !matchAuthor) return false;
+            }
+            // Date Filter
+            if (filters.date === 'today' && t.rawDate !== '2026-09-19') return false;
+            if (filters.date === 'week' && !t.rawDate.startsWith('2026-09-1')) return false;
+            if (filters.date === 'month' && !t.rawDate.startsWith('2026-09')) return false;
+            if (filters.date === 'custom' && filters.customFrom && filters.customTo) {
+                if (t.rawDate < filters.customFrom || t.rawDate > filters.customTo) return false;
+            }
+            return true;
+        });
+
+        // Update Stat Counters
+        const completedCount = transactionsData.filter(t => t.status === 'Completed').length;
+        const pendingCount = transactionsData.filter(t => t.status === 'Pending').length;
+        const totalAmount = transactionsData.reduce((acc, t) => acc + t.rawAmount, 0);
+
+        document.getElementById('statTotalCount').innerText = transactionsData.length;
+        document.getElementById('statCompletedCount').innerText = completedCount;
+        document.getElementById('statPendingCount').innerText = pendingCount;
+        document.getElementById('statTotalAmount').innerText = `₹${totalAmount.toLocaleString('en-IN')}`;
+
+        visibleCountEl.innerText = filtered.length;
+        totalCountEl.innerText = transactionsData.length;
+
+        // Render Active Chips
+        renderActiveChips();
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+            return;
+        } else {
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+        }
+
+        tbody.innerHTML = filtered.map(t => {
+            // Badges styling
+            let typeBadge = '';
+            if (t.type === 'Rental') {
+                typeBadge = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-label-caps uppercase tracking-wider bg-[#542a2d] text-[#fcd8d9] font-bold border border-[#f9b5b7]/50 shadow-sm"><span class="material-symbols-outlined text-sm">book</span> Rental</span>`;
+            } else if (t.type === 'Deposit') {
+                typeBadge = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-label-caps uppercase tracking-wider bg-[#483719] text-[#ffe6b6] font-bold border border-tertiary/60 shadow-sm"><span class="material-symbols-outlined text-sm">lock</span> Deposit</span>`;
+            } else if (t.type === 'Fine') {
+                typeBadge = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-label-caps uppercase tracking-wider bg-[#5c1c20] text-[#ffd6d9] font-bold border border-error/60 shadow-sm"><span class="material-symbols-outlined text-sm">warning</span> Fine</span>`;
+            } else {
+                typeBadge = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-label-caps uppercase tracking-wider bg-[#263e2d] text-[#d1fad7] font-bold border border-[#85e396]/60 shadow-sm"><span class="material-symbols-outlined text-sm">currency_exchange</span> Refund</span>`;
+            }
+
+            let statusPill = '';
+            if (t.status === 'Completed') {
+                statusPill = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#382b17] text-[#ffe19c] border border-tertiary/60 shadow-sm"><span class="w-2 h-2 rounded-full bg-[#ebc07a]"></span> Completed</span>`;
+            } else if (t.status === 'Pending') {
+                statusPill = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#57292c] text-[#ffdada] border border-secondary/60 shadow-sm"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span> Pending</span>`;
+            } else if (t.status === 'Failed') {
+                statusPill = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#5e191e] text-[#ffd2d6] border border-red-500/60 shadow-sm"><span class="w-2 h-2 rounded-full bg-red-400"></span> Failed</span>`;
+            } else {
+                statusPill = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#273a2e] text-[#bbf7d0] border border-emerald-500/60 shadow-sm"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Refunded</span>`;
+            }
+
+            const amountStyle = t.amount.startsWith('+') ? 'text-[#85e396]' : 'text-warm-ivory';
+
+            return `
+                <tr class="hover:bg-[#2c2217] transition-colors duration-150 group border-b border-surface-container-highest/60">
+                    <td class="py-4 px-6 font-mono text-xs font-bold text-tertiary">
+                        ${t.id}
+                    </td>
+                    <td class="py-4 px-6">
+                        <div class="font-serif text-base font-bold text-warm-ivory group-hover:text-white transition-colors">${t.bookTitle}</div>
+                        <div class="text-xs text-warm-parchment/80 font-medium">${t.author}</div>
+                    </td>
+                    <td class="py-4 px-6">${typeBadge}</td>
+                    <td class="py-4 px-6 text-xs text-warm-ivory font-semibold whitespace-nowrap">${t.date}</td>
+                    <td class="py-4 px-6"><span class="font-extrabold ${amountStyle} text-base tracking-wide">${t.amount}</span></td>
+                    <td class="py-4 px-6">${statusPill}</td>
+                    <td class="py-4 px-6 text-right">
+                        <button type="button" onclick="openTransactionModal('${t.id}')" class="px-4 py-2 rounded-lg bg-[#3a2c20] hover:bg-secondary-container text-warm-ivory hover:text-white text-xs font-bold font-label-caps uppercase tracking-wider border border-warm-ivory/20 hover:border-secondary transition-all duration-200 cursor-pointer shadow-sm active:scale-95">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function renderActiveChips() {
+        const row = document.getElementById('activeChipsRow');
+        if (!row) return;
+        const chips = [];
+
+        if (filters.type !== 'all') {
+            chips.push(`
+                <span class="inline-flex items-center gap-1.5 bg-deep-rosewood text-warm-ivory text-xs px-3 py-1 rounded-full border border-tertiary/40 font-bold">
+                    Type: ${filters.typeLabel}
+                    <button onclick="selectFilterOption('type', 'all', 'All Types')" class="hover:text-tertiary"><span class="material-symbols-outlined text-sm">close</span></button>
+                </span>
+            `);
+        }
+
+        if (filters.status !== 'all') {
+            chips.push(`
+                <span class="inline-flex items-center gap-1.5 bg-deep-rosewood text-warm-ivory text-xs px-3 py-1 rounded-full border border-tertiary/40 font-bold">
+                    Status: ${filters.statusLabel}
+                    <button onclick="selectFilterOption('status', 'all', 'All Statuses')" class="hover:text-tertiary"><span class="material-symbols-outlined text-sm">close</span></button>
+                </span>
+            `);
+        }
+
+        if (filters.date !== 'all') {
+            chips.push(`
+                <span class="inline-flex items-center gap-1.5 bg-deep-rosewood text-warm-ivory text-xs px-3 py-1 rounded-full border border-tertiary/40 font-bold">
+                    Date: ${filters.dateLabel}
+                    <button onclick="selectFilterOption('date', 'all', 'All Dates')" class="hover:text-tertiary"><span class="material-symbols-outlined text-sm">close</span></button>
+                </span>
+            `);
+        }
+
+        if (filters.search) {
+            chips.push(`
+                <span class="inline-flex items-center gap-1.5 bg-deep-rosewood text-warm-ivory text-xs px-3 py-1 rounded-full border border-tertiary/40 font-bold">
+                    Search: "${filters.search}"
+                    <button onclick="clearSearch()" class="hover:text-tertiary"><span class="material-symbols-outlined text-sm">close</span></button>
+                </span>
+            `);
+        }
+
+        row.innerHTML = chips.join('');
+    }
+
+    /* TRANSACTION DETAIL MODAL */
+    function openTransactionModal(txnId) {
+        const txn = transactionsData.find(t => t.id === txnId);
+        if (!txn) return;
+        activeSelectedTxnId = txnId;
+
+        document.getElementById('modalTxnId').innerText = txn.id;
+        
+        const content = document.getElementById('modalTxnContent');
+        content.innerHTML = `
+            <div class="bg-[#2e2319] p-4 rounded-xl border border-tertiary/30 space-y-3">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-[10px] font-label-caps uppercase text-tertiary font-bold tracking-widest">Book Information</span>
+                        <h4 class="font-serif text-lg font-bold text-warm-ivory mt-0.5">${txn.bookTitle}</h4>
+                        <p class="text-xs text-warm-parchment/80">Author: ${txn.author}</p>
+                    </div>
+                    <span class="text-lg font-extrabold text-tertiary">${txn.amount}</span>
+                </div>
+
+                <div class="pt-3 border-t border-surface-container-highest/60 grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                        <span class="text-warm-parchment/70 block">Transaction Type:</span>
+                        <span class="font-bold text-warm-ivory">${txn.type}</span>
+                    </div>
+                    <div>
+                        <span class="text-warm-parchment/70 block">Ledger Status:</span>
+                        <span class="font-bold text-warm-ivory">${txn.status}</span>
+                    </div>
+                    <div>
+                        <span class="text-warm-parchment/70 block">Date & Time:</span>
+                        <span class="font-bold text-warm-ivory">${txn.date}</span>
+                    </div>
+                    <div>
+                        <span class="text-warm-parchment/70 block">Payment Method:</span>
+                        <span class="font-bold text-warm-ivory">${txn.paymentMethod}</span>
+                    </div>
+                </div>
+
+                <div class="pt-2 text-xs">
+                    <span class="text-warm-parchment/70 block">Campus Pickup / Station:</span>
+                    <span class="font-bold text-warm-ivory">${txn.location}</span>
+                </div>
+            </div>
+        `;
+
+        const backdrop = document.getElementById('transactionDetailModalBackdrop');
+        backdrop.classList.remove('hidden');
+        backdrop.classList.add('flex');
+    }
+
+    function closeTransactionModal() {
+        const backdrop = document.getElementById('transactionDetailModalBackdrop');
+        backdrop.classList.add('hidden');
+        backdrop.classList.remove('flex');
+    }
+
+    function handleDetailBackdropClick(e) {
+        if (e.target.id === 'transactionDetailModalBackdrop') {
+            closeTransactionModal();
+        }
+    }
+
+    /* CUSTOM DATE RANGE MODAL */
+    function openCustomDateModal() {
+        document.getElementById('dateDropdownMenu')?.classList.add('hidden');
+        const backdrop = document.getElementById('customDateModalBackdrop');
+        backdrop.classList.remove('hidden');
+        backdrop.classList.add('flex');
+    }
+
+    function closeCustomDateModal() {
+        const backdrop = document.getElementById('customDateModalBackdrop');
+        backdrop.classList.add('hidden');
+        backdrop.classList.remove('flex');
+    }
+
+    function handleCustomDateBackdropClick(e) {
+        if (e.target.id === 'customDateModalBackdrop') {
+            closeCustomDateModal();
+        }
+    }
+
+    function handleApplyCustomDate(e) {
+        e.preventDefault();
+        const fromVal = document.getElementById('customFromDate').value;
+        const toVal = document.getElementById('customToDate').value;
+
+        if (fromVal && toVal) {
+            filters.date = 'custom';
+            filters.dateLabel = `${fromVal} to ${toVal}`;
+            filters.customFrom = fromVal;
+            filters.customTo = toVal;
+            document.getElementById('dateSelectedText').innerText = filters.dateLabel;
+            closeCustomDateModal();
+            renderTable();
+            showToast(`Filtered transactions from ${fromVal} to ${toVal}.`, 'info');
+        }
+    }
+
+    /* EXPORT & RECEIPT FUNCTIONS */
+    function exportStatement() {
+        const csvContent = "data:text/csv;charset=utf-8," 
+            + "Transaction ID,Book Title,Author,Type,Date,Amount,Status\n"
+            + transactionsData.map(t => `"${t.id}","${t.bookTitle}","${t.author}","${t.type}","${t.date}","${t.amount}","${t.status}"`).join("\n");
+        
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `BookNexus_Financial_Statement_2026.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast('Financial ledger statement exported as CSV!', 'success');
+    }
+
+    function downloadSingleReceipt() {
+        if (!activeSelectedTxnId) return;
+        showToast(`Receipt for ${activeSelectedTxnId} downloaded.`, 'success');
+        closeTransactionModal();
+    }
+
+    /* TOAST SYSTEM */
+    function showToast(msg, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        const toast = document.createElement('div');
+
+        const bgStyle = type === 'success' ? 'bg-muted-green text-warm-ivory' : 'bg-deep-rosewood text-warm-ivory';
+
+        toast.className = `${bgStyle} px-4 py-3 rounded-lg shadow-xl text-xs font-bold flex items-center gap-2 transform transition-all duration-300 pointer-events-auto border border-warm-parchment/20`;
+        toast.innerHTML = `
+            <span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'info'}</span>
+            <span>${msg}</span>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+</script>
+</body>
+</html>
