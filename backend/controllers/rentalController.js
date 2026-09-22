@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Rental = require("../models/Rental");
 const Book = require("../models/Book");
+const { recordRentalOnChain, recordReturnOnChain } = require("../services/blockchainService");
 
 const DEFAULT_LOAN_DAYS = 14;
 
@@ -59,6 +60,17 @@ const approveRental = asyncHandler(async (req, res) => {
     rental.dueDate = dueDate;
     await rental.save();
 
+    try {
+        const dueDateUnix = Math.floor(rental.dueDate.getTime() / 1000);
+        const txHash = await recordRentalOnChain(rental.book._id.toString(), req.user.walletAddress, dueDateUnix);
+        if (txHash) {
+            rental.contractTxHash = txHash;
+            await rental.save();
+        }
+    } catch (err) {
+        console.error("Blockchain recording failed (non-fatal):", err.message);
+    }
+
     await Book.findByIdAndUpdate(rental.book._id, { availability: "rented" });
 
     res.json({ success: true, data: rental });
@@ -112,6 +124,14 @@ const returnRental = asyncHandler(async (req, res) => {
     rental.status = "returned";
     rental.returnDate = new Date();
     await rental.save();
+
+    try {
+        if (rental.contractTxHash) {
+            await recordReturnOnChain(rental._id.toString());
+        }
+    } catch (err) {
+        console.error("Blockchain return recording failed (non-fatal):", err.message);
+    }
 
     await Book.findByIdAndUpdate(rental.book, { availability: "available" });
 
