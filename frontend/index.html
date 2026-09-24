@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>BookNexus | Browse Academic Books & Rent Sanctuary</title>
-    <meta name="description" content="BookNexus - Explore our curated collection of academic texts, rare manuscripts, library books, and peer-to-peer rented books."/>
+    <title>BookNexus | Academic Sanctuary & Peer Book Exchange</title>
+    <meta name="description" content="BookNexus - Explore our curated collection of academic texts, library books, peer-to-peer rented books, financial transactions ledger, and recommendations."/>
 
     <!-- Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&amp;family=DM+Serif+Display:ital@0;1&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&amp;family=DM+Serif+Display:ital@0;1&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -23,7 +23,7 @@
                     "colors": {
                         "on-tertiary": "#432c00",
                         "on-primary-fixed-variant": "#603e3f",
-                        "on-surface-variant": "#d4c2c2",
+                        "on-surface-variant": "#ecdcdb",
                         "surface-container": "#261f13",
                         "secondary-container": "#6c3b3d",
                         "surface-container-highest": "#3c3427",
@@ -38,13 +38,13 @@
                         "secondary-fixed-dim": "#f9b5b7",
                         "on-secondary": "#4f2326",
                         "on-tertiary-fixed": "#281900",
-                        "background": "#FDFBF7", /* Warm Ivory */
+                        "background": "#FDFBF7",
                         "outline-variant": "#504444",
                         "on-error-container": "#ffdad6",
                         "primary-fixed": "#ffdada",
                         "inverse-on-surface": "#372f23",
                         "surface-bright": "#40382b",
-                        "on-surface": "#2C2626", /* Dark Espresso */
+                        "on-surface": "#2C2626",
                         "tertiary-fixed": "#ffdeac",
                         "on-primary-fixed": "#2e1415",
                         "on-secondary-fixed-variant": "#69393b",
@@ -64,11 +64,10 @@
                         "surface-container-low": "#211b0f",
                         "primary": "#ebbbbc",
                         "outline": "#9d8d8d",
-                        "on-background": "#2C2626", /* Dark Espresso */
+                        "on-background": "#2C2626",
                         "surface-container-high": "#31291d",
                         "error": "#ffb4ab",
                         "surface-container-lowest": "#130d04",
-                        /* Custom Additions */
                         "deep-rosewood": "#46282a",
                         "warm-ivory": "#FDFBF7",
                         "warm-parchment": "#F5EFE6",
@@ -135,10 +134,6 @@
             background: #A67B7D; 
         }
 
-        .gold-accent {
-            border: 1px solid #46282a; 
-        }
-        
         .book-card-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -158,7 +153,7 @@
             100% { background-position: 300px; }
         }
 
-        /* Custom Dropdown Menu Styles - Pure direct CSS without theme() function */
+        /* Direct CSS for Dropdowns */
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -168,7 +163,7 @@
             min-width: 190px;
             margin-top: 8px;
             background-color: #FDFBF7;
-            border: 1px solid #46282a;
+            border: 1.5px solid #46282a;
             border-radius: 0.5rem;
             z-index: 100;
             box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.35);
@@ -289,14 +284,6 @@
             display: flex !important; 
         }
 
-        /* Modal Animation */
-        .modal-backdrop {
-            transition: opacity 0.3s ease;
-        }
-        .modal-box {
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-        }
-
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
@@ -311,34 +298,40 @@
 <!-- Toast Notification Container -->
 <div id="toastContainer" class="fixed top-24 right-6 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
 
-<!-- TopNavBar -->
-<nav class="fixed top-0 w-full z-50 bg-deep-rosewood text-warm-ivory shadow-md opacity-100">
+<!-- TopNavBar Shell -->
+<nav class="fixed top-0 w-full z-50 bg-deep-rosewood text-warm-ivory shadow-md">
     <div class="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-        <!-- Brand -->
+        <!-- Brand Logo & Name (Links to Browse) -->
         <div class="font-headline-md text-headline-md flex items-center gap-2 text-warm-ivory cursor-pointer select-none" onclick="switchNav('browse')">
             <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">book_4</span>
             <span class="font-bold tracking-tight">BookNexus</span>
         </div>
 
         <!-- Nav Links (Desktop) -->
-        <div class="hidden md:flex items-center gap-8" id="desktopNav">
-            <a class="nav-link text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors duration-300 cursor-pointer" onclick="switchNav('home')">Home</a>
-            <a class="nav-link text-warm-ivory font-bold border-b-2 border-warm-ivory pb-1 cursor-pointer" onclick="switchNav('browse')">Browse Books</a>
-            <a class="nav-link text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors duration-300 cursor-pointer" onclick="switchNav('faculty')">Faculty</a>
-            <a class="nav-link text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors duration-300 cursor-pointer" onclick="switchNav('sustainability')">Sustainability</a>
-            <a class="nav-link text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors duration-300 flex items-center gap-1.5 cursor-pointer" onclick="switchNav('library')">
-                <span>My Library</span>
-                <span id="savedCountBadge" class="bg-dusty-rose text-warm-ivory text-[10px] font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center">0</span>
+        <div class="hidden md:flex items-center gap-7" id="desktopNav">
+            <a id="navBrowse" class="nav-item text-warm-ivory font-bold border-b-2 border-warm-ivory pb-1 cursor-pointer transition-colors" onclick="switchNav('browse')">Browse Books</a>
+            <a id="navTransactions" class="nav-item text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors cursor-pointer" onclick="switchNav('transactions')">Transactions</a>
+            <a id="navRecs" class="nav-item text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors cursor-pointer" onclick="switchNav('recommendations')">For You</a>
+            <a id="navRentals" class="nav-item text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors cursor-pointer flex items-center gap-1.5" onclick="switchNav('myRentals')">
+                <span>My Rentals</span>
+                <span id="rentalsCountBadge" class="bg-dusty-rose text-warm-ivory text-[10px] font-bold px-2 py-0.5 rounded-full min-w-[18px] text-center">2</span>
             </a>
+            <a id="navListings" class="nav-item text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors cursor-pointer" onclick="switchNav('myListings')">My Listings</a>
+            <a id="navAdmin" class="nav-item text-warm-ivory/80 font-medium hover:text-warm-ivory transition-colors cursor-pointer" onclick="switchNav('admin')">Admin Desk</a>
         </div>
 
         <!-- Actions -->
-        <div class="flex items-center gap-4">
-            <button onclick="openModal('listBookModal')" class="hidden sm:flex items-center gap-1.5 border border-warm-ivory/40 text-warm-ivory hover:bg-warm-parchment/10 text-xs font-label-caps px-4 py-2 rounded-full transition-colors">
+        <div class="flex items-center gap-3">
+            <button onclick="openModal('listBookModal')" class="hidden sm:flex items-center gap-1.5 border border-warm-ivory/40 text-warm-ivory hover:bg-warm-parchment/10 text-xs font-label-caps px-4 py-2 rounded-full transition-colors font-bold">
                 <span class="material-symbols-outlined text-sm">add_circle</span>
-                <span>List a Book</span>
+                <span>+ Add Book</span>
             </button>
-            <button id="userAuthBtn" onclick="openModal('authModal')" class="bg-warm-ivory text-deep-rosewood font-label-caps text-label-caps px-6 py-2 rounded-full hover:bg-warm-parchment transition-colors scale-95 active:scale-90 transition-transform shadow-sm font-bold">
+            <div id="userProfileBadge" class="flex items-center gap-2 cursor-pointer relative" onclick="switchNav('profile')">
+                <div class="w-9 h-9 rounded-full bg-warm-parchment text-deep-rosewood font-bold flex items-center justify-center text-xs shadow-sm border border-warm-ivory/40" id="userAvatarText">
+                    SD
+                </div>
+            </div>
+            <button id="userAuthBtn" onclick="openModal('authModal')" class="bg-warm-ivory text-deep-rosewood font-label-caps text-xs px-5 py-2 rounded-full hover:bg-warm-parchment transition-all font-bold shadow-sm">
                 Sign In
             </button>
             <button class="md:hidden text-warm-ivory p-1" onclick="toggleMobileMenu()">
@@ -348,31 +341,30 @@
     </div>
 </nav>
 
-<!-- Mobile Menu Drawer -->
+<!-- Mobile Drawer -->
 <div id="mobileMenu" class="fixed inset-x-0 top-20 z-40 bg-deep-rosewood text-warm-ivory p-6 shadow-xl hidden md:hidden border-t border-warm-ivory/10 space-y-4">
-    <a class="block py-2 text-lg font-medium border-b border-warm-ivory/10" onclick="switchNav('home'); toggleMobileMenu();">Home</a>
-    <a class="block py-2 text-lg font-medium border-b border-warm-ivory/10" onclick="switchNav('browse'); toggleMobileMenu();">Browse Books</a>
-    <a class="block py-2 text-lg font-medium border-b border-warm-ivory/10" onclick="switchNav('faculty'); toggleMobileMenu();">Faculty Recommendations</a>
-    <a class="block py-2 text-lg font-medium border-b border-warm-ivory/10" onclick="switchNav('sustainability'); toggleMobileMenu();">Sustainability Impact</a>
-    <a class="block py-2 text-lg font-medium border-b border-warm-ivory/10 flex items-center justify-between" onclick="switchNav('library'); toggleMobileMenu();">
-        <span>My Library</span>
-        <span id="mobileSavedBadge" class="bg-dusty-rose text-warm-ivory text-xs px-2 py-0.5 rounded-full font-bold">0</span>
-    </a>
+    <a class="block py-2 text-base font-medium border-b border-warm-ivory/10" onclick="switchNav('browse'); toggleMobileMenu();">Browse Books</a>
+    <a class="block py-2 text-base font-medium border-b border-warm-ivory/10" onclick="switchNav('transactions'); toggleMobileMenu();">Transactions Ledger</a>
+    <a class="block py-2 text-base font-medium border-b border-warm-ivory/10" onclick="switchNav('recommendations'); toggleMobileMenu();">Recommended For You</a>
+    <a class="block py-2 text-base font-medium border-b border-warm-ivory/10" onclick="switchNav('myRentals'); toggleMobileMenu();">My Rentals</a>
+    <a class="block py-2 text-base font-medium border-b border-warm-ivory/10" onclick="switchNav('myListings'); toggleMobileMenu();">My Listings & Requests</a>
+    <a class="block py-2 text-base font-medium border-b border-warm-ivory/10" onclick="switchNav('admin'); toggleMobileMenu();">Admin Desk</a>
+    <a class="block py-2 text-base font-medium border-b border-warm-ivory/10" onclick="switchNav('profile'); toggleMobileMenu();">Profile & Preferences</a>
     <button onclick="openModal('listBookModal'); toggleMobileMenu();" class="w-full bg-warm-ivory text-deep-rosewood font-label-caps py-3 rounded-full text-center font-bold">
         + List a Textbook
     </button>
 </div>
 
-<!-- View 1: BROWSE BOOKS (Main Active View) -->
+<!-- ================= VIEW 1: BROWSE BOOKS (PRIMARY HOME CATALOG) ================= -->
 <div id="viewBrowse" class="view-panel">
     <main class="flex-grow pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
-        <!-- Hero / Header -->
+        <!-- Hero Header -->
         <header class="mb-8 text-center md:text-left">
-            <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-deep-rosewood mb-4 leading-tight">Find your next chapter.</h1>
-            <p class="font-body-lg text-body-lg text-dark-espresso max-w-2xl">Explore our curated collection of academic texts, rare manuscripts, library books, and peer-to-peer shared knowledge.</p>
+            <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-deep-rosewood mb-3 leading-tight">Find your next chapter.</h1>
+            <p class="font-body-lg text-body-lg text-dark-espresso max-w-2xl font-medium">Explore our curated collection of academic texts, rare manuscripts, library copies, and peer-to-peer rented books.</p>
         </header>
 
-        <!-- Main Search & Filter Control Panel -->
+        <!-- Search & Filters Toolbar -->
         <section class="bg-deep-rosewood rounded-xl p-5 md:p-6 mb-8 shadow-lg relative z-40">
             <div class="flex flex-col gap-4">
                 
@@ -382,7 +374,7 @@
                     <input autocomplete="off" 
                            class="w-full bg-deep-rosewood border-2 border-warm-ivory/40 rounded-lg pl-12 pr-10 py-3.5 text-warm-ivory focus:outline-none focus:border-warm-ivory focus:ring-2 focus:ring-warm-ivory/50 transition-all placeholder:text-warm-ivory/70 font-body-md text-base font-medium relative z-10" 
                            id="searchInput" 
-                           placeholder="Search titles, authors, or ISBN..." 
+                           placeholder="Search by title, author, genre, or subject..." 
                            type="text"
                            oninput="handleSearchInput(this.value)">
                     <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-warm-ivory/80 hover:text-warm-ivory z-20">
@@ -392,12 +384,12 @@
                     <div class="search-suggestions" id="searchSuggestions"></div>
                 </div>
 
-                <!-- Primary Dropdown Filter Controls (Visible & Clear) -->
+                <!-- Dropdown Filter Controls -->
                 <div class="flex flex-wrap md:flex-nowrap gap-4 w-full items-center justify-between z-30">
                     
-                    <!-- 1. Custom Type Dropdown (Library Books vs Rent Books vs All Types) -->
+                    <!-- 1. Access Type Dropdown (Library Books vs Rent Books vs All Types) -->
                     <div class="relative flex-1 min-w-[180px]" id="typeDropdownContainer">
-                        <label class="block text-[11px] font-label-caps text-warm-ivory/80 uppercase tracking-widest mb-1.5 font-bold">Access Type</label>
+                        <label class="block text-[11px] font-label-caps text-warm-ivory/80 uppercase tracking-widest mb-1.5 font-bold">Listing Type</label>
                         <div class="custom-select-trigger" data-type="type" onclick="toggleDropdown('typeDropdown')">
                             <span id="typeTriggerText" class="text-deep-rosewood font-bold">All Types</span>
                             <span class="material-symbols-outlined text-deep-rosewood">expand_more</span>
@@ -411,16 +403,16 @@
                                 <span>Library Books</span>
                                 <span class="material-symbols-outlined text-xs text-deep-rosewood">local_library</span>
                             </div>
-                            <div class="dropdown-item" onclick="selectType('rent', 'Rent Books')">
-                                <span>Rent Books</span>
+                            <div class="dropdown-item" onclick="selectType('rent', 'P2P Rent Books')">
+                                <span>P2P Rent Books</span>
                                 <span class="material-symbols-outlined text-xs text-dusty-rose">sell</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 2. Custom Genre Dropdown (All Genres + Specific Departments) -->
+                    <!-- 2. Genre Dropdown -->
                     <div class="relative flex-1 min-w-[180px]" id="genreDropdownContainer">
-                        <label class="block text-[11px] font-label-caps text-warm-ivory/80 uppercase tracking-widest mb-1.5 font-bold">Genre / Department</label>
+                        <label class="block text-[11px] font-label-caps text-warm-ivory/80 uppercase tracking-widest mb-1.5 font-bold">Genre / Dept</label>
                         <div class="custom-select-trigger" data-type="genre" onclick="toggleDropdown('genreDropdown')">
                             <span id="genreTriggerText" class="text-deep-rosewood font-bold">All Genres</span>
                             <span class="material-symbols-outlined text-deep-rosewood">expand_more</span>
@@ -454,17 +446,17 @@
             </div>
         </section>
 
-        <!-- Quick Filter Tabs (Extra prominent bar for instant 1-click filtering) -->
+        <!-- Quick Filter Tabs -->
         <div class="flex flex-wrap gap-2 mb-6 items-center">
             <span class="text-xs font-bold text-deep-rosewood uppercase tracking-wider mr-2">Quick Filter:</span>
-            <button id="quickTabAll" onclick="setQuickType('all')" class="quick-tab-btn active bg-deep-rosewood text-warm-ivory border border-deep-rosewood text-xs px-4 py-2 rounded-full font-bold transition-all shadow-sm">
+            <button id="quickTabAll" onclick="setQuickType('all')" class="quick-tab-btn bg-deep-rosewood text-warm-ivory border border-deep-rosewood text-xs px-4 py-2 rounded-full font-bold transition-all shadow-sm">
                 All Books (20)
             </button>
             <button id="quickTabLibrary" onclick="setQuickType('library')" class="quick-tab-btn bg-warm-parchment text-deep-rosewood border border-deep-rosewood/30 text-xs px-4 py-2 rounded-full font-bold hover:bg-deep-rosewood/10 transition-all">
                 📖 Library Books (10)
             </button>
             <button id="quickTabRent" onclick="setQuickType('rent')" class="quick-tab-btn bg-warm-parchment text-deep-rosewood border border-deep-rosewood/30 text-xs px-4 py-2 rounded-full font-bold hover:bg-deep-rosewood/10 transition-all">
-                🏷️ Rent Books (10)
+                🏷️ P2P Rent Books (10)
             </button>
             <button id="quickTabAvail" onclick="toggleAvailability()" class="quick-tab-btn bg-warm-parchment text-deep-rosewood border border-deep-rosewood/30 text-xs px-4 py-2 rounded-full font-bold hover:bg-deep-rosewood/10 transition-all">
                 ✅ Available Now Only
@@ -502,152 +494,216 @@
     </main>
 </div>
 
-<!-- View 2: HOME VIEW -->
-<div id="viewHome" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
-    <div class="bg-deep-rosewood text-warm-ivory rounded-2xl p-8 md:p-12 mb-12 relative overflow-hidden shadow-xl">
-        <div class="max-w-2xl relative z-10 space-y-4">
-            <span class="bg-warm-parchment/20 text-warm-ivory text-xs px-3 py-1 rounded-full font-label-caps uppercase tracking-widest">Campus Knowledge Hub</span>
-            <h2 class="font-headline-md text-3xl md:text-5xl text-warm-ivory">Borrow, Share & Empower Your Academic Journey.</h2>
-            <p class="font-body-lg text-warm-parchment/90 leading-relaxed">
-                Connect directly with students and campus libraries. Save hundreds on textbooks each semester while reducing environmental impact.
-            </p>
-            <div class="pt-4 flex flex-wrap gap-4">
-                <button onclick="switchNav('browse')" class="bg-warm-ivory text-deep-rosewood font-bold px-8 py-3 rounded-full hover:bg-warm-parchment transition-all shadow-md">
-                    Explore Book Catalog →
-                </button>
-                <button onclick="openModal('listBookModal')" class="border border-warm-ivory text-warm-ivory font-bold px-8 py-3 rounded-full hover:bg-warm-ivory/10 transition-all">
-                    List Your Textbook
-                </button>
+<!-- ================= VIEW 2: TRANSACTIONS & FINANCIAL LEDGER ================= -->
+<div id="viewTransactions" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+    <div class="flex flex-col w-full">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6">
+            <div>
+                <span class="text-xs font-label-caps text-deep-rosewood font-bold uppercase tracking-widest">Financial Escrow Ledger</span>
+                <h1 class="font-display-lg text-4xl text-deep-rosewood font-bold mt-1">Transactions</h1>
+                <p class="font-body-md text-sm text-dark-espresso font-medium">Track your institutional book rentals, security deposits, overdue fines, and reconciled refunds.</p>
+            </div>
+            <button onclick="exportStatement()" class="bg-deep-rosewood text-warm-ivory px-5 py-2.5 rounded-lg text-xs font-bold font-label-caps uppercase flex items-center gap-2 hover:bg-deep-rosewood/90 shadow-md">
+                <span class="material-symbols-outlined text-sm">receipt_long</span> Export Statement CSV
+            </button>
+        </div>
+
+        <!-- Summary Stats Bento -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20">
+                <div class="text-xs text-dark-espresso/70 font-bold uppercase">Total Transactions</div>
+                <div class="font-display-lg text-3xl text-deep-rosewood font-bold mt-2" id="statTotalCount">10</div>
+            </div>
+            <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20">
+                <div class="text-xs text-muted-green font-bold uppercase">Settled & Completed</div>
+                <div class="font-display-lg text-3xl text-muted-green font-bold mt-2" id="statCompletedCount">6</div>
+            </div>
+            <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20">
+                <div class="text-xs text-dusty-rose font-bold uppercase">Pending Settlement</div>
+                <div class="font-display-lg text-3xl text-dusty-rose font-bold mt-2" id="statPendingCount">1</div>
+            </div>
+            <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20">
+                <div class="text-xs text-deep-rosewood font-bold uppercase">Recorded Volume</div>
+                <div class="font-display-lg text-3xl text-deep-rosewood font-bold mt-2" id="statTotalAmount">₹1,140</div>
+            </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="bg-warm-parchment rounded-xl shadow-md border border-deep-rosewood/20 overflow-hidden">
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-left border-collapse min-w-[750px]">
+                    <thead>
+                        <tr class="bg-deep-rosewood text-warm-ivory text-xs uppercase font-label-caps tracking-wider">
+                            <th class="py-3.5 px-5">ID</th>
+                            <th class="py-3.5 px-5">Book Title</th>
+                            <th class="py-3.5 px-5">Type</th>
+                            <th class="py-3.5 px-5">Date</th>
+                            <th class="py-3.5 px-5">Amount</th>
+                            <th class="py-3.5 px-5">Status</th>
+                            <th class="py-3.5 px-5 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTableBody" class="divide-y divide-deep-rosewood/10 text-sm font-medium">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
-    <!-- Featured Categories Grid -->
-    <h3 class="font-headline-md text-2xl text-deep-rosewood mb-6">Popular Departments</h3>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
-        <button onclick="filterByGenreDirect('cs', 'Computer Science')" class="bg-warm-parchment border border-deep-rosewood/20 rounded-xl p-5 text-center hover:border-deep-rosewood transition-all group">
-            <span class="material-symbols-outlined text-3xl text-deep-rosewood mb-2 group-hover:scale-110 transition-transform">terminal</span>
-            <div class="font-bold text-sm text-deep-rosewood">Comp Sci</div>
-        </button>
-        <button onclick="filterByGenreDirect('eng', 'Engineering')" class="bg-warm-parchment border border-deep-rosewood/20 rounded-xl p-5 text-center hover:border-deep-rosewood transition-all group">
-            <span class="material-symbols-outlined text-3xl text-deep-rosewood mb-2 group-hover:scale-110 transition-transform">engineering</span>
-            <div class="font-bold text-sm text-deep-rosewood">Engineering</div>
-        </button>
-        <button onclick="filterByGenreDirect('math', 'Mathematics')" class="bg-warm-parchment border border-deep-rosewood/20 rounded-xl p-5 text-center hover:border-deep-rosewood transition-all group">
-            <span class="material-symbols-outlined text-3xl text-deep-rosewood mb-2 group-hover:scale-110 transition-transform">calculate</span>
-            <div class="font-bold text-sm text-deep-rosewood">Mathematics</div>
-        </button>
-        <button onclick="filterByGenreDirect('sci', 'Science')" class="bg-warm-parchment border border-deep-rosewood/20 rounded-xl p-5 text-center hover:border-deep-rosewood transition-all group">
-            <span class="material-symbols-outlined text-3xl text-deep-rosewood mb-2 group-hover:scale-110 transition-transform">science</span>
-            <div class="font-bold text-sm text-deep-rosewood">Science</div>
-        </button>
-        <button onclick="filterByGenreDirect('bus', 'Business')" class="bg-warm-parchment border border-deep-rosewood/20 rounded-xl p-5 text-center hover:border-deep-rosewood transition-all group">
-            <span class="material-symbols-outlined text-3xl text-deep-rosewood mb-2 group-hover:scale-110 transition-transform">show_chart</span>
-            <div class="font-bold text-sm text-deep-rosewood">Business</div>
-        </button>
-        <button onclick="filterByGenreDirect('lit', 'Literature')" class="bg-warm-parchment border border-deep-rosewood/20 rounded-xl p-5 text-center hover:border-deep-rosewood transition-all group">
-            <span class="material-symbols-outlined text-3xl text-deep-rosewood mb-2 group-hover:scale-110 transition-transform">menu_book</span>
-            <div class="font-bold text-sm text-deep-rosewood">Literature</div>
-        </button>
-    </div>
 </div>
 
-<!-- View 3: FACULTY RECOMMENDATIONS -->
-<div id="viewFaculty" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
-    <header class="mb-10">
-        <h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-deep-rosewood mb-2">Faculty Recommended Reading</h1>
-        <p class="font-body-lg text-dark-espresso">Syllabi required texts & professor recommended research manuscripts across university departments.</p>
+<!-- ================= VIEW 3: MY RECOMMENDATIONS (PICKED FOR YOU) ================= -->
+<div id="viewRecommendations" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+    <header class="mb-8">
+        <span class="text-xs font-label-caps uppercase text-dusty-rose font-bold tracking-widest">Personalized AI Curator</span>
+        <h1 class="font-display-lg text-4xl text-deep-rosewood font-bold mt-1">Picked For You</h1>
+        <p class="font-body-lg text-sm text-dark-espresso font-medium">Custom recommendations based on your reading history, saved subject tags, and campus syllabus match scores.</p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        <div class="bg-warm-parchment rounded-xl p-6 border border-deep-rosewood/20 space-y-4">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-full bg-deep-rosewood text-warm-ivory flex items-center justify-center font-bold text-lg">PM</div>
-                <div>
-                    <h4 class="font-bold text-lg text-deep-rosewood">Prof. A. Miller</h4>
-                    <p class="text-xs text-dark-espresso/80">Department of Philosophy & Humanities</p>
-                </div>
-            </div>
-            <p class="text-sm italic text-dark-espresso">"For students taking the Epistemology seminar, Bertrand Russell's work provides an indispensable foundation."</p>
-            <div class="pt-2 border-t border-deep-rosewood/10 flex justify-between items-center">
-                <span class="text-xs font-bold text-deep-rosewood">Course: PHIL 301</span>
-                <button onclick="searchQuery('Bertrand Russell')" class="text-xs text-dusty-rose font-bold hover:underline">Find Textbook →</button>
-            </div>
-        </div>
-
-        <div class="bg-warm-parchment rounded-xl p-6 border border-deep-rosewood/20 space-y-4">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-full bg-deep-rosewood text-warm-ivory flex items-center justify-center font-bold text-lg">GS</div>
-                <div>
-                    <h4 class="font-bold text-lg text-deep-rosewood">Prof. Gilbert Strang</h4>
-                    <p class="text-xs text-dark-espresso/80">Department of Mathematics</p>
-                </div>
-            </div>
-            <p class="text-sm italic text-dark-espresso">"Linear Algebra is the language of modern data science and quantum computing. Focus on vector space abstractions."</p>
-            <div class="pt-2 border-t border-deep-rosewood/10 flex justify-between items-center">
-                <span class="text-xs font-bold text-deep-rosewood">Course: MATH 240</span>
-                <button onclick="searchQuery('Gilbert Strang')" class="text-xs text-dusty-rose font-bold hover:underline">Find Textbook →</button>
-            </div>
-        </div>
+    <!-- Match Cards List -->
+    <div class="space-y-4" id="recommendationsList">
+        <!-- Rendered dynamically -->
     </div>
 </div>
 
-<!-- View 4: SUSTAINABILITY IMPACT -->
-<div id="viewSustainability" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
-    <header class="mb-10 text-center max-w-3xl mx-auto">
-        <span class="text-muted-green font-bold text-xs uppercase tracking-widest bg-muted-green/10 px-3 py-1 rounded-full border border-muted-green/20">Eco-Friendly Campus Initiative</span>
-        <h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-deep-rosewood mt-3 mb-4">Circular Knowledge Exchange</h1>
-        <p class="font-body-lg text-dark-espresso">Every book rented or borrowed on BookNexus prevents fresh deforestation, saves water, and reduces student spending.</p>
+<!-- ================= VIEW 4: MY RENTALS ================= -->
+<div id="viewRentals" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+    <header class="mb-8">
+        <h1 class="font-display-lg text-4xl text-deep-rosewood font-bold mb-1">My Rentals</h1>
+        <p class="font-body-md text-sm text-dark-espresso font-medium">Track active checkouts, return due dates, and pending rental requests.</p>
     </header>
 
-    <!-- Eco Metrics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div class="bg-warm-parchment rounded-xl p-8 border border-deep-rosewood/20 text-center space-y-2">
-            <span class="material-symbols-outlined text-4xl text-muted-green">forest</span>
-            <div class="font-display-lg text-4xl text-deep-rosewood font-bold">1,840 kg</div>
-            <div class="text-sm font-medium text-dark-espresso">Paper Saved</div>
-            <p class="text-xs text-dark-espresso/70">Equivalent to saving ~45 mature campus trees from textbook printing.</p>
-        </div>
+    <!-- Rental Filter Tabs -->
+    <div class="flex border-b border-deep-rosewood/20 mb-8 gap-6 text-sm font-bold">
+        <button id="tabActiveRentals" onclick="filterRentalTab('active')" class="text-deep-rosewood border-b-2 border-deep-rosewood pb-3">Active Rentals</button>
+        <button id="tabRequestedRentals" onclick="filterRentalTab('requested')" class="text-dark-espresso/70 hover:text-deep-rosewood pb-3">Requested</button>
+        <button id="tabReturnedRentals" onclick="filterRentalTab('returned')" class="text-dark-espresso/70 hover:text-deep-rosewood pb-3">Returned History</button>
+    </div>
 
-        <div class="bg-warm-parchment rounded-xl p-8 border border-deep-rosewood/20 text-center space-y-2">
-            <span class="material-symbols-outlined text-4xl text-muted-green">co2</span>
-            <div class="font-display-lg text-4xl text-deep-rosewood font-bold">4.2 Tons</div>
-            <div class="text-sm font-medium text-dark-espresso">CO2 Offset</div>
-            <p class="text-xs text-dark-espresso/70">Avoided through local peer-to-peer handoffs without heavy shipping.</p>
-        </div>
-
-        <div class="bg-warm-parchment rounded-xl p-8 border border-deep-rosewood/20 text-center space-y-2">
-            <span class="material-symbols-outlined text-4xl text-muted-green">payments</span>
-            <div class="font-display-lg text-4xl text-deep-rosewood font-bold">$14,250</div>
-            <div class="text-sm font-medium text-dark-espresso">Student Savings</div>
-            <p class="text-xs text-dark-espresso/70">Total money kept in student pockets this academic year.</p>
-        </div>
+    <!-- Rentals Cards Grid -->
+    <div class="space-y-4" id="rentalsListContainer">
+        <!-- Rendered dynamically -->
     </div>
 </div>
 
-<!-- View 5: MY LIBRARY (Saved & Rentals) -->
-<div id="viewLibrary" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
-    <header class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<!-- ================= VIEW 5: MY LISTINGS (OWNER ONLY) ================= -->
+<div id="viewListings" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+    <header class="mb-8 flex justify-between items-end">
         <div>
-            <h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-deep-rosewood mb-1">My Shelf & Rentals</h1>
-            <p class="font-body-lg text-dark-espresso">Manage your saved bookmarks, active borrowed books, and peer rental listings.</p>
+            <span class="text-xs font-label-caps text-deep-rosewood uppercase tracking-widest font-bold">Book Owner Shelf</span>
+            <h1 class="font-display-lg text-4xl text-deep-rosewood font-bold mt-1">My Listings & Requests</h1>
+            <p class="font-body-md text-sm text-dark-espresso font-medium">Manage your peer rental inventory and respond to incoming borrow requests from students.</p>
         </div>
-        <button onclick="openModal('listBookModal')" class="bg-deep-rosewood text-warm-ivory px-6 py-2.5 rounded-full text-xs font-label-caps hover:bg-deep-rosewood/90 transition-colors shadow-sm font-bold">
-            + List a Textbook
+        <button onclick="openModal('listBookModal')" class="bg-deep-rosewood text-warm-ivory text-xs px-5 py-2.5 rounded-full font-label-caps font-bold shadow-md">
+            + Add a Book
         </button>
     </header>
 
-    <!-- Library Tabs -->
-    <div class="flex border-b border-deep-rosewood/20 mb-8 gap-8">
-        <button id="tabSaved" onclick="switchLibraryTab('saved')" class="font-bold text-lg text-deep-rosewood border-b-2 border-deep-rosewood pb-3">Saved Bookmarks (<span id="savedCountText">0</span>)</button>
-        <button id="tabRentals" onclick="switchLibraryTab('rentals')" class="font-medium text-lg text-dark-espresso/70 hover:text-deep-rosewood pb-3">Active Rentals (<span id="rentalsCountText">0</span>)</button>
+    <!-- Incoming Requests Section -->
+    <div class="mb-12">
+        <h3 class="font-subheading-display text-2xl text-deep-rosewood mb-4 font-bold">Incoming Rental Requests</h3>
+        <div class="space-y-3" id="incomingRequestsContainer">
+            <!-- Rendered dynamically -->
+        </div>
     </div>
 
-    <!-- Saved Books Content -->
-    <div id="librarySavedContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    <!-- My Books Inventory -->
+    <div>
+        <h3 class="font-subheading-display text-2xl text-deep-rosewood mb-4 font-bold">My P2P Listed Textbooks</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="myListedBooksContainer">
+            <!-- Rendered dynamically -->
+        </div>
+    </div>
+</div>
 
-    <!-- Active Rentals Content -->
-    <div id="libraryRentalsContent" class="space-y-4 hidden"></div>
+<!-- ================= VIEW 6: ADMIN DASHBOARD ================= -->
+<div id="viewAdmin" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+    <header class="mb-8">
+        <span class="text-xs font-label-caps text-deep-rosewood uppercase tracking-widest font-bold">Circulation Control Desk</span>
+        <h1 class="font-display-lg text-4xl text-deep-rosewood font-bold mt-1">Admin Dashboard</h1>
+        <p class="font-body-md text-sm text-dark-espresso font-medium">Institutional overview of campus library inventory, active checkouts, and circulation metrics.</p>
+    </header>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+        <div class="bg-warm-parchment p-6 rounded-xl border border-deep-rosewood/20">
+            <p class="text-xs font-label-caps uppercase text-dark-espresso/70 font-bold mb-1">Total Books Catalogued</p>
+            <p class="font-display-lg text-4xl text-deep-rosewood font-bold">214</p>
+        </div>
+        <div class="bg-warm-parchment p-6 rounded-xl border border-deep-rosewood/20">
+            <p class="text-xs font-label-caps uppercase text-dark-espresso/70 font-bold mb-1">Active Checkouts</p>
+            <p class="font-display-lg text-4xl text-muted-green font-bold">58</p>
+        </div>
+        <div class="bg-warm-parchment p-6 rounded-xl border border-deep-rosewood/20">
+            <p class="text-xs font-label-caps uppercase text-dark-espresso/70 font-bold mb-1">Registered Campus Readers</p>
+            <p class="font-display-lg text-4xl text-deep-rosewood font-bold">341</p>
+        </div>
+    </div>
+
+    <!-- Admin Details Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-warm-parchment p-6 rounded-xl border border-deep-rosewood/20">
+            <h4 class="font-subheading-display text-xl text-deep-rosewood font-bold mb-4">Genre Distribution</h4>
+            <div class="space-y-3 text-xs font-bold">
+                <div><div class="flex justify-between mb-1"><span>Computer Science</span><span>68</span></div><div class="h-2 rounded-full bg-deep-rosewood/20 overflow-hidden"><div class="h-full bg-deep-rosewood w-[85%]"></div></div></div>
+                <div><div class="flex justify-between mb-1"><span>History</span><span>41</span></div><div class="h-2 rounded-full bg-deep-rosewood/20 overflow-hidden"><div class="h-full bg-deep-rosewood w-[60%]"></div></div></div>
+                <div><div class="flex justify-between mb-1"><span>Science</span><span>37</span></div><div class="h-2 rounded-full bg-deep-rosewood/20 overflow-hidden"><div class="h-full bg-deep-rosewood w-[52%]"></div></div></div>
+                <div><div class="flex justify-between mb-1"><span>Mathematics</span><span>17</span></div><div class="h-2 rounded-full bg-deep-rosewood/20 overflow-hidden"><div class="h-full bg-deep-rosewood w-[25%]"></div></div></div>
+            </div>
+        </div>
+
+        <div class="bg-warm-parchment p-6 rounded-xl border border-deep-rosewood/20">
+            <h4 class="font-subheading-display text-xl text-deep-rosewood font-bold mb-4">Most Requested Books</h4>
+            <div class="space-y-3 text-xs font-medium">
+                <div class="flex justify-between border-b border-deep-rosewood/10 pb-2"><span class="font-bold text-deep-rosewood">Algorithms to Live By</span><span class="font-mono text-dusty-rose font-bold">19 rentals</span></div>
+                <div class="flex justify-between border-b border-deep-rosewood/10 pb-2"><span class="font-bold text-deep-rosewood">Structure of Scientific Revolutions</span><span class="font-mono text-dusty-rose font-bold">16 rentals</span></div>
+                <div class="flex justify-between border-b border-deep-rosewood/10 pb-2"><span class="font-bold text-deep-rosewood">Clean Code</span><span class="font-mono text-dusty-rose font-bold">14 rentals</span></div>
+                <div class="flex justify-between border-b border-deep-rosewood/10 pb-2"><span class="font-bold text-deep-rosewood">Principles of Macroeconomics</span><span class="font-mono text-dusty-rose font-bold">11 rentals</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= VIEW 7: PROFILE & PREFERENCES ================= -->
+<div id="viewProfile" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-2xl mx-auto w-full">
+    <header class="mb-8">
+        <h1 class="font-display-lg text-4xl text-deep-rosewood font-bold mb-1">Profile & Preferences</h1>
+        <p class="font-body-md text-sm text-dark-espresso font-medium">Manage your student credentials and subject reading preferences.</p>
+    </header>
+
+    <div class="bg-warm-parchment rounded-xl p-6 border border-deep-rosewood/20 space-y-6">
+        <div class="flex items-center gap-4 border-b border-deep-rosewood/15 pb-6">
+            <div class="w-16 h-16 rounded-full bg-deep-rosewood text-warm-ivory flex items-center justify-center font-bold text-xl shadow-md" id="profileBigAvatar">
+                SD
+            </div>
+            <div>
+                <h3 class="font-subheading-display text-2xl text-deep-rosewood font-bold" id="profileName">Student Reader</h3>
+                <p class="text-xs text-dark-espresso/80 font-medium" id="profileEmail">student@university.edu</p>
+                <span class="inline-block mt-1 bg-deep-rosewood/10 text-deep-rosewood text-[10px] font-bold px-2 py-0.5 rounded border border-deep-rosewood/20" id="profileRoleBadge">Role: Student</span>
+            </div>
+        </div>
+
+        <!-- Preferences -->
+        <div>
+            <h4 class="font-bold text-sm text-deep-rosewood uppercase tracking-wider mb-3">Favorite Subject Tags</h4>
+            <div class="flex flex-wrap gap-2 mb-4" id="prefTagsContainer">
+                <!-- Tag chips injected -->
+            </div>
+            <form onsubmit="handleAddPrefTag(event)" class="flex gap-2">
+                <input required id="newTagInput" type="text" placeholder="e.g. Machine Learning, Philosophy" class="flex-1 bg-warm-ivory border border-deep-rosewood/30 rounded-lg px-4 py-2 text-xs text-deep-rosewood focus:outline-none"/>
+                <button type="submit" class="bg-deep-rosewood text-warm-ivory text-xs px-4 py-2 rounded-lg font-bold">Add Tag</button>
+            </form>
+        </div>
+
+        <div class="pt-4 border-t border-deep-rosewood/15 flex justify-between items-center">
+            <button onclick="showToast('Preferences saved successfully!', 'success')" class="bg-deep-rosewood text-warm-ivory text-xs font-bold px-6 py-2.5 rounded-full shadow-md">
+                Save Preferences
+            </button>
+            <button onclick="handleSignOut()" class="text-xs font-bold text-dusty-rose hover:underline">
+                Sign Out
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- Footer -->
@@ -681,30 +737,30 @@
     </div>
 </div>
 
-<!-- MODAL 2: List a Book Modal -->
+<!-- MODAL 2: List / Add Book Modal -->
 <div id="listBookModal" class="fixed inset-0 z-50 bg-dark-espresso/70 modal-backdrop hidden flex items-center justify-center p-4">
     <div class="bg-warm-ivory rounded-2xl max-w-lg w-full p-6 md:p-8 relative border border-deep-rosewood modal-box shadow-2xl">
         <button onclick="closeModal('listBookModal')" class="absolute top-4 right-4 text-deep-rosewood hover:text-dusty-rose p-1">
             <span class="material-symbols-outlined text-2xl">close</span>
         </button>
 
-        <h3 class="font-headline-md text-2xl text-deep-rosewood mb-2">List Your Textbook</h3>
+        <h3 class="font-headline-md text-2xl text-deep-rosewood mb-2">List a Textbook</h3>
         <p class="text-xs text-dark-espresso mb-6">Share course materials with fellow students on campus.</p>
 
         <form onsubmit="handleListBookSubmit(event)" class="space-y-4">
             <div>
                 <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Book Title *</label>
-                <input required id="newTitle" type="text" placeholder="e.g. Artificial Intelligence: A Modern Approach" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none focus:border-deep-rosewood text-sm font-medium"/>
+                <input required id="newTitle" type="text" placeholder="e.g. Artificial Intelligence: A Modern Approach" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Author *</label>
-                    <input required id="newAuthor" type="text" placeholder="e.g. Stuart Russell" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none focus:border-deep-rosewood text-sm font-medium"/>
+                    <input required id="newAuthor" type="text" placeholder="e.g. Stuart Russell" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
                 </div>
                 <div>
                     <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Genre / Dept *</label>
-                    <select id="newGenre" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none focus:border-deep-rosewood text-sm font-medium">
+                    <select id="newGenre" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium">
                         <option value="Computer Science">Computer Science</option>
                         <option value="Engineering">Engineering</option>
                         <option value="Mathematics">Mathematics</option>
@@ -718,33 +774,37 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Listing Type *</label>
-                    <select id="newType" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none focus:border-deep-rosewood text-sm font-medium">
-                        <option value="RENT">Rent to Peer ($/mo)</option>
-                        <option value="LIBRARY">Free Library Exchange</option>
+                    <select id="newType" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium">
+                        <option value="RENT">Rent to Peer ($5/wk)</option>
+                        <option value="LIBRARY">Free Library Stock</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Listed By (Your Name)</label>
-                    <input required id="newSeller" type="text" placeholder="e.g. Sarah Jenkins" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none focus:border-deep-rosewood text-sm font-medium"/>
+                    <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Condition *</label>
+                    <select id="newCondition" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium">
+                        <option value="Like New">Like New</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                    </select>
                 </div>
             </div>
 
             <div>
                 <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Cover Image URL (Optional)</label>
-                <input id="newCover" type="url" placeholder="https://..." class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none focus:border-deep-rosewood text-sm font-medium"/>
+                <input id="newCover" type="url" placeholder="https://..." class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
             </div>
 
             <div class="pt-4 flex justify-end gap-3">
                 <button type="button" onclick="closeModal('listBookModal')" class="px-5 py-2 text-xs font-bold text-deep-rosewood hover:underline">Cancel</button>
                 <button type="submit" class="bg-deep-rosewood text-warm-ivory font-label-caps text-xs px-6 py-2.5 rounded-full hover:bg-deep-rosewood/90 shadow-md font-bold">
-                    Submit Listing
+                    Save Book
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL 3: Auth Modal -->
+<!-- MODAL 3: Auth Modal (Login / Sign Up) -->
 <div id="authModal" class="fixed inset-0 z-50 bg-dark-espresso/70 modal-backdrop hidden flex items-center justify-center p-4">
     <div class="bg-warm-ivory rounded-2xl max-w-md w-full p-6 md:p-8 relative border border-deep-rosewood modal-box shadow-2xl text-center">
         <button onclick="closeModal('authModal')" class="absolute top-4 right-4 text-deep-rosewood hover:text-dusty-rose p-1">
@@ -752,20 +812,49 @@
         </button>
 
         <div class="material-symbols-outlined text-4xl text-deep-rosewood mb-2">account_circle</div>
-        <h3 class="font-headline-md text-2xl text-deep-rosewood mb-1">Student Portal</h3>
-        <p class="text-xs text-dark-espresso/80 mb-6">Sign in with your university credentials to request rentals and manage saved books.</p>
+        <h3 class="font-headline-md text-2xl text-deep-rosewood mb-1" id="authTitle">Student Portal</h3>
+        <p class="text-xs text-dark-espresso/80 mb-6" id="authSubtitle">Sign in with your university credentials to manage books & rentals.</p>
+
+        <!-- Mode Toggle -->
+        <div class="flex rounded-full bg-warm-parchment p-1 mb-6 border border-deep-rosewood/20">
+            <button type="button" id="authModeLogin" onclick="setAuthMode('login')" class="flex-1 py-1.5 rounded-full text-xs font-bold bg-deep-rosewood text-warm-ivory transition-all">Log In</button>
+            <button type="button" id="authModeSignup" onclick="setAuthMode('signup')" class="flex-1 py-1.5 rounded-full text-xs font-bold text-deep-rosewood transition-all">Sign Up</button>
+        </div>
 
         <form onsubmit="handleAuthSubmit(event)" class="space-y-4 text-left">
-            <div>
-                <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">University Email</label>
-                <input required id="authEmail" type="email" placeholder="student@university.edu" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none focus:border-deep-rosewood text-sm font-medium"/>
+            <div id="signupNameField" class="hidden">
+                <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Full Name *</label>
+                <input id="authName" type="text" placeholder="Jane Doe" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
             </div>
+
             <div>
-                <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Password</label>
-                <input required type="password" placeholder="••••••••" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none focus:border-deep-rosewood text-sm font-medium"/>
+                <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Email Address *</label>
+                <input required id="authEmail" type="email" placeholder="student@university.edu" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
             </div>
-            <button type="submit" class="w-full bg-deep-rosewood text-warm-ivory font-label-caps text-xs py-3 rounded-full hover:bg-deep-rosewood/90 shadow-md font-bold mt-2">
-                Sign In
+
+            <div>
+                <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Password *</label>
+                <input required id="authPassword" type="password" placeholder="••••••••" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
+            </div>
+
+            <div id="signupRoleField" class="hidden">
+                <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Account Role *</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" id="roleBtnStudent" onclick="setRoleSelection('student')" class="py-2 text-xs font-bold rounded-lg border border-deep-rosewood bg-deep-rosewood text-warm-ivory">I'm a Student</button>
+                    <button type="button" id="roleBtnOwner" onclick="setRoleSelection('owner')" class="py-2 text-xs font-bold rounded-lg border border-deep-rosewood/30 bg-warm-parchment text-deep-rosewood">I'm a Book Owner</button>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs">
+                <label class="flex items-center gap-1.5 cursor-pointer">
+                    <input type="checkbox" checked class="rounded border-deep-rosewood/30 text-deep-rosewood focus:ring-0"/>
+                    <span>Remember me</span>
+                </label>
+                <button type="button" onclick="showToast('Password reset link sent to your registered email.', 'info')" class="text-deep-rosewood hover:underline font-bold">Forgot password?</button>
+            </div>
+
+            <button type="submit" id="authSubmitBtn" class="w-full bg-deep-rosewood text-warm-ivory font-label-caps text-xs py-3 rounded-full hover:bg-deep-rosewood/90 shadow-md font-bold mt-2">
+                Log In
             </button>
         </form>
     </div>
@@ -774,7 +863,7 @@
 <!-- APP JAVASCRIPT LOGIC -->
 <script>
     /* ============================================================
-       DATA STORE: 20 Academic Books (10 Library, 10 Rent)
+       DATA STORE: Academic Catalog, Recommendations & Rentals
        ============================================================ */
     const initialBooks = [
         {
@@ -789,7 +878,8 @@
             cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=600",
             isbn: "978-1627790369",
             description: "A fascinating exploration of how computer algorithms can be applied to human decision-making, time management, and sorting choices in everyday life.",
-            location: "Turing Hall, 3rd Floor"
+            location: "Turing Hall, 3rd Floor",
+            condition: "Like New"
         },
         {
             id: 2,
@@ -803,7 +893,8 @@
             cover: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=600",
             isbn: "978-0226458120",
             description: "A landmark in intellectual history that introduced the term 'paradigm shift'. Essential reading for philosophy of science and history of physics.",
-            location: "Main Library - Stacks B-14"
+            location: "Main Library - Stacks B-14",
+            condition: "Good"
         },
         {
             id: 3,
@@ -817,7 +908,8 @@
             cover: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=600",
             isbn: "978-0520088177",
             description: "Newton's foundational work laying out the laws of motion and universal gravitation. Rare annotated student translation edition.",
-            location: "Special Manuscripts Archive"
+            location: "Special Manuscripts Archive",
+            condition: "Good"
         },
         {
             id: 4,
@@ -831,7 +923,8 @@
             cover: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&q=80&w=600",
             isbn: "978-0671201586",
             description: "A comprehensive survey of Western philosophy from the Pre-Socratics to the early 20th century. Recommended for PHIL 101/201.",
-            location: "Humanities Hall 204"
+            location: "Humanities Hall 204",
+            condition: "Like New"
         },
         {
             id: 5,
@@ -845,7 +938,8 @@
             cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&q=80&w=600",
             isbn: "978-0980232776",
             description: "The classic textbook by MIT Professor Gilbert Strang. Covers vector spaces, eigenvalues, matrix decompositions, and modern machine learning linear math.",
-            location: "Science Quad Library"
+            location: "Science Quad Library",
+            condition: "Like New"
         },
         {
             id: 6,
@@ -859,7 +953,8 @@
             cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=600",
             isbn: "978-0132350884",
             description: "A handbook of agile software craftsmanship. Teaches meaningful names, small functions, unit testing, and refactoring techniques.",
-            location: "CS Lab Lounge"
+            location: "CS Lab Lounge",
+            condition: "Good"
         },
         {
             id: 7,
@@ -873,7 +968,8 @@
             cover: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600",
             isbn: "978-0486450063",
             description: "Darwin's revolutionary treatise on evolutionary biology by natural selection. Annotated edition with critical essays.",
-            location: "Biology Building Library"
+            location: "Biology Building Library",
+            condition: "Fair"
         },
         {
             id: 8,
@@ -887,7 +983,8 @@
             cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=600",
             isbn: "978-0521657297",
             description: "Kant's masterpiece on metaphysics and human cognition. Cambridge edition translated by Paul Guyer.",
-            location: "Philosophy Seminar Library"
+            location: "Philosophy Seminar Library",
+            condition: "Good"
         },
         {
             id: 9,
@@ -901,7 +998,8 @@
             cover: "https://images.unsplash.com/photo-1516116211223-4c714195286f?auto=format&fit=crop&q=80&w=600",
             isbn: "978-0201633610",
             description: "Elements of reusable object-oriented software by the Gang of Four. Essential catalog of 23 classic design patterns.",
-            location: "Engineering Library 2F"
+            location: "Engineering Library 2F",
+            condition: "Like New"
         },
         {
             id: 10,
@@ -915,206 +1013,83 @@
             cover: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=600",
             isbn: "978-0914098911",
             description: "Rigorous and beautiful introduction to mathematical analysis and calculus proofs.",
-            location: "Math Reserve Desk"
-        },
-        {
-            id: 11,
-            title: "Engineering Mechanics: Statics",
-            author: "R.C. Hibbeler",
-            genre: "eng",
-            genreLabel: "Engineering",
-            type: "rent",
-            seller: "Tom Hanks",
-            available: true,
-            cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-0133918922",
-            description: "Standard core textbook for sophomore civil and mechanical engineering statics courses.",
-            location: "MechEng Building B"
-        },
-        {
-            id: 12,
-            title: "Fluid Mechanics",
-            author: "Frank M. White",
-            genre: "eng",
-            genreLabel: "Engineering",
-            type: "library",
-            seller: null,
-            available: true,
-            cover: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-0073398273",
-            description: "Comprehensive coverage of fluid statics, viscous flow, turbomachinery, and compressible aerodynamics.",
-            location: "Engineering Stacks 401"
-        },
-        {
-            id: 13,
-            title: "The Wealth of Nations",
-            author: "Adam Smith",
-            genre: "bus",
-            genreLabel: "Business",
-            type: "library",
-            seller: null,
-            available: true,
-            cover: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-0553585971",
-            description: "The foundational text of classical economics exploring division of labor, productivity, and free markets.",
-            location: "Economics Reserve"
-        },
-        {
-            id: 14,
-            title: "Thinking, Fast and Slow",
-            author: "Daniel Kahneman",
-            genre: "bus",
-            genreLabel: "Business",
-            type: "rent",
-            seller: "Lucy Liu",
-            available: false,
-            cover: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-0374533557",
-            description: "Nobel laureate Daniel Kahneman's summary of decades of behavioral economics research on cognitive biases.",
-            location: "Business Quad 102"
-        },
-        {
-            id: 15,
-            title: "Principles of Neural Science",
-            author: "Eric R. Kandel",
-            genre: "sci",
-            genreLabel: "Science",
-            type: "library",
-            seller: null,
-            available: true,
-            cover: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-0071390118",
-            description: "The definitive neuroscience reference work covering molecular biology of neurons to cognitive neuroscience.",
-            location: "Medical Science Annex"
-        },
-        {
-            id: 16,
-            title: "Artificial Intelligence: A Modern Approach",
-            author: "Stuart Russell & Peter Norvig",
-            genre: "cs",
-            genreLabel: "Computer Science",
-            type: "rent",
-            seller: "Alex Rivera",
-            available: true,
-            cover: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-0134610993",
-            description: "4th edition of the world's standard AI textbook. Covers machine learning, search, probabilistic reasoning, and robotics.",
-            location: "Robotics Hub"
-        },
-        {
-            id: 17,
-            title: "Macroeconomics",
-            author: "N. Gregory Mankiw",
-            genre: "bus",
-            genreLabel: "Business",
-            type: "rent",
-            seller: "Chloe Zhang",
-            available: true,
-            cover: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-1319105990",
-            description: "Intermediate macroeconomics analyzing national income, monetary policy, inflation, and business cycles.",
-            location: "Econ Department Lounge"
-        },
-        {
-            id: 18,
-            title: "Thermodynamics: An Engineering Approach",
-            author: "Yunus A. Cengel",
-            genre: "eng",
-            genreLabel: "Engineering",
-            type: "library",
-            seller: null,
-            available: false,
-            cover: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-0073398174",
-            description: "Covers energy, energy analysis, power cycles, and refrigeration systems.",
-            location: "Engineering Library 3F"
-        },
-        {
-            id: 19,
-            title: "To Kill a Mockingbird",
-            author: "Harper Lee",
-            genre: "lit",
-            genreLabel: "Literature",
-            type: "library",
-            seller: null,
-            available: true,
-            cover: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-0060935467",
-            description: "Classic American literature set for LIT 201 seminars.",
-            location: "Humanities Reserve Stacks"
-        },
-        {
-            id: 20,
-            title: "Deep Learning",
-            author: "Ian Goodfellow, Yoshua Bengio",
-            genre: "cs",
-            genreLabel: "Computer Science",
-            type: "rent",
-            seller: "Michael Chang",
-            available: true,
-            cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&q=80&w=600",
-            isbn: "978-0262035613",
-            description: "The definitive textbook on deep neural networks, convolutional networks, and generative modeling.",
-            location: "AI Research Lab"
+            location: "Math Reserve Desk",
+            condition: "Good"
         }
     ];
 
-    /* APP STATE */
-    let booksData = [...initialBooks];
-    let activeFilters = {
-        search: '',
-        genre: 'all',
-        genreLabel: 'All Genres',
-        type: 'all',
-        typeLabel: 'All Types',
-        availOnly: false
-    };
-    let savedBookIds = new Set([1, 5]);
-    let activeRentals = [
-        { bookId: 6, title: "Clean Code", author: "Robert C. Martin", dueDate: "Oct 14, 2026", seller: "David Kim" },
-        { bookId: 10, title: "Calculus", author: "Michael Spivak", dueDate: "Oct 28, 2026", seller: "Library Desk" }
+    const initialRecommendations = [
+        { id: 1, title: "Algorithms to Live By", author: "Brian Christian", match: 94, reason: "Matches your interest in Computer Science and prior borrow of Clean Code." },
+        { id: 9, title: "Design Patterns", author: "Erich Gamma", match: 88, reason: "Top recommendation among students in your CS 301 cohort." },
+        { id: 5, title: "Introduction to Linear Algebra", author: "Gilbert Strang", match: 76, reason: "Matches your saved subject preference: Mathematics & Machine Learning." }
     ];
+
+    let booksData = [...initialBooks];
+    let activeFilters = { search: '', genre: 'all', genreLabel: 'All Genres', type: 'all', typeLabel: 'All Types', availOnly: false };
+    let savedBookIds = new Set([1, 5]);
+    
+    let activeRentals = [
+        { id: 1, bookId: 6, title: "Clean Code", author: "Robert C. Martin", status: "active", dueDate: "Oct 14, 2026", seller: "David Kim", cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=600" },
+        { id: 2, bookId: 10, title: "Calculus", author: "Michael Spivak", status: "requested", dueDate: "Pending Approval", seller: "Math Desk", cover: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=600" }
+    ];
+
+    let incomingRequests = [
+        { id: "req1", requester: "K. Sundaram", bookTitle: "Algorithms to Live By", date: "Sep 22, 2026", status: "pending" },
+        { id: "req2", requester: "D. Alaoui", bookTitle: "Design Patterns", date: "Sep 24, 2026", status: "pending" }
+    ];
+
+    let prefTags = ["Computer Science", "Philosophy", "Linear Algebra"];
+    let authMode = "login";
+    let selectedRole = "student";
+    let currentUser = { name: "Sarah Jenkins", email: "sarah@university.edu", role: "Book Owner" };
 
     /* INITIALIZATION */
     document.addEventListener('DOMContentLoaded', () => {
         renderBookGrid();
+        renderRecommendations();
+        renderMyRentals();
+        renderMyListings();
+        renderPrefTags();
         updateSavedBadges();
-        
-        // Global click listener to dismiss active dropdowns
+
+        // Dismiss dropdowns on outside click
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('#genreDropdownContainer')) {
-                const el = document.getElementById('genreDropdown');
-                if (el) el.classList.remove('active');
-            }
-            if (!e.target.closest('#typeDropdownContainer')) {
-                const el = document.getElementById('typeDropdown');
-                if (el) el.classList.remove('active');
-            }
-            if (!e.target.closest('#searchInput') && !e.target.closest('#searchSuggestions')) {
-                const el = document.getElementById('searchSuggestions');
-                if (el) el.classList.remove('active');
-            }
+            if (!e.target.closest('#genreDropdownContainer')) document.getElementById('genreDropdown')?.classList.remove('active');
+            if (!e.target.closest('#typeDropdownContainer')) document.getElementById('typeDropdown')?.classList.remove('active');
+            if (!e.target.closest('#searchInput') && !e.target.closest('#searchSuggestions')) document.getElementById('searchSuggestions')?.classList.remove('active');
         });
     });
 
-    /* NAVIGATION */
+    /* NAVIGATION ROUTER */
     function switchNav(viewName) {
         document.querySelectorAll('.view-panel').forEach(el => el.classList.add('hidden'));
-        
+
         const navMap = {
             'browse': 'viewBrowse',
-            'home': 'viewHome',
-            'faculty': 'viewFaculty',
-            'sustainability': 'viewSustainability',
-            'library': 'viewLibrary'
+            'transactions': 'viewTransactions',
+            'recommendations': 'viewRecommendations',
+            'myRentals': 'viewRentals',
+            'myListings': 'viewListings',
+            'admin': 'viewAdmin',
+            'profile': 'viewProfile'
         };
 
         const targetId = navMap[viewName] || 'viewBrowse';
         document.getElementById(targetId)?.classList.remove('hidden');
 
-        if (viewName === 'library') {
-            renderLibraryView();
+        // Nav Active Highlight
+        document.querySelectorAll('#desktopNav .nav-item').forEach(link => {
+            link.classList.remove('font-bold', 'border-b-2', 'border-warm-ivory', 'pb-1');
+            link.classList.add('text-warm-ivory/80', 'font-medium');
+        });
+
+        const activeNavEl = document.getElementById('nav' + viewName.charAt(0).toUpperCase() + viewName.slice(1));
+        if (activeNavEl) {
+            activeNavEl.classList.add('font-bold', 'border-b-2', 'border-warm-ivory', 'pb-1');
+            activeNavEl.classList.remove('text-warm-ivory/80');
         }
+
+        if (viewName === 'transactions') renderTransactionsView();
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1123,51 +1098,34 @@
         document.getElementById('mobileMenu').classList.toggle('hidden');
     }
 
-    /* DROPDOWNS & FILTERS LOGIC */
+    /* SEARCH & DROPDOWN FILTERS */
     function toggleDropdown(id) {
         const target = document.getElementById(id);
         if (!target) return;
-        const isCurrentlyActive = target.classList.contains('active');
+        const isActive = target.classList.contains('active');
         document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('active'));
-        if (!isCurrentlyActive) {
-            target.classList.add('active');
-        }
+        if (!isActive) target.classList.add('active');
     }
 
     function selectGenre(val, label) {
         activeFilters.genre = val;
         activeFilters.genreLabel = label;
-        const triggerText = document.getElementById('genreTriggerText');
-        if (triggerText) triggerText.innerText = label;
+        document.getElementById('genreTriggerText').innerText = label;
         document.getElementById('genreDropdown')?.classList.remove('active');
-        
-        document.querySelectorAll('#genreDropdown .dropdown-item').forEach(item => {
-            const isMatch = item.innerText.includes(label) || (val === 'all' && item.innerText.includes('All Genres'));
-            item.classList.toggle('selected', isMatch);
-        });
-
         applyFilters();
     }
 
     function selectType(val, label) {
         activeFilters.type = val;
         activeFilters.typeLabel = label;
-        const triggerText = document.getElementById('typeTriggerText');
-        if (triggerText) triggerText.innerText = label;
+        document.getElementById('typeTriggerText').innerText = label;
         document.getElementById('typeDropdown')?.classList.remove('active');
-
-        document.querySelectorAll('#typeDropdown .dropdown-item').forEach(item => {
-            const isMatch = item.innerText.includes(label) || (val === 'all' && item.innerText.includes('All Types'));
-            item.classList.toggle('selected', isMatch);
-        });
-
-        // Sync Quick Tabs
         updateQuickTabStyles(val);
         applyFilters();
     }
 
     function setQuickType(typeVal) {
-        const labelMap = { 'all': 'All Types', 'library': 'Library Books', 'rent': 'Rent Books' };
+        const labelMap = { 'all': 'All Types', 'library': 'Library Books', 'rent': 'P2P Rent Books' };
         selectType(typeVal, labelMap[typeVal] || 'All Types');
     }
 
@@ -1175,39 +1133,22 @@
         const allBtn = document.getElementById('quickTabAll');
         const libBtn = document.getElementById('quickTabLibrary');
         const rentBtn = document.getElementById('quickTabRent');
-
         if (!allBtn || !libBtn || !rentBtn) return;
 
         const activeClass = "bg-deep-rosewood text-warm-ivory border-deep-rosewood shadow-sm";
         const inactiveClass = "bg-warm-parchment text-deep-rosewood border-deep-rosewood/30 hover:bg-deep-rosewood/10";
 
-        [allBtn, libBtn, rentBtn].forEach(btn => {
-            btn.className = `quick-tab-btn text-xs px-4 py-2 rounded-full font-bold transition-all border ${inactiveClass}`;
-        });
+        [allBtn, libBtn, rentBtn].forEach(b => b.className = `quick-tab-btn text-xs px-4 py-2 rounded-full font-bold transition-all border ${inactiveClass}`);
 
-        if (activeType === 'library') {
-            libBtn.className = `quick-tab-btn text-xs px-4 py-2 rounded-full font-bold transition-all border ${activeClass}`;
-        } else if (activeType === 'rent') {
-            rentBtn.className = `quick-tab-btn text-xs px-4 py-2 rounded-full font-bold transition-all border ${activeClass}`;
-        } else {
-            allBtn.className = `quick-tab-btn text-xs px-4 py-2 rounded-full font-bold transition-all border ${activeClass}`;
-        }
+        if (activeType === 'library') libBtn.className = `quick-tab-btn text-xs px-4 py-2 rounded-full font-bold transition-all border ${activeClass}`;
+        else if (activeType === 'rent') rentBtn.className = `quick-tab-btn text-xs px-4 py-2 rounded-full font-bold transition-all border ${activeClass}`;
+        else allBtn.className = `quick-tab-btn text-xs px-4 py-2 rounded-full font-bold transition-all border ${activeClass}`;
     }
 
     function toggleAvailability() {
         const toggleBtn = document.getElementById('availToggle');
         toggleBtn.classList.toggle('active');
         activeFilters.availOnly = toggleBtn.classList.contains('active');
-        
-        const quickAvailBtn = document.getElementById('quickTabAvail');
-        if (quickAvailBtn) {
-            if (activeFilters.availOnly) {
-                quickAvailBtn.className = "quick-tab-btn bg-deep-rosewood text-warm-ivory border border-deep-rosewood text-xs px-4 py-2 rounded-full font-bold transition-all shadow-sm";
-            } else {
-                quickAvailBtn.className = "quick-tab-btn bg-warm-parchment text-deep-rosewood border border-deep-rosewood/30 text-xs px-4 py-2 rounded-full font-bold hover:bg-deep-rosewood/10 transition-all";
-            }
-        }
-
         applyFilters();
     }
 
@@ -1243,17 +1184,14 @@
         ).slice(0, 5);
 
         if (matches.length === 0) {
-            suggestionsBox.innerHTML = `
-                <div class="p-4 text-xs text-deep-rosewood/70 text-center font-medium">
-                    No matching books found for "${query}"
-                </div>`;
+            suggestionsBox.innerHTML = `<div class="p-4 text-xs text-deep-rosewood/70 text-center font-medium">No books match "${query}"</div>`;
         } else {
             suggestionsBox.innerHTML = matches.map(b => `
                 <div class="suggestion-item" onclick="openBookDetail(${b.id}); document.getElementById('searchSuggestions').classList.remove('active');">
                     <img src="${b.cover}" alt="${b.title}" class="suggestion-cover"/>
                     <div>
                         <div class="font-bold text-sm text-deep-rosewood">${b.title}</div>
-                        <div class="text-xs text-dark-espresso/80">${b.author} • <span class="uppercase text-[10px] font-bold text-deep-rosewood">${b.type}</span></div>
+                        <div class="text-xs text-dark-espresso/80">${b.author} • <span class="uppercase text-[10px] font-bold">${b.type}</span></div>
                     </div>
                 </div>
             `).join('');
@@ -1262,40 +1200,10 @@
     }
 
     function applyFilters() {
-        const loadingState = document.getElementById('loadingState');
-        const bookGrid = document.getElementById('bookGrid');
-        
-        if (loadingState && bookGrid) {
-            loadingState.classList.remove('hidden');
-            bookGrid.classList.add('opacity-40');
-
-            setTimeout(() => {
-                loadingState.classList.add('hidden');
-                bookGrid.classList.remove('opacity-40');
-                renderBookGrid();
-                renderFilterChips();
-            }, 100);
-        } else {
-            renderBookGrid();
-            renderFilterChips();
-        }
+        renderBookGrid();
+        renderFilterChips();
     }
 
-    function filterByGenreDirect(code, label) {
-        switchNav('browse');
-        selectGenre(code, label);
-    }
-
-    function searchQuery(term) {
-        switchNav('browse');
-        const input = document.getElementById('searchInput');
-        if (input) {
-            input.value = term;
-            handleSearchInput(term);
-        }
-    }
-
-    /* RENDER FILTER CHIPS */
     function renderFilterChips() {
         const container = document.getElementById('filterChipsContainer');
         if (!container) return;
@@ -1328,21 +1236,8 @@
             `);
         }
 
-        if (activeFilters.search) {
-            chips.push(`
-                <span class="inline-flex items-center gap-1.5 bg-deep-rosewood text-warm-ivory text-xs px-3 py-1.5 rounded-full border border-deep-rosewood font-bold">
-                    Search: "${activeFilters.search}"
-                    <button onclick="clearSearch()" class="hover:text-dusty-rose"><span class="material-symbols-outlined text-sm">close</span></button>
-                </span>
-            `);
-        }
-
         if (chips.length > 0) {
-            chips.push(`
-                <button onclick="resetAllFilters()" class="text-xs font-bold text-deep-rosewood hover:underline ml-2">
-                    Clear All
-                </button>
-            `);
+            chips.push(`<button onclick="resetAllFilters()" class="text-xs font-bold text-deep-rosewood hover:underline ml-2">Clear All</button>`);
             container.innerHTML = chips.join('');
         } else {
             container.innerHTML = '';
@@ -1350,32 +1245,17 @@
     }
 
     function resetAllFilters() {
-        activeFilters = {
-            search: '',
-            genre: 'all',
-            genreLabel: 'All Genres',
-            type: 'all',
-            typeLabel: 'All Types',
-            availOnly: false
-        };
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) searchInput.value = '';
-        
-        const genreText = document.getElementById('genreTriggerText');
-        if (genreText) genreText.innerText = 'All Genres';
-        
-        const typeText = document.getElementById('typeTriggerText');
-        if (typeText) typeText.innerText = 'All Types';
-        
+        activeFilters = { search: '', genre: 'all', genreLabel: 'All Genres', type: 'all', typeLabel: 'All Types', availOnly: false };
+        document.getElementById('searchInput').value = '';
+        document.getElementById('genreTriggerText').innerText = 'All Genres';
+        document.getElementById('typeTriggerText').innerText = 'All Types';
         document.getElementById('availToggle')?.classList.remove('active');
         document.getElementById('clearSearchBtn')?.classList.add('hidden');
-        
         updateQuickTabStyles('all');
         applyFilters();
-        showToast("All filters reset. Showing all books.");
     }
 
-    /* RENDER BOOK CATALOG GRID */
+    /* RENDER CATALOG GRID */
     function renderBookGrid() {
         const grid = document.getElementById('bookGrid');
         const resultsCountEl = document.getElementById('resultsCount');
@@ -1387,35 +1267,19 @@
             if (activeFilters.availOnly && !b.available) return false;
             if (activeFilters.search) {
                 const q = activeFilters.search.toLowerCase();
-                const matchTitle = b.title.toLowerCase().includes(q);
-                const matchAuthor = b.author.toLowerCase().includes(q);
-                const matchIsbn = b.isbn && b.isbn.includes(q);
-                if (!matchTitle && !matchAuthor && !matchIsbn) return false;
+                if (!b.title.toLowerCase().includes(q) && !b.author.toLowerCase().includes(q) && !b.isbn.includes(q)) return false;
             }
             return true;
         });
 
-        // Apply Sorting
-        const sortBy = document.getElementById('sortBySelect')?.value || 'default';
-        if (sortBy === 'title') {
-            filtered.sort((a, b) => a.title.localeCompare(b.title));
-        } else if (sortBy === 'author') {
-            filtered.sort((a, b) => a.author.localeCompare(b.author));
-        }
-
-        if (resultsCountEl) {
-            resultsCountEl.innerText = `Showing ${filtered.length} result${filtered.length === 1 ? '' : 's'}`;
-        }
+        resultsCountEl.innerText = `Showing ${filtered.length} result${filtered.length === 1 ? '' : 's'}`;
 
         if (filtered.length === 0) {
             grid.innerHTML = `
                 <div class="col-span-full py-16 text-center bg-warm-parchment rounded-2xl border border-deep-rosewood/20 p-8">
                     <span class="material-symbols-outlined text-5xl text-deep-rosewood/40 mb-3">book_5</span>
-                    <h3 class="font-headline-md text-xl text-deep-rosewood font-bold mb-1">No textbooks found matching your selection</h3>
-                    <p class="text-sm text-dark-espresso/80 mb-4">Try clearing some filters or searching for another term.</p>
-                    <button onclick="resetAllFilters()" class="bg-deep-rosewood text-warm-ivory text-xs px-6 py-2.5 rounded-full font-label-caps font-bold">
-                        Reset Filters
-                    </button>
+                    <h3 class="font-headline-md text-xl text-deep-rosewood font-bold mb-1">No books found, try a different search</h3>
+                    <button onclick="resetAllFilters()" class="bg-deep-rosewood text-warm-ivory text-xs px-6 py-2.5 rounded-full font-bold mt-3">Reset Filters</button>
                 </div>
             `;
             return;
@@ -1432,29 +1296,21 @@
                 : `<span class="px-2 py-1 rounded-md text-[10px] font-bold border bg-muted-burgundy/10 text-muted-burgundy border-muted-burgundy/20">RENTED</span>`;
 
             return `
-                <div class="bg-warm-parchment rounded-xl p-4 border border-deep-rosewood/20 book-card-hover flex flex-col h-full cursor-pointer group"
-                     onclick="openBookDetail(${book.id})">
+                <div class="bg-warm-parchment rounded-xl p-4 border border-deep-rosewood/20 book-card-hover flex flex-col h-full cursor-pointer group" onclick="openBookDetail(${book.id})">
                     <div class="relative w-full aspect-[3/4] rounded-lg mb-4 overflow-hidden bg-warm-ivory flex-shrink-0">
                         ${badgeType}
                         <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
                     </div>
-                    
                     <div class="flex flex-col flex-grow">
-                        <div class="mb-1">
-                            <span class="text-[10px] font-label-caps text-deep-rosewood uppercase tracking-wider font-bold">${book.genreLabel}</span>
-                        </div>
+                        <span class="text-[10px] font-label-caps text-deep-rosewood uppercase font-bold tracking-wider mb-1">${book.genreLabel}</span>
                         <h3 class="font-subheading-display text-lg text-deep-rosewood leading-tight mb-1 line-clamp-2">${book.title}</h3>
                         <p class="font-body-md text-sm text-dark-espresso mb-2 line-clamp-1">${book.author}</p>
-                        ${book.seller ? `<div class="text-xs text-dark-espresso/80 mt-1">Listed by: ${book.seller}</div>` : ''}
+                        ${book.seller ? `<div class="text-xs text-dark-espresso/80 mt-1">Owner: ${book.seller}</div>` : ''}
                         
                         <div class="mt-auto pt-4 flex items-center justify-between" onclick="event.stopPropagation()">
                             ${statusBadge}
-                            <button onclick="toggleBookmark(${book.id})" 
-                                    class="text-deep-rosewood hover:text-dusty-rose transition-colors p-1"
-                                    title="${isSaved ? 'Remove Bookmark' : 'Save to My Library'}">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${isSaved ? 1 : 0};">
-                                    ${isSaved ? 'bookmark' : 'bookmark_add'}
-                                </span>
+                            <button onclick="toggleBookmark(${book.id})" class="text-deep-rosewood hover:text-dusty-rose p-1">
+                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${isSaved ? 1 : 0};">${isSaved ? 'bookmark' : 'bookmark_add'}</span>
                             </button>
                         </div>
                     </div>
@@ -1463,34 +1319,191 @@
         }).join('');
     }
 
-    /* BOOKMARKS & SAVED ITEMS */
-    function toggleBookmark(id) {
-        const book = booksData.find(b => b.id === id);
-        if (!book) return;
+    /* RECOMMENDATIONS PAGE */
+    function renderRecommendations() {
+        const container = document.getElementById('recommendationsList');
+        if (!container) return;
 
-        if (savedBookIds.has(id)) {
-            savedBookIds.delete(id);
-            showToast(`Removed "${book.title}" from saved books.`);
-        } else {
-            savedBookIds.add(id);
-            showToast(`Saved "${book.title}" to My Library!`, 'success');
-        }
-
-        updateSavedBadges();
-        renderBookGrid();
+        container.innerHTML = initialRecommendations.map(r => `
+            <div class="bg-warm-parchment rounded-xl p-5 border border-deep-rosewood/20 flex flex-col md:flex-row gap-5 items-center">
+                <div class="w-20 h-28 rounded-lg overflow-hidden flex-shrink-0 bg-warm-ivory">
+                    <img src="${booksData.find(b => b.id === r.id)?.cover || ''}" class="w-full h-full object-cover"/>
+                </div>
+                <div class="flex-1 space-y-2 w-full">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-subheading-display text-xl text-deep-rosewood font-bold">${r.title}</h3>
+                        <span class="text-xs font-mono font-bold text-dusty-rose bg-dusty-rose/10 px-3 py-1 rounded-full border border-dusty-rose/20">${r.match}% MATCH</span>
+                    </div>
+                    <p class="text-xs text-dark-espresso font-medium">Author: ${r.author}</p>
+                    <div class="w-full bg-deep-rosewood/10 h-2 rounded-full overflow-hidden">
+                        <div class="bg-deep-rosewood h-full rounded-full" style="width: ${r.match}%"></div>
+                    </div>
+                    <p class="text-xs text-dark-espresso/80 italic">${r.reason}</p>
+                </div>
+            </div>
+        `).join('');
     }
 
-    function updateSavedBadges() {
-        const count = savedBookIds.size;
-        const badge1 = document.getElementById('savedCountBadge');
-        const badge2 = document.getElementById('mobileSavedBadge');
-        const text1 = document.getElementById('savedCountText');
-        const text2 = document.getElementById('rentalsCountText');
+    /* RENTALS PAGE */
+    function renderMyRentals() {
+        const container = document.getElementById('rentalsListContainer');
+        if (!container) return;
 
-        if (badge1) badge1.innerText = count;
-        if (badge2) badge2.innerText = count;
-        if (text1) text1.innerText = count;
-        if (text2) text2.innerText = activeRentals.length;
+        container.innerHTML = activeRentals.map(r => `
+            <div class="bg-warm-parchment rounded-xl p-5 border border-deep-rosewood/20 flex justify-between items-center gap-4">
+                <div class="flex gap-4 items-center">
+                    <img src="${r.cover}" class="w-14 h-20 object-cover rounded-md flex-shrink-0"/>
+                    <div>
+                        <h4 class="font-subheading-display text-lg text-deep-rosewood font-bold">${r.title}</h4>
+                        <p class="text-xs text-dark-espresso">${r.author} • Lender: ${r.seller}</p>
+                        <p class="text-xs text-muted-green font-bold mt-1">Due Date: ${r.dueDate}</p>
+                    </div>
+                </div>
+                <button onclick="returnBook(${r.id})" class="bg-deep-rosewood text-warm-ivory text-xs px-5 py-2.5 rounded-full font-bold shadow-md hover:bg-deep-rosewood/90">
+                    Return Book
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function returnBook(rentalId) {
+        activeRentals = activeRentals.filter(r => r.id !== rentalId);
+        renderMyRentals();
+        updateSavedBadges();
+        showToast("Marked as returned!", "success");
+    }
+
+    /* MY LISTINGS & INCOMING REQUESTS PAGE */
+    function renderMyListings() {
+        const reqContainer = document.getElementById('incomingRequestsContainer');
+        const booksContainer = document.getElementById('myListedBooksContainer');
+
+        if (reqContainer) {
+            reqContainer.innerHTML = incomingRequests.map(req => `
+                <div class="bg-warm-parchment p-4 rounded-xl border border-deep-rosewood/20 flex justify-between items-center">
+                    <div>
+                        <p class="text-sm font-bold text-deep-rosewood">${req.requester} requested <span class="underline">${req.bookTitle}</span></p>
+                        <p class="text-xs text-dark-espresso/70">Date: ${req.date}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="handleRequestAction('${req.id}', 'approved')" class="bg-muted-green text-warm-ivory text-xs px-4 py-1.5 rounded-md font-bold">Approve</button>
+                        <button onclick="handleRequestAction('${req.id}', 'rejected')" class="bg-dusty-rose text-warm-ivory text-xs px-4 py-1.5 rounded-md font-bold">Reject</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        if (booksContainer) {
+            const myBooks = booksData.filter(b => b.type === 'rent');
+            booksContainer.innerHTML = myBooks.map(b => `
+                <div class="bg-warm-parchment p-4 rounded-xl border border-deep-rosewood/20 flex gap-4">
+                    <img src="${b.cover}" class="w-16 h-24 object-cover rounded-md flex-shrink-0"/>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-sm text-deep-rosewood">${b.title}</h4>
+                            <p class="text-xs text-dark-espresso">${b.author}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="showToast('Edit mode opened for ${b.title}')" class="text-xs font-bold text-deep-rosewood underline">Edit</button>
+                            <button onclick="showToast('Deleted listing for ${b.title}')" class="text-xs font-bold text-dusty-rose underline">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    function handleRequestAction(reqId, status) {
+        incomingRequests = incomingRequests.filter(r => r.id !== reqId);
+        renderMyListings();
+        showToast(`Request ${status} successfully!`, 'success');
+    }
+
+    /* TRANSACTIONS VIEW */
+    function renderTransactionsView() {
+        const tbody = document.getElementById('transactionTableBody');
+        if (!tbody) return;
+
+        const txns = [
+            { id: "TXN-00124", title: "Atomic Habits", type: "Rental", date: "19 Sep 2026", amount: "₹50", status: "Completed" },
+            { id: "TXN-00123", title: "The Alchemist", type: "Deposit", date: "18 Sep 2026", amount: "₹200", status: "Completed" },
+            { id: "TXN-00122", title: "Clean Code", type: "Fine", date: "17 Sep 2026", amount: "₹30", status: "Pending" },
+            { id: "TXN-00121", title: "Deep Work", type: "Refund", date: "15 Sep 2026", amount: "+₹150", status: "Refunded" }
+        ];
+
+        tbody.innerHTML = txns.map(t => `
+            <tr class="hover:bg-warm-parchment/60 transition-colors">
+                <td class="py-3 px-5 font-mono text-xs font-bold text-deep-rosewood">${t.id}</td>
+                <td class="py-3 px-5 font-bold text-deep-rosewood">${t.title}</td>
+                <td class="py-3 px-5"><span class="bg-deep-rosewood/10 text-deep-rosewood text-xs px-2.5 py-1 rounded font-bold">${t.type}</span></td>
+                <td class="py-3 px-5 text-xs">${t.date}</td>
+                <td class="py-3 px-5 font-bold">${t.amount}</td>
+                <td class="py-3 px-5"><span class="bg-muted-green/10 text-muted-green text-xs px-2.5 py-1 rounded font-bold">${t.status}</span></td>
+                <td class="py-3 px-5 text-right"><button onclick="showToast('Transaction ${t.id} receipt downloaded.', 'success')" class="text-xs font-bold text-deep-rosewood underline">Receipt</button></td>
+            </tr>
+        `).join('');
+    }
+
+    /* AUTH LOGIC */
+    function setAuthMode(mode) {
+        authMode = mode;
+        const loginBtn = document.getElementById('authModeLogin');
+        const signupBtn = document.getElementById('authModeSignup');
+        const nameField = document.getElementById('signupNameField');
+        const roleField = document.getElementById('signupRoleField');
+        const submitBtn = document.getElementById('authSubmitBtn');
+
+        if (mode === 'signup') {
+            signupBtn.className = "flex-1 py-1.5 rounded-full text-xs font-bold bg-deep-rosewood text-warm-ivory transition-all";
+            loginBtn.className = "flex-1 py-1.5 rounded-full text-xs font-bold text-deep-rosewood transition-all";
+            nameField.classList.remove('hidden');
+            roleField.classList.remove('hidden');
+            submitBtn.innerText = "Create Account";
+        } else {
+            loginBtn.className = "flex-1 py-1.5 rounded-full text-xs font-bold bg-deep-rosewood text-warm-ivory transition-all";
+            signupBtn.className = "flex-1 py-1.5 rounded-full text-xs font-bold text-deep-rosewood transition-all";
+            nameField.classList.add('hidden');
+            roleField.classList.add('hidden');
+            submitBtn.innerText = "Log In";
+        }
+    }
+
+    function setRoleSelection(role) {
+        selectedRole = role;
+        const studentBtn = document.getElementById('roleBtnStudent');
+        const ownerBtn = document.getElementById('roleBtnOwner');
+
+        if (role === 'student') {
+            studentBtn.className = "py-2 text-xs font-bold rounded-lg border border-deep-rosewood bg-deep-rosewood text-warm-ivory";
+            ownerBtn.className = "py-2 text-xs font-bold rounded-lg border border-deep-rosewood/30 bg-warm-parchment text-deep-rosewood";
+        } else {
+            ownerBtn.className = "py-2 text-xs font-bold rounded-lg border border-deep-rosewood bg-deep-rosewood text-warm-ivory";
+            studentBtn.className = "py-2 text-xs font-bold rounded-lg border border-deep-rosewood/30 bg-warm-parchment text-deep-rosewood";
+        }
+    }
+
+    function handleAuthSubmit(e) {
+        e.preventDefault();
+        const email = document.getElementById('authEmail').value;
+        const nameInput = document.getElementById('authName').value;
+        
+        currentUser.email = email;
+        currentUser.name = nameInput || email.split('@')[0];
+        currentUser.role = selectedRole === 'owner' ? 'Book Owner' : 'Student';
+
+        document.getElementById('profileName').innerText = currentUser.name;
+        document.getElementById('profileEmail').innerText = currentUser.email;
+        document.getElementById('profileRoleBadge').innerText = `Role: ${currentUser.role}`;
+        document.getElementById('userAuthBtn').innerText = currentUser.name.split(' ')[0];
+
+        closeModal('authModal');
+        showToast(`Logged in successfully as ${currentUser.name}!`, 'success');
+    }
+
+    function handleSignOut() {
+        showToast('Logged out of BookNexus.', 'info');
+        document.getElementById('userAuthBtn').innerText = 'Sign In';
+        switchNav('browse');
     }
 
     /* BOOK DETAIL MODAL */
@@ -1498,9 +1511,7 @@
         const book = booksData.find(b => b.id === id);
         if (!book) return;
 
-        const isSaved = savedBookIds.has(book.id);
         const detailContainer = document.getElementById('bookDetailContent');
-
         detailContainer.innerHTML = `
             <div class="flex flex-col sm:flex-row gap-6">
                 <div class="w-full sm:w-1/3 aspect-[3/4] rounded-xl overflow-hidden bg-warm-parchment relative flex-shrink-0 shadow-md">
@@ -1515,148 +1526,56 @@
                     </div>
 
                     <div class="bg-warm-parchment p-4 rounded-xl border border-deep-rosewood/20 space-y-2 mb-4 text-xs">
-                        <div class="flex justify-between"><span class="text-dark-espresso/70">ISBN:</span> <span class="font-bold text-deep-rosewood">${book.isbn}</span></div>
-                        <div class="flex justify-between"><span class="text-dark-espresso/70">Access Type:</span> <span class="font-bold text-deep-rosewood">${book.type === 'rent' ? 'Peer Rent Book' : 'Library Book'}</span></div>
+                        <div class="flex justify-between"><span class="text-dark-espresso/70">Condition:</span> <span class="font-bold text-deep-rosewood">${book.condition}</span></div>
+                        <div class="flex justify-between"><span class="text-dark-espresso/70">Access Type:</span> <span class="font-bold text-deep-rosewood">${book.type === 'rent' ? 'P2P Rent Book ($5/wk)' : 'Library Free Book'}</span></div>
                         <div class="flex justify-between"><span class="text-dark-espresso/70">Pickup Location:</span> <span class="font-bold text-deep-rosewood">${book.location}</span></div>
-                        ${book.seller ? `<div class="flex justify-between"><span class="text-dark-espresso/70">Lender:</span> <span class="font-bold text-deep-rosewood">${book.seller}</span></div>` : ''}
+                        ${book.seller ? `<div class="flex justify-between"><span class="text-dark-espresso/70">Lender Owner:</span> <span class="font-bold text-deep-rosewood">${book.seller}</span></div>` : ''}
                     </div>
 
-                    <div class="flex items-center gap-3 pt-2 border-t border-deep-rosewood/10">
-                        <button onclick="requestRental(${book.id})" 
-                                ${!book.available ? 'disabled' : ''}
-                                class="flex-1 bg-deep-rosewood text-warm-ivory font-label-caps text-xs py-3 rounded-full hover:bg-deep-rosewood/90 disabled:opacity-50 disabled:cursor-not-allowed font-bold shadow-md transition-all">
-                            ${book.available ? (book.type === 'rent' ? 'Request Peer Rental ($5/mo)' : 'Borrow Free from Library') : 'Currently Rented'}
-                        </button>
-                        <button onclick="toggleBookmark(${book.id}); openBookDetail(${book.id});" 
-                                class="p-3 border border-deep-rosewood rounded-full text-deep-rosewood hover:bg-warm-parchment transition-colors">
-                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' ${isSaved ? 1 : 0};">
-                                ${isSaved ? 'bookmark' : 'bookmark_add'}
-                            </span>
-                        </button>
-                    </div>
+                    <button onclick="requestRental(${book.id})" 
+                            ${!book.available ? 'disabled' : ''}
+                            class="w-full bg-deep-rosewood text-warm-ivory font-label-caps text-xs py-3 rounded-full hover:bg-deep-rosewood/90 disabled:opacity-50 disabled:cursor-not-allowed font-bold shadow-md">
+                        ${book.available ? 'Request to Rent' : 'Currently Unavailable'}
+                    </button>
                 </div>
             </div>
         `;
-
         openModal('bookDetailModal');
     }
 
     function requestRental(id) {
         const book = booksData.find(b => b.id === id);
         if (!book || !book.available) return;
-
         book.available = false;
+
         activeRentals.push({
+            id: Date.now(),
             bookId: book.id,
             title: book.title,
             author: book.author,
-            dueDate: "Nov 12, 2026",
-            seller: book.seller || "Campus Library"
+            status: "requested",
+            dueDate: "Pending Approval",
+            seller: book.seller || "Library Desk",
+            cover: book.cover
         });
 
         closeModal('bookDetailModal');
-        updateSavedBadges();
+        renderMyRentals();
         renderBookGrid();
-        showToast(`Request submitted for "${book.title}"! Pick up at ${book.location}.`, 'success');
+        showToast("Request sent! Waiting for approval.", "success");
     }
 
-    /* RENDER MY LIBRARY VIEW */
-    function renderLibraryView() {
-        const savedContainer = document.getElementById('librarySavedContent');
-        const rentalsContainer = document.getElementById('libraryRentalsContent');
-
-        if (!savedContainer || !rentalsContainer) return;
-
-        // Render Saved
-        const savedList = booksData.filter(b => savedBookIds.has(b.id));
-        if (savedList.length === 0) {
-            savedContainer.innerHTML = `
-                <div class="col-span-full py-12 text-center bg-warm-parchment rounded-xl border border-deep-rosewood/20">
-                    <p class="text-deep-rosewood font-bold">No saved bookmarks yet</p>
-                    <p class="text-xs text-dark-espresso/70 mt-1">Click the bookmark icon on any book card to save it here.</p>
-                </div>
-            `;
-        } else {
-            savedContainer.innerHTML = savedList.map(book => `
-                <div class="bg-warm-parchment rounded-xl p-4 border border-deep-rosewood/20 flex flex-col justify-between">
-                    <div>
-                        <h4 class="font-subheading-display text-base text-deep-rosewood font-bold leading-tight mb-1">${book.title}</h4>
-                        <p class="text-xs text-dark-espresso mb-3">${book.author}</p>
-                    </div>
-                    <div class="flex justify-between items-center pt-2 border-t border-deep-rosewood/10">
-                        <button onclick="openBookDetail(${book.id})" class="text-xs font-bold text-deep-rosewood hover:underline">View</button>
-                        <button onclick="toggleBookmark(${book.id}); renderLibraryView();" class="text-xs text-dusty-rose font-bold">Remove</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render Rentals
-        if (activeRentals.length === 0) {
-            rentalsContainer.innerHTML = `
-                <div class="py-12 text-center bg-warm-parchment rounded-xl border border-deep-rosewood/20">
-                    <p class="text-deep-rosewood font-bold">No active rentals</p>
-                </div>
-            `;
-        } else {
-            rentalsContainer.innerHTML = activeRentals.map(r => `
-                <div class="bg-warm-parchment p-4 rounded-xl border border-deep-rosewood/20 flex justify-between items-center">
-                    <div>
-                        <h4 class="font-subheading-display text-base text-deep-rosewood font-bold">${r.title}</h4>
-                        <p class="text-xs text-dark-espresso">${r.author} • Lender: ${r.seller}</p>
-                        <p class="text-[11px] text-muted-green font-bold mt-1">Due Date: ${r.dueDate}</p>
-                    </div>
-                    <button onclick="returnBook(${r.bookId})" class="border border-deep-rosewood text-deep-rosewood text-xs px-4 py-2 rounded-full font-bold hover:bg-deep-rosewood hover:text-warm-ivory transition-colors">
-                        Return Book
-                    </button>
-                </div>
-            `).join('');
-        }
-    }
-
-    function switchLibraryTab(tab) {
-        if (tab === 'saved') {
-            document.getElementById('librarySavedContent')?.classList.remove('hidden');
-            document.getElementById('libraryRentalsContent')?.classList.add('hidden');
-            document.getElementById('tabSaved').className = "font-bold text-lg text-deep-rosewood border-b-2 border-deep-rosewood pb-3";
-            document.getElementById('tabRentals').className = "font-medium text-lg text-dark-espresso/70 hover:text-deep-rosewood pb-3";
-        } else {
-            document.getElementById('librarySavedContent')?.classList.add('hidden');
-            document.getElementById('libraryRentalsContent')?.classList.remove('hidden');
-            document.getElementById('tabRentals').className = "font-bold text-lg text-deep-rosewood border-b-2 border-deep-rosewood pb-3";
-            document.getElementById('tabSaved').className = "font-medium text-lg text-dark-espresso/70 hover:text-deep-rosewood pb-3";
-        }
-    }
-
-    function returnBook(bookId) {
-        activeRentals = activeRentals.filter(r => r.bookId !== bookId);
-        const book = booksData.find(b => b.id === bookId);
-        if (book) book.available = true;
-        
-        updateSavedBadges();
-        renderLibraryView();
-        renderBookGrid();
-        showToast("Textbook returned to sanctuary library!", "success");
-    }
-
-    /* LIST NEW BOOK SUBMISSION */
+    /* LIST NEW BOOK SUBMIT */
     function handleListBookSubmit(e) {
         e.preventDefault();
         const title = document.getElementById('newTitle').value.trim();
         const author = document.getElementById('newAuthor').value.trim();
         const genreLabel = document.getElementById('newGenre').value;
         const typeVal = document.getElementById('newType').value.toLowerCase();
-        const seller = document.getElementById('newSeller').value.trim() || 'Student';
+        const condition = document.getElementById('newCondition').value;
         const cover = document.getElementById('newCover').value.trim() || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600';
 
-        const genreCodeMap = {
-            'Computer Science': 'cs',
-            'Engineering': 'eng',
-            'Mathematics': 'math',
-            'Science': 'sci',
-            'Business': 'bus',
-            'Literature': 'lit'
-        };
+        const genreCodeMap = { 'Computer Science': 'cs', 'Engineering': 'eng', 'Mathematics': 'math', 'Science': 'sci', 'Business': 'bus', 'Literature': 'lit' };
 
         const newBookObj = {
             id: Date.now(),
@@ -1664,64 +1583,89 @@
             author,
             genre: genreCodeMap[genreLabel] || 'cs',
             genreLabel,
-            type: typeVal,
-            seller: typeVal === 'rent' ? seller : null,
+            type: typeVal === 'rent' ? 'rent' : 'library',
+            seller: typeVal === 'rent' ? currentUser.name : null,
             available: true,
             cover,
             isbn: `978-0${Math.floor(100000000 + Math.random() * 900000000)}`,
-            description: `Newly listed textbook by ${seller} for ${genreLabel} students. Available for immediate peer exchange.`,
-            location: "Main Campus Library Desk"
+            description: `Newly listed textbook by ${currentUser.name}.`,
+            location: "Main Campus Library Desk",
+            condition
         };
 
         booksData.unshift(newBookObj);
         closeModal('listBookModal');
         renderBookGrid();
+        renderMyListings();
         e.target.reset();
-        showToast(`Successfully listed "${title}" for peer exchange!`, 'success');
+        showToast(`Saved "${title}" to listings!`, 'success');
     }
 
-    /* AUTH SUBMISSION */
-    function handleAuthSubmit(e) {
+    /* PROFILE PREFERENCES */
+    function renderPrefTags() {
+        const container = document.getElementById('prefTagsContainer');
+        if (!container) return;
+        container.innerHTML = prefTags.map(tag => `
+            <span class="inline-flex items-center gap-1.5 bg-deep-rosewood text-warm-ivory text-xs px-3 py-1 rounded-full font-bold">
+                ${tag}
+                <button onclick="removePrefTag('${tag}')" class="hover:text-dusty-rose"><span class="material-symbols-outlined text-sm">close</span></button>
+            </span>
+        `).join('');
+    }
+
+    function handleAddPrefTag(e) {
         e.preventDefault();
-        const email = document.getElementById('authEmail').value;
-        closeModal('authModal');
-        const btn = document.getElementById('userAuthBtn');
-        if (btn) btn.innerText = email.split('@')[0];
-        showToast(`Welcome back, ${email.split('@')[0]}!`, 'success');
+        const input = document.getElementById('newTagInput');
+        const val = input.value.trim();
+        if (val && !prefTags.includes(val)) {
+            prefTags.push(val);
+            input.value = '';
+            renderPrefTags();
+        }
+    }
+
+    function removePrefTag(tag) {
+        prefTags = prefTags.filter(t => t !== tag);
+        renderPrefTags();
+    }
+
+    /* BOOKMARKS & BADGES */
+    function toggleBookmark(id) {
+        if (savedBookIds.has(id)) savedBookIds.delete(id);
+        else savedBookIds.add(id);
+        updateSavedBadges();
+        renderBookGrid();
+    }
+
+    function updateSavedBadges() {
+        const badge = document.getElementById('rentalsCountBadge');
+        if (badge) badge.innerText = activeRentals.length;
     }
 
     /* MODAL HELPERS */
-    function openModal(id) {
-        const modal = document.getElementById(id);
-        if (modal) modal.classList.remove('hidden');
+    function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+
+    /* STATEMENT EXPORT */
+    function exportStatement() {
+        const csvContent = "data:text/csv;charset=utf-8,ID,Book Title,Type,Date,Amount,Status\nTXN-00124,Atomic Habits,Rental,19 Sep 2026,₹50,Completed\nTXN-00123,The Alchemist,Deposit,18 Sep 2026,₹200,Completed";
+        const link = document.createElement("a");
+        link.href = encodeURI(csvContent);
+        link.download = "BookNexus_Ledger.csv";
+        link.click();
+        showToast('Statement exported as CSV!', 'success');
     }
 
-    function closeModal(id) {
-        const modal = document.getElementById(id);
-        if (modal) modal.classList.add('hidden');
-    }
-
-    /* TOAST NOTIFICATION */
+    /* TOAST SYSTEM */
     function showToast(msg, type = 'info') {
         const container = document.getElementById('toastContainer');
         if (!container) return;
         const toast = document.createElement('div');
-
         const bgStyle = type === 'success' ? 'bg-muted-green text-warm-ivory' : 'bg-deep-rosewood text-warm-ivory';
-
         toast.className = `${bgStyle} px-4 py-3 rounded-lg shadow-xl text-xs font-bold flex items-center gap-2 transform transition-all duration-300 pointer-events-auto border border-warm-parchment/20`;
-        toast.innerHTML = `
-            <span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'info'}</span>
-            <span>${msg}</span>
-        `;
-
+        toast.innerHTML = `<span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'info'}</span><span>${msg}</span>`;
         container.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(-10px)';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-10px)'; setTimeout(() => toast.remove(), 300); }, 3000);
     }
 </script>
 </body>
