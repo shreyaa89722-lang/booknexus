@@ -291,6 +291,22 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* Receipt Print Styling */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printableInvoice, #printableInvoice * {
+                visibility: visible;
+            }
+            #printableInvoice {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col font-body-md text-body-md bg-warm-ivory selection:bg-dusty-rose selection:text-warm-ivory">
@@ -511,13 +527,13 @@
     <div class="flex flex-wrap gap-2 mb-6 items-center">
         <span class="text-xs font-bold text-deep-rosewood uppercase tracking-wider mr-2">Quick Filter:</span>
         <button id="quickTabAll" onclick="setQuickType('all')" class="quick-tab-btn bg-deep-rosewood text-warm-ivory border border-deep-rosewood text-xs px-4 py-2 rounded-full font-bold transition-all shadow-sm">
-            All Books (20)
+            All Books (10)
         </button>
         <button id="quickTabLibrary" onclick="setQuickType('library')" class="quick-tab-btn bg-warm-parchment text-deep-rosewood border border-deep-rosewood/30 text-xs px-4 py-2 rounded-full font-bold hover:bg-deep-rosewood/10 transition-all">
-            📖 Library Stock (10)
+            📖 Library Stock (5)
         </button>
         <button id="quickTabRent" onclick="setQuickType('rent')" class="quick-tab-btn bg-warm-parchment text-deep-rosewood border border-deep-rosewood/30 text-xs px-4 py-2 rounded-full font-bold hover:bg-deep-rosewood/10 transition-all">
-            🏷️ P2P Rent Books (10)
+            🏷️ P2P Rent Books (5)
         </button>
         <button id="quickTabAvail" onclick="toggleAvailability()" class="quick-tab-btn bg-warm-parchment text-deep-rosewood border border-deep-rosewood/30 text-xs px-4 py-2 rounded-full font-bold hover:bg-deep-rosewood/10 transition-all">
             ✅ Available Now Only
@@ -529,7 +545,7 @@
 
     <!-- Results Counter Bar -->
     <div class="mb-6 flex items-center justify-between border-b border-deep-rosewood/15 pb-4">
-        <div class="text-dark-espresso font-label-caps text-label-caps tracking-wider uppercase font-bold text-sm" id="resultsCount">Showing 20 results</div>
+        <div class="text-dark-espresso font-label-caps text-label-caps tracking-wider uppercase font-bold text-sm" id="resultsCount">Showing 10 results</div>
         <div class="flex items-center gap-2 text-xs text-dark-espresso font-medium">
             <span>Sort by:</span>
             <select id="sortBySelect" onchange="renderBookGrid()" class="bg-warm-parchment border border-deep-rosewood/30 rounded-md text-deep-rosewood font-bold text-xs px-3 py-1 focus:ring-0 cursor-pointer">
@@ -545,8 +561,6 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 hidden" id="loadingState">
         <div class="bg-warm-parchment rounded-xl p-4 border border-deep-rosewood/20 h-[380px] flex flex-col gap-4"><div class="w-full h-48 rounded-lg shimmer"></div><div class="h-6 w-3/4 shimmer rounded"></div><div class="h-4 w-1/2 shimmer rounded"></div></div>
         <div class="bg-warm-parchment rounded-xl p-4 border border-deep-rosewood/20 h-[380px] flex flex-col gap-4"><div class="w-full h-48 rounded-lg shimmer"></div><div class="h-6 w-3/4 shimmer rounded"></div><div class="h-4 w-1/2 shimmer rounded"></div></div>
-        <div class="bg-warm-parchment rounded-xl p-4 border border-deep-rosewood/20 h-[380px] flex flex-col gap-4"><div class="w-full h-48 rounded-lg shimmer"></div><div class="h-6 w-3/4 shimmer rounded"></div><div class="h-4 w-1/2 shimmer rounded"></div></div>
-        <div class="bg-warm-parchment rounded-xl p-4 border border-deep-rosewood/20 h-[380px] flex flex-col gap-4"><div class="w-full h-48 rounded-lg shimmer"></div><div class="h-6 w-3/4 shimmer rounded"></div><div class="h-4 w-1/2 shimmer rounded"></div></div>
     </div>
 
     <!-- Main Book Grid -->
@@ -555,31 +569,79 @@
     </div>
 </div>
 
-<!-- ================= CATEGORY 3: MY LISTINGS (OWNER ONLY) ================= -->
+<!-- ================= CATEGORY 3: MY LISTINGS & REQUESTS VIEW ================= -->
 <div id="viewListings" class="view-panel hidden pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
     <header class="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-            <span class="text-xs font-label-caps text-deep-rosewood uppercase tracking-widest font-bold">Book Owner Shelf</span>
-            <h1 class="font-display-lg text-4xl text-deep-rosewood font-bold mt-1">My Listings & Requests</h1>
-            <p class="font-body-md text-sm text-dark-espresso font-medium">Manage your listed books, pricing per week, and approve incoming borrow requests.</p>
+            <span class="text-xs font-label-caps text-deep-rosewood uppercase tracking-widest font-bold">Personal Dashboard</span>
+            <h1 class="font-display-lg text-4xl text-deep-rosewood font-bold mt-1">My Listings, Saved & Requests</h1>
+            <p class="font-body-md text-sm text-dark-espresso font-medium">Track your listed books, saved reminders, sent borrow requests, and incoming approval notifications.</p>
         </div>
         <button onclick="openModal('listBookModal')" class="bg-deep-rosewood text-warm-ivory text-xs px-6 py-3 rounded-full font-label-caps font-bold shadow-md hover:bg-deep-rosewood/90">
             + Add a Book
         </button>
     </header>
 
-    <!-- Incoming Requests Section -->
-    <div class="mb-12">
-        <h3 class="font-subheading-display text-2xl text-deep-rosewood mb-4 font-bold">Incoming Rental Requests</h3>
-        <div class="space-y-3" id="incomingRequestsContainer">
+    <!-- Sub-Section Tabs Bar -->
+    <div class="flex flex-wrap border-b border-deep-rosewood/20 gap-2 mb-8" id="listingsTabsNav">
+        <button id="tabBtnMyList" onclick="switchListingsSubTab('myList')" class="py-3 px-5 text-sm font-bold border-b-2 border-deep-rosewood text-deep-rosewood transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">collections_bookmark</span>
+            <span>My Listed Inventory (<span id="countMyListings">0</span>)</span>
+        </button>
+        <button id="tabBtnSaved" onclick="switchListingsSubTab('saved')" class="py-3 px-5 text-sm font-bold border-b-2 border-transparent text-dark-espresso/70 hover:text-deep-rosewood transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg text-dusty-rose">bookmark</span>
+            <span>Saved & Remind Me (<span id="countSaved">0</span>)</span>
+        </button>
+        <button id="tabBtnSent" onclick="switchListingsSubTab('sent')" class="py-3 px-5 text-sm font-bold border-b-2 border-transparent text-dark-espresso/70 hover:text-deep-rosewood transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">outbox</span>
+            <span>Sent Requests (<span id="countSentReq">0</span>)</span>
+        </button>
+        <button id="tabBtnReceived" onclick="switchListingsSubTab('received')" class="py-3 px-5 text-sm font-bold border-b-2 border-transparent text-dark-espresso/70 hover:text-deep-rosewood transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">inbox</span>
+            <span>Received Requests (<span id="countReceivedReq">0</span>)</span>
+        </button>
+    </div>
+
+    <!-- SUB-TAB 1: MY LISTED BOOKS -->
+    <div id="subTabMyList" class="sub-tab-panel">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-subheading-display text-2xl text-deep-rosewood font-bold">My Active P2P Listings</h3>
+            <span class="text-xs text-dark-espresso font-medium">Books you published for student rentals</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="myListedBooksContainer">
             <!-- Rendered dynamically -->
         </div>
     </div>
 
-    <!-- My Listed Books -->
-    <div>
-        <h3 class="font-subheading-display text-2xl text-deep-rosewood mb-4 font-bold">My P2P Listed Inventory</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="myListedBooksContainer">
+    <!-- SUB-TAB 2: SAVED & REMIND ME LATER -->
+    <div id="subTabSaved" class="sub-tab-panel hidden">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-subheading-display text-2xl text-deep-rosewood font-bold">Saved Books & Reminders</h3>
+            <span class="text-xs text-dark-espresso font-medium">Textbooks pinned to read or rent later</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="savedBooksContainer">
+            <!-- Rendered dynamically -->
+        </div>
+    </div>
+
+    <!-- SUB-TAB 3: SENT REQUESTS (OUTGOING) -->
+    <div id="subTabSent" class="sub-tab-panel hidden">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-subheading-display text-2xl text-deep-rosewood font-bold">Sent Rental Requests</h3>
+            <span class="text-xs text-dark-espresso font-medium">Status of book requests you submitted to owners</span>
+        </div>
+        <div class="space-y-4" id="sentRequestsContainer">
+            <!-- Rendered dynamically -->
+        </div>
+    </div>
+
+    <!-- SUB-TAB 4: RECEIVED REQUESTS (INCOMING) -->
+    <div id="subTabReceived" class="sub-tab-panel hidden">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-subheading-display text-2xl text-deep-rosewood font-bold">Incoming Rental Approvals</h3>
+            <span class="text-xs text-dark-espresso font-medium">Borrow requests received from other campus students</span>
+        </div>
+        <div class="space-y-4" id="incomingRequestsContainer">
             <!-- Rendered dynamically -->
         </div>
     </div>
@@ -600,15 +662,49 @@
             </button>
         </div>
 
+        <!-- Comprehensive Filters Toolbar for Transactions -->
+        <div class="bg-warm-parchment rounded-xl p-5 mb-6 border border-deep-rosewood/20 flex flex-wrap gap-4 items-center justify-between shadow-sm">
+            <!-- Search Transaction -->
+            <div class="flex-1 min-w-[220px] relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-deep-rosewood text-lg">search</span>
+                <input id="txnSearchInput" oninput="renderTransactionsView()" type="text" placeholder="Search by Txn ID, Book, or User..." class="w-full bg-warm-ivory border border-deep-rosewood/30 rounded-lg pl-10 pr-4 py-2 text-xs font-bold text-deep-rosewood focus:outline-none focus:border-deep-rosewood"/>
+            </div>
+
+            <!-- Type Filter -->
+            <div class="min-w-[160px]">
+                <select id="txnTypeFilter" onchange="renderTransactionsView()" class="w-full bg-warm-ivory border border-deep-rosewood/30 rounded-lg px-3 py-2 text-xs font-bold text-deep-rosewood focus:outline-none cursor-pointer">
+                    <option value="all">All Transaction Types</option>
+                    <option value="Rental Fee">Rental Fee</option>
+                    <option value="Security Deposit">Security Deposit</option>
+                    <option value="Overdue Fine">Overdue Fine</option>
+                    <option value="Refund">Refund</option>
+                    <option value="Listing Earning">Listing Earning</option>
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="min-w-[140px]">
+                <select id="txnStatusFilter" onchange="renderTransactionsView()" class="w-full bg-warm-ivory border border-deep-rosewood/30 rounded-lg px-3 py-2 text-xs font-bold text-deep-rosewood focus:outline-none cursor-pointer">
+                    <option value="all">All Statuses</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Refunded">Refunded</option>
+                </select>
+            </div>
+
+            <!-- Clear Txn Filters -->
+            <button onclick="resetTxnFilters()" class="text-xs font-bold text-deep-rosewood hover:underline">Reset Filters</button>
+        </div>
+
         <!-- Summary Stats Bento -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20">
                 <div class="text-xs text-dark-espresso/70 font-bold uppercase">Total Transactions</div>
-                <div class="font-display-lg text-3xl text-deep-rosewood font-bold mt-2" id="statTotalCount">10</div>
+                <div class="font-display-lg text-3xl text-deep-rosewood font-bold mt-2" id="statTotalCount">5</div>
             </div>
             <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20">
                 <div class="text-xs text-muted-green font-bold uppercase">Settled & Completed</div>
-                <div class="font-display-lg text-3xl text-muted-green font-bold mt-2" id="statCompletedCount">6</div>
+                <div class="font-display-lg text-3xl text-muted-green font-bold mt-2" id="statCompletedCount">3</div>
             </div>
             <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20">
                 <div class="text-xs text-dusty-rose font-bold uppercase">Pending Settlement</div>
@@ -616,7 +712,7 @@
             </div>
             <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20">
                 <div class="text-xs text-deep-rosewood font-bold uppercase">Recorded Volume</div>
-                <div class="font-display-lg text-3xl text-deep-rosewood font-bold mt-2" id="statTotalAmount">₹1,140</div>
+                <div class="font-display-lg text-3xl text-deep-rosewood font-bold mt-2" id="statTotalAmount">₹710</div>
             </div>
         </div>
 
@@ -632,7 +728,7 @@
                             <th class="py-3.5 px-5">Date</th>
                             <th class="py-3.5 px-5">Amount</th>
                             <th class="py-3.5 px-5">Status</th>
-                            <th class="py-3.5 px-5 text-right">Action</th>
+                            <th class="py-3.5 px-5 text-right">Receipt Preview</th>
                         </tr>
                     </thead>
                     <tbody id="transactionTableBody" class="divide-y divide-deep-rosewood/10 text-sm font-medium">
@@ -657,7 +753,7 @@
         <span class="material-symbols-outlined text-5xl text-deep-rosewood">lock_person</span>
         <h3 class="font-subheading-display text-2xl text-deep-rosewood font-bold">Authority Sign In Required</h3>
         <p class="text-xs text-dark-espresso font-medium">Access to the Admin Desk is restricted to university library authorities and administrators.</p>
-        <button onclick="setAuthMode('login'); openModal('authModal');" class="bg-deep-rosewood text-warm-ivory text-xs font-bold px-6 py-2.5 rounded-full shadow-md">
+        <button onclick="setAuthMode('login'); setRoleSelection('admin'); openModal('authModal');" class="bg-deep-rosewood text-warm-ivory text-xs font-bold px-6 py-2.5 rounded-full shadow-md">
             Sign In as Authority / Admin
         </button>
     </div>
@@ -768,7 +864,7 @@
                 <div>
                     <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Listing Type *</label>
                     <select id="newType" onchange="togglePriceInput(this.value)" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium">
-                        <option value="RENT">P2P Rent Book ($/wk)</option>
+                        <option value="RENT">P2P Rent Book (₹/wk)</option>
                         <option value="LIBRARY">Free Library Stock</option>
                     </select>
                 </div>
@@ -783,8 +879,8 @@
             </div>
 
             <div id="priceInputField">
-                <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Rental Price Per Week ($/wk or ₹/wk) *</label>
-                <input id="newPrice" type="text" placeholder="e.g. ₹50/wk or $5/wk" value="₹50/wk" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
+                <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Rental Price Per Week (₹/wk) *</label>
+                <input id="newPrice" type="text" placeholder="e.g. ₹50/wk" value="₹50/wk" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
             </div>
 
             <div>
@@ -802,21 +898,27 @@
     </div>
 </div>
 
-<!-- MODAL 3: Sign In / Auth Modal -->
+<!-- MODAL 3: Sign In / Auth Modal with Validation & Platform Rules -->
 <div id="authModal" class="fixed inset-0 z-50 bg-dark-espresso/70 modal-backdrop hidden flex items-center justify-center p-4">
-    <div class="bg-warm-ivory rounded-2xl max-w-md w-full p-6 md:p-8 relative border border-deep-rosewood modal-box shadow-2xl text-center">
+    <div class="bg-warm-ivory rounded-2xl max-w-md w-full p-6 md:p-8 relative border border-deep-rosewood modal-box shadow-2xl text-center max-h-[90vh] overflow-y-auto">
         <button onclick="closeModal('authModal')" class="absolute top-4 right-4 text-deep-rosewood hover:text-dusty-rose p-1">
             <span class="material-symbols-outlined text-2xl">close</span>
         </button>
 
         <div class="material-symbols-outlined text-4xl text-deep-rosewood mb-2">account_circle</div>
         <h3 class="font-headline-md text-2xl text-deep-rosewood mb-1" id="authTitle">Sign In Portal</h3>
-        <p class="text-xs text-dark-espresso/80 mb-6">Authenticate to access listings, transactions, and admin controls.</p>
+        <p class="text-xs text-dark-espresso/80 mb-4">Authenticate to access listings, transactions, and admin controls.</p>
 
         <!-- Mode Toggle -->
-        <div class="flex rounded-full bg-warm-parchment p-1 mb-6 border border-deep-rosewood/20">
+        <div class="flex rounded-full bg-warm-parchment p-1 mb-4 border border-deep-rosewood/20">
             <button type="button" id="authModeLogin" onclick="setAuthMode('login')" class="flex-1 py-1.5 rounded-full text-xs font-bold bg-deep-rosewood text-warm-ivory transition-all">Sign In</button>
             <button type="button" id="authModeSignup" onclick="setAuthMode('signup')" class="flex-1 py-1.5 rounded-full text-xs font-bold text-deep-rosewood transition-all">Create Account</button>
+        </div>
+
+        <!-- Dynamic Error Banner Display -->
+        <div id="authErrorBanner" class="hidden mb-4 p-3 rounded-lg bg-error-container text-on-error-container border border-error text-xs font-bold text-left flex items-start gap-2">
+            <span class="material-symbols-outlined text-base flex-shrink-0 mt-0.5">error</span>
+            <span id="authErrorMsg">Please check missing fields.</span>
         </div>
 
         <form onsubmit="handleAuthSubmit(event)" class="space-y-4 text-left">
@@ -827,12 +929,12 @@
 
             <div>
                 <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Email Address *</label>
-                <input required id="authEmail" type="email" placeholder="student@university.edu" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
+                <input id="authEmail" type="text" placeholder="student@university.edu" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
             </div>
 
             <div>
                 <label class="block text-xs font-label-caps text-deep-rosewood uppercase mb-1 font-bold">Password *</label>
-                <input required id="authPassword" type="password" placeholder="••••••••" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
+                <input id="authPassword" type="password" placeholder="•••••••• (Min 6 chars)" class="w-full bg-warm-parchment border border-deep-rosewood/30 rounded-lg px-4 py-2.5 text-deep-rosewood focus:outline-none text-sm font-medium"/>
             </div>
 
             <div>
@@ -844,6 +946,23 @@
                 </div>
             </div>
 
+            <!-- Rules & Terms Section -->
+            <div class="bg-warm-parchment p-3 rounded-lg border border-deep-rosewood/20 space-y-2 text-xs text-dark-espresso">
+                <div class="font-bold text-deep-rosewood flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">gavel</span>
+                    <span>BookNexus Sanctuary Rules:</span>
+                </div>
+                <ul class="list-disc pl-4 space-y-1 text-[11px] font-medium text-dark-espresso/90">
+                    <li>Return library books & P2P rentals in original listed condition.</li>
+                    <li>Rental requests are bound by escrow security deposit rules.</li>
+                    <li>Authority Sign-In is strictly required for Admin Desk access.</li>
+                </ul>
+                <div id="termsCheckGroup" class="pt-1 flex items-center gap-2">
+                    <input id="authTermsCheck" type="checkbox" class="rounded text-deep-rosewood border-deep-rosewood focus:ring-0 cursor-pointer"/>
+                    <label for="authTermsCheck" class="text-[11px] font-bold text-deep-rosewood cursor-pointer">I agree to BookNexus Rules & Honor Code</label>
+                </div>
+            </div>
+
             <button type="submit" id="authSubmitBtn" class="w-full bg-deep-rosewood text-warm-ivory font-label-caps text-xs py-3 rounded-full hover:bg-deep-rosewood/90 shadow-md font-bold mt-2">
                 Sign In
             </button>
@@ -851,10 +970,106 @@
     </div>
 </div>
 
+<!-- MODAL 4: Professional Pre-Download Invoice / Receipt Modal -->
+<div id="receiptPreviewModal" class="fixed inset-0 z-50 bg-dark-espresso/70 modal-backdrop hidden flex items-center justify-center p-4">
+    <div class="bg-warm-ivory rounded-2xl max-w-xl w-full p-6 md:p-8 relative border border-deep-rosewood modal-box shadow-2xl max-h-[90vh] overflow-y-auto">
+        <button onclick="closeModal('receiptPreviewModal')" class="absolute top-4 right-4 text-deep-rosewood hover:text-dusty-rose p-1">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+
+        <div id="printableInvoice" class="space-y-6">
+            <!-- Header -->
+            <div class="flex justify-between items-start border-b-2 border-deep-rosewood pb-4">
+                <div>
+                    <div class="font-headline-md text-2xl font-bold text-deep-rosewood flex items-center gap-2">
+                        <span class="material-symbols-outlined text-3xl">book_4</span>
+                        BookNexus
+                    </div>
+                    <p class="text-[11px] text-dark-espresso/70 font-semibold mt-0.5">Academic Sanctuary & Peer Escrow Ledger</p>
+                </div>
+                <div class="text-right">
+                    <span class="bg-muted-green text-warm-ivory text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">PAID & VERIFIED</span>
+                    <p class="text-xs font-mono font-bold text-deep-rosewood mt-2" id="recTxnId">TXN-00124</p>
+                    <p class="text-[11px] text-dark-espresso/70" id="recDate">Date: 23 Sep 2026</p>
+                </div>
+            </div>
+
+            <!-- Customer & Seller Details Grid -->
+            <div class="grid grid-cols-2 gap-4 bg-warm-parchment p-4 rounded-xl border border-deep-rosewood/20 text-xs">
+                <div>
+                    <span class="font-bold text-deep-rosewood uppercase text-[10px] block mb-1">Customer / Borrower</span>
+                    <p class="font-bold text-dark-espresso" id="recCustomerName">H M Nanditha</p>
+                    <p class="text-dark-espresso/80" id="recCustomerEmail">nanditha@univ.edu</p>
+                    <p class="text-dark-espresso/70">Role: Student Reader</p>
+                </div>
+                <div>
+                    <span class="font-bold text-deep-rosewood uppercase text-[10px] block mb-1">Book Owner / Provider</span>
+                    <p class="font-bold text-dark-espresso" id="recSellerName">Sarah Jenkins</p>
+                    <p class="text-dark-espresso/80">Campus Location: Turing Hall</p>
+                    <p class="text-dark-espresso/70">Escrow Account: Verified</p>
+                </div>
+            </div>
+
+            <!-- Itemized Table -->
+            <div class="border border-deep-rosewood/20 rounded-xl overflow-hidden">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-deep-rosewood text-warm-ivory font-bold uppercase">
+                        <tr>
+                            <th class="py-2.5 px-4">Item Description</th>
+                            <th class="py-2.5 px-4">Duration</th>
+                            <th class="py-2.5 px-4 text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-deep-rosewood/10 bg-warm-ivory font-medium">
+                        <tr>
+                            <td class="py-3 px-4">
+                                <p class="font-bold text-deep-rosewood" id="recBookTitle">Algorithms to Live By</p>
+                                <p class="text-[11px] text-dark-espresso/70" id="recTxnType">P2P Textbook Rental</p>
+                            </td>
+                            <td class="py-3 px-4 font-semibold" id="recDuration">1 Week</td>
+                            <td class="py-3 px-4 text-right font-bold text-deep-rosewood" id="recRentalFee">₹50</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2.5 px-4 text-dark-espresso/80">Refundable Security Deposit</td>
+                            <td class="py-2.5 px-4 text-dark-espresso/70">Escrow Hold</td>
+                            <td class="py-2.5 px-4 text-right font-semibold" id="recDepositFee">₹100</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Total Calculation -->
+            <div class="flex justify-between items-center pt-2 border-t border-deep-rosewood/20">
+                <div class="text-[11px] text-dark-espresso/70 italic">
+                    * Escrow deposit will be refunded automatically upon safe return verification.
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-bold text-dark-espresso block">Total Amount Settled:</span>
+                    <span class="font-display-lg text-2xl font-extrabold text-deep-rosewood" id="recTotalAmount">₹150</span>
+                </div>
+            </div>
+
+            <!-- Stamp & Official Footer -->
+            <div class="pt-4 border-t border-dashed border-deep-rosewood/30 text-center text-[11px] text-dark-espresso/70 space-y-1">
+                <p class="font-bold text-deep-rosewood">BookNexus Academic Sanctuary • Digital Invoice Stamp</p>
+                <p>Generated automatically for university record & compliance verification.</p>
+            </div>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="pt-6 flex justify-end gap-3 border-t border-deep-rosewood/20 mt-4">
+            <button onclick="closeModal('receiptPreviewModal')" class="px-5 py-2.5 rounded-full text-xs font-bold text-deep-rosewood hover:underline">Close</button>
+            <button onclick="printReceipt()" class="bg-deep-rosewood text-warm-ivory px-6 py-2.5 rounded-full text-xs font-bold shadow-md hover:bg-deep-rosewood/90 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">print</span> Print / Save PDF
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- APP JAVASCRIPT LOGIC -->
 <script>
     /* ============================================================
-       DATA STORE: Books Catalog with Clear Pricing
+       DATA STORE: Books Catalog & User State
        ============================================================ */
     const initialBooks = [
         {
@@ -1030,20 +1245,59 @@
     ];
 
     let booksData = [...initialBooks];
-    let activeFilters = { search: '', genre: 'all', genreLabel: 'All Genres', type: 'all', typeLabel: 'All Types', availOnly: false };
-
-    let incomingRequests = [
-        { id: "req1", requester: "K. Sundaram", bookTitle: "Algorithms to Live By", date: "Sep 22, 2026", status: "pending" },
-        { id: "req2", requester: "D. Alaoui", bookTitle: "Design Patterns", date: "Sep 24, 2026", status: "pending" }
+    let savedBookIds = [1, 5]; // Pre-saved books
+    
+    let sentRequests = [
+        {
+            id: "sreq-101",
+            bookId: 1,
+            title: "Algorithms to Live By",
+            author: "Brian Christian",
+            cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=600",
+            price: "₹50/wk",
+            owner: "Sarah Jenkins",
+            location: "Turing Hall, 3rd Floor",
+            requestedDate: "Sep 23, 2026",
+            status: "Pending Review",
+            message: "We will reach out to you soon! Your request is currently under review by the book owner. You will receive an email confirmation once approved."
+        },
+        {
+            id: "sreq-102",
+            bookId: 5,
+            title: "Introduction to Linear Algebra",
+            author: "Gilbert Strang",
+            cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&q=80&w=600",
+            price: "Free (Library)",
+            owner: "Campus Central Library",
+            location: "Science Quad Library",
+            requestedDate: "Sep 20, 2026",
+            status: "Approved",
+            message: "Request Approved! Please collect your copy at the Science Quad Library Desk. Bring your Student ID."
+        }
     ];
 
+    let incomingRequests = [
+        { id: "req1", requester: "K. Sundaram", email: "sundaram@univ.edu", bookTitle: "Algorithms to Live By", date: "Sep 22, 2026", status: "pending", duration: "2 Weeks", price: "₹100 Total" },
+        { id: "req2", requester: "D. Alaoui", email: "alaoui@univ.edu", bookTitle: "Design Patterns", date: "Sep 24, 2026", status: "pending", duration: "1 Week", price: "₹55 Total" }
+    ];
+
+    let transactionsData = [
+        { id: "TXN-00124", title: "Algorithms to Live By", seller: "Sarah Jenkins", type: "Rental Fee", date: "23 Sep 2026", amount: "₹50", deposit: "₹100", status: "Completed", duration: "1 Week" },
+        { id: "TXN-00123", title: "Introduction to Linear Algebra", seller: "Central Library", type: "Security Deposit", date: "20 Sep 2026", amount: "₹200", deposit: "₹200", status: "Completed", duration: "2 Weeks" },
+        { id: "TXN-00122", title: "Clean Code", seller: "David Kim", type: "Overdue Fine", date: "17 Sep 2026", amount: "₹30", deposit: "₹0", status: "Pending", duration: "Late Fee" },
+        { id: "TXN-00121", title: "Principia Mathematica", seller: "Special Archive", type: "Refund", date: "15 Sep 2026", amount: "₹150", deposit: "₹150", status: "Refunded", duration: "Returned" },
+        { id: "TXN-00120", title: "Design Patterns", seller: "Emma Watson", type: "Listing Earning", date: "10 Sep 2026", amount: "₹110", deposit: "₹0", status: "Completed", duration: "2 Weeks" }
+    ];
+
+    let activeFilters = { search: '', genre: 'all', genreLabel: 'All Genres', type: 'all', typeLabel: 'All Types', availOnly: false };
     let selectedRole = "student";
+    let authMode = "login";
     let currentUser = { name: "Guest Student", email: "guest@university.edu", role: "Student", isAdmin: false };
 
     /* INITIALIZATION */
     document.addEventListener('DOMContentLoaded', () => {
         renderBookGrid();
-        renderMyListings();
+        renderMyListingsAllTabs();
 
         // Dismiss dropdowns on outside click
         document.addEventListener('click', (e) => {
@@ -1080,6 +1334,7 @@
             activeNavEl.classList.remove('text-warm-ivory/80');
         }
 
+        if (viewName === 'myListings') renderMyListingsAllTabs();
         if (viewName === 'transactions') renderTransactionsView();
         if (viewName === 'admin') checkAdminAccess();
 
@@ -1276,7 +1531,7 @@
         selectGenre(code, label);
     }
 
-    /* RENDER CATALOG GRID WITH EXPLICIT PRICE DISPLAY ON EVERY CARD */
+    /* RENDER CATALOG GRID WITH EXPLICIT PRICE & SAVE BUTTON ON EVERY CARD */
     function renderBookGrid() {
         const grid = document.getElementById('bookGrid');
         const resultsCountEl = document.getElementById('resultsCount');
@@ -1313,6 +1568,7 @@
         }
 
         grid.innerHTML = filtered.map(book => {
+            const isSaved = savedBookIds.includes(book.id);
             const badgeType = book.type === 'rent'
                 ? `<div class="absolute top-2 left-2 bg-dusty-rose text-warm-ivory font-label-caps text-[10px] px-2 py-1 rounded border border-deep-rosewood/20 shadow-sm flex items-center gap-1 z-10 font-bold">RENT</div>`
                 : `<div class="absolute top-2 left-2 bg-warm-ivory text-deep-rosewood font-label-caps text-[10px] px-2 py-1 rounded border border-deep-rosewood/20 shadow-sm flex items-center gap-1 z-10 font-bold">LIBRARY</div>`;
@@ -1325,6 +1581,12 @@
                 <div class="bg-warm-parchment rounded-xl p-4 border border-deep-rosewood/20 book-card-hover flex flex-col h-full cursor-pointer group" onclick="openBookDetail(${book.id})">
                     <div class="relative w-full aspect-[3/4] rounded-lg mb-3 overflow-hidden bg-warm-ivory flex-shrink-0">
                         ${badgeType}
+                        <!-- Save / Bookmark Icon Button -->
+                        <button onclick="event.stopPropagation(); toggleSaveBook(${book.id})" 
+                                class="absolute top-2 right-2 w-8 h-8 rounded-full bg-warm-ivory/90 hover:bg-warm-ivory text-deep-rosewood flex items-center justify-center z-20 shadow-md transition-all active:scale-90"
+                                title="${isSaved ? 'Remove from Saved' : 'Save / Remind Me Later'}">
+                            <span class="material-symbols-outlined text-lg ${isSaved ? 'text-dusty-rose' : ''}" style="font-variation-settings: 'FILL' ${isSaved ? 1 : 0};">bookmark</span>
+                        </button>
                         <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
                         <!-- Price Tag Overlay -->
                         <div class="absolute bottom-2 right-2 bg-deep-rosewood/95 text-warm-ivory text-xs font-extrabold px-2.5 py-1 rounded-md shadow-md border border-warm-ivory/20">
@@ -1342,9 +1604,11 @@
                         
                         <div class="mt-auto pt-3 border-t border-deep-rosewood/10 flex items-center justify-between" onclick="event.stopPropagation()">
                             ${statusBadge}
-                            <button onclick="openBookDetail(${book.id})" class="bg-deep-rosewood text-warm-ivory text-[11px] px-3 py-1.5 rounded-full font-bold hover:bg-deep-rosewood/90 shadow-sm">
-                                View Details
-                            </button>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="openBookDetail(${book.id})" class="bg-deep-rosewood text-warm-ivory text-[11px] px-3 py-1.5 rounded-full font-bold hover:bg-deep-rosewood/90 shadow-sm">
+                                    Details
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1352,86 +1616,316 @@
         }).join('');
     }
 
-    /* MY LISTINGS & INCOMING REQUESTS VIEW */
-    function renderMyListings() {
+    /* SAVE / REMIND ME LATER TOGGLE */
+    function toggleSaveBook(id) {
+        const book = booksData.find(b => b.id === id);
+        if (!book) return;
+
+        const idx = savedBookIds.indexOf(id);
+        if (idx > -1) {
+            savedBookIds.splice(idx, 1);
+            showToast(`Removed "${book.title}" from Saved Books.`, 'info');
+        } else {
+            savedBookIds.push(id);
+            showToast(`Saved "${book.title}" for Remind Me Later!`, 'success');
+        }
+
+        renderBookGrid();
+        renderMyListingsAllTabs();
+    }
+
+    /* MY LISTINGS SUB-TABS NAVIGATION & RENDERING */
+    function switchListingsSubTab(tabKey) {
+        document.querySelectorAll('.sub-tab-panel').forEach(p => p.classList.add('hidden'));
+
+        const tabBtnMap = {
+            'myList': 'tabBtnMyList',
+            'saved': 'tabBtnSaved',
+            'sent': 'tabBtnSent',
+            'received': 'tabBtnReceived'
+        };
+
+        const panelMap = {
+            'myList': 'subTabMyList',
+            'saved': 'subTabSaved',
+            'sent': 'subTabSent',
+            'received': 'subTabReceived'
+        };
+
+        document.getElementById(panelMap[tabKey])?.classList.remove('hidden');
+
+        // Reset Tab Header Styles
+        document.querySelectorAll('#listingsTabsNav button').forEach(btn => {
+            btn.className = "py-3 px-5 text-sm font-bold border-b-2 border-transparent text-dark-espresso/70 hover:text-deep-rosewood transition-all flex items-center gap-2";
+        });
+
+        const activeBtn = document.getElementById(tabBtnMap[tabKey]);
+        if (activeBtn) {
+            activeBtn.className = "py-3 px-5 text-sm font-bold border-b-2 border-deep-rosewood text-deep-rosewood transition-all flex items-center gap-2";
+        }
+    }
+
+    function renderMyListingsAllTabs() {
+        // Update Counter Badges
+        const myP2PBooks = booksData.filter(b => b.type === 'rent');
+        const savedBooksList = booksData.filter(b => savedBookIds.includes(b.id));
+
+        document.getElementById('countMyListings').innerText = myP2PBooks.length;
+        document.getElementById('countSaved').innerText = savedBooksList.length;
+        document.getElementById('countSentReq').innerText = sentRequests.length;
+        document.getElementById('countReceivedReq').innerText = incomingRequests.length;
+
+        // 1. My Listed Books Container
+        const myListContainer = document.getElementById('myListedBooksContainer');
+        if (myListContainer) {
+            if (myP2PBooks.length === 0) {
+                myListContainer.innerHTML = `<div class="col-span-full py-8 text-center text-xs text-dark-espresso/70 font-medium">No active listings created yet. Click "+ Add a Book" to publish your first textbook.</div>`;
+            } else {
+                myListContainer.innerHTML = myP2PBooks.map(b => `
+                    <div class="bg-warm-parchment p-4 rounded-xl border border-deep-rosewood/20 flex gap-4 shadow-sm">
+                        <img src="${b.cover}" class="w-20 h-28 object-cover rounded-md flex-shrink-0 shadow-sm"/>
+                        <div class="flex flex-col justify-between flex-1">
+                            <div>
+                                <div class="flex justify-between items-start">
+                                    <span class="text-[10px] font-bold text-deep-rosewood uppercase">${b.genreLabel}</span>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded ${b.available ? 'bg-muted-green/10 text-muted-green' : 'bg-muted-burgundy/10 text-muted-burgundy'}">
+                                        ${b.available ? 'Active' : 'Rented'}
+                                    </span>
+                                </div>
+                                <h4 class="font-bold text-sm text-deep-rosewood leading-tight mt-0.5">${b.title}</h4>
+                                <p class="text-xs text-dark-espresso font-medium">${b.author}</p>
+                                <p class="text-xs text-dusty-rose font-extrabold mt-1">Price: ${b.price}</p>
+                            </div>
+                            <div class="flex gap-3 pt-2 border-t border-deep-rosewood/10 items-center justify-between">
+                                <button onclick="toggleBookAvailability(${b.id})" class="text-xs font-bold text-deep-rosewood hover:underline">
+                                    ${b.available ? 'Mark Rented' : 'Mark Available'}
+                                </button>
+                                <button onclick="deleteListing(${b.id})" class="text-xs font-bold text-dusty-rose hover:underline">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 2. Saved Books Container
+        const savedContainer = document.getElementById('savedBooksContainer');
+        if (savedContainer) {
+            if (savedBooksList.length === 0) {
+                savedContainer.innerHTML = `<div class="col-span-full py-8 text-center text-xs text-dark-espresso/70 font-medium">No saved books yet. Click the bookmark icon on any book card to save it for later.</div>`;
+            } else {
+                savedContainer.innerHTML = savedBooksList.map(b => `
+                    <div class="bg-warm-parchment p-4 rounded-xl border border-deep-rosewood/20 flex gap-4 shadow-sm">
+                        <img src="${b.cover}" class="w-20 h-28 object-cover rounded-md flex-shrink-0 shadow-sm"/>
+                        <div class="flex flex-col justify-between flex-1">
+                            <div>
+                                <span class="text-[10px] font-bold text-deep-rosewood uppercase">${b.genreLabel}</span>
+                                <h4 class="font-bold text-sm text-deep-rosewood leading-tight mt-0.5">${b.title}</h4>
+                                <p class="text-xs text-dark-espresso font-medium">${b.author}</p>
+                                <p class="text-xs text-dusty-rose font-extrabold mt-1">${b.price}</p>
+                            </div>
+                            <div class="flex gap-2 pt-2 border-t border-deep-rosewood/10 items-center justify-between">
+                                <button onclick="openBookDetail(${b.id})" class="bg-deep-rosewood text-warm-ivory text-[11px] px-3 py-1 rounded-full font-bold hover:bg-deep-rosewood/90">Rent Now</button>
+                                <button onclick="toggleSaveBook(${b.id})" class="text-xs font-bold text-dusty-rose hover:underline">Unsave</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 3. Sent Requests (Outgoing) Container
+        const sentContainer = document.getElementById('sentRequestsContainer');
+        if (sentContainer) {
+            if (sentRequests.length === 0) {
+                sentContainer.innerHTML = `<div class="py-8 text-center text-xs text-dark-espresso/70 font-medium bg-warm-parchment rounded-xl border border-deep-rosewood/20">No sent requests active. Browse books and click "Request to Rent" to submit a borrow request.</div>`;
+            } else {
+                sentContainer.innerHTML = sentRequests.map(req => {
+                    const statusStyle = req.status.includes('Approved')
+                        ? 'bg-muted-green/10 text-muted-green border-muted-green/30'
+                        : req.status.includes('Rejected')
+                        ? 'bg-muted-burgundy/10 text-muted-burgundy border-muted-burgundy/30'
+                        : 'bg-dusty-rose/10 text-dusty-rose border-dusty-rose/30';
+
+                    return `
+                        <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
+                            <div class="flex gap-4 items-center">
+                                <img src="${req.cover}" class="w-14 h-20 object-cover rounded-md shadow-sm flex-shrink-0"/>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-bold text-base text-deep-rosewood">${req.title}</h4>
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${statusStyle}">${req.status}</span>
+                                    </div>
+                                    <p class="text-xs text-dark-espresso font-medium">Author: ${req.author} • Owner: ${req.owner}</p>
+                                    <p class="text-xs text-dusty-rose font-bold">Rental Price: ${req.price} • Requested Date: ${req.requestedDate}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="w-full md:w-auto bg-warm-ivory p-3.5 rounded-lg border border-deep-rosewood/15 space-y-1 md:max-w-md">
+                                <div class="text-[11px] font-bold text-deep-rosewood flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">mark_email_read</span>
+                                    <span>Status Notification:</span>
+                                </div>
+                                <p class="text-xs text-dark-espresso leading-relaxed font-medium">${req.message}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // 4. Incoming Requests (Received) Container
         const reqContainer = document.getElementById('incomingRequestsContainer');
-        const booksContainer = document.getElementById('myListedBooksContainer');
-
         if (reqContainer) {
-            reqContainer.innerHTML = incomingRequests.map(req => `
-                <div class="bg-warm-parchment p-4 rounded-xl border border-deep-rosewood/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                    <div>
-                        <p class="text-sm font-bold text-deep-rosewood">${req.requester} requested <span class="underline">${req.bookTitle}</span></p>
-                        <p class="text-xs text-dark-espresso/70">Request Date: ${req.date}</p>
+            if (incomingRequests.length === 0) {
+                reqContainer.innerHTML = `<div class="py-8 text-center text-xs text-dark-espresso/70 font-medium bg-warm-parchment rounded-xl border border-deep-rosewood/20">No incoming rental requests currently pending.</div>`;
+            } else {
+                reqContainer.innerHTML = incomingRequests.map(req => `
+                    <div class="bg-warm-parchment p-5 rounded-xl border border-deep-rosewood/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-base text-deep-rosewood">${req.requester}</span>
+                                <span class="text-xs text-dark-espresso/70">(${req.email})</span>
+                            </div>
+                            <p class="text-xs text-dark-espresso font-medium">Requested Book: <span class="font-bold text-deep-rosewood">${req.bookTitle}</span> (${req.price})</p>
+                            <p class="text-[11px] text-dark-espresso/70">Requested Date: ${req.date} • Duration: ${req.duration}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="handleRequestAction('${req.id}', 'Approved')" class="bg-muted-green text-warm-ivory text-xs px-5 py-2 rounded-full font-bold hover:bg-muted-green/90 shadow-sm flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">check</span> Approve
+                            </button>
+                            <button onclick="handleRequestAction('${req.id}', 'Rejected')" class="bg-dusty-rose text-warm-ivory text-xs px-5 py-2 rounded-full font-bold hover:bg-dusty-rose/90 shadow-sm flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">close</span> Reject
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="handleRequestAction('${req.id}', 'Approved')" class="bg-muted-green text-warm-ivory text-xs px-4 py-1.5 rounded-md font-bold hover:bg-muted-green/90 shadow-sm">Approve</button>
-                        <button onclick="handleRequestAction('${req.id}', 'Rejected')" class="bg-dusty-rose text-warm-ivory text-xs px-4 py-1.5 rounded-md font-bold hover:bg-dusty-rose/90 shadow-sm">Reject</button>
-                    </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
         }
+    }
 
-        if (booksContainer) {
-            const myBooks = booksData.filter(b => b.type === 'rent');
-            booksContainer.innerHTML = myBooks.map(b => `
-                <div class="bg-warm-parchment p-4 rounded-xl border border-deep-rosewood/20 flex gap-4">
-                    <img src="${b.cover}" class="w-16 h-24 object-cover rounded-md flex-shrink-0 shadow-sm"/>
-                    <div class="flex flex-col justify-between flex-1">
-                        <div>
-                            <span class="text-[10px] font-bold text-deep-rosewood uppercase">${b.genreLabel}</span>
-                            <h4 class="font-bold text-sm text-deep-rosewood leading-tight">${b.title}</h4>
-                            <p class="text-xs text-dark-espresso font-medium">${b.author}</p>
-                            <p class="text-xs text-dusty-rose font-extrabold mt-1">Price: ${b.price}</p>
-                        </div>
-                        <div class="flex gap-3 pt-2 border-t border-deep-rosewood/10">
-                            <button onclick="showToast('Edit listing opened for ${b.title}')" class="text-xs font-bold text-deep-rosewood hover:underline">Edit</button>
-                            <button onclick="showToast('Deleted listing for ${b.title}')" class="text-xs font-bold text-dusty-rose hover:underline">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+    function toggleBookAvailability(id) {
+        const book = booksData.find(b => b.id === id);
+        if (book) {
+            book.available = !book.available;
+            showToast(`Updated status for "${book.title}" to ${book.available ? 'Available' : 'Rented'}`, 'info');
+            renderBookGrid();
+            renderMyListingsAllTabs();
         }
+    }
+
+    function deleteListing(id) {
+        const book = booksData.find(b => b.id === id);
+        booksData = booksData.filter(b => b.id !== id);
+        showToast(`Removed listing for "${book ? book.title : 'Book'}"`, 'info');
+        renderBookGrid();
+        renderMyListingsAllTabs();
     }
 
     function handleRequestAction(reqId, status) {
+        const req = incomingRequests.find(r => r.id === reqId);
         incomingRequests = incomingRequests.filter(r => r.id !== reqId);
-        renderMyListings();
-        showToast(`Request ${status} successfully!`, 'success');
+        renderMyListingsAllTabs();
+        showToast(`Request from ${req ? req.requester : 'User'} ${status} successfully! Notification sent.`, 'success');
     }
 
-    /* TRANSACTIONS VIEW */
+    /* TRANSACTIONS VIEW WITH FILTERS & PRE-DOWNLOAD RECEIPT PREVIEW */
     function renderTransactionsView() {
         const tbody = document.getElementById('transactionTableBody');
         if (!tbody) return;
 
-        const txns = [
-            { id: "TXN-00124", title: "Atomic Habits", type: "Rental", date: "19 Sep 2026", amount: "₹50", status: "Completed" },
-            { id: "TXN-00123", title: "The Alchemist", type: "Deposit", date: "18 Sep 2026", amount: "₹200", status: "Completed" },
-            { id: "TXN-00122", title: "Clean Code", type: "Fine", date: "17 Sep 2026", amount: "₹30", status: "Pending" },
-            { id: "TXN-00121", title: "Deep Work", type: "Refund", date: "15 Sep 2026", amount: "+₹150", status: "Refunded" }
-        ];
+        const searchQuery = document.getElementById('txnSearchInput')?.value.trim().toLowerCase() || '';
+        const typeFilter = document.getElementById('txnTypeFilter')?.value || 'all';
+        const statusFilter = document.getElementById('txnStatusFilter')?.value || 'all';
 
-        tbody.innerHTML = txns.map(t => `
+        let filteredTxns = transactionsData.filter(t => {
+            if (typeFilter !== 'all' && t.type !== typeFilter) return false;
+            if (statusFilter !== 'all' && t.status !== statusFilter) return false;
+            if (searchQuery) {
+                const q = searchQuery;
+                if (!t.id.toLowerCase().includes(q) && !t.title.toLowerCase().includes(q) && !t.seller.toLowerCase().includes(q)) return false;
+            }
+            return true;
+        });
+
+        // Update Bento Stats
+        document.getElementById('statTotalCount').innerText = filteredTxns.length;
+        document.getElementById('statCompletedCount').innerText = filteredTxns.filter(t => t.status === 'Completed').length;
+        document.getElementById('statPendingCount').innerText = filteredTxns.filter(t => t.status === 'Pending').length;
+        
+        let totalVal = filteredTxns.reduce((acc, curr) => {
+            const num = parseInt(curr.amount.replace(/[^0-9]/g, '')) || 0;
+            return acc + num;
+        }, 0);
+        document.getElementById('statTotalAmount').innerText = `₹${totalVal}`;
+
+        if (filteredTxns.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-xs text-dark-espresso/70 font-medium">No transactions match the selected filters.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = filteredTxns.map(t => `
             <tr class="hover:bg-warm-parchment/60 transition-colors">
-                <td class="py-3 px-5 font-mono text-xs font-bold text-deep-rosewood">${t.id}</td>
-                <td class="py-3 px-5 font-bold text-deep-rosewood">${t.title}</td>
-                <td class="py-3 px-5"><span class="bg-deep-rosewood/10 text-deep-rosewood text-xs px-2.5 py-1 rounded font-bold">${t.type}</span></td>
-                <td class="py-3 px-5 text-xs font-semibold">${t.date}</td>
-                <td class="py-3 px-5 font-extrabold text-deep-rosewood">${t.amount}</td>
-                <td class="py-3 px-5"><span class="bg-muted-green/10 text-muted-green text-xs px-2.5 py-1 rounded font-bold">${t.status}</span></td>
-                <td class="py-3 px-5 text-right"><button onclick="exportStatement()" class="text-xs font-bold text-deep-rosewood underline">Receipt CSV</button></td>
+                <td class="py-3.5 px-5 font-mono text-xs font-bold text-deep-rosewood">${t.id}</td>
+                <td class="py-3.5 px-5 font-bold text-deep-rosewood">${t.title}</td>
+                <td class="py-3.5 px-5"><span class="bg-deep-rosewood/10 text-deep-rosewood text-xs px-2.5 py-1 rounded font-bold">${t.type}</span></td>
+                <td class="py-3.5 px-5 text-xs font-semibold">${t.date}</td>
+                <td class="py-3.5 px-5 font-extrabold text-deep-rosewood">${t.amount}</td>
+                <td class="py-3.5 px-5"><span class="bg-muted-green/10 text-muted-green text-xs px-2.5 py-1 rounded font-bold">${t.status}</span></td>
+                <td class="py-3.5 px-5 text-right">
+                    <button onclick="previewReceipt('${t.id}')" class="bg-deep-rosewood text-warm-ivory text-xs px-3.5 py-1.5 rounded-full font-bold hover:bg-deep-rosewood/90 shadow-sm inline-flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">visibility</span> View Receipt
+                    </button>
+                </td>
             </tr>
         `).join('');
     }
 
-    /* AUTH & ROLE LOGIC */
+    function resetTxnFilters() {
+        if (document.getElementById('txnSearchInput')) document.getElementById('txnSearchInput').value = '';
+        if (document.getElementById('txnTypeFilter')) document.getElementById('txnTypeFilter').value = 'all';
+        if (document.getElementById('txnStatusFilter')) document.getElementById('txnStatusFilter').value = 'all';
+        renderTransactionsView();
+    }
+
+    /* PREVIEW & PRINT RECEIPT MODAL */
+    function previewReceipt(txnId) {
+        const txn = transactionsData.find(t => t.id === txnId);
+        if (!txn) return;
+
+        document.getElementById('recTxnId').innerText = txn.id;
+        document.getElementById('recDate').innerText = `Date: ${txn.date}`;
+        document.getElementById('recCustomerName').innerText = currentUser.name;
+        document.getElementById('recCustomerEmail').innerText = currentUser.email;
+        document.getElementById('recSellerName').innerText = txn.seller;
+        document.getElementById('recBookTitle').innerText = txn.title;
+        document.getElementById('recTxnType').innerText = `Transaction Type: ${txn.type}`;
+        document.getElementById('recDuration').innerText = txn.duration;
+        document.getElementById('recRentalFee').innerText = txn.amount;
+        document.getElementById('recDepositFee').innerText = txn.deposit;
+
+        const rentalNum = parseInt(txn.amount.replace(/[^0-9]/g, '')) || 0;
+        const depNum = parseInt(txn.deposit.replace(/[^0-9]/g, '')) || 0;
+        document.getElementById('recTotalAmount').innerText = `₹${rentalNum + depNum}`;
+
+        openModal('receiptPreviewModal');
+    }
+
+    function printReceipt() {
+        window.print();
+        showToast('Receipt ready for print or saving as PDF!', 'success');
+    }
+
+    /* AUTH VALIDATION & ROLE LOGIC */
     function setAuthMode(mode) {
         authMode = mode;
         const loginBtn = document.getElementById('authModeLogin');
         const signupBtn = document.getElementById('authModeSignup');
         const nameField = document.getElementById('signupNameField');
         const submitBtn = document.getElementById('authSubmitBtn');
+        const errBanner = document.getElementById('authErrorBanner');
+
+        errBanner?.classList.add('hidden');
 
         if (mode === 'signup') {
             signupBtn.className = "flex-1 py-1.5 rounded-full text-xs font-bold bg-deep-rosewood text-warm-ivory transition-all";
@@ -1463,9 +1957,40 @@
 
     function handleAuthSubmit(e) {
         e.preventDefault();
-        const email = document.getElementById('authEmail').value;
-        const nameInput = document.getElementById('authName').value;
-        
+        const email = document.getElementById('authEmail').value.trim();
+        const password = document.getElementById('authPassword').value;
+        const nameInput = document.getElementById('authName').value.trim();
+        const termsCheck = document.getElementById('authTermsCheck').checked;
+        const errBanner = document.getElementById('authErrorBanner');
+        const errMsg = document.getElementById('authErrorMsg');
+
+        errBanner?.classList.add('hidden');
+
+        // Validation Checks
+        if (authMode === 'signup' && !nameInput) {
+            errMsg.innerText = "Please enter your full name.";
+            errBanner?.classList.remove('hidden');
+            return;
+        }
+
+        if (!email || !email.includes('@') || !email.includes('.')) {
+            errMsg.innerText = "Please enter a valid campus email address (e.g. student@university.edu).";
+            errBanner?.classList.remove('hidden');
+            return;
+        }
+
+        if (!password || password.length < 6) {
+            errMsg.innerText = "Password must be at least 6 characters long.";
+            errBanner?.classList.remove('hidden');
+            return;
+        }
+
+        if (!termsCheck) {
+            errMsg.innerText = "You must accept the BookNexus Sanctuary Rules & Honor Code to proceed.";
+            errBanner?.classList.remove('hidden');
+            return;
+        }
+
         currentUser.email = email;
         currentUser.name = nameInput || email.split('@')[0];
         currentUser.role = selectedRole === 'admin' ? 'Authority / Admin' : selectedRole === 'owner' ? 'Book Owner' : 'Student';
@@ -1480,15 +2005,16 @@
             switchNav('admin');
             showToast(`Signed in as Authority Admin (${currentUser.name})`, 'success');
         } else {
-            showToast(`Signed in as ${currentUser.name}`, 'success');
+            showToast(`Signed in as ${currentUser.name} (${currentUser.role})`, 'success');
         }
     }
 
-    /* BOOK DETAIL MODAL WITH PRICE DISPLAY */
+    /* BOOK DETAIL MODAL WITH PRICE DISPLAY & SAVE BUTTON */
     function openBookDetail(id) {
         const book = booksData.find(b => b.id === id);
         if (!book) return;
 
+        const isSaved = savedBookIds.includes(book.id);
         const detailContainer = document.getElementById('bookDetailContent');
         detailContainer.innerHTML = `
             <div class="flex flex-col sm:flex-row gap-6">
@@ -1514,11 +2040,18 @@
                         ${book.seller ? `<div class="flex justify-between"><span class="text-dark-espresso/70">Book Owner:</span> <span class="font-bold text-deep-rosewood">${book.seller}</span></div>` : ''}
                     </div>
 
-                    <button onclick="requestRental(${book.id})" 
-                            ${!book.available ? 'disabled' : ''}
-                            class="w-full bg-deep-rosewood text-warm-ivory font-label-caps text-xs py-3.5 rounded-full hover:bg-deep-rosewood/90 disabled:opacity-50 disabled:cursor-not-allowed font-bold shadow-md">
-                        ${book.available ? `Request to Rent (${book.price})` : 'Currently Rented'}
-                    </button>
+                    <div class="flex gap-3">
+                        <button onclick="toggleSaveBook(${book.id})" 
+                                class="border border-deep-rosewood text-deep-rosewood font-label-caps text-xs py-3 px-4 rounded-full hover:bg-deep-rosewood/10 font-bold shadow-sm flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' ${isSaved ? 1 : 0};">bookmark</span>
+                            <span>${isSaved ? 'Saved' : 'Remind Later'}</span>
+                        </button>
+                        <button onclick="requestRental(${book.id})" 
+                                ${!book.available ? 'disabled' : ''}
+                                class="flex-1 bg-deep-rosewood text-warm-ivory font-label-caps text-xs py-3.5 rounded-full hover:bg-deep-rosewood/90 disabled:opacity-50 disabled:cursor-not-allowed font-bold shadow-md">
+                            ${book.available ? `Request to Rent (${book.price})` : 'Currently Rented'}
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
@@ -1530,9 +2063,26 @@
         if (!book || !book.available) return;
         book.available = false;
 
+        // Create Sent Request Entry with Status Message
+        const newReq = {
+            id: `sreq-${Date.now()}`,
+            bookId: book.id,
+            title: book.title,
+            author: book.author,
+            cover: book.cover,
+            price: book.price,
+            owner: book.seller || 'Campus Central Library',
+            location: book.location,
+            requestedDate: "Just Now",
+            status: "Pending Review",
+            message: `We will reach out to you soon! Your request is currently under review by ${book.seller || 'Library Desk'}. You will receive a notification once approved.`
+        };
+        sentRequests.unshift(newReq);
+
         closeModal('bookDetailModal');
         renderBookGrid();
-        showToast(`Request sent for "${book.title}" (${book.price})! Waiting for approval.`, "success");
+        renderMyListingsAllTabs();
+        showToast(`Request sent for "${book.title}" (${book.price})! We will reach out to you soon.`, "success");
     }
 
     /* ADD / LIST BOOK WITH PRICE FIELD */
@@ -1580,7 +2130,7 @@
         booksData.unshift(newBookObj);
         closeModal('listBookModal');
         renderBookGrid();
-        renderMyListings();
+        renderMyListingsAllTabs();
         e.target.reset();
         showToast(`Added "${title}" (${price}) to listings!`, 'success');
     }
@@ -1591,7 +2141,7 @@
 
     /* STATEMENT EXPORT */
     function exportStatement() {
-        const csvContent = "data:text/csv;charset=utf-8,ID,Book Title,Type,Date,Amount,Status\nTXN-00124,Atomic Habits,Rental,19 Sep 2026,₹50,Completed\nTXN-00123,The Alchemist,Deposit,18 Sep 2026,₹200,Completed";
+        const csvContent = "data:text/csv;charset=utf-8,ID,Book Title,Type,Date,Amount,Status\nTXN-00124,Algorithms to Live By,Rental Fee,23 Sep 2026,₹50,Completed\nTXN-00123,Introduction to Linear Algebra,Security Deposit,20 Sep 2026,₹200,Completed";
         const link = document.createElement("a");
         link.href = encodeURI(csvContent);
         link.download = "BookNexus_Ledger.csv";
