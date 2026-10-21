@@ -22,7 +22,13 @@ const registerRules = [
 ];
 
 const loginRules = [
-  body("email").trim().isEmail().withMessage("Must be a valid email").normalizeEmail(),
+  body().custom((value, { req }) => {
+    const id = req.body.email || req.body.identifier || req.body.usn;
+    if (!id || (typeof id === "string" && !id.trim())) {
+      throw new Error("Email or USN is required");
+    }
+    return true;
+  }),
   body("password").notEmpty().withMessage("Password is required"),
 ];
 

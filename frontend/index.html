@@ -2204,7 +2204,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <div id="nxlS1">
                     <p class="nxa-note"><span class="material-symbols-outlined">verified_user</span><span>No account for this email yet. Enter your <b>name</b> and <b>USN</b> exactly as in college records. Your email, phone, department and other details are filled in automatically.</span></p>
                     <div class="nxa-f"><label for="nxlName" class="nxa-l">Full name</label><input id="nxlName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="As in college records"><p class="nxa-hint">Capitals and spaces don’t matter. Dots do.</p><p class="nxa-err" id="nxlNameE" hidden></p></div>
-                    <div class="nxa-f"><label for="nxlUsn" class="nxa-l">USN</label><input id="nxlUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042"><p class="nxa-err" id="nxlUsnE" hidden></p></div>
+                    <div class="nxa-f"><label for="nxlUsn" class="nxa-l">USN</label><input id="nxlUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="nxlUsnE" hidden></p></div>
                     <div class="nxa-f"><label for="nxlDob" class="nxa-l">Date of birth</label><input id="nxlDob" class="nxa-in pl" type="date" autocomplete="off"><p class="nxa-hint">Confirms the USN is yours, so nobody else can claim it.</p><p class="nxa-err" id="nxlDobE" hidden></p></div>
                     <div class="nxa-f"><label for="nxlNp" class="nxa-l">Create password</label><div class="nxa-pw"><input id="nxlNp" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="nxlNpX"></div><p class="nxa-err" id="nxlNpE" hidden></p></div>
                     <div class="nxa-f"><label for="nxlNp2" class="nxa-l">Confirm password</label><div class="nxa-pw"><input id="nxlNp2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="nxlNp2E" hidden></p></div>
@@ -2231,14 +2231,14 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                 </form>
                 <form id="nxaVIn" class="nxa-form" novalidate onsubmit="nxaDoIn(event)">
                     <div class="nxa-chip"><span id="nxlInEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
-                    <div class="nxa-f"><label for="siUsn" class="nxa-l">Your USN</label><input id="siUsn" class="nxa-in" type="text" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042"><p class="nxa-err" id="siUsnE" hidden></p></div>
+                    <div class="nxa-f"><label for="siUsn" class="nxa-l">Your USN</label><input id="siUsn" class="nxa-in" type="text" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="siUsnE" hidden></p></div>
                     <div class="nxa-f"><label for="siPw" class="nxa-l">Password</label><div class="nxa-pw"><input id="siPw" class="nxa-in pl" type="password" autocomplete="current-password" maxlength="64" placeholder="Your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="siPwE" hidden></p></div>
                     <div class="nxa-row"><button type="button" class="nxa-link" onclick="nxaView('fp')">Forgot password?</button></div>
                     <button class="nxa-go" id="siGo">Sign in</button>
                 </form>
                 <form id="nxaVUp" class="nxa-form" novalidate hidden onsubmit="nxaDoUp(event)">
                     <div class="nxa-f"><label for="suName" class="nxa-l">Full name</label><input id="suName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="As in college records"><p class="nxa-err" id="suNameE" hidden></p></div>
-                    <div class="nxa-f"><label for="suUsn" class="nxa-l">USN</label><input id="suUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042"><p class="nxa-err" id="suUsnE" hidden></p></div>
+                    <div class="nxa-f"><label for="suUsn" class="nxa-l">USN</label><input id="suUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="suUsnE" hidden></p></div>
                     <div class="nxa-f"><label for="suEmail" class="nxa-l">College email</label><input id="suEmail" class="nxa-in pl" type="email" autocomplete="email" maxlength="80" placeholder="name@univ.edu"><p class="nxa-hint">Must be exactly the email saved in college records.</p><p class="nxa-err" id="suEmailE" hidden></p></div>
                     <div class="nxa-f"><label for="suPw" class="nxa-l">Password</label><div class="nxa-pw"><input id="suPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="suPwX"></div><p class="nxa-err" id="suPwE" hidden></p></div>
                     <div class="nxa-f"><label for="suPw2" class="nxa-l">Confirm password</label><div class="nxa-pw"><input id="suPw2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="suPw2E" hidden></p></div>
@@ -2248,7 +2248,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                 </form>
                 <form id="nxaVFp" class="nxa-form" novalidate hidden onsubmit="nxaDoFp(event)">
                     <div class="nxa-banner info">To change your password, please visit the Book NEXUS pickup center.</div><div hidden aria-hidden="true">
-                    <div class="nxa-f"><label for="fpUsn" class="nxa-l">Your USN</label><input id="fpUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042"><p class="nxa-err" id="fpUsnE" hidden></p></div>
+                    <div class="nxa-f"><label for="fpUsn" class="nxa-l">Your USN</label><input id="fpUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="fpUsnE" hidden></p></div>
                     <div class="nxa-f"><label for="fpEmail" class="nxa-l">College email</label><input id="fpEmail" class="nxa-in pl" type="email" autocomplete="email" maxlength="80" placeholder="name@univ.edu"><p class="nxa-err" id="fpEmailE" hidden></p></div>
                     <div class="nxa-f"><label for="fpDob" class="nxa-l">Date of birth (as on college record)</label><input id="fpDob" class="nxa-in pl" type="date"><p class="nxa-err" id="fpDobE" hidden></p></div>
                     <div class="nxa-f"><label for="fpPw" class="nxa-l">New password</label><div class="nxa-pw"><input id="fpPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a new password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="fpPwX"></div><p class="nxa-err" id="fpPwE" hidden></p></div>
@@ -2344,13 +2344,13 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     // User State
     let currentRole = "student"; // 'student', 'librarian', 'admin'
     let currentUser = {
-        name: "H M Nanditha",
-        rollNo: "CS2026-042",
-        email: "nanditha@univ.edu",
-        dept: "Computer Science",
-        year: "",
-        phone: "+91 9876543210",
-        anonId: "Renter #B21"
+        name: "ABDUR RAHMAN",
+        rollNo: "4MC23CB001",
+        email: "abdur56562541@gmail.com",
+        dept: "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+        year: "3rd Year (Sem 6)",
+        phone: "+91 9035386625",
+        anonId: "Renter #001"
     };
 
     // Library & Rental Books Catalog
@@ -33210,7 +33210,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     const NX_COLLEGE_X = { 'CS2026-042': { year: 3, semester: 5, branch: 'Computer Science & Engineering', dob: '14 Aug 2005', secretId: currentUser.anonId }, 'EC2026-018': { year: 2, semester: 3, branch: 'Electronics & Communication Engineering', dob: '02 Mar 2006', secretId: 'ID-C14' }, 'MA2026-009': { year: 4, semester: 7, branch: 'Information Science & Engineering', dob: '21 Nov 2004', secretId: 'ID-D09' } };
     const NX_COLLEGE = {}; librarianStudentsList.forEach(r => { const x = NX_COLLEGE_X[r.rollNo]; if (x) NX_COLLEGE[r.rollNo] = { usn: r.rollNo, name: r.name, email: r.email, phone: r.phone, dept: r.dept, college: 'A Legacy Bound in Books', ...x }; });
     if (NX_COLLEGE['CS2026-042']) NX_COLLEGE['CS2026-042'].email = 'booknexus.student@gmail.com';
-    const NX_USN_RE = /^[A-Z]{2}\d{4}-\d{3}$/, nxUsnNorm = v => String(v || '').toUpperCase().replace(/\s+/g, '');
+    const NX_USN_RE = /^([0-9][A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{3}|[A-Z]{2}[0-9]{4}-[0-9]{3}|[A-Z0-9-]{4,14})$/i, nxUsnNorm = v => String(v || '').toUpperCase().replace(/\s+/g, '');
     const nxOfficial = r => ({ name: r.name, email: r.email, phone: r.phone, studentId: r.usn, college: r.college, dept: r.dept, branch: r.branch, year: String(r.year), semester: String(r.semester), dob: r.dob, secretId: r.secretId });
     const NX_PROF_KEY = 'bnx_profiles_v1';
     const nxStore = (() => { try { return JSON.parse(localStorage.getItem(NX_PROF_KEY)) || {}; } catch (e) { return {}; } })();   /* nickname, bio, genres... kept in this browser so they survive sign-out, sign-in and refresh */
@@ -33267,7 +33267,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         const q = nxLookupUSN(i.value), m = nxaEl(p + 'Msg'), c = nxaEl(p + 'Card'), g = nxaEl(p + 'Go'), gate = p === 'pg';
         nxaRec = q.state === 'found' ? q.rec : null; c.hidden = !nxaRec; g.disabled = !nxaRec;
         m.className = 'nxa-msg' + (q.state === 'missing' || (q.state === 'format' && i.value.length >= 12) ? ' bad' : q.state === 'found' ? ' ok' : '');
-        m.textContent = { empty: 'Type your USN. Everything else fills in automatically.', format: i.value.length >= 12 ? 'That doesn’t look like a USN. Use 2 letters, a year and 3 digits, like CS2026-042.' : 'Keep typing…', missing: 'We couldn’t find this USN in college records. Check it, or ask the library desk.', found: 'Found in college records.' }[q.state];
+        m.textContent = { empty: 'Type your USN. Everything else fills in automatically.', format: i.value.length >= 12 ? 'That doesn’t look like a USN. Use 2 letters, a year and 3 digits, like 4MC23CB001.' : 'Keep typing…', missing: 'We couldn’t find this USN in college records. Check it, or ask the library desk.', found: 'Found in college records.' }[q.state];
         if (nxaRec) { const r = nxaRec, ini = r.name.split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase(), E = nxEsc;
             c.innerHTML = `<div class="nxa-h"><span class="nxa-av">${E(ini)}</span><div><b>${E(r.name)}</b><small>${E(r.usn)}</small></div></div><dl><div><dt>Branch</dt><dd>${E(r.branch || r.dept)}</dd></div><div><dt>Semester</dt><dd>${r.semester}</dd></div><div><dt>College</dt><dd>${E(r.college)}</dd></div><div><dt>Role</dt><dd>User</dd></div><div><dt>Email</dt><dd>${E(r.email)}</dd></div><div><dt>Phone</dt><dd>${E(r.phone)}</dd></div><div><dt>Date of birth</dt><dd>${E(r.dob)}</dd></div><div><dt>Secret ID</dt><dd>${E(r.secretId)} <span class="nxa-lk">Admin assigned</span></dd></div></dl>`;
             g.textContent = gate ? 'Confirm and sync my details' : 'Sign in as ' + r.name.split(/\s+/)[0]; } else g.textContent = gate ? 'Confirm and sync my details' : 'Sign in';
@@ -33502,7 +33502,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         if (!N.verified) {   /* USN is compulsory: nothing else is available until the official details are synced */
             const chips = Object.keys(NX_COLLEGE).map(u => `<button type="button" onclick="nxaEl('pgUsn').value='${u}';nxaInput('pg')">${u}</button>`).join('');
             root.innerHTML = `<div class="pf pf-in"><section class="pf-hero pf-rise" style="--i:0" aria-label="Set up your profile"><div class="pf-bg" aria-hidden="true"><i class="pf-orb a"></i><i class="pf-orb b"></i><i class="pf-fb b1"></i><i class="pf-fb b2"></i><i class="pf-fb b3"></i><i class="pf-fb b4"></i><i class="pf-fb b5"></i></div><div class="pf-hin" style="grid-template-columns:minmax(0,1fr)"><div class="pf-glass" style="display:block"><span class="pf-eye">Required to set up your profile</span><h1>Verify your USN</h1><p class="pf-idl" style="max-width:56ch;margin-top:8px">Enter your USN once. Your name, branch, year, semester, college and Secret ID are filled in from college records, so you never type them yourself.</p></div></div></section>
-              <section class="pf-card pf-rise" style="--i:1;width:min(560px,100%);margin:0 auto"><div class="nxa"><label for="pgUsn" class="nxa-l">Your USN</label><input id="pgUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042" oninput="nxaInput('pg')" onkeydown="if(event.key==='Enter'){event.preventDefault();nxaSubmit('pg')}"><p id="pgMsg" class="nxa-msg" role="status" aria-live="polite">Type your USN. Everything else fills in automatically.</p><div id="pgCard" class="nxa-card" hidden></div><div class="nxa-ch"><span>Sample USNs</span>${chips}</div><button type="button" id="pgGo" class="nxa-go" onclick="nxaSubmit('pg')" disabled>Confirm and sync my details</button></div></section></div>`;
+              <section class="pf-card pf-rise" style="--i:1;width:min(560px,100%);margin:0 auto"><div class="nxa"><label for="pgUsn" class="nxa-l">Your USN</label><input id="pgUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001" oninput="nxaInput('pg')" onkeydown="if(event.key==='Enter'){event.preventDefault();nxaSubmit('pg')}"><p id="pgMsg" class="nxa-msg" role="status" aria-live="polite">Type your USN. Everything else fills in automatically.</p><div id="pgCard" class="nxa-card" hidden></div><div class="nxa-ch"><span>Sample USNs</span>${chips}</div><button type="button" id="pgGo" class="nxa-go" onclick="nxaSubmit('pg')" disabled>Confirm and sync my details</button></div></section></div>`;
             setTimeout(() => profEl('pgUsn')?.focus({ preventScroll: true }), 60); return;
         }
         const photoCtl = editing
@@ -36930,7 +36930,7 @@ window.nvSave = gate(() => {
   const normUsn = v => (typeof nxUsnNorm === 'function' ? nxUsnNorm(v) : String(v || '').toUpperCase().replace(/\s+/g, ''));
   const normName = v => String(v || '').toLowerCase().replace(/\s+/g, '');   /* capitals and spaces are ignored; dots and other punctuation must match the college record exactly */
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  const USN_FORMAT = 'That doesn’t look like a USN. Use 2 letters, a year and 3 digits, like CS2026-042.';
+  const USN_FORMAT = 'That doesn’t look like a USN. Use 2 letters, a year and 3 digits, like 4MC23CB001.';
   const USN_MISSING = 'We couldn’t find this USN in college records. Check it, or ask the library desk.';
 
   /* ---------- throttling for repeated wrong attempts ---------- */

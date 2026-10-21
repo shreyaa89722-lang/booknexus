@@ -55,17 +55,28 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc   Login a user
 // @route  POST /api/auth/login
 const loginUser = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+    const { email, identifier, usn, password } = req.body;
+    const loginId = (identifier || usn || email || "").toString().trim();
 
-    if (!email || !password) {
+    if (!loginId || !password) {
         res.status(400);
-        throw new Error("Email and password are required");
+        throw new Error("Email/USN and password are required");
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginId);
+    const query = isEmail
+        ? { email: loginId.toLowerCase() }
+        : {
+            $or: [
+                { usn: { $regex: new RegExp(`^${loginId}$`, 'i') } },
+                { email: loginId.toLowerCase() }
+            ]
+        };
+
+    const user = await User.findOne(query).select("+password");
     if (!user || !(await user.comparePassword(password))) {
         res.status(401);
-        throw new Error("Invalid email or password");
+        throw new Error("Invalid email/USN or password");
     }
 
     res.json({
@@ -74,7 +85,11 @@ const loginUser = asyncHandler(async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
+            usn: user.usn,
             role: user.role,
+            branch: user.branch,
+            college: user.college,
+            semester: user.semester,
             preferences: user.preferences,
             token: generateToken(user._id),
         },
