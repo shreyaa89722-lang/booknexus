@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNexus — My Rentals</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app-body">
+  <nav class="topnav" id="appNav"></nav>
+  <div class="mobile-menu" id="mobileMenu"></div>
+  <main class="page">
+    <div class="page-head">
+      <h1>My rentals</h1>
+      <p>Track requests, due dates, and on-chain proof.</p>
+    </div>
+    <div class="tabs" id="tabs"></div>
+    <div id="list"></div>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    const user = BN.requireAuth();
+    BN.renderNav("rentals");
+    const TABS = ["active", "requested", "returned", "overdue"];
+    let tab = "active";
+    let rentals = [];
+
+    function badge(status) {
+      return `<span class="badge b-${status}">${status}</span>`;
+    }
+
+    function chainBadge(r) {
+      if (!r.contractTxHash) return "";
+      return `<a class="badge chain" href="${BN.etherscan(r.contractTxHash)}" target="_blank" rel="noopener">⛓️ Blockchain verified</a>`;
+    }
+
+    function renderTabs() {
+      document.getElementById("tabs").innerHTML = TABS.map((t) => {
+        const n = rentals.filter((r) => r.status === t).length;
+        return `<button class="tab ${tab === t ? "active" : ""}" data-tab="${t}">${t[0].toUpperCase() + t.slice(1)} (${n})</button>`;
+      }).join("");
+      document.querySelectorAll(".tab").forEach((btn) => {
+        btn.addEventListener("click", () => { tab = btn.dataset.tab; render(); });
+      });
+    }
+
+    function render() {
+      renderTabs();
+      const rows = rentals.filter((r) => r.status === tab);
+      const list = document.getElementById("list");
+      if (!rows.length) {
+        list.innerHTML = BN.empty(`No ${tab} rentals.`);
+        return;
+      }
+      list.innerHTML = rows.map((r) => {
+        const book = r.book || {};
+        const canReturn = ["active", "overdue"].includes(r.status);
+        return `
+          <div class="list-card">
+            <div class="thumb" style="${BN.coverStyle(book)}"></div>
+            <div>
+              <h3>${book.title || "Untitled"}</h3>
+              <p class="muted">${book.author || ""}</p>
+              <div class="row" style="margin-top:8px">
+                ${badge(r.status)}
+                ${chainBadge(r)}
+              </div>
+              <p class="muted" style="margin-top:8px">
+                Requested ${BN.formatDate(r.requestDate)}
+                ${r.dueDate ? " · Due " + BN.formatDate(r.dueDate) : ""}
+                ${r.returnDate ? " · Returned " + BN.formatDate(r.returnDate) : ""}
+              </p>
+            </div>
+            <div class="actions">
+              ${canReturn ? `<button class="btn btn-primary btn-sm" data-return="${r._id}">Return Book</button>` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+      document.querySelectorAll("[data-return]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          btn.disabled = true;
+          try {
+            await BN.api(`/rentals/${btn.dataset.return}/return`, { method: "PUT" });
+            BN.toast("Book marked as returned");
+            await load();
+          } catch (err) {
+            BN.toast(err.message);
+            btn.disabled = false;
+          }
+        });
+      });
+    }
+
+    async function load() {
+      document.getElementById("list").innerHTML = BN.empty("Loading…");
+      const json = await BN.api("/rentals");
+      const mine = (json.data || []).filter((r) => {
+        const renterId = r.renter?._id || r.renter;
+        return String(renterId) === String(user._id);
+      });
+      rentals = mine;
+      render();
+    }
+
+    load().catch((err) => {
+      document.getElementById("list").innerHTML = BN.empty(err.message);
+    });
+  </script>
+</body>
+</html>

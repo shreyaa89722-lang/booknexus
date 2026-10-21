@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNexus — My Dashboard</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app-body">
+  <nav class="topnav" id="appNav"></nav>
+  <div class="mobile-menu" id="mobileMenu"></div>
+  <main class="page">
+    <div class="page-head">
+      <h1>My dashboard</h1>
+      <p>Your reading snapshot.</p>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="panel" style="padding:20px;margin-bottom:18px">
+      <h2 style="margin-bottom:12px">Current rentals</h2>
+      <div id="current"></div>
+    </div>
+    <div class="charts-grid">
+      <div class="panel" style="padding:20px">
+        <h2 style="margin-bottom:12px">Reading history</h2>
+        <div id="history"></div>
+      </div>
+      <div class="panel" style="padding:20px">
+        <h2 style="margin-bottom:12px">Genre breakdown</h2>
+        <div id="genres"></div>
+      </div>
+    </div>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    const user = BN.requireAuth();
+    BN.renderNav("me");
+
+    (async () => {
+      try {
+        const [rentalsJson, booksJson] = await Promise.all([
+          BN.api("/rentals"),
+          BN.api("/books?limit=200", { auth: false }),
+        ]);
+        const booksById = Object.fromEntries((booksJson.data || []).map((b) => [b._id, b]));
+        const mine = (rentalsJson.data || []).filter((r) => String(r.renter?._id || r.renter) === String(user._id));
+        const counted = mine.filter((r) => ["active", "returned", "overdue"].includes(r.status));
+        const current = mine.filter((r) => ["active", "overdue"].includes(r.status));
+        const genres = {};
+        counted.forEach((r) => {
+          const book = booksById[r.book?._id || r.book] || r.book || {};
+          const g = book.genre || "Uncategorized";
+          genres[g] = (genres[g] || 0) + 1;
+        });
+        const favorite = Object.entries(genres).sort((a, b) => b[1] - a[1])[0];
+        document.getElementById("stats").innerHTML = `
+          <div class="stat-card"><div class="label">Total books rented</div><div class="value">${counted.length}</div></div>
+          <div class="stat-card"><div class="label">Currently reading</div><div class="value">${current.length}</div></div>
+          <div class="stat-card"><div class="label">Favorite genre</div><div class="value" style="font-size:22px">${favorite ? favorite[0] : "—"}</div></div>
+        `;
+        document.getElementById("current").innerHTML = current.length ? current.map((r) => {
+          const overdue = r.status === "overdue" || (r.dueDate && new Date(r.dueDate) < new Date() && r.status === "active");
+          return `<div class="list-card">
+            <div class="thumb" style="${BN.coverStyle(r.book)}"></div>
+            <div>
+              <h3>${r.book?.title || "Book"}</h3>
+              <p class="muted">Due ${BN.formatDate(r.dueDate)}</p>
+              ${overdue ? `<span class="badge b-overdue">Overdue</span>` : `<span class="badge b-active">${r.status}</span>`}
+            </div>
+          </div>`;
+        }).join("") : BN.empty("You are not reading anything right now.");
+
+        const history = counted.slice().sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
+        document.getElementById("history").innerHTML = history.length
+          ? `<table><thead><tr><th>Title</th><th>Status</th><th>Requested</th></tr></thead><tbody>
+            ${history.map((r) => `<tr><td>${r.book?.title || ""}</td><td>${r.status}</td><td>${BN.formatDate(r.requestDate)}</td></tr>`).join("")}
+          </tbody></table>`
+          : BN.empty("No reading history yet.");
+
+        const max = Math.max(1, ...Object.values(genres));
+        document.getElementById("genres").innerHTML = Object.keys(genres).length
+          ? Object.entries(genres).map(([g, n]) => `
+              <div class="bar-row"><span style="width:110px">${g}</span><div class="track"><div class="fill" style="width:${(n / max) * 100}%"></div></div><span>${n}</span></div>
+            `).join("")
+          : BN.empty("Rent a few books and your genre mix will appear here.");
+      } catch (err) {
+        document.getElementById("current").innerHTML = BN.empty(err.message);
+      }
+    })();
+  </script>
+</body>
+</html>

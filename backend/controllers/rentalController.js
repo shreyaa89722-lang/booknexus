@@ -62,9 +62,12 @@ const approveRental = asyncHandler(async (req, res) => {
 
     try {
         const dueDateUnix = Math.floor(rental.dueDate.getTime() / 1000);
-        const txHash = await recordRentalOnChain(rental.book._id.toString(), req.user.walletAddress, dueDateUnix);
-        if (txHash) {
-            rental.contractTxHash = txHash;
+        const onChainResult = await recordRentalOnChain(rental.book._id.toString(), req.user.walletAddress, dueDateUnix);
+        if (onChainResult) {
+            if (onChainResult.txHash) rental.contractTxHash = onChainResult.txHash;
+            if (onChainResult.onChainRentalId !== null && onChainResult.onChainRentalId !== undefined) {
+                rental.onChainRentalId = onChainResult.onChainRentalId;
+            }
             await rental.save();
         }
     } catch (err) {
@@ -126,8 +129,8 @@ const returnRental = asyncHandler(async (req, res) => {
     await rental.save();
 
     try {
-        if (rental.contractTxHash) {
-            await recordReturnOnChain(rental._id.toString());
+        if (rental.onChainRentalId !== null && rental.onChainRentalId !== undefined) {
+            await recordReturnOnChain(rental.onChainRentalId);
         }
     } catch (err) {
         console.error("Blockchain return recording failed (non-fatal):", err.message);

@@ -1,0 +1,1294 @@
+[
+  {
+    "name": "ABDUR RAHMAN",
+    "email": "abdur56562541@gmail.com",
+    "password": "$2b$10$Z/F4OdeinYJ28jKz9lvbueQv/dv4LMzRUUwVaQSQ7A7WMTgTwNKXS",
+    "role": "student",
+    "usn": "4MC23CB001",
+    "mobile": "9035386625",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB001"
+  },
+  {
+    "name": "ANANYA D A",
+    "email": "ananyadvnu@gmail.com",
+    "password": "$2b$10$4wSl9KyQiZiqhvdYZlVTP.OJer/FaFH.lRBygrkaKMOAHvS9SllWq",
+    "role": "student",
+    "usn": "4MC23CB002",
+    "mobile": "9481118282",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB002"
+  },
+  {
+    "name": "ANKITHA H S",
+    "email": "ankithabatry@gmail.com",
+    "password": "$2b$10$ZignWiBvNVvWIl0wQr9Sgu288vKn9le4jAzncTsmIfJldu.qkgLB2",
+    "role": "student",
+    "usn": "4MC23CB003",
+    "mobile": "6363282822",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB003"
+  },
+  {
+    "name": "ATHMIK R AMEEN",
+    "email": "rudreshrameen@gmail.com",
+    "password": "$2b$10$9K51ibW08AUda0uoUSqN7eEIUVFVWS8vcFAFdPQt/.Ioo1Uwft3EG",
+    "role": "student",
+    "usn": "4MC23CB004",
+    "mobile": "9902306854",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB004"
+  },
+  {
+    "name": "AVINASH SUBHAS GUNDANAVAR",
+    "email": "avinashgundanavar@gmail.com",
+    "password": "$2b$10$ImyfLg3.Xsgt.vaCHEpCC.bgR9kATPJED6XJKTX0HWw0ZTa9IrY7i",
+    "role": "student",
+    "usn": "4MC23CB005",
+    "mobile": "9740799584",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB005"
+  },
+  {
+    "name": "BHOOMI N",
+    "email": "bhoomingowda793@gmail.com",
+    "password": "$2b$10$4I.V5tE1x42n8aW4j.cwFOnE2jusLpCpRywt4PyUUjlXJQO.XrF5S",
+    "role": "student",
+    "usn": "4MC23CB006",
+    "mobile": "9945881115",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB006"
+  },
+  {
+    "name": "BHOOMIKA C",
+    "email": "bhoomikabv2694@gmail.com",
+    "password": "$2b$10$K87hdfn33yh/D1L423X3kOEsEn0zsKbxfGRCbeDpSMjrqN3Z748Oy",
+    "role": "student",
+    "usn": "4MC23CB007",
+    "mobile": "9742514541",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB007"
+  },
+  {
+    "name": "BHOOMIKA S",
+    "email": "bhoomikashashidhar33@gmail.com",
+    "password": "$2b$10$/KpB8hhqjjXerfiT7AmAouBAjjF7/JTXR4sjqWQLF82qNsSMv4zAu",
+    "role": "student",
+    "usn": "4MC23CB008",
+    "mobile": "9741473053",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB008"
+  },
+  {
+    "name": "BHUVAN H S",
+    "email": "hsbhuvan0@gmail.com",
+    "password": "$2b$10$odnJCegbfbXdXMc7BaJ/.uU3w4lRa9NH4845wCOV3XTVIhnPO.shO",
+    "role": "student",
+    "usn": "4MC23CB009",
+    "mobile": "9591125198",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB009"
+  },
+  {
+    "name": "BHUVAN SHARMA H V",
+    "email": "bhuvansharmahv@gmail.com",
+    "password": "$2b$10$8bmqYphxri3s9ifw8fzdi.F386Yz4UpR7o2c.jYcAaAu0GimI1e.y",
+    "role": "student",
+    "usn": "4MC23CB010",
+    "mobile": "9845471671",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB010"
+  },
+  {
+    "name": "C K PUNYASHREE",
+    "email": "punyapunya01600@gmail.com",
+    "password": "$2b$10$xqj7kj/0YFvbgDK39XH18e5AFUOYZ4.bxagBGY/coGg/YcywYpSkK",
+    "role": "student",
+    "usn": "4MC23CB011",
+    "mobile": "8971089176",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB011"
+  },
+  {
+    "name": "D S VARUN GOWDA",
+    "email": "varungowda629@gmail.com",
+    "password": "$2b$10$5yGcGfoOnAElHQaNvCh6OO8xuq5VAQRs9DlPQlTfdWrYpRSGlEwVi",
+    "role": "student",
+    "usn": "4MC23CB012",
+    "mobile": "9449809336",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB012"
+  },
+  {
+    "name": "DANIYAL MOHTHASHIM",
+    "email": "daniyalmohthashim4786@gmail.com",
+    "password": "$2b$10$swVppvcezMyipPrvNNph9eslLJQ2WanOJraAIFGISr6ZMt6wlrmsO",
+    "role": "student",
+    "usn": "4MC23CB013",
+    "mobile": "9481332786",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB013"
+  },
+  {
+    "name": "DARSHAN A",
+    "email": "darshua3107@gmail.com",
+    "password": "$2b$10$xWvXCw6NQhtUJUf5rNDG9elismJR6Zy4UvqOGdgH5mO34AB01ogsK",
+    "role": "student",
+    "usn": "4MC23CB014",
+    "mobile": "8088635992",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB014"
+  },
+  {
+    "name": "DARSHINI H J",
+    "email": "nidhijagdeesh8@gmail.com",
+    "password": "$2b$10$NsNZ6OzqU5UYEtL9U20eX.dCclRyi1w6e5OWqMNwOhJ1qc.mvhLqK",
+    "role": "student",
+    "usn": "4MC23CB015",
+    "mobile": "9901380160",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB015"
+  },
+  {
+    "name": "DEEPU Y B",
+    "email": "gowdadeepu638@gmail.com",
+    "password": "$2b$10$6XqdO7.o8UkcdKcm4DCMu.PWlvoR7Pb1oNfeBelXJLmaHjylBrg6S",
+    "role": "student",
+    "usn": "4MC23CB016",
+    "mobile": "9900420863",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB016"
+  },
+  {
+    "name": "DEVENDRA KUMAR",
+    "email": "devendra27577@gmail.com",
+    "password": "$2b$10$QjjLixoF/5PEZvMSjuD5Ges1nrSNiwlZvrHf34Gd9GNYcCeenUN2i",
+    "role": "student",
+    "usn": "4MC23CB017",
+    "mobile": "9663106367",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB017"
+  },
+  {
+    "name": "DHRUVA N",
+    "email": "ndhruva1234@gmail.com",
+    "password": "$2b$10$xmFmmfbVGrhMCuwhbcHJsOoL6RopR7Yvv9dtiHbO3Bh9ycOD8eXua",
+    "role": "student",
+    "usn": "4MC23CB018",
+    "mobile": "9481071059",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB018"
+  },
+  {
+    "name": "GOWTHAM M P",
+    "email": "gowtham4657@gmail.com",
+    "password": "$2b$10$1NiqiEs7lTPSTPmathBgdeonBGESKlRP4eiL7I0jOmf7M0s0caW6e",
+    "role": "student",
+    "usn": "4MC23CB019",
+    "mobile": "9035358095",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB019"
+  },
+  {
+    "name": "H M NANDITHA",
+    "email": "nandithahm123@gmail.com",
+    "password": "$2b$10$p.ZeenE56BP2rTXQFlQHee1WRgt2LKhOBgQXRq6/sNvqRZWi2nY4i",
+    "role": "student",
+    "usn": "4MC23CB020",
+    "mobile": "9844465266",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB020"
+  },
+  {
+    "name": "HEMANTH D",
+    "email": "hemanthdharmegowda08@gmail.com",
+    "password": "$2b$10$jY40HqhMGoJJp/c12xRHEu7QldkD5CV4fXCCql5i65dCGjAdh07BO",
+    "role": "student",
+    "usn": "4MC23CB021",
+    "mobile": "9880325492",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB021"
+  },
+  {
+    "name": "HEMESHA Y K",
+    "email": "ameshjk46@gmail.com",
+    "password": "$2b$10$/OYcAxWIOtOiToSv3zTR..4VkuntmtxHW4puKXW15LhPrntEl9HaG",
+    "role": "student",
+    "usn": "4MC23CB022",
+    "mobile": "9008255628",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB022"
+  },
+  {
+    "name": "JEEVAN Y P",
+    "email": "jeevanyp2005@gmail.com",
+    "password": "$2b$10$72etHiHGszj6QTSdTRgStO0Vy.chanF8AXuqQ8EWHPHyGM1EmveFe",
+    "role": "student",
+    "usn": "4MC23CB023",
+    "mobile": "9880417856",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB023"
+  },
+  {
+    "name": "KHADIJATUL KUBRAA",
+    "email": "kubraakhadija@gmail.com",
+    "password": "$2b$10$v2jf/PAo45O.dlUNlKA2veyQSsPEwpU.7V.WNobxBaHDGfhSt3OQO",
+    "role": "student",
+    "usn": "4MC23CB024",
+    "mobile": "9449461236",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB024"
+  },
+  {
+    "name": "KIRAN A R",
+    "email": "kirangowda143422@gmail.com",
+    "password": "$2b$10$ztq557lvzKJ0UoF6.c01se2xSMDbDDWk2Elm8qyUU3B1pVrkcK2BO",
+    "role": "student",
+    "usn": "4MC23CB025",
+    "mobile": "9964252153",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB025"
+  },
+  {
+    "name": "M GNANESH",
+    "email": "gnaneshgnani5454@gmail.ocm",
+    "password": "$2b$10$JwHEJkHOdakqurUP/NOA9OF74n0nrOqevslM8MC0McljamEvWr0/.",
+    "role": "student",
+    "usn": "4MC23CB026",
+    "mobile": "8861187890",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB026"
+  },
+  {
+    "name": "MADAN S K",
+    "email": "skm43685@gmail.com",
+    "password": "$2b$10$oBnnxUxRbVhddOcdLc/moOJsgp35rusXJ3g3Rl24n6n4f7DIH./cu",
+    "role": "student",
+    "usn": "4MC23CB027",
+    "mobile": "9743672766",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB027"
+  },
+  {
+    "name": "MANYA R",
+    "email": "manyarbedre2005@gmail.com",
+    "password": "$2b$10$Z9oWx7pQqW2k.cFdGSb.JOAIYi5kVZlezaRAjzuJfT65FzXrzq.wu",
+    "role": "student",
+    "usn": "4MC23CB028",
+    "mobile": "9008134735",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB028"
+  },
+  {
+    "name": "MANYASHREE R",
+    "email": "savitharaghu886@gmail.com",
+    "password": "$2b$10$J6L/Kbd87.FZmbdiVXq7CuHambKmEqaz6gEwwEeYBwl.CHW5.9G3e",
+    "role": "student",
+    "usn": "4MC23CB029",
+    "mobile": "9448346330",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB029"
+  },
+  {
+    "name": "MONIKA K S",
+    "email": "darshandarshu20034@gmail.com",
+    "password": "$2b$10$RvOPSHpZk2ns/OUOEQ59h.yYOh88YWViUtcPFGX4h0L7HpbFBMbHu",
+    "role": "student",
+    "usn": "4MC23CB030",
+    "mobile": "7899928100",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB030"
+  },
+  {
+    "name": "NAGENDRA J",
+    "email": "nagendraj1221@gmail.com",
+    "password": "$2b$10$StSGPDcdwOhFuZnF1u7BduUCUJrLzi6i8WoBNeCUC/Z9X40ZU0wfy",
+    "role": "student",
+    "usn": "4MC23CB031",
+    "mobile": "9019738481",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB031"
+  },
+  {
+    "name": "NANDITHA L",
+    "email": "nandithalekki27@gmail.com",
+    "password": "$2b$10$Ol1vHixvH4l8UcjlGUu1nunKJ5FW7LqnMGlUtOSJ2fdizEMUKPvUW",
+    "role": "student",
+    "usn": "4MC23CB032",
+    "mobile": "9481665111",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB032"
+  },
+  {
+    "name": "NIDA FALAK",
+    "email": "nidafalak311@gmail.com",
+    "password": "$2b$10$xmoWOnBFK767wu/4piAPx.eVZ.vZsQtkuRLrI7GR56fwOWR6f6Nfu",
+    "role": "student",
+    "usn": "4MC23CB033",
+    "mobile": "9482971449",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB033"
+  },
+  {
+    "name": "P GOKUL YADAV",
+    "email": "pgokulyadav67893@gmail.com",
+    "password": "$2b$10$qfD.3nremNJHd1HwzhfOyObjorYWEDy.PQAsxTqqUywy2JndnChLS",
+    "role": "student",
+    "usn": "4MC23CB034",
+    "mobile": "9844173062",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB034"
+  },
+  {
+    "name": "POORVITHA V",
+    "email": "poorvithavenkatesha@gmail.com",
+    "password": "$2b$10$23sJWHOl/aHiK7MHI/Cb/uc1DKVQHekFiJs4musr9TIF3hrrQsPxe",
+    "role": "student",
+    "usn": "4MC23CB035",
+    "mobile": "6363666704",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB035"
+  },
+  {
+    "name": "PRAJWAL H D",
+    "email": "prajawalhd375@gmail.com",
+    "password": "$2b$10$.Gxz3UjsniQOlGkL7jf/4OkCFu1M5C2Rp2Bs5o2Jx00VtGxc9n2hO",
+    "role": "student",
+    "usn": "4MC23CB036",
+    "mobile": "9343411103",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB036"
+  },
+  {
+    "name": "PRANAV SIDDAPPA B P",
+    "email": "pranav868677@gmail.com",
+    "password": "$2b$10$6obB1.DihGD6jW3J4P1j6ueNhkGaIqrVPBWK.mHvZiJQL4Ebo5Mdi",
+    "role": "student",
+    "usn": "4MC23CB037",
+    "mobile": "9886296165",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB037"
+  },
+  {
+    "name": "PRASAD",
+    "email": "prasadmalegaon05@gmail.com",
+    "password": "$2b$10$HUqIoj3I41j34I1dHtIKAOvQde89KjJBndt.he2AEIDcmNPIWn/hG",
+    "role": "student",
+    "usn": "4MC23CB038",
+    "mobile": "9900537295",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB038"
+  },
+  {
+    "name": "PRUTHVI JAIN S S",
+    "email": "pruthvijainss24@gmail.com",
+    "password": "$2b$10$k6CmUYeD4cWbeypVRxKYWugMLR50e5sNVxK95Qrpldp4Ti5f8CO1S",
+    "role": "student",
+    "usn": "4MC23CB039",
+    "mobile": "8792407924",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB039"
+  },
+  {
+    "name": "RAMYA S L",
+    "email": "ramyaslr623@gmail.com",
+    "password": "$2b$10$DbiaFYFdnNeQWykyLZGipOjII3ZUh2CBMtgJ9znjst6BATgfa0MwO",
+    "role": "student",
+    "usn": "4MC23CB040",
+    "mobile": "9380298048",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB040"
+  },
+  {
+    "name": "RASHMITHA C J",
+    "email": "cjrashmitha@gmail.com",
+    "password": "$2b$10$qvCXsMAsjjGFxc0GUYvEM.52venlUizq.hRrs9DGwKKsXoFhFrauO",
+    "role": "student",
+    "usn": "4MC23CB041",
+    "mobile": "8971491551",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB041"
+  },
+  {
+    "name": "RIDA MARYAM",
+    "email": "ridamaryam127@gmail.com",
+    "password": "$2b$10$Q/u1vDRspOpXXLqE8Z9MLupR7fQyMAJoL.JPq4Mfsxhk9ju9XrwT6",
+    "role": "student",
+    "usn": "4MC23CB042",
+    "mobile": "7760083606",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB042"
+  },
+  {
+    "name": "RUJULA P",
+    "email": "rujulapraksh9@gmail.com",
+    "password": "$2b$10$6W.5ofrUL0GptbGuEGl7Y.E.RBfE3bkP0J3xAwT8fDq1QPr9hbju.",
+    "role": "student",
+    "usn": "4MC23CB043",
+    "mobile": "9900693572",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB043"
+  },
+  {
+    "name": "SAMARTH H BHARADWAJ",
+    "email": "samhb537@gmail.com",
+    "password": "$2b$10$k0LEe2AtW80fkUGgTzC4zuA62Qx8ly2k41Wsrsdl4UFABoGBKb8ia",
+    "role": "student",
+    "usn": "4MC23CB044",
+    "mobile": "9845113879",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB044"
+  },
+  {
+    "name": "SAMRUDHI H M",
+    "email": "samrudhi.hm23@gmail.com",
+    "password": "$2b$10$J5BZBPPrx/XuFpH4Ic9.2OVer2GtEYP5w4YcMQEtJYoQptKir1mae",
+    "role": "student",
+    "usn": "4MC23CB045",
+    "mobile": "8951891164",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB045"
+  },
+  {
+    "name": "SANJANA K S",
+    "email": "sanjanagowda20.3@gmail.com",
+    "password": "$2b$10$RvMf2t8qog.NGckKHL8aZOq/La/Ay.dPeJQebQ1n0BLizyePh3ECu",
+    "role": "student",
+    "usn": "4MC23CB046",
+    "mobile": "9449156124",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB046"
+  },
+  {
+    "name": "SHEHZAADI AAFREEN",
+    "email": "shehzaadiaafreen786@gmail.com",
+    "password": "$2b$10$6TVIPrxl/RZ3HTDnNvncHukhJmOl6szaSAi0pabGAYQXMwG6BQ6Ce",
+    "role": "student",
+    "usn": "4MC23CB047",
+    "mobile": "9985371506",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB047"
+  },
+  {
+    "name": "SHIROODARSHINI",
+    "email": "shiroodarshini@gmail.com",
+    "password": "$2b$10$SnjeTy55zna7/VbVmJ6rkOO9RvmEjQiab6dRXjjLvW/qnK8c/6xzW",
+    "role": "student",
+    "usn": "4MC23CB048",
+    "mobile": "9449665529",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB048"
+  },
+  {
+    "name": "SHREYA G N",
+    "email": "shreyaa89722@gmail.com",
+    "password": "$2b$10$DAvqf82w9ZesdtJ7klhXVOUJDXDs1bjgNi0Tv6QrTt/6oGQrci8wy",
+    "role": "student",
+    "usn": "4MC23CB049",
+    "mobile": "8970385744",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB049"
+  },
+  {
+    "name": "SHUKRITHA S S",
+    "email": "shukrithashukri076@gmail.com",
+    "password": "$2b$10$DjM5Nw4jiixClLBqBci3MuKbz4an8.dDzPxAlrk5Srw.eFQ2TaE1q",
+    "role": "student",
+    "usn": "4MC23CB050",
+    "mobile": "9967092783",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB050"
+  },
+  {
+    "name": "SOHAN H S",
+    "email": "sohansuresh0008@gmail.com",
+    "password": "$2b$10$zN/DKVtdV6Qi0AlJ4LaHwOybrxxhB00LevSTMsCaB2zfyjL4EmWxS",
+    "role": "student",
+    "usn": "4MC23CB051",
+    "mobile": "7899161308",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB051"
+  },
+  {
+    "name": "SPANDANA R",
+    "email": "spandanaravi05@gmail.com",
+    "password": "$2b$10$V5C0cTcgxujl.Nb5KzMBUucUCkJbW0HZkiE5s2Ltp1J7uOiVdTC0C",
+    "role": "student",
+    "usn": "4MC23CB052",
+    "mobile": "9845696126",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB052"
+  },
+  {
+    "name": "SUBIYA BEGUM",
+    "email": "s4358698@gmail.com",
+    "password": "$2b$10$lKZFfXsqzcNkWBmmdaFz8e1LIQyfM8SG2zgoJPbRDExPRrnzhMhL.",
+    "role": "student",
+    "usn": "4MC23CB053",
+    "mobile": "9902651280",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB053"
+  },
+  {
+    "name": "SUHAS U M",
+    "email": "suhasum2005@gmail.com",
+    "password": "$2b$10$TnbpdXwwjVReAQsX2efUjuZaKQuboBs2aXuzj3mgQIE6PxEBt7Zs.",
+    "role": "student",
+    "usn": "4MC23CB054",
+    "mobile": "9845439760",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB054"
+  },
+  {
+    "name": "SUMEDHA G M",
+    "email": "sumedhamanjunath46@gmail.com",
+    "password": "$2b$10$fRZWhkVOZXroQOlEOnhb..KppI/X1xLgYqgmB.iassI2w0lnpGci6",
+    "role": "student",
+    "usn": "4MC23CB055",
+    "mobile": "9448205419",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB055"
+  },
+  {
+    "name": "SUPRIYA S R",
+    "email": "ravijapadakatte@gmail.com",
+    "password": "$2b$10$DBADNQ9YjaULxwuGVTWPyub8Dh9B//aJ7UnuUmCvjP6QnvnHhhHl.",
+    "role": "student",
+    "usn": "4MC23CB056",
+    "mobile": "9902647424",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB056"
+  },
+  {
+    "name": "TEENA RAJ",
+    "email": "teenarajj02@gmail.com",
+    "password": "$2b$10$FJFcCyjZl7Xr92x83ycb6eqwIxGPmMO4ZvA.dYh6r9UZDWM9jZ8Eu",
+    "role": "student",
+    "usn": "4MC23CB057",
+    "mobile": "8861142332",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB057"
+  },
+  {
+    "name": "TEJAS R",
+    "email": "tejasr481@gmail.com",
+    "password": "$2b$10$1v/HGaaMv2/AsoI5q4ris.1pJA8hzTZPXAIsuZgY2Naf4PHBomkj2",
+    "role": "student",
+    "usn": "4MC23CB058",
+    "mobile": "8277092474",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB058"
+  },
+  {
+    "name": "THANUSH GOWDA K S",
+    "email": "thanushksgowda@gmail.com",
+    "password": "$2b$10$sZcC1vn79INmh7XhHoR0aOduve4n5WMt7qn971B8H9rLuIcGjGRia",
+    "role": "student",
+    "usn": "4MC23CB059",
+    "mobile": "9449208746",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB059"
+  },
+  {
+    "name": "VINAY H M",
+    "email": "manjunathgowda11976@gmail.com",
+    "password": "$2b$10$dpbPNiBpf4u2zpjMAMOvZO8al/Enne8CcJ8Vi7Fs45/CEr0uUdZcO",
+    "role": "student",
+    "usn": "4MC23CB060",
+    "mobile": "9945179445",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB060"
+  },
+  {
+    "name": "VINAY M",
+    "email": "vinaymanu2005@gmail.com",
+    "password": "$2b$10$0rVP6aWHBsMcp.zN4uz5l.i.gQELDsDST5NQ0KXx0ssWNI9ThBsYi",
+    "role": "student",
+    "usn": "4MC23CB061",
+    "mobile": "7760190615",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB061"
+  },
+  {
+    "name": "YUKTHI PATEL H M",
+    "email": "yukthi.patel12@gmail.com",
+    "password": "$2b$10$s3i9l3wd2MW9LyOWvAM14O28xFylzZw/Raxovi57vlVhW6JUp0E4G",
+    "role": "student",
+    "usn": "4MC23CB062",
+    "mobile": "9448125569",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB062"
+  },
+  {
+    "name": "YUSUF ISLAM",
+    "email": "yusufislam9483@gmail.com",
+    "password": "$2b$10$V9R4xfUqkkHfDb1v1iab6.3PmNHu9Av68hynISzDsztKM8E3cIz5m",
+    "role": "student",
+    "usn": "4MC23CB063",
+    "mobile": "9886860068",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC23CB063"
+  },
+  {
+    "name": "BHOOMIKA K M",
+    "email": "bhoomikm2003@gmail.com",
+    "password": "$2b$10$DNviCG.ku3Qwp53ZCb6kxekDKOsjkHDmMoSRqrHWaGlRyyUvGz/3e",
+    "role": "student",
+    "usn": "4MC24CB400",
+    "mobile": "8073835439",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC24CB400"
+  },
+  {
+    "name": "HARSHITH GOWDA K R",
+    "email": "harshithgowdah2@gmail.com",
+    "password": "$2b$10$4sqYFwfcKlk4HEORC2p3hu9Qw1CnActk/00RoEAJqos0x6bCfwKTy",
+    "role": "student",
+    "usn": "4MC24CB401",
+    "mobile": "9632735439",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC24CB401"
+  },
+  {
+    "name": "PALLAVI C",
+    "email": "pallavic8105@gmail.com",
+    "password": "$2b$10$EMZXzXcofkyQ1meXICbavuZP//TlYiB8o96a9Rd.orysoTwrjbKG2",
+    "role": "student",
+    "usn": "4MC24CB402",
+    "mobile": "8431693643",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC24CB402"
+  },
+  {
+    "name": "POORNACHANDRA P B",
+    "email": "pb.poornachandra@gmail.com",
+    "password": "$2b$10$F2AN5Eerg/FuWUuq7aglIe/mG8EEVPwvHN0TY1SDNcV6vwO37A2p2",
+    "role": "student",
+    "usn": "4MC24CB403",
+    "mobile": "7760131380",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC24CB403"
+  },
+  {
+    "name": "SUSHANTH GOWDA S",
+    "email": "sushanthsushanthgowda3@gmail.com",
+    "password": "$2b$10$Nhn6a30/ypHwM7XYgx/kzupw02NTnMK3envJz6ZLm4gg32FaFdTW6",
+    "role": "student",
+    "usn": "4MC24CB404",
+    "mobile": "7349125943",
+    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+    "college": "Malnad college of engineering",
+    "semester": "Sixth",
+    "preferences": {
+      "genres": [],
+      "authors": [],
+      "subjects": [
+        "COMPUTER SCIENCE AND BUSINESS SYSTEMS"
+      ]
+    },
+    "plainPassword": "4MC24CB404"
+  }
+]

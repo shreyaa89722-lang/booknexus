@@ -1,6 +1,14 @@
 # Dependencies
 node_modules/
-package-lock.json (optional, but keep node_modules ignored)
+
+# Database data files
+backend/data/
+**/data/db/
+mongod.lock
+
+# Frontend build output
+frontend/dist/
+dist/
 
 # Environment variables
 .env

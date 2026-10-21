@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
             authors: [{ type: String }],
             subjects: [{ type: String }],
         },
+        usn: { type: String, trim: true },
+        mobile: { type: String, trim: true },
+        branch: { type: String, trim: true },
+        college: { type: String, trim: true },
+        semester: { type: String, trim: true },
     },
     { timestamps: true }
 );

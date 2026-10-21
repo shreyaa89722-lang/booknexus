@@ -500,6 +500,7 @@
 </div>
 
 <!-- JAVASCRIPT LOGIC -->
+<script src="js/app.js"></script>
 <script>
     /* ============================================================
        TRANSACTIONS DATA STORE
@@ -663,8 +664,52 @@
     let activeSelectedTxnId = null;
 
     /* INITIALIZATION */
-    document.addEventListener('DOMContentLoaded', () => {
+    async function loadLiveTransactions() {
+        if (typeof BN !== "undefined" && BN.getToken()) {
+            try {
+                const res = await BN.api('/rentals');
+                if (res && res.data && res.data.length > 0) {
+                    const mapped = res.data.map((r, idx) => {
+                        const statusMap = {
+                            requested: "Pending",
+                            active: "Completed",
+                            approved: "Completed",
+                            returned: "Refunded",
+                            rejected: "Failed",
+                            overdue: "Pending"
+                        };
+                        const dateObj = new Date(r.createdAt || r.requestDate || Date.now());
+                        const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                        const isoDate = dateObj.toISOString().split('T')[0];
+                        return {
+                            id: r.onChainRentalId ? `CHAIN-#${r.onChainRentalId}` : `TXN-${r._id.toString().slice(-5).toUpperCase()}`,
+                            bookTitle: r.book?.title || "Book Rental",
+                            author: r.book?.author || "Academic Library",
+                            type: "Rental",
+                            date: formattedDate,
+                            rawDate: isoDate,
+                            amount: "₹50",
+                            rawAmount: 50,
+                            status: statusMap[r.status] || "Completed",
+                            paymentMethod: r.contractTxHash ? "Sepolia On-Chain Escrow" : "Campus Student Wallet",
+                            location: "Main Stacks Desk",
+                            user: r.renter?.name || "Campus Member",
+                            txHash: r.contractTxHash || null
+                        };
+                    });
+                    transactionsData = [...mapped, ...initialTransactions];
+                    renderTable();
+                    return;
+                }
+            } catch (err) {
+                console.warn("Could not load backend rentals, using ledger cache:", err.message);
+            }
+        }
         renderTable();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadLiveTransactions();
 
         // Dismiss dropdowns on outside click
         document.addEventListener('click', (e) => {

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNexus — Add / Edit Book</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app-body">
+  <nav class="topnav" id="appNav"></nav>
+  <div class="mobile-menu" id="mobileMenu"></div>
+  <main class="page">
+    <div class="page-head">
+      <h1 id="title">Add a book</h1>
+      <p>Fields match the catalog rules: title, author, genre, and subject are required.</p>
+    </div>
+    <form class="form-card form-grid" id="form">
+      <div>
+        <label>Title</label>
+        <input id="titleField" />
+        <div class="hint" id="titleHint"></div>
+      </div>
+      <div>
+        <label>Author</label>
+        <input id="author" />
+        <div class="hint" id="authorHint"></div>
+      </div>
+      <div>
+        <label>Genre</label>
+        <input id="genre" />
+        <div class="hint" id="genreHint"></div>
+      </div>
+      <div>
+        <label>Subject</label>
+        <input id="subject" />
+        <div class="hint" id="subjectHint"></div>
+      </div>
+      <div class="span-2">
+        <label>Description</label>
+        <textarea id="description"></textarea>
+      </div>
+      <div>
+        <label>Condition</label>
+        <select id="condition">
+          <option value="new">New</option>
+          <option value="good" selected>Good</option>
+          <option value="fair">Fair</option>
+          <option value="worn">Worn</option>
+        </select>
+      </div>
+      <div>
+        <label>Cover URL</label>
+        <input id="coverUrl" placeholder="https://…" />
+      </div>
+      <div>
+        <label>Listing type</label>
+        <select id="listingType">
+          <option value="library">Library</option>
+          <option value="p2p">P2P</option>
+        </select>
+      </div>
+      <div id="priceWrap" class="hidden">
+        <label>Weekly price</label>
+        <input id="rentalPricePerWeek" type="number" min="0.01" step="0.01" />
+        <div class="hint" id="priceHint"></div>
+      </div>
+      <div class="span-2 error-banner" id="formError"></div>
+      <div class="span-2 row">
+        <button class="btn btn-primary" style="width:auto" id="saveBtn" type="submit">Save</button>
+        <a class="btn btn-ghost btn-sm" href="listings.html">Cancel</a>
+      </div>
+    </form>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    const user = BN.requireAuth();
+    if (!["owner", "admin"].includes(user.role)) window.location.href = "browse.html";
+    BN.renderNav("listings");
+    const id = new URLSearchParams(location.search).get("id");
+    const listingType = document.getElementById("listingType");
+    const priceWrap = document.getElementById("priceWrap");
+
+    function syncPrice() {
+      priceWrap.classList.toggle("hidden", listingType.value !== "p2p");
+    }
+    listingType.addEventListener("change", () => { syncPrice(); live(); });
+
+    function live() {
+      const required = [
+        ["titleField", "titleHint", "Title is required"],
+        ["author", "authorHint", "Author is required"],
+        ["genre", "genreHint", "Genre is required"],
+        ["subject", "subjectHint", "Subject is required"],
+      ];
+      let ok = true;
+      required.forEach(([fid, hid, msg]) => {
+        const v = document.getElementById(fid).value.trim();
+        const hint = document.getElementById(hid);
+        hint.textContent = v ? "" : msg;
+        hint.className = "hint " + (v ? "" : "bad");
+        if (!v) ok = false;
+      });
+      const priceHint = document.getElementById("priceHint");
+      if (listingType.value === "p2p") {
+        const price = Number(document.getElementById("rentalPricePerWeek").value);
+        const good = price > 0;
+        priceHint.textContent = good ? "" : "Price must be a positive number";
+        priceHint.className = "hint " + (good ? "" : "bad");
+        if (!good) ok = false;
+      } else priceHint.textContent = "";
+      return ok;
+    }
+
+    ["titleField", "author", "genre", "subject", "rentalPricePerWeek"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", live);
+    });
+
+    async function hydrate() {
+      if (!id) return;
+      document.getElementById("title").textContent = "Edit book";
+      document.getElementById("saveBtn").textContent = "Update";
+      const json = await BN.api(`/books/${id}`, { auth: false });
+      const b = json.data;
+      titleField.value = b.title || "";
+      author.value = b.author || "";
+      genre.value = b.genre || "";
+      subject.value = b.subject || "";
+      description.value = b.description || "";
+      condition.value = b.condition || "good";
+      coverUrl.value = b.coverUrl || "";
+      listingType.value = b.listingType || "library";
+      rentalPricePerWeek.value = b.rentalPricePerWeek || "";
+      syncPrice();
+    }
+
+    document.getElementById("form").addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const formError = document.getElementById("formError");
+      formError.textContent = "";
+      if (!live()) return;
+      const payload = {
+        title: titleField.value.trim(),
+        author: author.value.trim(),
+        genre: genre.value.trim(),
+        subject: subject.value.trim(),
+        description: description.value.trim(),
+        condition: condition.value,
+        coverUrl: coverUrl.value.trim(),
+        listingType: listingType.value,
+        rentalPricePerWeek: listingType.value === "p2p" ? Number(rentalPricePerWeek.value) : 0,
+      };
+      const saveBtn = document.getElementById("saveBtn");
+      saveBtn.disabled = true;
+      try {
+        if (id) await BN.api(`/books/${id}`, { method: "PUT", body: payload });
+        else await BN.api("/books", { method: "POST", body: payload });
+        window.location.href = "listings.html";
+      } catch (err) {
+        formError.textContent = err.message;
+        saveBtn.disabled = false;
+      }
+    });
+
+    syncPrice();
+    hydrate().catch((err) => {
+      document.getElementById("formError").textContent = err.message;
+    });
+  </script>
+</body>
+</html>

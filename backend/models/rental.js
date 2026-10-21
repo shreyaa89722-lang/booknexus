@@ -17,6 +17,7 @@ const rentalSchema = new mongoose.Schema(
         dueDate: { type: Date, default: null },
         returnDate: { type: Date, default: null },
         contractTxHash: { type: String, default: null },
+        onChainRentalId: { type: Number, default: null },
     },
     { timestamps: true }
 );

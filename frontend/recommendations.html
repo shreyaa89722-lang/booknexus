@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNexus — Recommendations</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app-body">
+  <nav class="topnav" id="appNav"></nav>
+  <div class="mobile-menu" id="mobileMenu"></div>
+  <main class="page">
+    <div class="page-head">
+      <h1>Picked for you</h1>
+      <p id="intro">Titles matched to your preferences and rental history.</p>
+    </div>
+    <div id="list"></div>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    BN.requireAuth();
+    BN.renderNav("recommendations");
+    const list = document.getElementById("list");
+    list.innerHTML = `<div class="grid">${BN.skeletons(4)}</div>`;
+
+    (async () => {
+      try {
+        const json = await BN.api("/recommendations");
+        const rows = json.data || [];
+        const cold = rows.length && rows.every((r) => r.matchScore == null);
+        if (cold) {
+          document.getElementById("intro").textContent =
+            "No rental history yet — showing newest books as a starting point.";
+        }
+        if (!rows.length) {
+          list.innerHTML = BN.empty("Nothing to recommend yet. Browse a few titles and check back.");
+          return;
+        }
+        list.innerHTML = rows.map(({ book, matchScore }) => {
+          const pct = matchScore == null ? null : Math.round(matchScore * 100);
+          return `
+            <a class="list-card" href="book.html?id=${book._id}" style="text-decoration:none;color:inherit">
+              <div class="thumb" style="${BN.coverStyle(book)}"></div>
+              <div>
+                <h3>${book.title}</h3>
+                <p class="muted">${book.author} · ${book.genre || ""}</p>
+                ${pct != null ? `<div class="match"><span style="width:${pct}%"></span></div><p class="muted" style="margin-top:6px">${pct}% match</p>` : ""}
+              </div>
+            </a>
+          `;
+        }).join("");
+      } catch (err) {
+        list.innerHTML = BN.empty(err.message);
+      }
+    })();
+  </script>
+</body>
+</html>

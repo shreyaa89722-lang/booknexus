@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNexus — Profile</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app-body">
+  <nav class="topnav" id="appNav"></nav>
+  <div class="mobile-menu" id="mobileMenu"></div>
+  <main class="page">
+    <div class="page-head">
+      <h1>Profile & preferences</h1>
+      <p>Tell us what you like to read.</p>
+    </div>
+    <div class="form-card">
+      <div class="row" style="margin-bottom:18px;gap:16px">
+        <div class="avatar-btn" style="width:56px;height:56px;background:var(--rosewood);cursor:default" id="avatar"></div>
+        <div>
+          <p><strong id="name"></strong></p>
+          <p class="muted" id="email"></p>
+          <p class="muted" id="role"></p>
+        </div>
+      </div>
+      <label>Preferred genres</label>
+      <div class="chips" id="genreChips"></div>
+      <div class="row"><input id="genreInput" placeholder="Add a genre" /><button class="btn btn-ghost btn-sm" type="button" id="addGenre">Add</button></div>
+      <label style="margin-top:16px">Preferred authors</label>
+      <div class="chips" id="authorChips"></div>
+      <div class="row"><input id="authorInput" placeholder="Add an author" /><button class="btn btn-ghost btn-sm" type="button" id="addAuthor">Add</button></div>
+      <label style="margin-top:16px">Preferred subjects</label>
+      <div class="chips" id="subjectChips"></div>
+      <div class="row"><input id="subjectInput" placeholder="Add a subject" /><button class="btn btn-ghost btn-sm" type="button" id="addSubject">Add</button></div>
+      <div class="error-banner" id="formMsg"></div>
+      <div class="row" style="margin-top:18px">
+        <button class="btn btn-primary" style="width:auto" id="saveBtn">Save Preferences</button>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn2">Logout</button>
+      </div>
+    </div>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    const user = BN.requireAuth();
+    BN.renderNav("profile");
+    let prefs = {
+      genres: [...(user.preferences?.genres || [])],
+      authors: [...(user.preferences?.authors || [])],
+      subjects: [...(user.preferences?.subjects || [])],
+    };
+
+    document.getElementById("avatar").textContent = BN.initials(user.name);
+    document.getElementById("name").textContent = user.name || "";
+    document.getElementById("email").textContent = user.email || "";
+    document.getElementById("role").textContent = "Role: " + (user.role || "student");
+    document.getElementById("logoutBtn2").addEventListener("click", BN.logout);
+
+    function chips(kind, elId) {
+      const el = document.getElementById(elId);
+      el.innerHTML = prefs[kind].map((v, i) => `
+        <span class="chip">${v}<button type="button" data-kind="${kind}" data-i="${i}">×</button></span>
+      `).join("");
+      el.querySelectorAll("button").forEach((b) => {
+        b.addEventListener("click", () => {
+          prefs[b.dataset.kind].splice(Number(b.dataset.i), 1);
+          renderAll();
+        });
+      });
+    }
+
+    function renderAll() {
+      chips("genres", "genreChips");
+      chips("authors", "authorChips");
+      chips("subjects", "subjectChips");
+    }
+
+    function add(kind, inputId) {
+      const input = document.getElementById(inputId);
+      const v = input.value.trim();
+      if (v && !prefs[kind].includes(v)) prefs[kind].push(v);
+      input.value = "";
+      renderAll();
+    }
+    document.getElementById("addGenre").addEventListener("click", () => add("genres", "genreInput"));
+    document.getElementById("addAuthor").addEventListener("click", () => add("authors", "authorInput"));
+    document.getElementById("addSubject").addEventListener("click", () => add("subjects", "subjectInput"));
+
+    document.getElementById("saveBtn").addEventListener("click", async () => {
+      const msg = document.getElementById("formMsg");
+      msg.textContent = "";
+      try {
+        await BN.api("/auth/preferences", { method: "PUT", body: { preferences: prefs } });
+        const next = { ...user, preferences: prefs };
+        localStorage.setItem("booknexus_user", JSON.stringify(next));
+        msg.style.color = "#166534";
+        msg.textContent = "Preferences saved.";
+      } catch (err) {
+        msg.style.color = "#b45309";
+        msg.textContent = err.message;
+      }
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>

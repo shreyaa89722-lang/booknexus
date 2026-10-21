@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BookNexus — My Listings</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="app-body">
+  <nav class="topnav" id="appNav"></nav>
+  <div class="mobile-menu" id="mobileMenu"></div>
+  <main class="page">
+    <div class="page-head row space">
+      <div>
+        <h1>My listings</h1>
+        <p>Manage P2P books and incoming requests.</p>
+      </div>
+      <a class="btn btn-primary" style="width:auto" href="book-form.html">+ Add a Book</a>
+    </div>
+    <div id="listings"></div>
+    <h2 style="margin:28px 0 12px;color:var(--rosewood)">Incoming requests</h2>
+    <div id="requests"></div>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    const user = BN.requireAuth();
+    if (!["owner", "admin"].includes(user.role)) window.location.href = "browse.html";
+    BN.renderNav("listings");
+
+    async function load() {
+      const [booksJson, rentalsJson] = await Promise.all([
+        BN.api("/books?limit=100", { auth: false }),
+        BN.api("/rentals"),
+      ]);
+      const mine = (booksJson.data || []).filter((b) => {
+        const oid = b.owner?._id || b.owner;
+        return oid && String(oid) === String(user._id);
+      });
+      const listingsEl = document.getElementById("listings");
+      listingsEl.innerHTML = mine.length ? mine.map((b) => `
+        <div class="list-card">
+          <div class="thumb" style="${BN.coverStyle(b)}"></div>
+          <div>
+            <h3>${b.title}</h3>
+            <p class="muted">${b.author}</p>
+            <span class="badge ${b.availability === "available" ? "b-avail" : "b-out"}">${b.availability}</span>
+          </div>
+          <div class="actions row">
+            <a class="btn btn-ghost btn-sm" href="book-form.html?id=${b._id}">Edit</a>
+            <button class="btn btn-danger btn-sm" data-del="${b._id}">Delete</button>
+          </div>
+        </div>
+      `).join("") : BN.empty("You have not listed any books yet.");
+
+      document.querySelectorAll("[data-del]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          if (!confirm("Delete this listing?")) return;
+          try {
+            await BN.api(`/books/${btn.dataset.del}`, { method: "DELETE" });
+            BN.toast("Listing deleted");
+            load();
+          } catch (err) {
+            BN.toast(err.message);
+          }
+        });
+      });
+
+      const incoming = (rentalsJson.data || []).filter((r) => {
+        const oid = r.owner?._id || r.owner;
+        return r.status === "requested" && oid && String(oid) === String(user._id);
+      });
+      const reqEl = document.getElementById("requests");
+      reqEl.innerHTML = incoming.length ? incoming.map((r) => `
+        <div class="list-card">
+          <div class="thumb" style="${BN.coverStyle(r.book)}"></div>
+          <div>
+            <h3>${r.book?.title || "Book"}</h3>
+            <p class="muted">Requested by ${r.renter?.name || "Someone"} · ${BN.formatDate(r.requestDate)}</p>
+          </div>
+          <div class="actions row">
+            <button class="btn btn-primary btn-sm" data-act="approve" data-id="${r._id}">Approve</button>
+            <button class="btn btn-danger btn-sm" data-act="reject" data-id="${r._id}">Reject</button>
+          </div>
+        </div>
+      `).join("") : BN.empty("No incoming requests.");
+
+      document.querySelectorAll("[data-act]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          btn.disabled = true;
+          try {
+            await BN.api(`/rentals/${btn.dataset.id}/${btn.dataset.act}`, { method: "PUT" });
+            BN.toast(btn.dataset.act === "approve" ? "Request approved" : "Request rejected");
+            load();
+          } catch (err) {
+            BN.toast(err.message);
+            btn.disabled = false;
+          }
+        });
+      });
+    }
+
+    load().catch((err) => {
+      document.getElementById("listings").innerHTML = BN.empty(err.message);
+    });
+  </script>
+</body>
+</html>

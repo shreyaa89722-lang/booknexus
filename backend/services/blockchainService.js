@@ -35,7 +35,23 @@ async function recordRentalOnChain(bookId, renterAddress, dueDateUnix) {
 
   const tx = await instance.contract.createRental(bookId, targetRenter, dueDateUnix);
   const receipt = await tx.wait();
-  return receipt.hash;
+
+  let onChainRentalId = null;
+  if (receipt && receipt.logs) {
+    for (const log of receipt.logs) {
+      try {
+        const parsed = instance.contract.interface.parseLog(log);
+        if (parsed && parsed.name === "RentalCreated") {
+          onChainRentalId = Number(parsed.args.rentalId || parsed.args[0]);
+          break;
+        }
+      } catch {
+        // Log is from another contract or event format
+      }
+    }
+  }
+
+  return { txHash: receipt.hash, onChainRentalId };
 }
 
 async function recordReturnOnChain(onChainRentalId) {
@@ -45,7 +61,12 @@ async function recordReturnOnChain(onChainRentalId) {
     return null;
   }
 
-  const tx = await instance.contract.markReturned(onChainRentalId);
+  if (onChainRentalId === null || onChainRentalId === undefined || isNaN(Number(onChainRentalId))) {
+    console.warn("Blockchain return skipped: invalid or missing onChainRentalId:", onChainRentalId);
+    return null;
+  }
+
+  const tx = await instance.contract.markReturned(BigInt(onChainRentalId));
   const receipt = await tx.wait();
   return receipt.hash;
 }
