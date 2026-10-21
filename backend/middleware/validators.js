@@ -23,8 +23,8 @@ const registerRules = [
 
 const loginRules = [
   body().custom((value, { req }) => {
-    const id = req.body.email || req.body.identifier || req.body.usn;
-    if (!id || (typeof id === "string" && !id.trim())) {
+    const id = req.body.email || req.body.usn || req.body.identifier;
+    if (!id || typeof id !== "string" || !id.trim()) {
       throw new Error("Email or USN is required");
     }
     return true;

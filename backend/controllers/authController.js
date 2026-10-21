@@ -55,28 +55,24 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc   Login a user
 // @route  POST /api/auth/login
 const loginUser = asyncHandler(async (req, res) => {
-    const { email, identifier, usn, password } = req.body;
-    const loginId = (identifier || usn || email || "").toString().trim();
+    const identifier = (req.body.identifier || req.body.usn || req.body.email || "").trim();
+    const { password } = req.body;
 
-    if (!loginId || !password) {
+    if (!identifier || !password) {
         res.status(400);
         throw new Error("Email/USN and password are required");
     }
 
-    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginId);
-    const query = isEmail
-        ? { email: loginId.toLowerCase() }
-        : {
-            $or: [
-                { usn: { $regex: new RegExp(`^${loginId}$`, 'i') } },
-                { email: loginId.toLowerCase() }
-            ]
-        };
+    const user = await User.findOne({
+        $or: [
+            { email: identifier.toLowerCase() },
+            { usn: { $regex: new RegExp(`^${identifier}$`, "i") } }
+        ]
+    }).select("+password");
 
-    const user = await User.findOne(query).select("+password");
     if (!user || !(await user.comparePassword(password))) {
         res.status(401);
-        throw new Error("Invalid email/USN or password");
+        throw new Error("Invalid credentials");
     }
 
     res.json({
