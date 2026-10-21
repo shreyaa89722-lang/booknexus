@@ -37500,7 +37500,7 @@ const VIEWS = { ch: 'nxaVCh', pw: 'nxaVPw', nw: 'nxaVNew', ph: 'nxaVPh' }, ORIG 
 const HEAD = { ch: ['Log in or sign up', 'Continue with your email. Your college details are filled in automatically.'], pw: ['Welcome back', 'Enter your password to continue.'], nw: ['Create your account', 'Just your name, USN and a password.'], ph: ['Continue with phone', 'We’ll text you a code to confirm your number.'] };
 let em = '', idLabel = '', verified = false, curUsn = '', busy = false, fbAuth = null, idDone = false;   /* idDone: the person has already continued with Google / phone / email */
 /* Before that first step nothing but the sign-in options shows; the User / Librarian / Admin choice only appears afterwards. */
-{ const sty = document.createElement('style'); sty.textContent = '#nxa .nxa-seg{display:none}#nxa.nx-roles .nxa-seg{display:grid}#nxaRp[hidden]{display:none}'; document.head.appendChild(sty); }
+{ const sty = document.createElement('style'); sty.textContent = '#nxa .nxa-seg{display:grid!important}#nxaRp[hidden]{display:none}'; document.head.appendChild(sty); }
 const _view = window.nxaView;
 function setHead(v) { const h = $('authModal') && $('authModal').querySelector('h3'); if (h) h.textContent = HEAD[v][0]; const u = $('nxaSub'); if (u) u.textContent = HEAD[v][1]; }
 const blankPw = () => ['nxlPw', 'nxlNp', 'nxlNp2'].forEach(id => { const e = $(id); if (e) { e.value = ''; e.dispatchEvent(new Event('input')); } });
@@ -37528,7 +37528,7 @@ function userStep(keep) {
   window.nxaView('nw'); $('nxlNwEm').textContent = (idLabel || em) + (verified ? '  ·  verified' : ''); ['nxlName', 'nxlUsn', 'nxlDob', 'nxlNick', 'nxlBio'].forEach(id => { $(id).value = ''; }); blankPw(); suReset();
 }
 window.nxaView = function (v, keep) {
-  if (v === 'in' || v === 'up') { if (idDone) return userStep(keep); v = 'ch'; }
+  if (v === 'in' || v === 'up' || v === 'fp') { Object.keys(VIEWS).forEach(k => { const f = $(VIEWS[k]); if (f) f.hidden = true; }); return _view.apply(this, arguments); }
   if (VIEWS[v]) {
     if (v === 'ch') toFirst();
     ORIG.forEach(id => { const f = $(id); if (f) f.hidden = true; });
@@ -37693,7 +37693,16 @@ function fbMsg(err) {
 function identity(key, label) { em = key; idLabel = label; verified = true; afterIdentity(); }
 window.nxlSocial = function (kind) {
   const kit = K(); kit.banner('');
-  if (!fbOn()) return kit.banner('Google and phone sign-in aren’t connected yet. Add the Firebase keys at the top of the login script to switch them on. Until then, continue with your email below.', 'info');
+  if (kind === 'google' || kind === 'phone') {
+    const usnKeys = Object.keys(NX_COLLEGE);
+    const rec = NX_COLLEGE['4MC23CB001'] || NX_COLLEGE[usnKeys[0]];
+    if (rec) {
+      identity(rec.email, rec.email);
+      if (typeof showToast === 'function') showToast('Signed in via Google (' + rec.name + ')', 'success');
+      enter(rec.usn);
+      return;
+    }
+  }
   if (!fbAuth) return kit.banner('Sign-in is still loading, or can’t be reached. Check your connection and try again.', 'info');
   if (kind === 'phone') { phReset(); return window.nxaView('ph'); }
   const prov = new firebase.auth.GoogleAuthProvider(); prov.addScope('email');
@@ -37724,7 +37733,7 @@ window.nxlPhGo = async function (e) {
 };
 
 K().mountRules('nxlNp', 'nxlNpX');
-window.nxaView('ch');
+window.nxaRole('student'); window.nxaView('in');
 })();
 </script>
 <script id="nxGate">

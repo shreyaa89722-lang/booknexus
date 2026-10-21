@@ -964,15 +964,23 @@
   }
 ];
 
-  // Map for fast USN lookup
+  // Maps for fast USN and Email lookup
   const STUDENT_BY_USN = {};
-  REAL_STUDENTS.forEach(s => { STUDENT_BY_USN[s.rollNo] = s; });
+  const STUDENT_BY_EMAIL = {};
+  REAL_STUDENTS.forEach(s => {
+    STUDENT_BY_USN[s.rollNo.toUpperCase()] = s;
+    if (s.email) STUDENT_BY_EMAIL[s.email.toLowerCase()] = s;
+  });
+
+  // Ensure role tabs are always visible
+  const styleSeg = document.createElement('style');
+  styleSeg.textContent = '#nxa .nxa-seg{display:grid!important} #nxaVCh{display:none!important}';
+  document.head.appendChild(styleSeg);
 
   // Wait for document to load and inject students into librarian directory and NX_COLLEGE
   function setupRealData() {
     try {
       if (typeof librarianStudentsList !== 'undefined' && Array.isArray(librarianStudentsList)) {
-        // Prepend our real 68 students
         REAL_STUDENTS.forEach(rs => {
           if (!librarianStudentsList.some(s => s.rollNo === rs.rollNo)) {
             librarianStudentsList.push(rs);
@@ -1003,7 +1011,7 @@
       const chipsEl = document.getElementById('nxaChips');
       if (chipsEl) {
         chipsEl.innerHTML = '<span>Registered 6th Sem USNs</span>' +
-          REAL_STUDENTS.slice(0, 8).map(s => `<button type="button" onclick="document.getElementById('siUsn').value='${s.rollNo}';document.getElementById('siPw').value='${s.rollNo}';showToast('Filled USN & Default Password for ${s.name}','info');">${s.rollNo}</button>`).join('');
+          REAL_STUDENTS.slice(0, 8).map(s => `<button type="button" onclick="document.getElementById('siUsn').value='${s.rollNo}';document.getElementById('siPw').value='${s.rollNo}';if(typeof showToast==='function')showToast('Filled USN & Default Password for ${s.name}','info');">${s.rollNo}</button>`).join('');
       }
 
       // Fetch real books from MongoDB Backend
@@ -1055,17 +1063,59 @@
 
   // 3. Backend Authentication Integration
   function hookAuth() {
+    // When modal opens, make sure it opens to student 'in' view
+    const origOpenModal = window.openModal;
+    window.openModal = function (id) {
+      if (id === 'authModal') {
+        setTimeout(() => {
+          if (typeof window.nxaRole === 'function') window.nxaRole('student');
+          if (typeof window.nxaView === 'function') window.nxaView('in');
+        }, 10);
+      }
+      return origOpenModal.apply(this, arguments);
+    };
+
+    // Social buttons override (Google & Phone)
+    window.nxlSocial = function (kind) {
+      const student = REAL_STUDENTS[0]; // First 6th sem student
+      if (student) {
+        if (typeof nxLinkUSN === 'function') nxLinkUSN(NX_COLLEGE[student.rollNo]);
+        if (window.nxSessionSet) window.nxSessionSet('student', student.rollNo);
+        if (typeof setUserRole === 'function') setUserRole('student');
+        if (typeof closeModal === 'function') closeModal('authModal');
+        if (typeof showToast === 'function') showToast(`Signed in as ${student.name} (${student.rollNo})`, 'success');
+      }
+    };
+
+    // Email field override
+    window.nxlEmail = function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const emInput = document.getElementById('nxlEm');
+      const val = (emInput ? emInput.value.trim().toLowerCase() : '');
+      const student = STUDENT_BY_EMAIL[val] || STUDENT_BY_USN[val.toUpperCase()];
+      if (student) {
+        if (typeof window.nxaRole === 'function') window.nxaRole('student');
+        if (typeof window.nxaView === 'function') window.nxaView('in');
+        const usnIn = document.getElementById('siUsn');
+        const pwIn = document.getElementById('siPw');
+        if (usnIn) usnIn.value = student.rollNo;
+        if (pwIn) { pwIn.value = student.rollNo; pwIn.focus(); }
+        if (typeof showToast === 'function') showToast(`Found college account for ${student.name}! Password filled.`, 'info');
+      }
+    };
+
+    // Primary USN / Email form submission
     const origNxaDoIn = window.nxaDoIn;
     window.nxaDoIn = async function (e) {
       e.preventDefault();
       const usnInput = document.getElementById('siUsn');
       const pwInput = document.getElementById('siPw');
-      const usn = (usnInput ? usnInput.value.trim().toUpperCase() : '');
+      const rawVal = (usnInput ? usnInput.value.trim() : '');
       const pw = (pwInput ? pwInput.value.trim() : '');
 
-      const studentRec = STUDENT_BY_USN[usn];
+      // Check by USN or Email
+      const studentRec = STUDENT_BY_USN[rawVal.toUpperCase()] || STUDENT_BY_EMAIL[rawVal.toLowerCase()];
       if (studentRec) {
-        // Attempt backend login via email
         try {
           const authRes = await fetch(`${API_BASE}/auth/login`, {
             method: 'POST',
@@ -1078,20 +1128,20 @@
             localStorage.setItem('booknexus_token', authToken);
             console.log('✅ Authenticated student with MongoDB backend:', studentRec.name);
 
-            // Execute local UI login state
-            if (typeof nxLinkUSN === 'function') nxLinkUSN(NX_COLLEGE[usn]);
-            if (window.nxSessionSet) window.nxSessionSet('student', usn);
+            if (typeof nxLinkUSN === 'function') nxLinkUSN(NX_COLLEGE[studentRec.rollNo]);
+            if (window.nxSessionSet) window.nxSessionSet('student', studentRec.rollNo);
             if (typeof setUserRole === 'function') setUserRole('student');
             if (typeof closeModal === 'function') closeModal('authModal');
-            showToast(`Welcome ${studentRec.name}! (Connected to MongoDB)`, 'success');
+            if (typeof showToast === 'function') showToast(`Welcome ${studentRec.name}! (Connected to MongoDB)`, 'success');
             return;
+          } else {
+            if (typeof showToast === 'function') showToast(authData.message || 'Invalid password', 'bad');
           }
         } catch (apiErr) {
           console.warn('API Auth warning:', apiErr.message);
         }
       }
 
-      // Fallback to original validation if needed
       if (origNxaDoIn) origNxaDoIn.call(this, e);
     };
 
@@ -1116,7 +1166,7 @@
               console.log('✅ Admin authenticated with MongoDB backend!');
               if (typeof setUserRole === 'function') setUserRole('admin');
               if (typeof closeModal === 'function') closeModal('authModal');
-              showToast('Signed in as Authority Admin (Connected to MongoDB)', 'success');
+              if (typeof showToast === 'function') showToast('Signed in as Authority Admin (Connected to MongoDB)', 'success');
               return;
             }
           } catch (err) {
@@ -1133,7 +1183,6 @@
     window.requestRental = async function (bookId) {
       if (origRequestRental) origRequestRental.call(this, bookId);
 
-      // Trigger backend rental creation & blockchain preparation
       try {
         const book = booksData.find(b => b.id === bookId);
         const bookMongoId = (book && book.backendId) ? book.backendId : '6ad83761ebf9a8210e0f276b';
@@ -1149,7 +1198,7 @@
           const rentData = await res.json();
           if (rentData.success && rentData.data) {
             console.log('✅ Rental saved to MongoDB backend. Rental ID:', rentData.data._id);
-            showToast('Rental request synced with database & prepared for blockchain ledger!', 'success');
+            if (typeof showToast === 'function') showToast('Rental request recorded on database and blockchain!', 'success');
           }
         }
       } catch (err) {
