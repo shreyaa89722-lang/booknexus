@@ -5,7 +5,7 @@ const fs = require("fs");
 let mongodInstance = null;
 
 const connectDB = async () => {
-  const uri = process.env.MONGO_URI;
+  const uri = process.env.ATLAS_MONGO_URI || process.env.MONGO_URI;
   const isAtlas = uri && uri.startsWith("mongodb") && !uri.includes("127.0.0.1") && !uri.includes("localhost");
 
   if (isAtlas) {
@@ -40,15 +40,26 @@ const connectDB = async () => {
     }
 
     const { MongoMemoryServer } = require("mongodb-memory-server");
-    mongodInstance = await MongoMemoryServer.create({
-      instance: {
-        port: 27017,
-        dbPath: dataDir,
-        storageEngine: "wiredTiger",
-      },
-    });
+    try {
+      mongodInstance = await MongoMemoryServer.create({
+        instance: {
+          port: 27017,
+          dbPath: dataDir,
+          storageEngine: "wiredTiger",
+        },
+      });
+    } catch (memErr) {
+      mongodInstance = await MongoMemoryServer.create({
+        instance: {
+          dbPath: dataDir,
+          storageEngine: "wiredTiger",
+        },
+      });
+    }
 
-    const localUri = mongodInstance.getUri() + "bookhive";
+    let localUri = mongodInstance.getUri();
+    if (!localUri.endsWith("/")) localUri += "/";
+    localUri += "bookhive";
     const conn = await mongoose.connect(localUri, {
       serverSelectionTimeoutMS: 5000,
     });

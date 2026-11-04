@@ -5,16 +5,24 @@ const userSchema = new mongoose.Schema(
     {
         name: { type: String, required: true, trim: true },
         email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-        password: { type: String, required: true, minlength: 6, select: false },
+        password: { type: String, required: function () { return !this.googleId; }, minlength: 6, select: false },
         role: {
             type: String,
             enum: ["student", "owner", "admin"],
             default: "student",
         },
+        googleId: { type: String, unique: true, sparse: true },
         preferences: {
             genres: [{ type: String }],
             authors: [{ type: String }],
             subjects: [{ type: String }],
+        },
+        emailPreferences: {
+            rentalUpdates: { type: Boolean, default: true },
+            dueReminders: { type: Boolean, default: true },
+            announcements: { type: Boolean, default: true },
+            readingUpdates: { type: Boolean, default: true },
+            promotional: { type: Boolean, default: false },
         },
         usn: { type: String, trim: true },
         mobile: { type: String, trim: true },
@@ -27,7 +35,7 @@ const userSchema = new mongoose.Schema(
 
 // Automatically hash the password before saving to the database
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
+    if (!this.password || !this.isModified("password")) return next();
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     next();
@@ -35,7 +43,8 @@ userSchema.pre("save", async function (next) {
 
 // Helper method to check a login password against the stored hash
 userSchema.methods.comparePassword = async function (candidatePassword) {
+    if (!this.password || !candidatePassword) return false;
     return bcrypt.compare(candidatePassword, this.password);
 };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.models.User || mongoose.model("User", userSchema);

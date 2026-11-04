@@ -9,6 +9,7 @@ mongod.lock
 # Frontend build output
 frontend/dist/
 dist/
+.vercel/
 
 # Environment variables
 .env
@@ -24,3 +25,9 @@ desktop.ini
 # Hardhat / Blockchain build files
 blockchain/artifacts/
 blockchain/cache/
+.vercel
+
+# Temporary screenshots & scratch files
+*.png
+scratch/
+frontend/*2026*.html

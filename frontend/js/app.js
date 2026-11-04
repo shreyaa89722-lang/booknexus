@@ -1,7 +1,8 @@
 const BN = (() => {
   const TOKEN_KEY = "booknexus_token";
   const USER_KEY = "booknexus_user";
-  const API_BASE = window.location.port === "3000" ? "/api" : "http://localhost:5000/api";
+  const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+  const API_BASE = (typeof window !== "undefined" && window.API_BASE) || (isLocal ? (window.location.port === "3000" ? "/api" : "http://localhost:5000/api") : "/api");
 
   const pages = {
     browse: { href: "browse.html", label: "Browse" },

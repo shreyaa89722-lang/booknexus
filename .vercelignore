@@ -1,0 +1,12 @@
+backend/data/
+**/data/db/
+mongod.lock
+*.lock
+node_modules/
+.git
+.github
+*.png
+*.jpg
+scratch/
+test*.js
+blockchain/

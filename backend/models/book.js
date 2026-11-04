@@ -32,4 +32,4 @@ const bookSchema = new mongoose.Schema(
 // Enables text search across these fields (used later for book search)
 bookSchema.index({ title: "text", author: "text", genre: "text", subject: "text" });
 
-module.exports = mongoose.model("Book", bookSchema);
+module.exports = mongoose.models.Book || mongoose.model("Book", bookSchema);

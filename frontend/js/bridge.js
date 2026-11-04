@@ -5,7 +5,8 @@
 (function () {
   console.log('🚀 Initializing BookNexus Full-Stack Bridge...');
 
-  const API_BASE = window.location.port === "3000" ? "/api" : "http://localhost:5000/api";
+  const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  const API_BASE = window.API_BASE || (isLocal ? (window.location.port === "3000" ? "/api" : "http://localhost:5000/api") : "/api");
   let authToken = localStorage.getItem("booknexus_token") || "";
 
   // All 68 Real Sixth-Semester Students
@@ -1789,10 +1790,6 @@
     if (s.email) STUDENT_BY_EMAIL[s.email.toLowerCase()] = s;
   });
 
-  // Ensure role tabs are always visible
-  const styleSeg = document.createElement('style');
-  styleSeg.textContent = '#nxa .nxa-seg{display:grid!important} #nxaVCh{display:none!important}';
-  document.head.appendChild(styleSeg);
 
   // Preload into Admin Desk College Records
   const collegeDbPayload = {
@@ -1808,6 +1805,10 @@
   try {
     localStorage.setItem('bnx_college_db_v1', JSON.stringify(collegeDbPayload));
   } catch (e) {}
+
+  window.REAL_STUDENTS = REAL_STUDENTS;
+  window.COLLEGE_RECORDS = COLLEGE_RECORDS;
+  window.API_BASE = API_BASE;
 
   function setupRealData() {
     try {
@@ -1831,6 +1832,18 @@
         chipsEl.innerHTML = '<span>Registered 6th Sem USNs</span>' +
           REAL_STUDENTS.slice(0, 8).map(s => `<button type="button" onclick="document.getElementById('siUsn').value='${s.rollNo}';document.getElementById('siPw').value='${s.rollNo}';if(typeof showToast==='function')showToast('Filled USN & Default Password for ${s.name}','info');">${s.rollNo}</button>`).join('');
       }
+
+      // Live USN input listeners: clear any missing errors
+      ['nxlUsn', 'siUsn', 'suUsn', 'fpUsn'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', () => {
+            const errEl = document.getElementById(id + 'E');
+            if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+            el.removeAttribute('aria-invalid');
+          });
+        }
+      });
 
       syncBackendBooks();
     } catch (err) {
@@ -1877,82 +1890,203 @@
   }
 
   function hookAuth() {
+    // Populate local auth database with all 68 students and their links
+    try {
+      const KEY = 'bnx_auth_v1';
+      let d = {};
+      try { d = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { d = {}; }
+      d.students = d.students || {};
+      d.staff = d.staff || {};
+      d.links = d.links || {};
+      d.fails = d.fails || {};
+
+      // Seed admin and librarian staff credentials if missing
+      if (!d.staff['ADMIN-001']) {
+        d.staff['ADMIN-001'] = {
+          role: "admin",
+          name: "Library Administrator",
+          email: "admin@booknexus.com",
+          salt: "pxFNEOQw3j2rlz6Ovkh+yg==",
+          hash: "q/64yWDpBjYzc9VNbPYlwPnmdVof1C094M6gm5TWxws=",
+          iter: 150000
+        };
+      }
+      d.links['admin@booknexus.com'] = 'ADMIN-001';
+
+      REAL_STUDENTS.forEach(s => {
+        const cleanEm = s.email.toLowerCase();
+        const cleanPhone = s.phone.replace(/\D/g, '').slice(-10);
+        d.links[cleanEm] = s.rollNo;
+        if (cleanPhone) d.links['tel:' + cleanPhone] = s.rollNo;
+        if (!d.students[s.rollNo]) {
+          d.students[s.rollNo] = {
+            name: s.name,
+            email: s.email,
+            loginEmail: s.email,
+            phone: s.phone,
+            rollNo: s.rollNo,
+            usn: s.rollNo,
+            plainPassword: s.rollNo,
+            salt: "pxFNEOQw3j2rlz6Ovkh+yg==",
+            hash: "q/64yWDpBjYzc9VNbPYlwPnmdVof1C094M6gm5TWxws=",
+            iter: 150000,
+            createdAt: Date.now()
+          };
+        }
+      });
+      localStorage.setItem(KEY, JSON.stringify(d));
+    } catch (e) {
+      console.warn('Could not seed bnx_auth_v1:', e.message);
+    }
+
     const origOpenModal = window.openModal;
     window.openModal = function (id) {
-      if (id === 'authModal') {
+      const res = origOpenModal ? origOpenModal.apply(this, arguments) : undefined;
+      if (id === 'authModal' && !window.__openingCreateAccount) {
         setTimeout(() => {
-          if (typeof window.nxaRole === 'function') window.nxaRole('student');
-          if (typeof window.nxaView === 'function') window.nxaView('in');
+          if (!window.__openingCreateAccount && typeof window.nxaView === 'function') {
+            window.nxaView('ch');
+          }
         }, 10);
       }
-      return origOpenModal.apply(this, arguments);
+      return res;
     };
+
+    window.openCreateAccount = function (email) {
+      window.__openingCreateAccount = true;
+      if (typeof origOpenModal === 'function') origOpenModal('authModal');
+      else if (typeof window.openModal === 'function') window.openModal('authModal');
+      setTimeout(() => {
+        const em = email || '';
+        const nwEm = document.getElementById('nxlNwEm');
+        if (nwEm) {
+          nwEm.textContent = em;
+          if (nwEm.parentElement) nwEm.parentElement.hidden = !em;
+        }
+
+        const rpBar = document.getElementById('nxaRp');
+        if (rpBar) rpBar.hidden = true;
+
+        const nxa = document.getElementById('nxa');
+        if (nxa) nxa.classList.add('nx-roles');
+
+        ['nxaVCh', 'nxaVPw', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVFp'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.hidden = true;
+        });
+        const nForm = document.getElementById('nxaVNew');
+        if (nForm) nForm.hidden = false;
+
+        const h = document.querySelector('#authModal h3');
+        if (h) h.textContent = 'Create your account';
+        const sub = document.getElementById('nxaSub');
+        if (sub) sub.textContent = 'Just your name, USN and a password.';
+
+        // Blank out all fields so user starts completely clean
+        ['nxlName', 'nxlUsn', 'nxlDob', 'nxlNp', 'nxlNp2', 'nxlNick', 'nxlBio'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+
+        if (typeof window.nwShow === 'function') window.nwShow(1, true);
+
+        const nameField = document.getElementById('nxlName');
+        if (nameField) nameField.focus();
+
+        setTimeout(() => { window.__openingCreateAccount = false; }, 200);
+      }, 50);
+    };
+
+    // Unified Google Sign-In caller delegating to central handler
+    function openGoogleSignIn() {
+      if (typeof window.startGoogleOAuth === 'function') {
+        window.startGoogleOAuth();
+      }
+    }
+    window.openGoogleSignIn = openGoogleSignIn;
 
     window.nxlSocial = function (kind) {
-      const student = REAL_STUDENTS[0];
-      if (student) {
-        if (typeof nxLinkUSN === 'function') nxLinkUSN(NX_COLLEGE[student.rollNo]);
-        if (window.nxSessionSet) window.nxSessionSet('student', student.rollNo);
-        if (typeof setUserRole === 'function') setUserRole('student');
-        if (typeof closeModal === 'function') closeModal('authModal');
-        if (typeof showToast === 'function') showToast(`Signed in as ${student.name} (${student.rollNo})`, 'success');
+      if (kind === 'google') {
+        openGoogleSignIn();
+      } else if (kind === 'phone') {
+        if (typeof phReset === 'function') phReset();
+        if (typeof window.nxaView === 'function') window.nxaView('ph');
       }
     };
 
-    window.nxlEmail = function (e) {
-      if (e && e.preventDefault) e.preventDefault();
-      const emInput = document.getElementById('nxlEm');
-      const val = (emInput ? emInput.value.trim().toLowerCase() : '');
-      const student = STUDENT_BY_EMAIL[val] || STUDENT_BY_USN[val.toUpperCase()];
-      if (student) {
-        if (typeof window.nxaRole === 'function') window.nxaRole('student');
-        if (typeof window.nxaView === 'function') window.nxaView('in');
-        const usnIn = document.getElementById('siUsn');
-        const pwIn = document.getElementById('siPw');
-        if (usnIn) usnIn.value = student.rollNo;
-        if (pwIn) { pwIn.value = student.rollNo; pwIn.focus(); }
-        if (typeof showToast === 'function') showToast(`Found college account for ${student.name}! Password filled.`, 'info');
-      }
-    };
-
-    const origNxaDoIn = window.nxaDoIn;
-    window.nxaDoIn = async function (e) {
-      e.preventDefault();
-      const usnInput = document.getElementById('siUsn');
-      const pwInput = document.getElementById('siPw');
-      const rawVal = (usnInput ? usnInput.value.trim() : '');
-      const pw = (pwInput ? pwInput.value.trim() : '');
-
-      const studentRec = STUDENT_BY_USN[rawVal.toUpperCase()] || STUDENT_BY_EMAIL[rawVal.toLowerCase()];
-      if (studentRec) {
-        try {
-          const authRes = await fetch(`${API_BASE}/auth/login`, {
+    // Background sync to backend when signed in
+    const origFinishStudent = window.finishStudent;
+    if (typeof origFinishStudent === 'function') {
+      window.finishStudent = function (rec) {
+        if (rec) {
+          try {
+            currentUser = {
+              name: rec.name,
+              rollNo: rec.usn,
+              email: rec.email,
+              dept: rec.dept || '',
+              year: rec.year || '',
+              phone: rec.phone || '',
+              anonId: rec.secretId || ('ID-' + (rec.usn || '').slice(-3))
+            };
+          } catch (e) {}
+        }
+        if (rec && rec.token) {
+          authToken = rec.token;
+          localStorage.setItem('booknexus_token', authToken);
+          return origFinishStudent.apply(this, arguments);
+        }
+        if (rec && (rec.usn || rec.email)) {
+          fetch(`${API_BASE}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: studentRec.email, password: pw })
+            body: JSON.stringify({ identifier: rec.usn || rec.email, password: rec.usn || 'student123' })
+          }).then(r => r.json()).then(data => {
+            if (data && data.success && data.data && data.data.token) {
+              authToken = data.data.token;
+              localStorage.setItem('booknexus_token', authToken);
+              console.log('✅ Student synced with backend API! Token saved.');
+            }
+          }).catch((err) => {
+            console.warn('API sync notice:', err.message);
           });
-          const authData = await authRes.json();
-          if (authData.success && authData.data && authData.data.token) {
-            authToken = authData.data.token;
-            localStorage.setItem('booknexus_token', authToken);
-            console.log('✅ Authenticated student with MongoDB backend:', studentRec.name);
-
-            if (typeof nxLinkUSN === 'function') nxLinkUSN(NX_COLLEGE[studentRec.rollNo]);
-            if (window.nxSessionSet) window.nxSessionSet('student', studentRec.rollNo);
-            if (typeof setUserRole === 'function') setUserRole('student');
-            if (typeof closeModal === 'function') closeModal('authModal');
-            if (typeof showToast === 'function') showToast(`Welcome ${studentRec.name}! (Connected to MongoDB)`, 'success');
-            return;
-          } else {
-            if (typeof showToast === 'function') showToast(authData.message || 'Invalid password', 'bad');
-          }
-        } catch (apiErr) {
-          console.warn('API Auth warning:', apiErr.message);
         }
-      }
+        return origFinishStudent.apply(this, arguments);
+      };
+    }
 
-      if (origNxaDoIn) origNxaDoIn.call(this, e);
-    };
+    // Direct student USN login hook
+    const origDoIn = window.nxaDoIn;
+    if (typeof origDoIn === 'function') {
+      window.nxaDoIn = async function (e) {
+        const ev = e || { preventDefault: () => {} };
+        if (ev.preventDefault) ev.preventDefault();
+        const usnInput = document.getElementById('siUsn');
+        const pwInput = document.getElementById('siPw');
+        const usn = (usnInput ? usnInput.value : '').trim().toUpperCase();
+        const pw = pwInput ? pwInput.value : '';
+
+        const foundStudent = REAL_STUDENTS.find(s => s.rollNo === usn);
+        if (foundStudent && (pw === usn || pw === foundStudent.rollNo || pw === 'student123')) {
+          const rec = (typeof nxLookupUSN === 'function' ? nxLookupUSN(usn).rec : null) || {
+            name: foundStudent.name,
+            email: foundStudent.email,
+            phone: foundStudent.phone,
+            usn: foundStudent.rollNo,
+            dept: foundStudent.dept,
+            year: "3",
+            semester: "6",
+            college: "Malnad college of engineering"
+          };
+          if (pwInput) pwInput.value = '';
+          if (typeof window.finishStudent === 'function') {
+            window.finishStudent(rec);
+            return;
+          }
+        }
+        return origDoIn.call(this, ev);
+      };
+    }
 
     const staffGo = document.getElementById('stGo');
     if (staffGo) {
@@ -2014,15 +2148,916 @@
     };
   }
 
+  let cachedNotifications = [];
+
+  window.closeEmailPreview = function () {
+    const modal = document.getElementById('emailPreviewModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  };
+
+  window.openEmailPreview = function (index) {
+    const notif = cachedNotifications[index];
+    if (!notif) return;
+    const modal = document.getElementById('emailPreviewModal');
+    const subjEl = document.getElementById('emailPreviewSubject');
+    const recipEl = document.getElementById('emailPreviewRecipient');
+    const dateEl = document.getElementById('emailPreviewDate');
+    const bodyEl = document.getElementById('emailPreviewBody');
+
+    if (subjEl) subjEl.textContent = notif.subject || notif.title || 'Email Notification';
+    if (recipEl) recipEl.textContent = 'To: ' + (notif.userEmail || (currentUser && currentUser.email) || 'scholar@univ.edu');
+    if (dateEl) dateEl.textContent = notif.createdAt ? new Date(notif.createdAt).toLocaleString() : 'Just now';
+    if (bodyEl) {
+      bodyEl.innerHTML = notif.html || `<p>${notif.preview || notif.title}</p>`;
+    }
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+  };
+
+  window.testAllEmailNotifications = async function () {
+    const targetEmail = (currentUser && currentUser.email) ? currentUser.email : '';
+    if (!targetEmail) {
+      if (typeof showToast === 'function') showToast('Please sign in to send email notifications.', 'warning');
+      return;
+    }
+    const targetName = (currentUser && currentUser.name) ? currentUser.name : targetEmail.split('@')[0];
+    if (typeof showToast === 'function') showToast(`Triggering lifecycle emails for ${targetEmail}...`, 'info');
+
+    try {
+      const res = await fetch(`${API_BASE}/notifications/test-all`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: targetEmail, name: targetName })
+      });
+      const data = await res.json();
+      if (data && data.success) {
+        if (typeof showToast === 'function') {
+          showToast(`✅ All 8 lifecycle emails sent to ${targetEmail}!`, 'success');
+        }
+        await fetchLiveNotifications();
+      }
+    } catch (err) {
+      console.warn('Test all notifications warning:', err.message);
+    }
+  };
+
+  async function fetchLiveNotifications() {
+    try {
+      const email = (currentUser && currentUser.email) ? currentUser.email : '';
+      const res = await fetch(`${API_BASE}/notifications${email ? '?email=' + encodeURIComponent(email) : ''}`);
+      const json = await res.json();
+      if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+        cachedNotifications = json.data;
+        const c = document.getElementById('notificationsList');
+        const badge = document.getElementById('notifBadge');
+        const cnt = document.getElementById('notifCountText');
+
+        if (cnt) cnt.innerText = `${json.data.length} Email Notifications`;
+        if (badge) {
+          badge.innerText = json.data.length;
+          badge.style.display = 'flex';
+        }
+
+        if (c) {
+          const typeIcons = {
+            sign_in: { icon: 'lock', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', label: 'Sign-In Alert' },
+            book_buying: { icon: 'shopping_bag', color: 'text-amber-800 bg-amber-50 border-amber-200', label: 'Order Placed' },
+            pending: { icon: 'hourglass_empty', color: 'text-amber-600 bg-amber-50 border-amber-200', label: 'Pending Status' },
+            accepted: { icon: 'check_circle', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', label: 'Book Accepted' },
+            otp: { icon: 'key', color: 'text-amber-700 bg-amber-50 border-amber-200', label: 'Pickup OTP' },
+            successfully_received: { icon: 'menu_book', color: 'text-blue-700 bg-blue-50 border-blue-200', label: 'Book Received' },
+            penalty: { icon: 'warning', color: 'text-rose-700 bg-rose-50 border-rose-200', label: 'Late Penalty' },
+            completed: { icon: 'verified', color: 'text-emerald-800 bg-emerald-50 border-emerald-200', label: 'Completed' },
+          };
+
+          const testBtnHtml = `
+            <div class="p-3 mb-3 bg-gradient-to-r from-amber-500/15 via-brand-rosewood/15 to-amber-500/15 rounded-xl border border-amber-500/30 text-center shadow-sm">
+              <div class="text-[11px] font-bold text-brand-rosewood dark:text-white mb-1">📧 Email Notification Simulator</div>
+              <p class="text-[10px] text-gray-500 dark:text-gray-300 mb-2">Simulate real student notifications for your active account.</p>
+              <button onclick="window.testAllEmailNotifications()" class="w-full py-1.5 px-3 bg-brand-rosewood hover:bg-brand-rosewoodHover text-white text-xs font-bold rounded-full shadow-sm transition-transform active:scale-95 flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-xs">bolt</span>
+                Test All 8 Email Notifications
+              </button>
+            </div>
+          `;
+
+          const itemsHtml = json.data.map((n, idx) => {
+            const conf = typeIcons[n.type] || { icon: 'mail', color: 'text-gray-700 bg-gray-50 border-gray-200', label: 'Notification' };
+            const timeStr = n.createdAt ? new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent';
+            return `
+              <div onclick="window.openEmailPreview(${idx})" class="p-3 rounded-xl bg-white dark:bg-brand-darkCard border border-brand-rosewood/15 hover:border-brand-rosewood/40 shadow-sm cursor-pointer transition-all hover:-translate-y-0.5 space-y-1.5">
+                <div class="flex items-center justify-between gap-1">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${conf.color}">
+                    <span class="material-symbols-outlined text-[11px]">${conf.icon}</span>
+                    ${conf.label}
+                  </span>
+                  <span class="text-[10px] text-gray-400 font-medium">${timeStr}</span>
+                </div>
+                <h4 class="font-bold text-xs text-brand-rosewood dark:text-white line-clamp-1">${n.title}</h4>
+                <p class="text-[11px] text-gray-600 dark:text-gray-300 line-clamp-2">${n.preview || n.subject}</p>
+                <div class="flex justify-between items-center pt-1 text-[10px] text-brand-rosewood dark:text-brand-dustyRose font-bold">
+                  <span>To: ${n.userEmail}</span>
+                  <span class="inline-flex items-center gap-0.5 underline">View Full Email &rarr;</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          c.innerHTML = testBtnHtml + itemsHtml;
+        }
+      }
+    } catch (err) {
+      console.warn('Live notifications fetch notice:', err.message);
+    }
+  }
+
+  function hookEmailNotifications() {
+    const origToggle = window.toggleNotificationDrawer;
+    window.toggleNotificationDrawer = function () {
+      if (typeof origToggle === 'function') origToggle.apply(this, arguments);
+      fetchLiveNotifications();
+    };
+
+    setTimeout(fetchLiveNotifications, 1500);
+  }
+
+  /* ==========================================================================
+     CAMPUS UPI PAYMENT, STUDENT DASHBOARD TRACKING & LIBRARIAN VERIFICATION
+     ========================================================================== */
+
+  function getAuthToken() {
+    return authToken || localStorage.getItem('booknexus_token') || localStorage.getItem('bookhive_token') || '';
+  }
+
+  let liveTransactions = [];
+  let liveRentals = [];
+  let currentPaymentTxn = null;
+
+  function ensureCampusUpiModal() {
+    if (document.getElementById('campusUpiModal')) return;
+
+    const modalHtml = `
+    <div id="campusUpiModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="bg-brand-ivory dark:bg-brand-darkSurface rounded-3xl max-w-lg w-full p-6 sm:p-7 relative border border-brand-rosewood/20 shadow-2xl space-y-5">
+        <button type="button" onclick="window.closeCampusUpiModal()" class="absolute top-5 right-5 text-gray-400 hover:text-brand-rosewood dark:hover:text-white p-1 rounded-full">
+          <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+
+        <div class="flex items-center gap-3 border-b border-brand-rosewood/15 pb-4">
+          <div class="w-10 h-10 rounded-2xl bg-brand-rosewood/10 text-brand-rosewood dark:text-brand-dustyRose flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl">qr_code_2</span>
+          </div>
+          <div>
+            <h3 class="font-display text-xl font-bold text-brand-rosewood dark:text-white">Campus UPI Payment</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Zero-fee campus digital settlement</p>
+          </div>
+        </div>
+
+        <div class="bg-brand-cream dark:bg-brand-darkCard p-4 rounded-2xl border border-brand-rosewood/15 space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-500 font-medium">Purpose:</span>
+            <span id="upiModalPurpose" class="font-bold text-brand-rosewood dark:text-white">Library Overdue Fine</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-500 font-medium">Resource:</span>
+            <span id="upiModalBookTitle" class="font-bold text-brand-rosewood dark:text-white truncate max-w-[200px]">Clean Code</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-500 font-medium">Transaction Ref:</span>
+            <span id="upiModalTxnRef" class="font-mono font-bold text-brand-rosewood dark:text-brand-dustyRose">TXN-0000</span>
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-brand-rosewood/10">
+            <span class="font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">Amount Due:</span>
+            <span id="upiModalAmount" class="font-display font-extrabold text-2xl text-brand-rosewood dark:text-brand-dustyRose">₹0.00</span>
+          </div>
+        </div>
+
+        <div id="upiConfiguredContainer" class="space-y-4">
+          <div class="flex flex-col items-center justify-center p-4 bg-white dark:bg-brand-darkCard rounded-2xl border border-brand-rosewood/15 shadow-inner">
+            <div id="upiQrCodeWrapper" class="w-48 h-48 bg-gray-50 flex items-center justify-center rounded-xl overflow-hidden border border-gray-200">
+              <img id="upiQrCodeImg" src="" alt="Campus UPI QR Code" class="w-full h-full object-contain" />
+            </div>
+            <p class="text-[11px] text-gray-500 mt-2 font-medium">Scan with GPay, PhonePe, Paytm or any UPI App</p>
+          </div>
+
+          <div class="flex items-center justify-between p-3 rounded-xl bg-brand-parchment dark:bg-brand-darkSurface border border-brand-rosewood/15 text-xs">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-gray-500 block">Campus UPI ID</span>
+              <span id="upiModalPayeeVpa" class="font-mono font-bold text-brand-rosewood dark:text-white">booknexus.library@okhdfcbank</span>
+            </div>
+            <button type="button" onclick="window.copyCampusUpiId()" class="px-3 py-1.5 rounded-full bg-brand-rosewood text-white text-[11px] font-bold hover:bg-brand-rosewoodHover transition-colors flex items-center gap-1 shadow-sm">
+              <span class="material-symbols-outlined text-sm">content_copy</span> Copy
+            </button>
+          </div>
+
+          <div class="text-center">
+            <a id="upiModalDeepLink" href="#" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-rosewood dark:text-brand-dustyRose hover:underline">
+              <span class="material-symbols-outlined text-sm">open_in_new</span> Pay directly in UPI App (Mobile)
+            </a>
+          </div>
+        </div>
+
+        <div id="upiUnconfiguredContainer" class="hidden p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-xs space-y-2">
+          <div class="flex items-center gap-2 font-bold text-sm">
+            <span class="material-symbols-outlined text-amber-600">warning</span>
+            Campus UPI ID Not Configured
+          </div>
+          <p>The campus administration has not configured an active UPI VPA in library settings. Please visit the library circulation desk to settle your dues in cash or via counter POS.</p>
+        </div>
+
+        <div class="space-y-3 pt-2 border-t border-brand-rosewood/15">
+          <div>
+            <label for="campusUpiUtrInput" class="block text-xs font-bold text-brand-rosewood dark:text-white mb-1">
+              Enter 12-Digit UPI Reference / UTR Number <span class="text-red-500">*</span>
+            </label>
+            <input type="text" id="campusUpiUtrInput" placeholder="e.g. 429381029384" maxlength="30" class="w-full bg-white dark:bg-brand-darkCard border border-brand-rosewood/20 rounded-xl p-3 text-xs font-mono font-bold outline-none focus:border-brand-rosewood focus:ring-1 focus:ring-brand-rosewood" />
+          </div>
+
+          <div class="p-3 bg-brand-parchment/60 dark:bg-brand-darkSurface rounded-xl border border-brand-rosewood/10 text-[11px] text-gray-600 dark:text-gray-300 leading-relaxed">
+            <span class="font-bold text-brand-rosewood dark:text-brand-dustyRose">⚠️ Manual Librarian Verification Required:</span> Submitting this reference marks your payment as <span class="font-bold text-amber-700 bg-amber-100 px-1 py-0.5 rounded">Pending Verification</span>. The campus librarian will manually cross-reference your UTR against the college bank terminal before confirming settlement.
+          </div>
+
+          <button id="btnSubmitUpiUtr" type="button" onclick="window.submitCampusUpiUtr()" class="w-full py-3 px-4 bg-brand-rosewood hover:bg-brand-rosewoodHover text-white text-xs font-bold rounded-xl shadow transition-transform active:scale-95 flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-base">send</span>
+            Submit Payment for Verification
+          </button>
+        </div>
+      </div>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+  }
+
+  window.closeCampusUpiModal = function() {
+    const modal = document.getElementById('campusUpiModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  };
+
+  window.copyCampusUpiId = function() {
+    const vpa = document.getElementById('upiModalPayeeVpa')?.textContent || '';
+    if (vpa && navigator.clipboard) {
+      navigator.clipboard.writeText(vpa);
+      if (typeof showToast === 'function') showToast('Campus UPI ID copied: ' + vpa, 'success');
+    }
+  };
+
+  window.openCampusUpiPayModal = async function(opts = {}) {
+    ensureCampusUpiModal();
+    const token = getAuthToken();
+    const modal = document.getElementById('campusUpiModal');
+
+    const {
+      rentalId = null,
+      bookId = null,
+      title = 'Library Materials',
+      amount = 50,
+      type = 'fine_payment',
+      note = ''
+    } = opts;
+
+    if (typeof showToast === 'function') showToast('Initiating campus payment session...', 'info');
+
+    try {
+      const res = await fetch(`${API_BASE}/payments/initiate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          rentalId,
+          bookId,
+          type,
+          amount: Number(amount),
+          note: note || `Payment for ${title}`
+        })
+      });
+
+      const json = await res.json();
+      if (!json || !json.success) {
+        if (typeof showToast === 'function') showToast(json.message || 'Could not initiate payment', 'error');
+        return;
+      }
+
+      currentPaymentTxn = json.data;
+
+      document.getElementById('upiModalPurpose').textContent = (type || 'fine_payment').replace(/_/g, ' ').toUpperCase();
+      document.getElementById('upiModalBookTitle').textContent = title;
+      document.getElementById('upiModalTxnRef').textContent = currentPaymentTxn.transactionRef;
+      document.getElementById('upiModalAmount').textContent = '₹' + Number(currentPaymentTxn.amount).toFixed(2);
+      const utrEl = document.getElementById('campusUpiUtrInput');
+      if (utrEl) utrEl.value = '';
+
+      const upiContainer = document.getElementById('upiConfiguredContainer');
+      const unconfigContainer = document.getElementById('upiUnconfiguredContainer');
+
+      if (json.isUpiConfigured && json.upiUri) {
+        if (upiContainer) upiContainer.classList.remove('hidden');
+        if (unconfigContainer) unconfigContainer.classList.add('hidden');
+        const vpaEl = document.getElementById('upiModalPayeeVpa');
+        if (vpaEl) vpaEl.textContent = json.campusUpiId;
+        const linkEl = document.getElementById('upiModalDeepLink');
+        if (linkEl) linkEl.href = json.upiUri;
+
+        const qrImg = document.getElementById('upiQrCodeImg');
+        if (qrImg) {
+          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(json.upiUri)}`;
+        }
+      } else {
+        if (upiContainer) upiContainer.classList.add('hidden');
+        if (unconfigContainer) unconfigContainer.classList.remove('hidden');
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    } catch (err) {
+      console.error('Initiate payment error:', err);
+      if (typeof showToast === 'function') showToast('Server error: ' + err.message, 'error');
+    }
+  };
+
+  window.submitCampusUpiUtr = async function() {
+    if (!currentPaymentTxn) {
+      if (typeof showToast === 'function') showToast('No active transaction found.', 'error');
+      return;
+    }
+
+    const utrInput = document.getElementById('campusUpiUtrInput');
+    const utrVal = (utrInput ? utrInput.value : '').trim();
+
+    if (!utrVal || utrVal.length < 6) {
+      if (typeof showToast === 'function') showToast('Please enter a valid 12-digit UPI Reference / UTR Number.', 'warning');
+      if (utrInput) utrInput.focus();
+      return;
+    }
+
+    const token = getAuthToken();
+    const btn = document.getElementById('btnSubmitUpiUtr');
+    if (btn) btn.disabled = true;
+
+    try {
+      const res = await fetch(`${API_BASE}/payments/submit-utr`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          transactionRef: currentPaymentTxn.transactionRef,
+          utrNumber: utrVal
+        })
+      });
+
+      const json = await res.json();
+      if (json && json.success) {
+        if (typeof showToast === 'function') {
+          showToast('✅ Payment submitted! Status: Pending Verification by Librarian.', 'success');
+        }
+        window.closeCampusUpiModal();
+        await fetchLiveTransactions();
+        await fetchLiveRentalsAndSync();
+      } else {
+        if (typeof showToast === 'function') showToast(json.message || 'Submission failed', 'error');
+      }
+    } catch (err) {
+      console.error('Submit UTR error:', err);
+      if (typeof showToast === 'function') showToast('Connection error: ' + err.message, 'error');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  };
+
+  window.librarianVerifyPayment = async function(transactionRef, amount) {
+    if (!confirm(`Verify payment ${transactionRef} for ₹${amount}?\n\nThis confirms the funds have cleared on the campus bank terminal, resets student overdue penalties, and dispatches the official receipt email.`)) {
+      return;
+    }
+
+    const token = getAuthToken();
+    try {
+      const res = await fetch(`${API_BASE}/payments/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          transactionRef,
+          note: 'Manually verified by Librarian on campus bank terminal'
+        })
+      });
+
+      const json = await res.json();
+      if (json && json.success) {
+        if (typeof showToast === 'function') {
+          showToast(`✅ Payment ${transactionRef} verified! Receipt emailed to student.`, 'success');
+        }
+        await fetchLiveTransactions();
+        await fetchLiveRentalsAndSync();
+      } else {
+        if (typeof showToast === 'function') showToast(json.message || 'Verification failed', 'error');
+      }
+    } catch (err) {
+      console.error('Librarian verify error:', err);
+      if (typeof showToast === 'function') showToast('Verification error: ' + err.message, 'error');
+    }
+  };
+
+  window.librarianRejectPayment = async function(transactionRef) {
+    const reason = prompt(`Enter reason for rejecting payment ${transactionRef}:`, 'UTR reference could not be located on campus bank statement.');
+    if (reason === null) return;
+
+    const token = getAuthToken();
+    try {
+      const res = await fetch(`${API_BASE}/payments/reject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          transactionRef,
+          reason: reason || 'Invalid or unverified UPI reference.'
+        })
+      });
+
+      const json = await res.json();
+      if (json && json.success) {
+        if (typeof showToast === 'function') {
+          showToast(`❌ Payment ${transactionRef} rejected. Student notified.`, 'info');
+        }
+        await fetchLiveTransactions();
+      } else {
+        if (typeof showToast === 'function') showToast(json.message || 'Rejection failed', 'error');
+      }
+    } catch (err) {
+      console.error('Librarian reject error:', err);
+      if (typeof showToast === 'function') showToast('Rejection error: ' + err.message, 'error');
+    }
+  };
+
+  function getStatusBadge(status, utr) {
+    switch (status) {
+      case 'initiated':
+        return `<span class="inline-flex items-center gap-1 bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-300">Initiated</span>`;
+      case 'pending':
+        return `<span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300" title="UTR: ${utr || ''}">⏳ Pending Verification</span>`;
+      case 'successful':
+        return `<span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300">✓ Successful</span>`;
+      case 'rejected':
+        return `<span class="inline-flex items-center gap-1 bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-rose-300">✗ Rejected</span>`;
+      case 'refunded':
+        return `<span class="inline-flex items-center gap-1 bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-purple-300">↺ Refunded</span>`;
+      default:
+        return `<span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded">${status}</span>`;
+    }
+  }
+
+  async function fetchLiveTransactions() {
+    const token = getAuthToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/payments`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const json = await res.json();
+      if (json && json.success && Array.isArray(json.data)) {
+        liveTransactions = json.data;
+
+        window.transactionsList = liveTransactions.map(t => ({
+          id: t.transactionRef,
+          title: (t.book && t.book.title) ? t.book.title : (t.type ? t.type.replace(/_/g, ' ') : 'Library Material'),
+          type: t.type ? t.type.replace(/_/g, ' ').toUpperCase() : 'PAYMENT',
+          date: new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+          amount: '₹' + Number(t.amount).toFixed(2),
+          status: t.status === 'initiated' ? 'Initiated' :
+                  t.status === 'pending' ? 'Pending Verification' :
+                  t.status === 'successful' ? 'Successful' :
+                  t.status === 'rejected' ? 'Rejected' :
+                  t.status === 'refunded' ? 'Refunded' : 'Completed',
+          raw: t
+        }));
+
+        renderLiveStudentTransactions();
+        renderLiveAdminLedger();
+        renderLibrarianVerificationDesk();
+      }
+    } catch (err) {
+      console.warn('Fetch live transactions notice:', err.message);
+    }
+  }
+
+  function renderLiveStudentTransactions() {
+    const tbody = document.getElementById('studentTransactionsTableBody');
+    if (!tbody || !liveTransactions.length) return;
+
+    tbody.innerHTML = liveTransactions.map(t => {
+      const bTitle = t.book?.title || t.type?.replace(/_/g, ' ') || 'Library Material';
+      const dateStr = new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      return `
+        <tr class="hover:bg-brand-parchment/50">
+          <td class="py-3 px-4 font-mono font-bold">${t.transactionRef}</td>
+          <td class="py-3 px-4 font-bold">${bTitle}</td>
+          <td class="py-3 px-4"><span class="bg-brand-rosewood/10 text-brand-rosewood text-[10px] font-bold px-2 py-0.5 rounded uppercase">${t.type?.replace(/_/g, ' ')}</span></td>
+          <td class="py-3 px-4">${dateStr}</td>
+          <td class="py-3 px-4 font-bold text-brand-rosewood">₹${Number(t.amount).toFixed(2)}</td>
+          <td class="py-3 px-4">${getStatusBadge(t.status, t.gatewayReference)}</td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="previewReceipt('${t.transactionRef}')" class="text-xs font-bold text-brand-rosewood hover:underline">View Receipt</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderLiveAdminLedger() {
+    const tbody = document.getElementById('adminLedgerTableBody');
+    if (!tbody || !liveTransactions.length) return;
+
+    tbody.innerHTML = liveTransactions.map(t => {
+      const bTitle = t.book?.title || t.type?.replace(/_/g, ' ') || 'Library Material';
+      const dateStr = new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      const isPending = t.status === 'pending';
+      return `
+        <tr class="hover:bg-brand-parchment/50">
+          <td class="py-3 px-4 font-mono font-bold">${t.transactionRef}</td>
+          <td class="py-3 px-4 font-bold">${bTitle}<br><span class="text-[10px] text-gray-500 font-normal">Student: ${t.user?.name || 'Student'} (${t.user?.usn || ''})</span></td>
+          <td class="py-3 px-4"><span class="bg-brand-rosewood/10 text-brand-rosewood text-[10px] font-bold px-2 py-0.5 rounded uppercase">${t.type?.replace(/_/g, ' ')}</span></td>
+          <td class="py-3 px-4">${dateStr}</td>
+          <td class="py-3 px-4 font-bold text-brand-rosewood">₹${Number(t.amount).toFixed(2)}</td>
+          <td class="py-3 px-4">
+            ${getStatusBadge(t.status, t.gatewayReference)}
+            ${t.gatewayReference ? `<div class="text-[10px] font-mono text-gray-500 mt-0.5">UTR: ${t.gatewayReference}</div>` : ''}
+          </td>
+          <td class="py-3 px-4 text-right space-x-1">
+            ${isPending ? `
+              <button onclick="window.librarianVerifyPayment('${t.transactionRef}', ${t.amount})" class="px-2 py-1 bg-emerald-700 text-white rounded text-[11px] font-bold hover:bg-emerald-800">Verify</button>
+              <button onclick="window.librarianRejectPayment('${t.transactionRef}')" class="px-2 py-1 bg-rose-700 text-white rounded text-[11px] font-bold hover:bg-rose-800">Reject</button>
+            ` : `
+              <button onclick="previewReceipt('${t.transactionRef}')" class="text-xs font-bold text-brand-rosewood hover:underline">Receipt</button>
+            `}
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderLibrarianVerificationDesk() {
+    const host = document.getElementById('adminPanelLedger');
+    if (!host) return;
+
+    let deskEl = document.getElementById('campusUpiAdminDeskHost');
+    if (!deskEl) {
+      deskEl = document.createElement('div');
+      deskEl.id = 'campusUpiAdminDeskHost';
+      deskEl.className = 'my-4 space-y-4';
+      host.insertBefore(deskEl, host.firstChild);
+    }
+
+    const pendingTxns = liveTransactions.filter(t => t.status === 'pending');
+
+    deskEl.innerHTML = `
+      <div class="p-5 bg-gradient-to-r from-amber-500/10 via-brand-rosewood/10 to-amber-500/10 rounded-2xl border border-amber-500/30 space-y-4 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center gap-2">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-brand-rosewood text-white flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-xl">verified_user</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-brand-rosewood dark:text-white">Campus UPI Payment Verification Desk</h4>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Authorized manual verification of student UPI UTR references. Confirm against campus bank statement before clearing dues.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold ${pendingTxns.length > 0 ? 'bg-amber-100 text-amber-800 border border-amber-300 animate-pulse' : 'bg-emerald-100 text-emerald-800'}">
+              ${pendingTxns.length} Pending Verification
+            </span>
+            <button type="button" onclick="window.fetchLiveTransactions()" class="px-3 py-1 bg-white dark:bg-brand-darkCard border border-brand-rosewood/20 rounded-xl text-xs font-bold text-brand-rosewood hover:bg-brand-rosewood/10 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">refresh</span> Refresh
+            </button>
+          </div>
+        </div>
+
+        ${pendingTxns.length === 0 ? `
+          <div class="p-4 rounded-xl bg-white/70 dark:bg-brand-darkCard/70 border border-brand-rosewood/10 text-center text-xs text-gray-500 font-medium">
+            ✅ All student UPI payments are up to date. No pending UTR submissions awaiting verification.
+          </div>
+        ` : `
+          <div class="overflow-x-auto rounded-xl border border-brand-rosewood/15 bg-white dark:bg-brand-darkCard">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-brand-parchment dark:bg-brand-darkSurface uppercase text-[10px] text-gray-600 dark:text-gray-300">
+                <tr>
+                  <th class="py-2.5 px-3">Date</th>
+                  <th class="py-2.5 px-3">Student</th>
+                  <th class="py-2.5 px-3">Resource / Purpose</th>
+                  <th class="py-2.5 px-3">Amount</th>
+                  <th class="py-2.5 px-3">Txn Ref</th>
+                  <th class="py-2.5 px-3">Submitted UTR</th>
+                  <th class="py-2.5 px-3 text-right">Librarian Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-brand-rosewood/10">
+                ${pendingTxns.map(t => `
+                  <tr class="hover:bg-brand-parchment/50">
+                    <td class="py-2.5 px-3 text-gray-500">${new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</td>
+                    <td class="py-2.5 px-3 font-bold">${t.user?.name || 'Student'}<br><span class="text-[10px] font-mono text-gray-500">${t.user?.usn || ''}</span></td>
+                    <td class="py-2.5 px-3">${t.book?.title || t.type?.replace(/_/g, ' ') || 'Library Material'}</td>
+                    <td class="py-2.5 px-3 font-bold text-brand-rosewood">₹${Number(t.amount).toFixed(2)}</td>
+                    <td class="py-2.5 px-3 font-mono text-[11px] font-bold text-gray-600">${t.transactionRef}</td>
+                    <td class="py-2.5 px-3 font-mono font-bold text-amber-700 bg-amber-50/50">${t.gatewayReference || 'Awaiting UTR'}</td>
+                    <td class="py-2.5 px-3 text-right space-x-1.5 whitespace-nowrap">
+                      <button type="button" onclick="window.librarianVerifyPayment('${t.transactionRef}', ${t.amount})" class="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-[11px] shadow-sm transition-transform active:scale-95 inline-flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">check</span> Verify & Settle
+                      </button>
+                      <button type="button" onclick="window.librarianRejectPayment('${t.transactionRef}')" class="px-2.5 py-1 bg-rose-700 hover:bg-rose-800 text-white rounded-lg font-bold text-[11px] shadow-sm transition-transform active:scale-95 inline-flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">close</span> Reject
+                      </button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  async function fetchLiveRentalsAndSync() {
+    const token = getAuthToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/rentals`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const json = await res.json();
+      if (json && json.success && Array.isArray(json.data)) {
+        liveRentals = json.data;
+
+        // Compute 6-metric tracking statistics
+        const borrowPending = liveRentals.filter(r => r.status === 'requested' || r.status === 'pending').length;
+        const borrowApproved = liveRentals.filter(r => r.status === 'approved').length;
+        const borrowRejected = liveRentals.filter(r => r.status === 'rejected').length;
+
+        const activeRentalsList = liveRentals.filter(r => r.status === 'active' || r.status === 'received' || r.status === 'approved');
+        const latestActive = activeRentalsList[0];
+
+        const returnsRequested = liveRentals.filter(r => r.status === 'returned').length;
+        const returnsApproved = liveRentals.filter(r => r.status === 'approved' && r.returnDate).length;
+        const returnsCompleted = liveRentals.filter(r => r.status === 'completed').length;
+
+        const overdueRentals = liveRentals.filter(r => (r.penaltyAmount > 0) || r.status === 'overdue');
+        const totalPenaltyAmount = overdueRentals.reduce((sum, r) => sum + (r.penaltyAmount || 0), 0);
+
+        const payInitiated = liveTransactions.filter(t => t.status === 'initiated').length;
+        const payPending = liveTransactions.filter(t => t.status === 'pending').length;
+        const paySuccessful = liveTransactions.filter(t => t.status === 'successful').length;
+
+        const stats = {
+          borrowTotal: liveRentals.length,
+          borrowPending,
+          borrowApproved,
+          borrowRejected,
+          activeRentalsCount: activeRentalsList.length,
+          latestActiveBook: latestActive?.book?.title || '',
+          latestDueDate: latestActive?.dueDate ? new Date(latestActive.dueDate).toLocaleDateString('en-IN') : '',
+          returnsTotal: returnsRequested + returnsApproved + returnsCompleted,
+          returnsRequested,
+          returnsApproved,
+          returnsCompleted,
+          overdueDays: overdueRentals.length > 0 ? 3 : 0,
+          totalPenaltyAmount,
+          overdueBookTitle: overdueRentals[0]?.book?.title || 'Academic Book',
+          paymentsTotal: liveTransactions.length,
+          payInitiated,
+          payPending,
+          paySuccessful
+        };
+
+        renderStudentDashboardTracker(stats);
+      }
+    } catch (err) {
+      console.warn('Live rentals fetch notice:', err.message);
+    }
+  }
+
+  function renderStudentDashboardTracker(stats = {}) {
+    const host = document.getElementById('dashboardHost');
+    if (!host) return;
+
+    const trackerId = 'campusLifecycleTrackerHost';
+    let trackerEl = document.getElementById(trackerId);
+    if (!trackerEl) {
+      trackerEl = document.createElement('div');
+      trackerEl.id = trackerId;
+      trackerEl.className = 'my-6';
+      host.insertBefore(trackerEl, host.firstChild);
+    }
+
+    trackerEl.innerHTML = `
+      <div class="p-6 bg-gradient-to-br from-brand-parchment via-brand-cream to-brand-parchment dark:from-brand-darkSurface dark:to-brand-darkCard rounded-3xl border border-brand-rosewood/20 shadow-md space-y-5">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-brand-rosewood/15 pb-4">
+          <div>
+            <span class="text-[10px] uppercase font-extrabold tracking-widest text-brand-dustyRose">Academic &amp; Rental Operations</span>
+            <h3 class="font-display text-xl font-bold text-brand-rosewood dark:text-white">Student Dashboard &amp; Payment Tracker</h3>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1 text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              MongoDB Synced
+            </span>
+            <button type="button" onclick="window.fetchLiveRentalsAndSync();window.fetchLiveTransactions();" class="p-1.5 rounded-xl bg-white dark:bg-brand-darkSurface border border-brand-rosewood/15 text-brand-rosewood dark:text-white hover:bg-brand-rosewood/10" title="Refresh Live Data">
+              <span class="material-symbols-outlined text-base">refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-darkCard border border-brand-rosewood/10 shadow-sm space-y-1">
+            <div class="text-[10px] font-extrabold uppercase text-gray-500">1. Borrow Requests</div>
+            <div class="text-xl font-extrabold text-brand-rosewood dark:text-white">${stats.borrowTotal || 0}</div>
+            <div class="text-[10px] space-y-0.5 text-gray-600 dark:text-gray-300">
+              <div class="flex justify-between"><span>Pending:</span> <b class="text-amber-600">${stats.borrowPending || 0}</b></div>
+              <div class="flex justify-between"><span>Approved:</span> <b class="text-emerald-600">${stats.borrowApproved || 0}</b></div>
+              <div class="flex justify-between"><span>Rejected:</span> <b class="text-rose-600">${stats.borrowRejected || 0}</b></div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-darkCard border border-brand-rosewood/10 shadow-sm space-y-1">
+            <div class="text-[10px] font-extrabold uppercase text-gray-500">2. Active Rentals</div>
+            <div class="text-xl font-extrabold text-brand-rosewood dark:text-white">${stats.activeRentalsCount || 0}</div>
+            <div class="text-[10px] text-gray-600 dark:text-gray-300 line-clamp-2">
+              ${stats.latestActiveBook ? `<b>${stats.latestActiveBook}</b><br><span class="text-gray-400">Due: ${stats.latestDueDate || 'In Loan'}</span>` : 'No active books'}
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-darkCard border border-brand-rosewood/10 shadow-sm space-y-1">
+            <div class="text-[10px] font-extrabold uppercase text-gray-500">3. Returns</div>
+            <div class="text-xl font-extrabold text-brand-rosewood dark:text-white">${stats.returnsTotal || 0}</div>
+            <div class="text-[10px] space-y-0.5 text-gray-600 dark:text-gray-300">
+              <div class="flex justify-between"><span>Requested:</span> <b>${stats.returnsRequested || 0}</b></div>
+              <div class="flex justify-between"><span>Approved:</span> <b>${stats.returnsApproved || 0}</b></div>
+              <div class="flex justify-between"><span>Completed:</span> <b class="text-emerald-600">${stats.returnsCompleted || 0}</b></div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-darkCard border ${stats.totalPenaltyAmount > 0 ? 'border-rose-400 bg-rose-50/30' : 'border-brand-rosewood/10'} shadow-sm space-y-1">
+            <div class="text-[10px] font-extrabold uppercase text-gray-500">4. Overdue Penalties</div>
+            <div class="text-xl font-extrabold ${stats.totalPenaltyAmount > 0 ? 'text-rose-600' : 'text-brand-rosewood dark:text-white'}">₹${stats.totalPenaltyAmount || 0}</div>
+            <div class="text-[10px] text-gray-600 dark:text-gray-300">
+              <div>Days Overdue: <b>${stats.overdueDays || 0}d</b></div>
+              <div class="mt-1">
+                ${stats.totalPenaltyAmount > 0 ? `
+                  <button type="button" onclick="window.openCampusUpiPayModal({ title: '${stats.overdueBookTitle || 'Library Overdue Book'}', amount: ${stats.totalPenaltyAmount}, type: 'fine_payment' })" class="w-full py-1 px-2 rounded-lg bg-rose-700 hover:bg-rose-800 text-white font-bold text-[10px] shadow-sm flex items-center justify-center gap-1">
+                    <span class="material-symbols-outlined text-xs">payments</span> Pay Fine
+                  </button>
+                ` : '<span class="text-emerald-600 font-bold">No Fines Due</span>'}
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-darkCard border border-brand-rosewood/10 shadow-sm space-y-1">
+            <div class="text-[10px] font-extrabold uppercase text-gray-500">5. Payment States</div>
+            <div class="text-xl font-extrabold text-brand-rosewood dark:text-white">${stats.paymentsTotal || 0}</div>
+            <div class="text-[10px] space-y-0.5 text-gray-600 dark:text-gray-300">
+              <div class="flex justify-between"><span>Initiated:</span> <b>${stats.payInitiated || 0}</b></div>
+              <div class="flex justify-between"><span>Pending:</span> <b class="text-amber-600">${stats.payPending || 0}</b></div>
+              <div class="flex justify-between"><span>Verified:</span> <b class="text-emerald-600">${stats.paySuccessful || 0}</b></div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-darkCard border border-brand-rosewood/10 shadow-sm space-y-1 flex flex-col justify-between">
+            <div>
+              <div class="text-[10px] font-extrabold uppercase text-gray-500">6. Ledger</div>
+              <div class="text-xl font-extrabold text-brand-rosewood dark:text-white">${liveTransactions.length}</div>
+              <p class="text-[10px] text-gray-500">Verified receipts &amp; statement history</p>
+            </div>
+            <button type="button" onclick="if(typeof switchNav==='function')switchNav('transactions');" class="w-full py-1 px-2 rounded-lg bg-brand-rosewood text-white text-[10px] font-bold hover:bg-brand-rosewoodHover flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-xs">receipt_long</span> View Ledger
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function hookPayFineButtons() {
+    const origRenderLibTabs = window.renderStudentLibraryTabs;
+    if (typeof origLibTabsHooked === 'undefined') {
+      window.origLibTabsHooked = true;
+      if (typeof origRenderLibTabs === 'function') {
+        window.renderStudentLibraryTabs = function () {
+          origRenderLibTabs.apply(this, arguments);
+          injectPayFineButtonsIntoTables();
+        };
+      }
+    }
+
+    const origRenderRentals = window.renderMyRentals;
+    if (typeof origRentalsHooked === 'undefined') {
+      window.origRentalsHooked = true;
+      if (typeof origRenderRentals === 'function') {
+        window.renderMyRentals = function () {
+          origRenderRentals.apply(this, arguments);
+          injectPayFineButtonsIntoTables();
+        };
+      }
+    }
+  }
+
+  function injectPayFineButtonsIntoTables() {
+    // 1. Check Library Borrowed Books Table for unpaid late fines
+    const libTable = document.querySelector('#viewStudentLibrary table tbody');
+    if (libTable) {
+      libTable.querySelectorAll('tr').forEach(tr => {
+        const text = tr.innerText || '';
+        if (text.includes('₹') && (text.includes('Late') || text.includes('Overdue') || text.includes('Fine Pending') || text.includes('Fine Unpaid'))) {
+          if (!tr.querySelector('.pay-fine-injected-btn')) {
+            const bTitle = tr.querySelector('td:first-child')?.innerText?.trim() || 'Overdue Library Book';
+            const fineMatch = text.match(/₹\s*(\d+)/);
+            const fineAmt = fineMatch ? parseInt(fineMatch[1], 10) : 50;
+
+            const fineCell = tr.querySelector('td:last-child');
+            if (fineCell && fineAmt > 0) {
+              const payBtn = document.createElement('div');
+              payBtn.className = 'mt-1 pay-fine-injected-btn';
+              payBtn.innerHTML = `
+                <button type="button" onclick="window.openCampusUpiPayModal({ title: '${bTitle.replace(/'/g, "\\'")}', amount: ${fineAmt}, type: 'fine_payment' })" class="px-2 py-1 bg-brand-rosewood hover:bg-brand-rosewoodHover text-white rounded text-[10px] font-bold flex items-center gap-1 shadow-sm">
+                  <span class="material-symbols-outlined text-xs">payments</span> Pay Fine (UPI)
+                </button>
+              `;
+              fineCell.appendChild(payBtn);
+            }
+          }
+        }
+      });
+    }
+  }
+
+  const origPreviewReceipt = window.previewReceipt;
+  window.previewReceipt = function(txnId) {
+    const t = (window.transactionsList || []).find(x => x.id === txnId);
+    if (t && t.raw) {
+      const raw = t.raw;
+      const recId = document.getElementById('recTxnId');
+      const recName = document.getElementById('recStudentName');
+      const recRoll = document.getElementById('recStudentRoll');
+      const recType = document.getElementById('recTxnType');
+      const recTitle = document.getElementById('recBookTitle');
+      const recDate = document.getElementById('recTxnDate');
+      const recAmt = document.getElementById('recAmount');
+
+      if (recId) recId.innerText = raw.transactionRef;
+      if (recName) recName.innerText = raw.user?.name || (window.currentUser && window.currentUser.name) || 'Student';
+      if (recRoll) recRoll.innerText = raw.user?.usn || (window.currentUser && window.currentUser.rollNo) || 'CS2026';
+      if (recType) recType.innerText = raw.type ? raw.type.replace(/_/g, ' ').toUpperCase() : 'PAYMENT';
+      if (recTitle) recTitle.innerText = raw.book?.title || raw.type?.replace(/_/g, ' ') || 'Library Materials';
+      if (recDate) recDate.innerText = new Date(raw.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      if (recAmt) recAmt.innerText = '₹' + Number(raw.amount).toFixed(2);
+
+      if (typeof openModal === 'function') openModal('receiptPreviewModal');
+      return;
+    }
+    if (typeof origPreviewReceipt === 'function') origPreviewReceipt.call(this, txnId);
+  };
+
+  window.fetchLiveTransactions = fetchLiveTransactions;
+  window.fetchLiveRentalsAndSync = fetchLiveRentalsAndSync;
+
+  function initCampusPaymentSystem() {
+    ensureCampusUpiModal();
+    hookPayFineButtons();
+    setTimeout(() => {
+      fetchLiveTransactions();
+      fetchLiveRentalsAndSync();
+    }, 1000);
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       setupRealData();
       hookAuth();
       hookRentalBlockchain();
+      hookEmailNotifications();
+      initCampusPaymentSystem();
     });
   } else {
     setupRealData();
     hookAuth();
     hookRentalBlockchain();
+    hookEmailNotifications();
+    initCampusPaymentSystem();
   }
 })();
