@@ -2,6 +2,7 @@ const express = require("express");
 const {
     registerUser,
     loginUser,
+    completeOnboarding,
     getMe,
     updatePreferences,
     getEmailPreferences,
@@ -16,6 +17,7 @@ const router = express.Router();
 
 router.post("/register", registerRules, validate, registerUser);
 router.post("/login", loginRules, validate, loginUser);
+router.post("/complete-onboarding", completeOnboarding);
 router.get("/google/config", getGoogleConfig);
 router.post("/google", googleLogin);
 router.post("/logout", logoutUser);

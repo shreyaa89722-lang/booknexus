@@ -7,7 +7,7 @@ const validate = (req, res, next) => {
     res.status(400);
     return res.json({
       success: false,
-      message: "Validation failed",
+      message: errors.array()[0]?.msg || "Validation failed",
       errors: errors.array().map((e) => ({ field: e.path, message: e.msg })),
     });
   }
@@ -15,9 +15,16 @@ const validate = (req, res, next) => {
 };
 
 const registerRules = [
-  body("name").optional().trim().isLength({ max: 100 }),
-  body("email").trim().isEmail().withMessage("Must be a valid email").normalizeEmail(),
+  body("name").trim().notEmpty().withMessage("Full name is required").isLength({ max: 100 }),
+  body("email").trim().isEmail().withMessage("Must be a valid email address").normalizeEmail(),
+  body("usn").optional().trim().customSanitizer(v => (v ? v.toUpperCase() : v)),
   body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
+  body("confirmPassword").optional().custom((val, { req }) => {
+    if (val && val !== req.body.password) {
+      throw new Error("Password and confirm password do not match");
+    }
+    return true;
+  }),
   body("role").optional().isIn(["student", "owner", "admin"]).withMessage("Role must be student, owner, or admin"),
 ];
 
@@ -25,11 +32,18 @@ const loginRules = [
   body().custom((value, { req }) => {
     const id = req.body.email || req.body.usn || req.body.identifier;
     if (!id || typeof id !== "string" || !id.trim()) {
-      throw new Error("Email or USN is required");
+      throw new Error("USN or Email is required");
     }
     return true;
   }),
   body("password").notEmpty().withMessage("Password is required"),
+];
+
+const onboardingRules = [
+  body("usn").trim().notEmpty().withMessage("USN is required").customSanitizer(v => (v ? v.toUpperCase() : v)),
+  body("mobile").optional().trim(),
+  body("branch").optional().trim(),
+  body("semester").optional().trim(),
 ];
 
 const bookRules = [
@@ -45,4 +59,4 @@ const rentalRequestRules = [
   body("bookId").notEmpty().withMessage("bookId is required").isMongoId().withMessage("bookId must be a valid id"),
 ];
 
-module.exports = { validate, registerRules, loginRules, bookRules, rentalRequestRules };
+module.exports = { validate, registerRules, loginRules, onboardingRules, bookRules, rentalRequestRules };

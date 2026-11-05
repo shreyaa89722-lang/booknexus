@@ -5,6 +5,9 @@ node_modules/
 backend/data/
 **/data/db/
 mongod.lock
+backend/users_backup_*.json
+backend/config/.active_mongo_uri
+.active_mongo_uri
 
 # Frontend build output
 frontend/dist/

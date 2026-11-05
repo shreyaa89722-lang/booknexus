@@ -22,10 +22,25 @@ const protect = asyncHandler(async (req, res, next) => {
             res.status(401);
             throw new Error("User no longer exists");
         }
+
+        // Prevent incomplete student accounts from accessing protected features
+        const currentUrl = req.originalUrl || req.url || "";
+        if (
+            req.user.role === "student" &&
+            req.user.registrationCompleted === false &&
+            !currentUrl.includes("/auth/me") &&
+            !currentUrl.includes("/complete-onboarding")
+        ) {
+            res.status(403);
+            throw new Error("Student onboarding incomplete. Please complete registration and quiz to access this feature.");
+        }
+
         next();
     } catch (error) {
-        res.status(401);
-        throw new Error("Not authorized, token invalid or expired");
+        if (res.statusCode !== 403) {
+            res.status(401);
+        }
+        throw error;
     }
 });
 

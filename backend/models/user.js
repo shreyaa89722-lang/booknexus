@@ -24,17 +24,34 @@ const userSchema = new mongoose.Schema(
             readingUpdates: { type: Boolean, default: true },
             promotional: { type: Boolean, default: false },
         },
-        usn: { type: String, trim: true },
+        usn: { type: String, trim: true, uppercase: true },
         mobile: { type: String, trim: true },
         branch: { type: String, trim: true },
         college: { type: String, trim: true },
         semester: { type: String, trim: true },
+        registrationCompleted: { type: Boolean, default: false },
+        quizCompleted: { type: Boolean, default: false },
+        quizAnswers: { type: mongoose.Schema.Types.Mixed, default: null },
+        onboardingStep: {
+            type: String,
+            enum: ["details", "quiz", "completed"],
+            default: "details",
+        },
     },
     { timestamps: true }
 );
 
-// Automatically hash the password before saving to the database
+// Indexes
+userSchema.index({ usn: 1 }, { unique: true, sparse: true });
+
+// Pre-save hooks: clean empty usn strings to undefined so sparse index works
 userSchema.pre("save", async function (next) {
+    if (this.usn === "" || this.usn === null) {
+        this.usn = undefined;
+    }
+    if (this.usn) {
+        this.usn = this.usn.toUpperCase().trim();
+    }
     if (!this.password || !this.isModified("password")) return next();
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);

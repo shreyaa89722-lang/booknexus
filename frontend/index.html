@@ -2225,12 +2225,15 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <div class="nxa-chip"><span id="nxlNwEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
                     <div class="nxs-prog" aria-hidden="true"><i class="on"></i><i id="nxlP2"></i><span id="nxlStepLbl">Step 1 of 2</span></div>
                     <div id="nxlS1">
-                    <p class="nxa-note"><span class="material-symbols-outlined">verified_user</span><span>No account for this email yet. Enter your <b>name</b> and <b>USN</b> exactly as in college records. Your email, phone, department and other details are filled in automatically.</span></p>
-                    <div class="nxa-f"><label for="nxlName" class="nxa-l">Full name</label><input id="nxlName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="As in college records"><p class="nxa-hint">Capitals and spaces don't matter. Dots do.</p><p class="nxa-err" id="nxlNameE" hidden></p></div>
-                    <div class="nxa-f"><label for="nxlUsn" class="nxa-l">USN</label><input id="nxlUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042"><p class="nxa-err" id="nxlUsnE" hidden></p></div>
-                    <div class="nxa-f"><label for="nxlDob" class="nxa-l">Date of birth</label><input id="nxlDob" class="nxa-in pl" type="date" autocomplete="off"><p class="nxa-hint">Confirms the USN is yours, so nobody else can claim it.</p><p class="nxa-err" id="nxlDobE" hidden></p></div>
-                    <div class="nxa-f"><label for="nxlNp" class="nxa-l">Create password</label><div class="nxa-pw"><input id="nxlNp" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="nxlNpX"></div><p class="nxa-err" id="nxlNpE" hidden></p></div>
-                    <div class="nxa-f"><label for="nxlNp2" class="nxa-l">Confirm password</label><div class="nxa-pw"><input id="nxlNp2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="nxlNp2E" hidden></p></div>
+                    <p class="nxa-note"><span class="material-symbols-outlined">verified_user</span><span>Create your official BookNexus student profile. Please enter your student details and USN.</span></p>
+                    <div class="nxa-f"><label for="nxlName" class="nxa-l">Full name</label><input id="nxlName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="Full name as in college records"><p class="nxa-err" id="nxlNameE" hidden></p></div>
+                    <div class="nxa-f"><label for="nxlUsn" class="nxa-l">USN</label><input id="nxlUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="nxlUsnE" hidden></p></div>
+                    <div class="nxa-f" id="nxlEmWrap"><label for="nxlEmail" class="nxa-l">College email</label><input id="nxlEmail" class="nxa-in pl" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="120" placeholder="e.g. student@college.edu"><p class="nxa-err" id="nxlEmailE" hidden></p></div>
+                    <div class="nxa-f"><label for="nxlPhone" class="nxa-l">Phone number</label><input id="nxlPhone" class="nxa-in pl" type="tel" autocomplete="tel" maxlength="16" placeholder="+91 98765 43210"><p class="nxa-err" id="nxlPhoneE" hidden></p></div>
+                    <div class="nxa-f"><label for="nxlDept" class="nxa-l">Department</label><input id="nxlDept" class="nxa-in pl" type="text" maxlength="60" placeholder="e.g. Computer Science and Business Systems"><p class="nxa-err" id="nxlDeptE" hidden></p></div>
+                    <div class="nxa-f"><label for="nxlSem" class="nxa-l">Semester</label><select id="nxlSem" class="nxa-in pl"><option value="Semester 1">Semester 1</option><option value="Semester 2">Semester 2</option><option value="Semester 3">Semester 3</option><option value="Semester 4">Semester 4</option><option value="Semester 5">Semester 5</option><option value="Semester 6" selected>Semester 6</option><option value="Semester 7">Semester 7</option><option value="Semester 8">Semester 8</option></select><p class="nxa-err" id="nxlSemE" hidden></p></div>
+                    <div class="nxa-f" id="nxlPwWrap"><label for="nxlNp" class="nxa-l">Create password</label><div class="nxa-pw"><input id="nxlNp" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="nxlNpX"></div><p class="nxa-err" id="nxlNpE" hidden></p></div>
+                    <div class="nxa-f" id="nxlPw2Wrap"><label for="nxlNp2" class="nxa-l">Confirm password</label><div class="nxa-pw"><input id="nxlNp2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="nxlNp2E" hidden></p></div>
                     </div>
                     <div id="nxlS2" class="nxs-s2" hidden>
                         <div class="nxs-grp">
@@ -2253,21 +2256,152 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <p class="nxa-sw" id="nxlBk" hidden><button type="button" class="nxa-link" onclick="nxlStep(1)">Back to college details</button></p>
                 </form>
                 <form id="nxaVIn" class="nxa-form" novalidate onsubmit="nxaDoIn(event)">
-                    <div class="nxa-chip"><span id="nxlInEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
-                    <div class="nxa-f"><label for="siUsn" class="nxa-l">Your USN</label><input id="siUsn" class="nxa-in" type="text" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042"><p class="nxa-err" id="siUsnE" hidden></p></div>
+                    <div class="nxa-chip" id="nxlInEmChip" hidden><span id="nxlInEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
+                    <div class="nxa-f"><label for="siUsn" class="nxa-l">Your USN</label><input id="siUsn" class="nxa-in" type="text" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="siUsnE" hidden></p></div>
                     <div class="nxa-f"><label for="siPw" class="nxa-l">Password</label><div class="nxa-pw"><input id="siPw" class="nxa-in pl" type="password" autocomplete="current-password" maxlength="64" placeholder="Your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="siPwE" hidden></p></div>
                     <div class="nxa-row"><button type="button" class="nxa-link" onclick="nxaView('fp')">Forgot password?</button></div>
                     <button class="nxa-go" id="siGo">Sign in</button>
+                    
+                    <div class="nxa-or" style="margin:16px 0;"><span>OR</span></div>
+                    
+                    <button type="button" id="studentGoogleBtn" class="nxa-soc" onclick="window.startGoogleOAuth()">
+                        <svg viewBox="0 0 48 48" aria-hidden="true" style="width:20px;height:20px;margin-right:8px;"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 010-9.4l-7.9-6.1a24 24 0 000 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+                        Continue with Google
+                    </button>
+
+                    <div style="text-align:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(70,40,42,0.1);font-size:12px;color:#71717a;">
+                        Don't have an account yet? 
+                        <button type="button" class="nxa-link" onclick="nxaView('up')" style="font-weight:700;color:#6C3B3D;text-decoration:underline;cursor:pointer;background:none;border:none;">Sign up now</button>
+                    </div>
                 </form>
-                <form id="nxaVUp" class="nxa-form" novalidate hidden onsubmit="nxaDoUp(event)">
-                    <div class="nxa-f"><label for="suName" class="nxa-l">Full name</label><input id="suName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="As in college records"><p class="nxa-err" id="suNameE" hidden></p></div>
-                    <div class="nxa-f"><label for="suUsn" class="nxa-l">USN</label><input id="suUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042"><p class="nxa-err" id="suUsnE" hidden></p></div>
-                    <div class="nxa-f"><label for="suEmail" class="nxa-l">College email</label><input id="suEmail" class="nxa-in pl" type="email" autocomplete="email" maxlength="80" placeholder="name@univ.edu"><p class="nxa-hint">Must be exactly the email saved in college records.</p><p class="nxa-err" id="suEmailE" hidden></p></div>
-                    <div class="nxa-f"><label for="suPw" class="nxa-l">Password</label><div class="nxa-pw"><input id="suPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="suPwX"></div><p class="nxa-err" id="suPwE" hidden></p></div>
-                    <div class="nxa-f"><label for="suPw2" class="nxa-l">Confirm password</label><div class="nxa-pw"><input id="suPw2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="suPw2E" hidden></p></div>
-                    <p class="nxa-note"><span class="material-symbols-outlined">verified_user</span><span><b>USN</b> and <b>email</b> must be exactly as in college records, with no spaces. <b>Name</b> can be in any case or spacing, but dots must match. Not sure what’s on file? Ask the library desk.</span></p>
-                    <button class="nxa-go" id="suGo">Create account</button>
-                    <p class="nxa-sw">Already have an account? <button type="button" class="nxa-link" onclick="nxaView('in')">Sign in</button></p>
+
+                <form id="nxaVUp" class="nxa-form" novalidate hidden onsubmit="nxaDoUp(event)" style="text-align:left;">
+                    <div style="background:rgba(108,59,61,0.06);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#46282a;">
+                        <strong>New Student Registration:</strong> Complete all 8 details and the 6-question reading quiz to discover your personalized book recommendations.
+                    </div>
+
+                    <div class="nxa-f"><label for="suName" class="nxa-l">1. Full Name</label><input id="suName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="e.g. John Doe"><p class="nxa-err" id="suNameE" hidden></p></div>
+                    <div class="nxa-f"><label for="suUsn" class="nxa-l">2. USN</label><input id="suUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="suUsnE" hidden></p></div>
+                    <div class="nxa-f"><label for="suEmail" class="nxa-l">3. College Email</label><input id="suEmail" class="nxa-in pl" type="email" autocomplete="email" maxlength="80" placeholder="e.g. student@college.edu"><p class="nxa-err" id="suEmailE" hidden></p></div>
+                    <div class="nxa-f"><label for="suPhone" class="nxa-l">4. Phone Number</label><input id="suPhone" class="nxa-in pl" type="tel" autocomplete="tel" maxlength="16" placeholder="e.g. +91 98765 43210"><p class="nxa-err" id="suPhoneE" hidden></p></div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="nxa-f">
+                            <label for="suDept" class="nxa-l">5. Department</label>
+                            <select id="suDept" class="nxa-in pl" style="height:44px;">
+                                <option value="COMPUTER SCIENCE AND BUSINESS SYSTEMS">CS & Business Systems</option>
+                                <option value="COMPUTER SCIENCE AND ENGINEERING">Computer Science</option>
+                                <option value="INFORMATION SCIENCE AND ENGINEERING">Information Science</option>
+                                <option value="ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING">AI & ML</option>
+                                <option value="ELECTRONICS AND COMMUNICATION ENGINEERING">ECE</option>
+                                <option value="MECHANICAL ENGINEERING">Mechanical</option>
+                                <option value="CIVIL ENGINEERING">Civil</option>
+                            </select>
+                            <p class="nxa-err" id="suDeptE" hidden></p>
+                        </div>
+                        <div class="nxa-f">
+                            <label for="suSem" class="nxa-l">6. Semester</label>
+                            <select id="suSem" class="nxa-in pl" style="height:44px;">
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6" selected>Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                            <p class="nxa-err" id="suSemE" hidden></p>
+                        </div>
+                    </div>
+
+                    <div class="nxa-f"><label for="suPw" class="nxa-l">7. Create Password</label><div class="nxa-pw"><input id="suPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="At least 6 characters"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="suPwE" hidden></p></div>
+                    <div class="nxa-f"><label for="suPw2" class="nxa-l">8. Confirm Password</label><div class="nxa-pw"><input id="suPw2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="suPw2E" hidden></p></div>
+
+                    <!-- Step 9: Required Genre Quiz -->
+                    <div class="mt-4 pt-4 border-t border-brand-rosewood/15">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-sm text-brand-rosewood dark:text-white flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-base text-brand-gold">auto_stories</span>
+                                9. Reading & Literary Quiz (6 Questions)
+                            </h4>
+                            <span class="text-[11px] font-medium text-brand-rosewood/80" id="suQuizProgress">0/6 answered</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-3">Power your Cosine-Similarity book recommendation engine.</p>
+                        <div id="suQuizContainer" class="space-y-4"></div>
+                        <p class="nxa-err" id="suQuizE" hidden></p>
+                    </div>
+
+                    <div class="mt-6">
+                        <button class="nxa-go" id="suGo">10. Submit Registration & Open Dashboard</button>
+                    </div>
+                    <p class="nxa-sw" style="text-align:center;margin-top:12px;">Already have an account? <button type="button" class="nxa-link" onclick="nxaView('in')">Sign in</button></p>
+                </form>
+
+                <!-- Onboarding View for Google / Incomplete Users -->
+                <form id="nxaVOnboard" class="nxa-form" novalidate hidden onsubmit="nxaDoOnboard(event)" style="text-align:left;">
+                    <div id="obGoogleIdentityChip" class="p-3 bg-brand-rosewood/10 rounded-2xl flex items-center gap-3 mb-4 border border-brand-rosewood/20">
+                        <div class="w-10 h-10 rounded-full bg-brand-rosewood text-white flex items-center justify-center font-bold" id="obGoogleAvatar">G</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-sm text-brand-rosewood dark:text-white truncate" id="obGoogleName">Google Student</div>
+                            <div class="text-xs text-gray-500 truncate" id="obGoogleEmail">email@gmail.com</div>
+                        </div>
+                        <span class="text-[10px] bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded-full uppercase">Verified</span>
+                    </div>
+
+                    <p class="text-xs text-gray-500 mb-4">Complete your college profile and required book preferences quiz to link your account and access your dashboard.</p>
+
+                    <div class="nxa-f"><label for="obUsn" class="nxa-l">College USN</label><input id="obUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="obUsnE" hidden></p></div>
+                    <div class="nxa-f"><label for="obPhone" class="nxa-l">Phone Number</label><input id="obPhone" class="nxa-in pl" type="tel" autocomplete="tel" maxlength="16" placeholder="e.g. +91 98765 43210"><p class="nxa-err" id="obPhoneE" hidden></p></div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="nxa-f">
+                            <label for="obDept" class="nxa-l">Department</label>
+                            <select id="obDept" class="nxa-in pl" style="height:44px;">
+                                <option value="COMPUTER SCIENCE AND BUSINESS SYSTEMS">CS & Business Systems</option>
+                                <option value="COMPUTER SCIENCE AND ENGINEERING">Computer Science</option>
+                                <option value="INFORMATION SCIENCE AND ENGINEERING">Information Science</option>
+                                <option value="ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING">AI & ML</option>
+                                <option value="ELECTRONICS AND COMMUNICATION ENGINEERING">ECE</option>
+                                <option value="MECHANICAL ENGINEERING">Mechanical</option>
+                                <option value="CIVIL ENGINEERING">Civil</option>
+                            </select>
+                            <p class="nxa-err" id="obDeptE" hidden></p>
+                        </div>
+                        <div class="nxa-f">
+                            <label for="obSem" class="nxa-l">Semester</label>
+                            <select id="obSem" class="nxa-in pl" style="height:44px;">
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6" selected>Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                            <p class="nxa-err" id="obSemE" hidden></p>
+                        </div>
+                    </div>
+
+                    <!-- Required Quiz for Google Onboarding -->
+                    <div class="mt-4 pt-4 border-t border-brand-rosewood/15">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-sm text-brand-rosewood dark:text-white flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-base text-brand-gold">auto_stories</span>
+                                Reading & Literary Quiz (6 Questions)
+                            </h4>
+                            <span class="text-[11px] font-medium text-brand-rosewood/80" id="obQuizProgress">0/6 answered</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-3">Power your Cosine-Similarity book recommendation engine.</p>
+                        <div id="obQuizContainer" class="space-y-4"></div>
+                        <p class="nxa-err" id="obQuizE" hidden></p>
+                    </div>
+
+                    <div class="mt-6">
+                        <button class="nxa-go" id="obGo">Complete Profile & Enter Dashboard</button>
+                    </div>
+                    <p class="nxa-sw" style="text-align:center;margin-top:12px;"><button type="button" class="nxa-link" onclick="nxaView('in')">Cancel / Sign in with another account</button></p>
                 </form>
                 <form id="nxaVFp" class="nxa-form" novalidate hidden onsubmit="nxaDoFp(event)">
                     <div class="nxa-banner info">To change your password, please visit the Book NEXUS pickup center.</div><div hidden aria-hidden="true">
@@ -17790,16 +17924,28 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     window.openModal = openModal;
     window.closeModal = closeModal;
 
-    function openCreateAccount(email) {
+    function openCreateAccount(email, usn, name) {
         window.__openingCreateAccount = true;
         openModal('authModal');
         setTimeout(() => {
             const em = email || '';
             const nwEm = document.getElementById('nxlNwEm');
+            const emWrap = document.getElementById('nxlEmWrap');
+            const pwWrap = document.getElementById('nxlPwWrap');
+            const pw2Wrap = document.getElementById('nxlPw2Wrap');
+            const isGoogleOnboard = !!window.__googleOnboardingData;
+
             if (nwEm) {
                 nwEm.textContent = em;
                 if (nwEm.parentElement) nwEm.parentElement.hidden = !em;
             }
+            if (emWrap) {
+                emWrap.hidden = !!em;
+                const emInput = document.getElementById('nxlEmail');
+                if (emInput) emInput.value = em;
+            }
+            if (pwWrap) pwWrap.hidden = isGoogleOnboard;
+            if (pw2Wrap) pw2Wrap.hidden = isGoogleOnboard;
 
             const rpBar = document.getElementById('nxaRp');
             if (rpBar) rpBar.hidden = true;
@@ -17815,20 +17961,22 @@ textarea.pf-inp{resize:vertical;min-height:96px}
             if (nForm) nForm.hidden = false;
 
             const h = document.querySelector('#authModal h3');
-            if (h) h.textContent = 'Create your account';
+            if (h) h.textContent = isGoogleOnboard ? 'Complete Student Onboarding' : 'Create Student Account';
             const sub = document.getElementById('nxaSub');
-            if (sub) sub.textContent = 'Just your name, USN and a password.';
+            if (sub) sub.textContent = isGoogleOnboard ? 'Please enter your student details and USN to link your Google account.' : 'Fill in your details and complete the short quiz to open your dashboard.';
 
-            // Blank out all fields so user starts completely clean
-            ['nxlName', 'nxlUsn', 'nxlDob', 'nxlNp', 'nxlNp2', 'nxlNick', 'nxlBio'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.value = '';
-            });
+            // Populate or clear fields
+            if (document.getElementById('nxlName')) document.getElementById('nxlName').value = name || '';
+            if (document.getElementById('nxlUsn')) document.getElementById('nxlUsn').value = usn || '';
+            if (document.getElementById('nxlPhone')) document.getElementById('nxlPhone').value = '';
+            if (document.getElementById('nxlDept')) document.getElementById('nxlDept').value = 'Computer Science and Business Systems';
+            if (document.getElementById('nxlNp')) document.getElementById('nxlNp').value = '';
+            if (document.getElementById('nxlNp2')) document.getElementById('nxlNp2').value = '';
 
             if (typeof nwShow === 'function') nwShow(1, true);
 
-            const nameField = document.getElementById('nxlName');
-            if (nameField) nameField.focus();
+            const targetField = usn ? document.getElementById('nxlPhone') : (name ? document.getElementById('nxlUsn') : document.getElementById('nxlName'));
+            if (targetField) targetField.focus();
 
             setTimeout(() => { window.__openingCreateAccount = false; }, 300);
         }, 50);
@@ -22303,60 +22451,40 @@ button.nd-li{background:transparent;color:inherit;text-align:left;font:inherit;c
 'use strict';
 const DAY = 864e5, NOW = Date.now(), ago = d => NOW - d * DAY, inr = n => '₹' + Math.round(n).toLocaleString('en-IN'), esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const RM = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-/* ---- source records (rentals: B = borrowed from another student, L = lent to another student; s/e/due are days ago / days ago / days from now) ---- */
-const REN = [
- { id: 'RN-1041', role: 'B', t: 'Introduction to Algorithms', a: 'T. H. Cormen', d: 'Computer Science', w: 'Owner #A47', rent: 200, dep: 500, stage: 'Return Due', g: 'active', s: 12, due: 3, ds: 'held', pay: 1, pick: 1, rt: 'Return due in 3 days' },
- { id: 'RN-1044', role: 'B', t: 'Digital Design', a: 'M. Morris Mano', d: 'Electronics', w: 'Owner #C19', rent: 140, dep: 350, stage: 'Ready for Pickup', g: 'approved', s: 2, win: 2.3, ds: 'held', pay: 1, rt: 'Collect within the pickup window' },
- { id: 'RN-1048', role: 'B', t: 'Strength of Materials', a: 'R. K. Bansal', d: 'Civil', w: 'Owner #G14', rent: 130, dep: 320, stage: 'Waiting for Drop-off', g: 'approved', s: 1, ds: 'held', pay: 1, rt: 'Owner has not dropped off the book yet' },
- { id: 'RN-1046', role: 'B', t: 'Database System Concepts', a: 'A. Silberschatz', d: 'Computer Science', w: 'Owner #B31', rent: 180, dep: 450, stage: 'Requested', g: 'pending', s: 1, ds: 'none', pay: 0, rt: 'Awaiting owner approval' },
- { id: 'RN-1043', role: 'B', t: 'Computer Networks', a: 'A. S. Tanenbaum', d: 'Computer Science', w: 'Owner #D05', rent: 160, dep: 300, stage: 'Returned', g: 'returned', s: 16, e: 1, ds: 'pend', pay: 1, pick: 1, rt: 'Returned · deposit release pending' },
- { id: 'RN-1038', role: 'B', t: 'Operating System Concepts', a: 'A. Silberschatz', d: 'Computer Science', w: 'Owner #A12', rent: 160, dep: 400, stage: 'Completed', g: 'completed', s: 42, e: 28, ds: 'ret', pay: 1, pick: 1, rt: 'Returned on time' },
- { id: 'RN-1029', role: 'B', t: 'Higher Engineering Mathematics', a: 'B. S. Grewal', d: 'Mathematics', w: 'Owner #E22', rent: 120, dep: 300, stage: 'Completed', g: 'completed', s: 70, e: 56, ds: 'part', ret: 40, why: 'Late return by 2 days', pay: 1, pick: 1, rt: 'Returned 2 days late' },
- { id: 'RN-1033', role: 'B', t: 'Organic Chemistry', a: 'Morrison & Boyd', d: 'Chemistry', w: 'Owner #F08', rent: 150, dep: 350, stage: 'Cancelled', g: 'cancelled', s: 34, ds: 'none', pay: 0, rt: 'Owner declined the request' },
- { id: 'RN-1040', role: 'L', t: 'Data Structures Using C++', a: 'D. S. Malik', d: 'Computer Science', w: 'Renter #B12', rent: 150, dep: 400, stage: 'Rented', g: 'active', s: 9, due: 5, pick: 1, dr: 'Dropped off', rt: 'Return due in 5 days', earn: 0 },
- { id: 'RN-1045', role: 'L', t: 'Signals and Systems', a: 'A. V. Oppenheim', d: 'Electronics', w: 'Renter #A33', rent: 130, dep: 300, stage: 'Awaiting Drop-off', g: 'approved', s: 1, dl: .5, dr: 'You must drop off the book', rt: 'Not yet rented', earn: 0 },
- { id: 'RN-1049', role: 'L', t: 'Fluid Mechanics', a: 'R. K. Bansal', d: 'Civil', w: 'Renter #D14', rent: 190, dep: 380, stage: 'Dropped Off', g: 'approved', s: 3, win: 1.6, dr: 'Dropped off', rt: 'Awaiting borrower pickup', earn: 0 },
- { id: 'RN-1047', role: 'L', t: 'Principles of Economics', a: 'N. G. Mankiw', d: 'Economics', w: 'Renter #C08', rent: 170, dep: 350, stage: 'Request Received', g: 'pending', s: 0, dr: '—', rt: '—', earn: 0 },
- { id: 'RN-1042', role: 'L', t: 'Engineering Drawing', a: 'N. D. Bhatt', d: 'Mechanical', w: 'Renter #E09', rent: 140, dep: 300, stage: 'Return Pending', g: 'active', s: 21, dr: 'Dropped off', rt: 'Return verification pending', earn: 0 },
- { id: 'RN-1035', role: 'L', t: 'Engineering Physics', a: 'Gaur & Gupta', d: 'Physics', w: 'Renter #C08', rent: 210, dep: 400, stage: 'Completed', g: 'completed', s: 60, e: 45, dr: 'Dropped off', rt: 'Returned', earn: 1 },
- { id: 'RN-1031', role: 'L', t: 'Engineering Thermodynamics', a: 'P. K. Nag', d: 'Mechanical', w: 'Renter #D21', rent: 180, dep: 350, stage: 'Completed', g: 'completed', s: 88, e: 74, dr: 'Dropped off', rt: 'Returned', earn: 1 },
- { id: 'RN-1026', role: 'L', t: 'Introduction to Linear Algebra', a: 'Gilbert Strang', d: 'Mathematics', w: 'Renter #A33', rent: 260, dep: 450, stage: 'Completed', g: 'completed', s: 118, e: 101, dr: 'Dropped off', rt: 'Returned', earn: 1 }
-];
-const LIB = [
- { id: 'LB-301', t: 'Operating Systems: Three Easy Pieces', a: 'R. Arpaci-Dusseau', d: 'Computer Science', s: 130, due: 116, e: 117, rv: 'done' },
- { id: 'LB-302', t: 'Compilers: Principles and Techniques', a: 'A. V. Aho', d: 'Computer Science', s: 75, due: 61, e: 56, fine: 50, rv: 'done' },
- { id: 'LB-306', t: 'Artificial Intelligence: A Modern Approach', a: 'S. Russell', d: 'Computer Science', s: 25, due: 11, e: 9, rv: 'pending' },
- { id: 'LB-303', t: 'Discrete Mathematics', a: 'K. H. Rosen', d: 'Mathematics', s: 16, due: 2, out: 20 },
- { id: 'LB-304', t: 'Python Crash Course', a: 'E. Matthes', d: 'Computer Science', s: 3, due: -11 },
- { id: 'LB-305', t: 'Computer Organization and Architecture', a: 'W. Stallings', d: 'Computer Science', s: 8, due: -6 }
-];
+/* ---- dynamic user records: populated from live backend API /analytics/user-dashboard ---- */
+let REN = [];
+let LIB = [];
 /* ---- normalise: every record becomes dated events; all totals are derived from these ---- */
 const T = []; let seq = 0;
 const ev = o => { o.n = ++seq; o.tx = (o.f || o.b === 'finedue') ? 'TX-' + (7200 + seq) : ''; T.push(o); };
-REN.forEach(r => {
- const base = { src: 'ren', role: r.role, rec: r.id, title: r.t, author: r.a, dept: r.d, g: r.g }, live = r.g !== 'pending' && r.g !== 'cancelled';
- if (r.role === 'B') {
-  ev({ ...base, d: ago(r.s), t: 'Rental requested', ic: 'send' });
-  if (live) ev({ ...base, d: ago(r.s - .4), t: 'Rental approved', ic: 'verified' });
-  if (live && r.pay) { ev({ ...base, d: ago(r.s - .5), t: 'Rental payment', amt: r.rent, f: 'out', b: 'rental', ic: 'payments' }); ev({ ...base, d: ago(r.s - .5), t: 'Deposit paid', amt: r.dep, f: 'out', b: 'deposit', hold: (r.ds === 'held' || r.ds === 'pend') ? r.dep : 0, ic: 'lock' }); }
-  if (r.pick) ev({ ...base, d: ago(r.s - 1.5), t: 'Book picked up', ic: 'inventory_2' });
-  if (r.e != null) { ev({ ...base, d: ago(r.e), t: 'Book returned', ic: 'assignment_return' });
-   if (r.ds === 'ret' || r.ds === 'part') ev({ ...base, d: ago(r.e - .5), t: 'Deposit refunded', amt: r.dep - (r.ret || 0), f: 'in', b: 'refund', g: 'refunded', ic: 'currency_rupee' });
-   if (r.ds === 'part') ev({ ...base, d: ago(r.e - .5), t: 'Late fine retained from deposit', amt: r.ret, f: '', b: 'fine', ic: 'gavel', why: r.why }); }
- } else {
-  ev({ ...base, d: ago(r.s), t: r.g === 'cancelled' ? 'Request declined' : 'Request received', ic: 'inbox' });
-  if (live) ev({ ...base, d: ago(r.s - .5), t: r.stage === 'Awaiting Drop-off' ? 'Request approved' : r.stage === 'Dropped Off' ? 'Book dropped off' : 'Book lent', ic: 'volunteer_activism' });
-  if (r.earn) ev({ ...base, d: ago(r.e), t: 'Rental earning received', amt: r.rent, f: 'in', b: 'earn', ic: 'account_balance_wallet' });
- }
-});
-LIB.forEach(l => {
- const base = { src: 'lib', role: '', rec: l.id, title: l.t, author: l.a, dept: l.d }, g0 = l.e != null ? 'returned' : l.out ? 'overdue' : 'active';
- ev({ ...base, d: ago(l.s), t: 'Book borrowed', g: g0, ic: 'menu_book' });
- if (l.e != null) ev({ ...base, d: ago(l.e), t: 'Book returned', g: 'returned', ic: 'assignment_return' });
- if (l.fine) ev({ ...base, d: ago(l.e), t: 'Fine paid', amt: l.fine, f: 'out', b: 'fine', g: 'completed', ic: 'gavel' });
- if (l.out) ev({ ...base, d: ago(0), t: 'Fine outstanding', amt: l.out, b: 'finedue', g: 'overdue', ic: 'warning' });
- if (l.rv === 'done') ev({ ...base, d: ago(l.e - 1), t: 'Review submitted', g: 'completed', ic: 'rate_review' });
-});
+function rebuildTransactions() {
+  T.length = 0; seq = 0;
+  REN.forEach(r => {
+    const base = { src: 'ren', role: r.role, rec: r.id, title: r.t, author: r.a, dept: r.d, g: r.g }, live = r.g !== 'pending' && r.g !== 'cancelled';
+    if (r.role === 'B') {
+      ev({ ...base, d: ago(r.s), t: 'Rental requested', ic: 'send' });
+      if (live) ev({ ...base, d: ago(r.s - .4), t: 'Rental approved', ic: 'verified' });
+      if (live && r.pay) { ev({ ...base, d: ago(r.s - .5), t: 'Rental payment', amt: r.rent, f: 'out', b: 'rental', ic: 'payments' }); ev({ ...base, d: ago(r.s - .5), t: 'Deposit paid', amt: r.dep, f: 'out', b: 'deposit', hold: (r.ds === 'held' || r.ds === 'pend') ? r.dep : 0, ic: 'lock' }); }
+      if (r.pick) ev({ ...base, d: ago(r.s - 1.5), t: 'Book picked up', ic: 'inventory_2' });
+      if (r.e != null) { ev({ ...base, d: ago(r.e), t: 'Book returned', ic: 'assignment_return' });
+        if (r.ds === 'ret' || r.ds === 'part') ev({ ...base, d: ago(r.e - .5), t: 'Deposit refunded', amt: r.dep - (r.ret || 0), f: 'in', b: 'refund', g: 'refunded', ic: 'currency_rupee' });
+        if (r.ds === 'part') ev({ ...base, d: ago(r.e - .5), t: 'Late fine retained from deposit', amt: r.ret, f: '', b: 'fine', ic: 'gavel', why: r.why }); }
+    } else {
+      ev({ ...base, d: ago(r.s), t: r.g === 'cancelled' ? 'Request declined' : 'Request received', ic: 'inbox' });
+      if (live) ev({ ...base, d: ago(r.s - .5), t: r.stage === 'Awaiting Drop-off' ? 'Request approved' : r.stage === 'Dropped Off' ? 'Book dropped off' : 'Book lent', ic: 'volunteer_activism' });
+      if (r.earn) ev({ ...base, d: ago(r.e), t: 'Rental earning received', amt: r.rent, f: 'in', b: 'earn', ic: 'account_balance_wallet' });
+    }
+  });
+  LIB.forEach(l => {
+    const base = { src: 'lib', role: '', rec: l.id, title: l.t, author: l.a, dept: l.d }, g0 = l.e != null ? 'returned' : l.out ? 'overdue' : 'active';
+    ev({ ...base, d: ago(l.s), t: 'Book borrowed', g: g0, ic: 'menu_book' });
+    if (l.e != null) ev({ ...base, d: ago(l.e), t: 'Book returned', g: 'returned', ic: 'assignment_return' });
+    if (l.fine) ev({ ...base, d: ago(l.e), t: 'Fine paid', amt: l.fine, f: 'out', b: 'fine', g: 'completed', ic: 'gavel' });
+    if (l.out) ev({ ...base, d: ago(0), t: 'Fine outstanding', amt: l.out, b: 'finedue', g: 'overdue', ic: 'warning' });
+    if (l.rv === 'done') ev({ ...base, d: ago(l.e - 1), t: 'Review submitted', g: 'completed', ic: 'rate_review' });
+  });
+}
+rebuildTransactions();
 /* ---- filters ---- */
 const ND = { time: 'all', from: '', to: '', act: 'all', st: 'all', q: '', fo: false, ch: 'flow', lf: 'all', rf: 'all', rc: 'all', lc: 'all', hid: {}, rr: 'B', sec: 'lib', hintOff: false, more: {}, first: true, ready: false, prev: {}, card: '' };
 const ACTS = { all: 'All', borrowing: 'Borrowing', returns: 'Returns', requests: 'Requests', payments: 'Payments', earnings: 'Earnings', fines: 'Fines', refunds: 'Refunds', deposits: 'Deposits', reviews: 'Reviews' };
@@ -22685,7 +22813,7 @@ function render() {
   <nav class="nd3-jump" aria-label="Jump to"><button type="button" onclick="NDX.jump('nd-money')">Money</button><button type="button" onclick="NDX.tab('lib')">Library</button><button type="button" onclick="NDX.tab('ren')">Rentals</button><button type="button" onclick="NDX.jump('nd-recent')">Activity</button></nav></div>
 
 
- ${!E.length ? `<div class="nd3-grid">${WAL}${TIL}</div><div class="db-em" id="nd-empty"><span class="material-symbols-outlined">filter_alt_off</span>${ND.card && !cardN ? `<b>Nothing to show for “${CARDL[ND.card]}”</b><p>${CARDZ[ND.card]}</p>` : `<b>No matching records found</b><p>Try changing or clearing a filter.</p>`}<button type="button" class="nd3-btn" onclick="NDX.clear()">${ND.card && !cardN ? 'Back to everything' : 'Clear filters'}</button></div>` : `
+ ${!E.length ? `<div class="nd3-grid">${WAL}${TIL}</div><div class="db-em" id="nd-empty"><span class="material-symbols-outlined">${T.length === 0 ? 'auto_stories' : 'filter_alt_off'}</span>${ND.card && !cardN ? `<b>Nothing to show for “${CARDL[ND.card]}”</b><p>${CARDZ[ND.card]}</p><button type="button" class="nd3-btn" onclick="NDX.clear()">Back to everything</button>` : (T.length === 0 ? `<b>No activity yet</b><p>You haven't borrowed or rented any books yet. Explore the catalog to get started.</p><div style="margin-top:14px"><button type="button" class="bn-btn pri" onclick="switchNav('browse')">Explore Catalog</button></div>` : `<b>No matching records found</b><p>Try changing or clearing a filter.</p><button type="button" class="nd3-btn" onclick="NDX.clear()">Clear filters</button>`)}</div>` : `
  ${A.length ? `<section class="nd3-todo" style="--i:1"><div class="nd3-sh"><h3>To do now <span class="nd3-count">${A.length}</span></h3><small>Things that need you</small></div><div class="nd3-todos">${A.slice(0, ND.more.at ? 99 : 3).map(([ic, t, d, st, when, id]) => `<div class="nd3-td"><span class="material-symbols-outlined">${ic}</span><div><b>${esc(t)}</b><small>${esc(d)}</small><em>${esc(st)} · ${esc(when)}</em></div><button type="button" class="nd3-btn sm" onclick="NDX.task('${id}','${ic}')">Details</button></div>`).join('')}</div>${A.length > 3 ? `<div class="db-ctr"><button type="button" class="nd3-btn sm" onclick="NDX.more('at')">${ND.more.at ? 'Show fewer' : 'Show ' + (A.length - 3) + ' more'}</button></div>` : ''}</section>` : nf ? '' : `<section class="nd3-ok" style="--i:1"><span class="material-symbols-outlined">task_alt</span>You’re all caught up — nothing needs your attention.</section>`}
  <div class="nd3-grid">
  ${WAL}
@@ -22862,7 +22990,71 @@ document.addEventListener('mousemove', e => { const w = tip.offsetWidth || 0; ti
  let rzT = 0, lastW = 0;
  window.addEventListener('resize', () => { const h = document.getElementById('dashboardHost'); if (h) h.dataset.w = h.clientWidth; clearTimeout(rzT); rzT = setTimeout(() => { const h2 = document.getElementById('dashboardHost'), v = document.getElementById('viewDashboard'); if (h2 && v && !v.classList.contains('hidden') && ND.ready) { const w = h2.clientWidth; if (Math.abs(w - lastW) > 8) { lastW = w; drawAll(h2); } } }, 120); });
 }
-window.renderDashboardView = function () { ND.first = true; ND.ready = false; render(); };
+window.renderDashboardView = async function () {
+  ND.first = true;
+  ND.ready = false;
+  const token = localStorage.getItem('booknexus_token') || sessionStorage.getItem('booknexus_token') || localStorage.getItem('bookhive_token');
+  if (token) {
+    try {
+      const res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/analytics/user-dashboard', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          if (!d.hasActivity) {
+            REN = [];
+            LIB = [];
+          } else {
+            REN = [
+              ...(d.rentals?.borrowed || []).map(r => ({
+                id: 'RN-' + (r._id ? r._id.slice(-4).toUpperCase() : '0000'),
+                role: 'B',
+                t: r.book?.title || 'Book',
+                a: r.book?.author || '',
+                d: r.book?.genre || 'General',
+                w: r.owner ? (r.owner.name || 'Owner') : 'BookNexus',
+                rent: r.book?.price || 0,
+                dep: (r.book?.price || 0) * 2,
+                stage: r.status,
+                g: r.status,
+                s: Math.max(1, Math.round((Date.now() - new Date(r.createdAt || Date.now())) / 864e5)),
+                pay: 1,
+                pick: ['active', 'received', 'completed', 'returned'].includes(r.status) ? 1 : 0,
+                e: r.returnDate ? Math.max(0, Math.round((Date.now() - new Date(r.returnDate)) / 864e5)) : null
+              })),
+              ...(d.rentals?.lent || []).map(r => ({
+                id: 'RN-' + (r._id ? r._id.slice(-4).toUpperCase() : '0000'),
+                role: 'L',
+                t: r.book?.title || 'Book',
+                a: r.book?.author || '',
+                d: r.book?.genre || 'General',
+                w: r.renter ? (r.renter.name || 'Renter') : 'Student',
+                rent: r.book?.price || 0,
+                dep: (r.book?.price || 0) * 2,
+                stage: r.status,
+                g: r.status,
+                s: Math.max(1, Math.round((Date.now() - new Date(r.createdAt || Date.now())) / 864e5)),
+                earn: r.status === 'completed' ? 1 : 0,
+                e: r.returnDate ? Math.max(0, Math.round((Date.now() - new Date(r.returnDate)) / 864e5)) : null
+              }))
+            ];
+            LIB = [];
+          }
+          rebuildTransactions();
+        }
+      }
+    } catch (e) {
+      console.warn('Dashboard fetch notice:', e.message);
+    }
+  } else {
+    REN = [];
+    LIB = [];
+    rebuildTransactions();
+  }
+  render();
+};
 })();
 </script>
 <script>
@@ -23844,13 +24036,23 @@ window.nvSave = gate(() => {
   const lockMsg = s => 'Too many incorrect attempts. Try again in ' + s + ' second' + (s === 1 ? '' : 's') + '.';
 
   /* ---------- views ---------- */
-  const TITLES = { in: ['Campus Sign In', 'Sign in with your USN and password.'], up: ['Create Student Account', 'Sign up with your college details. They’re checked against college records.'], fp: ['Reset Password', 'Confirm your college record details to choose a new password.'] };
+  const TITLES = { 
+    in: ['Campus Sign In', 'Sign in with your USN and password.'], 
+    up: ['Create Student Account', 'Complete all details and quiz to register.'], 
+    fp: ['Reset Password', 'Confirm your college record details to choose a new password.'],
+    onboard: ['Complete Student Onboarding', 'Link your Google account and complete student details and quiz.']
+  };
   function setHead(t, s) { const h = $('authModal') && $('authModal').querySelector('h3'); if (h) h.textContent = t; const u = $('nxaSub'); if (u) u.textContent = s; }
   window.nxaView = function (v, keepBanner) {
-    view = v; ['in', 'up', 'fp'].forEach(k => { const f = $({ in: 'nxaVIn', up: 'nxaVUp', fp: 'nxaVFp' }[k]); f.hidden = k !== v; clearErrs(f); });
+    view = v; ['in', 'up', 'fp', 'onboard'].forEach(k => { 
+      const f = $({ in: 'nxaVIn', up: 'nxaVUp', fp: 'nxaVFp', onboard: 'nxaVOnboard' }[k]); 
+      if (f) { f.hidden = k !== v; clearErrs(f); }
+    });
     if (!keepBanner) banner('');
-    setHead(TITLES[v][0], TITLES[v][1]);
-    const f = { in: 'siUsn', up: 'suName', fp: 'fpUsn' }[v]; setTimeout(() => { const el = $(f); if (el && !$('authModal').classList.contains('hidden')) el.focus(); }, 40);
+    if (TITLES[v]) setHead(TITLES[v][0], TITLES[v][1]);
+    const f = { in: 'siUsn', up: 'suName', fp: 'fpUsn', onboard: 'obUsn' }[v]; setTimeout(() => { const el = $(f); if (el && !$('authModal').classList.contains('hidden')) el.focus(); }, 40);
+    if (v === 'up' && typeof window.ensureSuQuizRendered === 'function') window.ensureSuQuizRendered();
+    if (v === 'onboard' && typeof window.ensureObQuizRendered === 'function') window.ensureObQuizRendered();
   };
   function wipe() { ['siUsn', 'siPw', 'suName', 'suUsn', 'suEmail', 'suPw', 'suPw2', 'fpUsn', 'fpEmail', 'fpDob', 'fpPw', 'fpPw2', 'stId', 'stPw', 'stNew', 'stNew2'].forEach(id => { const e = $(id); if (e) { e.value = ''; e.dispatchEvent(new Event('input')); } }); resetEyes($('nxa')); clearErrs($('nxa')); }
   window.nxaRole = function (r) {
@@ -23891,19 +24093,59 @@ window.nvSave = gate(() => {
     e.preventDefault(); if (busy) return; const f = $('nxaVIn'); clearErrs(f); banner('');
     const usn = normUsn($('siUsn').value), pw = $('siPw').value; $('siUsn').value = usn; let ok = true;
     if (!usn) ok = fieldErr('siUsn', 'Enter your USN.') && ok;
-    else { const q = nxLookupUSN(usn); if (q.state === 'format') ok = fieldErr('siUsn', USN_FORMAT) && ok; else if (q.state === 'missing') ok = fieldErr('siUsn', USN_MISSING) && ok; }
     if (!pw) ok = fieldErr('siPw', 'Enter your password.') && ok;
     if (!ok) return firstBad(['siUsn', 'siPw']);
-    if (!cryptoOk()) return banner(CRYPTO_ERR, 'bad');
-    const rec = nxLookupUSN(usn).rec, d = load(), acc = d.students[usn];
-    if (!acc) return banner('No Book NEXUS account exists for ' + usn + ' yet. Use “Sign up” to create one.', 'bad');
-    const k = 's:' + usn, left = lockLeft(d, k); if (left) return fieldErr('siPw', lockMsg(left)), $('siPw').focus();
+
     setBusy($('siGo'), true, 'Signing in…');
     try {
-      const h = await hashPw(pw, acc.salt, acc.iter);
-      if (!same(h, acc.hash)) { const r = failed(d, k); setBusy($('siGo'), false); fieldErr('siPw', r > 0 ? 'Incorrect password. ' + r + ' attempt' + (r === 1 ? '' : 's') + ' left before a temporary lock.' : lockMsg(Math.ceil(LOCK_MS / 1000))); $('siPw').focus(); $('siPw').select(); return; }
-      okAttempt(d, k); setBusy($('siGo'), false); $('siPw').value = ''; finishStudent(rec);
-    } catch (err) { setBusy($('siGo'), false); banner('Sign-in failed: ' + (err && err.message ? err.message : 'unexpected error') + '. Please try again.', 'bad'); }
+      const res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: usn, password: pw })
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        setBusy($('siGo'), false);
+        const data = json.data;
+        if (json.needsOnboarding) {
+          closeModal('authModal');
+          if (typeof openCreateAccount === 'function') openCreateAccount(data.email, data.usn, data.name);
+          showToast('Please complete your profile and quiz to finish onboarding.', 'info');
+          return;
+        }
+        localStorage.setItem('booknexus_token', data.token);
+        localStorage.setItem('bookhive_token', data.token);
+        localStorage.setItem('currentUser', JSON.stringify(data));
+        sessionStorage.setItem('booknexus_token', data.token);
+        sessionStorage.setItem('currentUser', JSON.stringify(data));
+        window.currentUser = data;
+        window.currentRole = data.role || 'student';
+        if (typeof finishStudent === 'function') finishStudent(data);
+        if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', data.usn || data._id, data.name, data.email);
+        closeModal('authModal');
+        showToast('Signed in successfully as ' + (data.name || data.usn), 'success');
+        if (typeof updateNavProfile === 'function') updateNavProfile();
+        if (typeof switchNav === 'function') switchNav('dashboard');
+        return;
+      } else {
+        setBusy($('siGo'), false);
+        const msg = json.message || 'Invalid USN or password.';
+        return fieldErr('siPw', msg);
+      }
+    } catch (netErr) {
+      // Offline fallback: try local hash check if offline
+      if (!cryptoOk()) { setBusy($('siGo'), false); return banner(CRYPTO_ERR, 'bad'); }
+      const rec = nxLookupUSN(usn).rec, d = load(), acc = d.students[usn];
+      if (!acc) { setBusy($('siGo'), false); return banner('Invalid USN or password. Connect to network to sign in with your campus account.', 'bad'); }
+      const k = 's:' + usn, left = lockLeft(d, k); if (left) { setBusy($('siGo'), false); return fieldErr('siPw', lockMsg(left)), $('siPw').focus(); }
+      try {
+        const h = await hashPw(pw, acc.salt, acc.iter);
+        if (!same(h, acc.hash)) { const r = failed(d, k); setBusy($('siGo'), false); fieldErr('siPw', r > 0 ? 'Incorrect password. ' + r + ' attempt' + (r === 1 ? '' : 's') + ' left.' : lockMsg(Math.ceil(LOCK_MS / 1000))); $('siPw').focus(); return; }
+        okAttempt(d, k); setBusy($('siGo'), false); $('siPw').value = ''; finishStudent(rec);
+        if (typeof updateNavProfile === 'function') updateNavProfile();
+        if (typeof switchNav === 'function') switchNav('dashboard');
+      } catch (err) { setBusy($('siGo'), false); banner('Sign-in failed. Please try again.', 'bad'); }
+    }
   };
 
   /* ---------- student sign up ---------- */
@@ -24583,68 +24825,155 @@ document.addEventListener('input', e => { if (e.target && e.target.id === 'nxlBi
 function nwShow(n, quiet) {
   nwStep = n; const two = n === 2;
   $('nxlS1').hidden = two; $('nxlS2').hidden = !two; $('nxlBk').hidden = !two; $('nxlP2').className = two ? 'on' : '';
-  $('nxlStepLbl').textContent = two ? 'Step 2 of 2 · About you' : 'Step 1 of 2 · College details';
-  $('nxlNwBtn').textContent = two ? 'Create account' : 'Continue';
+  $('nxlStepLbl').textContent = two ? 'Step 2 of 2 · Literary & Academic Quiz' : 'Step 1 of 2 · Student Details';
+  $('nxlNwBtn').textContent = two ? 'Submit Registration' : 'Continue to Quiz';
   const h = $('authModal') && $('authModal').querySelector('h3'), u = $('nxaSub');
-  if (h) h.textContent = two ? 'Make it yours' : HEAD.nw[0]; if (u) u.textContent = two ? 'Three quick questions so fellow readers know you. All required, and you can change them anytime from your profile.' : HEAD.nw[1];
-  if (two) { suRender(); }
-  if (!quiet) { const box = $('nxa') && $('nxa').closest('[style*="overflow-y"]'); if (box) box.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => { const el = $(two ? 'nxlNick' : 'nxlName'); if (el) el.focus({ preventScroll: true }); }, 60); }
+  if (h) h.textContent = two ? 'Genre Discovery Quiz' : (window.__googleOnboardingData ? 'Complete Student Onboarding' : 'Create Student Account');
+  if (u) u.textContent = two ? 'Answer all 6 questions to help BookNexus match textbooks and books to your reading interests.' : 'Please enter your student details and official USN.';
+  if (two) {
+    if (!Object.keys(SU.answers).length && !Object.keys(SU.cur).length) {
+      SU.mode = 'quiz'; SU.q = 0; SU.cur = {};
+    }
+    suRender();
+  }
+  if (!quiet) { const box = $('nxa') && $('nxa').closest('[style*="overflow-y"]'); if (box) box.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => { const el = $(two ? 'nxlQz' : 'nxlName'); if (el) el.focus({ preventScroll: true }); }, 60); }
 }
 window.nxlStep = function (n) { K().clearErrs($('nxaVNew')); K().banner(''); nwShow(n); };
 window.nxlCreate = async function (e) {
   e.preventDefault(); if (busy) return; const kit = K(), f = $('nxaVNew'); kit.clearErrs(f); kit.banner('');
-  const name = $('nxlName').value.trim().replace(/\s+/g, ' '), rawU = $('nxlUsn').value, dob = $('nxlDob').value, pw = $('nxlNp').value, pw2 = $('nxlNp2').value; let ok = true, rec = null, usn = '';
+  const name = $('nxlName').value.trim().replace(/\s+/g, ' ');
+  const rawU = $('nxlUsn').value.trim();
+  const phone = $('nxlPhone') ? $('nxlPhone').value.trim() : '';
+  const dept = $('nxlDept') ? $('nxlDept').value.trim() : 'Computer Science and Business Systems';
+  const sem = $('nxlSem') ? $('nxlSem').value.trim() : 'Semester 6';
+  const pw = $('nxlNp') ? $('nxlNp').value : '';
+  const pw2 = $('nxlNp2') ? $('nxlNp2').value : '';
+  const isGoogle = !!window.__googleOnboardingData;
+  const emailInput = $('nxlEmail');
+  const collegeEmail = isGoogle ? (window.__googleOnboardingData.email || em) : (emailInput ? emailInput.value.trim().toLowerCase() : em);
+
+  let ok = true, usn = '';
   if (!name) ok = kit.fieldErr('nxlName', 'Enter your full name.') && ok;
   if (!rawU) ok = kit.fieldErr('nxlUsn', 'Enter your USN.') && ok;
-  else if (/\s/.test(rawU)) ok = kit.fieldErr('nxlUsn', 'USN can’t contain spaces.') && ok;
+  else if (/\s/.test(rawU)) ok = kit.fieldErr('nxlUsn', 'USN cannot contain spaces.') && ok;
   else {
-    usn = kit.normUsn(rawU); $('nxlUsn').value = usn;
-    const q = nxLookupUSN(usn);
-    if (q.state === 'found') rec = q.rec;
-    else if (q.state === 'format') ok = kit.fieldErr('nxlUsn', 'A USN has only letters, numbers and hyphens.') && ok;
-    else {
-      rec = {
-        usn,
-        name: name || usn,
-        email: em || (usn.toLowerCase() + '@college.edu'),
-        phone: '+91 9844465266',
-        dept: 'COMPUTER SCIENCE AND BUSINESS SYSTEMS',
-        branch: 'COMPUTER SCIENCE AND BUSINESS SYSTEMS',
-        college: 'Malnad college of engineering',
-        year: 3,
-        semester: 6,
-        dob: dob || '15 Aug 2004',
-        secretId: 'Renter #' + usn.slice(-3)
-      };
-      if (typeof NX_COLLEGE !== 'undefined') NX_COLLEGE[usn] = rec;
-    }
+    usn = kit.normUsn(rawU);
+    $('nxlUsn').value = usn;
   }
-  if (!pw) ok = kit.fieldErr('nxlNp', 'Create a password.') && ok; else if (!kit.pwOk(pw)) ok = kit.fieldErr('nxlNp', kit.pwProblem(pw)) && ok;
-  if (!pw2) ok = kit.fieldErr('nxlNp2', 'Confirm your password.') && ok; else if (pw && pw !== pw2) ok = kit.fieldErr('nxlNp2', 'Passwords don’t match.') && ok;
-  if (rec) {
-    if (name) rec.name = name;
-    if (dob) rec.dob = dob;
+
+  if (!isGoogle) {
+    if (!collegeEmail) ok = kit.fieldErr('nxlEmail', 'Enter your college email address.') && ok;
+    else if (!kit.EMAIL_RE.test(collegeEmail)) ok = kit.fieldErr('nxlEmail', 'Enter a valid email address.') && ok;
+    if (!pw) ok = kit.fieldErr('nxlNp', 'Create a password.') && ok;
+    else if (!kit.pwOk(pw)) ok = kit.fieldErr('nxlNp', kit.pwProblem(pw)) && ok;
+    if (!pw2) ok = kit.fieldErr('nxlNp2', 'Confirm your password.') && ok;
+    else if (pw && pw !== pw2) ok = kit.fieldErr('nxlNp2', 'Passwords do not match.') && ok;
   }
+
   if (!ok && nwStep === 2) nwShow(1, true);
-  if (!ok) { for (const id of ['nxlName', 'nxlUsn', 'nxlDob', 'nxlNp', 'nxlNp2']) { const i = $(id); if (i && i.hasAttribute('aria-invalid')) { i.focus(); break; } } return; }
-  const d = kit.load();
-  if (nwStep === 1) { nwShow(2); return; }   /* details are valid: now ask the three profile questions */
-  const nick = $('nxlNick').value.trim().replace(/\s+/g, ' '), bio = $('nxlBio').value.trim();
-  if (!nick) return kit.fieldErr('nxlNick', 'Tell us what we should call you.'), $('nxlNick').focus();
-  if (!/^[\p{L}\p{N} .'_-]{2,30}$/u.test(nick)) return kit.fieldErr('nxlNick', 'Use 2 to 30 letters, numbers or spaces.'), $('nxlNick').focus();
-  if (!bio) return kit.fieldErr('nxlBio', 'Write a few words about yourself.'), $('nxlBio').focus();
-  if (bio.length > 300) return kit.fieldErr('nxlBio', 'About me must be 300 characters or fewer.'), $('nxlBio').focus();
-  if (SU.mode === 'quiz') { const g = $('nxlGenE'); g.textContent = 'Finish the quiz, or choose “Pick genres myself”.'; g.hidden = false; return $('nxlQz').focus(); }
-  if (!SU.genres.length) { const g = $('nxlGenE'); g.textContent = 'Choose at least one genre, or take the quiz.'; g.hidden = false; const gb = $('nxlGen').querySelector('button'); return gb && gb.focus(); }
-  busy = true; const b = $('nxlNwBtn'); b.disabled = true; b.textContent = 'Creating account…';
+  if (!ok) {
+    for (const id of ['nxlName', 'nxlUsn', 'nxlEmail', 'nxlPhone', 'nxlDept', 'nxlNp', 'nxlNp2']) {
+      const i = $(id); if (i && i.hasAttribute('aria-invalid')) { i.focus(); break; }
+    }
+    return;
+  }
+
+  if (nwStep === 1) {
+    nwShow(2);
+    return;
+  }
+
+  // Step 2 Validation: Check quiz answers
+  const totalQuestions = (typeof NX_QUIZ !== 'undefined') ? NX_QUIZ.length : 6;
+  const answeredCount = Object.keys(SU.answers || {}).length || Object.keys(SU.cur || {}).length;
+  if (answeredCount < totalQuestions) {
+    const g = $('nxlGenE');
+    if (g) { g.textContent = `Please complete all ${totalQuestions} questions of the quiz to finish registration.`; g.hidden = false; }
+    SU.mode = 'quiz';
+    suRender();
+    const qz = $('nxlQz');
+    if (qz) qz.focus();
+    return;
+  }
+
+  busy = true;
+  const b = $('nxlNwBtn');
+  b.disabled = true;
+  b.textContent = isGoogle ? 'Linking Google account…' : 'Creating student account…';
+
   try {
-    d.students[usn] = Object.assign({ name: rec.name, email: rec.email, loginEmail: em, createdAt: Date.now() }, await kit.makeCred(pw));
-    d.links = d.links || {}; d.links[em] = usn;
-    if (!kit.save(d)) return kit.banner(kit.STORE_ERR, 'bad');
-    window.nxSignupExtras = { usn, fields: { nickname: nick, bio, genres: SU.genres.slice(), quizAnswers: JSON.parse(JSON.stringify(SU.answers)), interests: [], contactMethods: nxDefContact(rec.phone) } };
-    enter(usn);
-  } catch (err) { kit.banner('Couldn’t create the account: ' + (err && err.message ? err.message : 'unexpected error') + '.', 'bad'); }
-  finally { busy = false; b.disabled = false; b.textContent = nwStep === 2 ? 'Create account' : 'Continue'; }
+    const quizPayload = Object.keys(SU.answers).length ? SU.answers : SU.cur;
+    let res = null;
+    if (isGoogle) {
+      // Call complete onboarding API for Google user
+      res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/complete-onboarding', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(window.__googleOnboardingData?.token ? { 'Authorization': 'Bearer ' + window.__googleOnboardingData.token } : {})
+        },
+        body: JSON.stringify({
+          usn,
+          mobile: phone,
+          branch: dept,
+          department: dept,
+          college: 'Malnad college of engineering',
+          semester: sem,
+          quizAnswers: quizPayload,
+          email: window.__googleOnboardingData.email,
+          googleId: window.__googleOnboardingData.googleId
+        })
+      });
+    } else {
+      // Call student registration API with password
+      res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email: collegeEmail,
+          usn,
+          mobile: phone,
+          branch: dept,
+          department: dept,
+          college: 'Malnad college of engineering',
+          semester: sem,
+          password: pw,
+          confirmPassword: pw2,
+          quizAnswers: quizPayload
+        })
+      });
+    }
+
+    const json = await res.json();
+    if (res.ok && json.success) {
+      const user = json.data;
+      window.__googleOnboardingData = null;
+      localStorage.setItem('booknexus_token', user.token);
+      localStorage.setItem('bookhive_token', user.token);
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      sessionStorage.setItem('booknexus_token', user.token);
+      sessionStorage.setItem('currentUser', JSON.stringify(user));
+      window.currentUser = user;
+      window.currentRole = user.role || 'student';
+      if (typeof finishStudent === 'function') finishStudent(user);
+      if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', user.usn || user._id, user.name, user.email);
+      closeModal('authModal');
+      if (typeof updateNavProfile === 'function') updateNavProfile();
+      showToast('Welcome to BookNexus, ' + user.name + '! Registration completed successfully.', 'success');
+      if (typeof switchNav === 'function') switchNav('dashboard');
+    } else {
+      const errMsg = json.message || 'Registration failed. Please check your details.';
+      kit.banner(errMsg, 'bad');
+      if (typeof showToast === 'function') showToast(errMsg, 'warning');
+    }
+  } catch (err) {
+    kit.banner('Could not complete registration: ' + (err?.message || 'network error') + '. Please try again.', 'bad');
+  } finally {
+    busy = false;
+    b.disabled = false;
+    b.textContent = nwStep === 2 ? 'Submit Registration' : 'Continue to Quiz';
+  }
 };
 
 /* ---- Google / phone through Firebase Authentication ---- */
@@ -24676,6 +25005,14 @@ window.handleGoogleSignIn = async function (response) {
     const json = await res.json();
     if (json.success) {
       const data = json.data;
+      if (json.needsOnboarding) {
+        window.__googleOnboardingData = data;
+        localStorage.setItem('booknexus_last_google_email', data.email);
+        if (typeof openCreateAccount === 'function') openCreateAccount(data.email, data.usn || '', data.name || '');
+        if (typeof showToast === 'function') showToast('First-time Google sign-in detected. Please complete student onboarding.', 'info');
+        return;
+      }
+      window.__googleOnboardingData = null;
       localStorage.setItem('booknexus_last_google_email', data.email);
       localStorage.setItem('bookhive_token', data.token);
       localStorage.setItem('bookhive_user', JSON.stringify(data));
@@ -24689,8 +25026,8 @@ window.handleGoogleSignIn = async function (response) {
       if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', data.usn || data._id, data.name, data.email);
       if (typeof window.closeModal === 'function') window.closeModal('authModal');
       if (typeof showToast === 'function') showToast('Signed in successfully with Google as ' + (data.email || data.name), 'success');
-      if (typeof window.renderProfileView === 'function') window.renderProfileView();
       if (typeof updateNavProfile === 'function') updateNavProfile();
+      if (typeof window.switchNav === 'function') window.switchNav('dashboard');
     } else {
       const msg = json.message || 'Google sign-in failed';
       if (kit && kit.banner) kit.banner(msg, 'bad');
@@ -24712,6 +25049,7 @@ window.handleGoogleSignInDirect = async function (email, name, googleId) {
       return;
     }
     let data = null;
+    let needsOnboarding = false;
     try {
       const res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/google', {
         method: 'POST',
@@ -24725,6 +25063,7 @@ window.handleGoogleSignInDirect = async function (email, name, googleId) {
       const json = await res.json();
       if (json && json.success) {
         data = json.data;
+        needsOnboarding = !!json.needsOnboarding;
       }
     } catch (apiErr) {
       console.warn('API /auth/google direct call notice:', apiErr.message);
@@ -24741,6 +25080,15 @@ window.handleGoogleSignInDirect = async function (email, name, googleId) {
       };
     }
 
+    if (needsOnboarding) {
+      window.__googleOnboardingData = data;
+      localStorage.setItem('booknexus_last_google_email', data.email);
+      if (typeof openCreateAccount === 'function') openCreateAccount(data.email, data.usn || '', data.name || '');
+      if (typeof showToast === 'function') showToast('First-time Google sign-in detected. Please complete student onboarding.', 'info');
+      return;
+    }
+
+    window.__googleOnboardingData = null;
     localStorage.setItem('booknexus_last_google_email', data.email);
     localStorage.setItem('bookhive_token', data.token);
     localStorage.setItem('bookhive_user', JSON.stringify(data));
@@ -24754,8 +25102,8 @@ window.handleGoogleSignInDirect = async function (email, name, googleId) {
     if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', data.usn || data._id, data.name, data.email);
     if (typeof window.closeModal === 'function') window.closeModal('authModal');
     if (typeof showToast === 'function') showToast('Signed in successfully with Google as ' + (data.email || data.name), 'success');
-    if (typeof window.renderProfileView === 'function') window.renderProfileView();
     if (typeof updateNavProfile === 'function') updateNavProfile();
+    if (typeof window.switchNav === 'function') window.switchNav('dashboard');
   } catch (err) {
     console.error('handleGoogleSignInDirect error:', err);
     if (typeof showToast === 'function') showToast('Google sign-in error: ' + err.message, 'warning');
@@ -24924,6 +25272,24 @@ function triggerGoogleTokenClient() {
               const json = await res.json();
               if (json && json.success) {
                 const data = json.data;
+                if (json.needsOnboarding) {
+                  // First-time or incomplete Google user -> Onboarding workflow
+                  window.__onboardingToken = data.token;
+                  localStorage.setItem('booknexus_onboarding_token', data.token);
+                  const nameEl = document.getElementById('obGoogleName');
+                  const emailEl = document.getElementById('obGoogleEmail');
+                  const avatarEl = document.getElementById('obGoogleAvatar');
+                  if (nameEl) nameEl.textContent = data.name || 'Student';
+                  if (emailEl) emailEl.textContent = data.email || '';
+                  if (avatarEl) avatarEl.textContent = (data.name ? data.name[0] : 'G').toUpperCase();
+                  if (data.usn && document.getElementById('obUsn')) document.getElementById('obUsn').value = data.usn;
+                  if (data.phone && document.getElementById('obPhone')) document.getElementById('obPhone').value = data.phone;
+                  if (typeof window.nxaView === 'function') window.nxaView('onboard');
+                  if (typeof showToast === 'function') showToast('Google identity verified! Complete student details and reading quiz to finish.', 'info');
+                  return;
+                }
+
+                // Returning registered Google user -> Direct dashboard access
                 localStorage.setItem('bookhive_token', data.token);
                 localStorage.setItem('bookhive_user', JSON.stringify(data));
                 localStorage.setItem('booknexus_token', data.token);
@@ -25063,19 +25429,43 @@ window.nxPromptSignIn = prompt;
 
 function label() {
   const b = $('userAuthBtn'), l = $('userAuthLabel');
-  const token = localStorage.getItem('booknexus_token') || sessionStorage.getItem('booknexus_token');
-  const storedUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
-  const currentEmail = (S && S.email) || (currentUser && currentUser.email) || (storedUser && storedUser.email);
+  const token = localStorage.getItem('booknexus_token') || 
+                sessionStorage.getItem('booknexus_token') ||
+                localStorage.getItem('bookhive_token') || 
+                sessionStorage.getItem('bookhive_token');
 
-  if (currentEmail && token) {
-    if (l) l.textContent = 'Sign out';
+  let storedUser = null;
+  try {
+    storedUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || localStorage.getItem('bookhive_user') || 'null');
+  } catch (e) { storedUser = null; }
+
+  // Check all signals of active user session:
+  // 1. Session object S (from nxSessionSet)
+  // 2. Global window.currentUser
+  // 3. Stored user from localStorage/sessionStorage
+  // 4. Linked USN (nxGetLinkedUSN or nxActiveUSN or nx_current_usn)
+  // 5. Active auth token
+  const userIdentifier = (typeof S !== 'undefined' && S && (S.email || S.name || S.id)) ||
+                         (typeof currentUser !== 'undefined' && currentUser && (currentUser.email || currentUser.name || currentUser.rollNo || currentUser.usn || currentUser._id)) ||
+                         (storedUser && (storedUser.email || storedUser.name || storedUser.usn || storedUser.rollNo || storedUser._id)) ||
+                         (typeof nxGetLinkedUSN === 'function' && nxGetLinkedUSN()) ||
+                         (typeof nxActiveUSN === 'function' && nxActiveUSN()) ||
+                         localStorage.getItem('nx_current_usn');
+
+  const isSignedIn = !!(userIdentifier || token);
+  const iconEl = b ? b.querySelector('.material-symbols-outlined') : null;
+
+  if (isSignedIn) {
+    if (l) l.textContent = 'Sign Out';
+    if (iconEl) iconEl.textContent = 'logout';
     if (b) {
       b.onclick = function(e) { if (e && e.preventDefault) e.preventDefault(); window.nxSignOut(); };
       b.setAttribute('onclick', 'nxSignOut()');
-      b.title = 'Sign out (' + currentEmail + ')';
+      b.title = 'Sign Out (' + (userIdentifier || 'User') + ')';
     }
   } else {
     if (l) l.textContent = 'Sign In';
+    if (iconEl) iconEl.textContent = 'account_circle';
     if (b) {
       b.onclick = function(e) { if (e && e.preventDefault) e.preventDefault(); openModal('authModal'); };
       b.setAttribute('onclick', "openModal('authModal')");

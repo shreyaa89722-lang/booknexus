@@ -2055,38 +2055,441 @@
       };
     }
 
-    // Direct student USN login hook
-    const origDoIn = window.nxaDoIn;
-    if (typeof origDoIn === 'function') {
-      window.nxaDoIn = async function (e) {
-        const ev = e || { preventDefault: () => {} };
-        if (ev.preventDefault) ev.preventDefault();
-        const usnInput = document.getElementById('siUsn');
-        const pwInput = document.getElementById('siPw');
-        const usn = (usnInput ? usnInput.value : '').trim().toUpperCase();
-        const pw = pwInput ? pwInput.value : '';
+    // -------------------------------------------------------------
+    // BookNexus Complete Auth & Interactive Onboarding Quiz System
+    // -------------------------------------------------------------
+    const NX_QUIZ_QUESTIONS = [
+      {
+        id: 0,
+        q: "What pulls you into a book?",
+        opts: [
+          { key: "a", text: "A story to get lost in" },
+          { key: "b", text: "Something real that happened" },
+          { key: "c", text: "How things work & tech logic" },
+          { key: "d", text: "Ideas that change how I think" },
+          { key: "e", text: "Ways to improve my life & habits" },
+          { key: "f", text: "Clear explanations for my course" }
+        ]
+      },
+      {
+        id: 1,
+        q: "It's midnight and the library is yours. Where do you wander?",
+        opts: [
+          { key: "a", text: "Fantasy, novels and classics" },
+          { key: "b", text: "Old maps, history & dusty archives" },
+          { key: "c", text: "Circuit boards and lab manuals" },
+          { key: "d", text: "A quiet corner with big questions" },
+          { key: "e", text: "A study desk piled with course notes" },
+          { key: "f", text: "The self-growth & mindset shelf" }
+        ]
+      },
+      {
+        id: 2,
+        q: "Which subjects do you enjoy most?",
+        opts: [
+          { key: "a", text: "Numbers, algorithms and logic" },
+          { key: "b", text: "Machines and building physical things" },
+          { key: "c", text: "The past, biographies & its people" },
+          { key: "d", text: "Life, consciousness & the universe" },
+          { key: "e", text: "Language, fiction & storytelling" },
+          { key: "f", text: "The human mind & productivity" }
+        ]
+      },
+      {
+        id: 3,
+        q: "Who would you invite to dinner?",
+        opts: [
+          { key: "a", text: "A scientist who just made a breakthrough" },
+          { key: "b", text: "A historian with captivating stories" },
+          { key: "c", text: "A philosopher who loves rigorous debate" },
+          { key: "d", text: "A visionary founder who built an empire" },
+          { key: "e", text: "An engineer with a toolbox of inventions" },
+          { key: "f", text: "A novelist with an unexpected plot twist" }
+        ]
+      },
+      {
+        id: 4,
+        q: "A free rainy afternoon. What are you doing?",
+        opts: [
+          { key: "a", text: "Curled up with an immersive fiction novel" },
+          { key: "b", text: "Exploring a deep documentary and researching" },
+          { key: "c", text: "Writing code or solving logic puzzles" },
+          { key: "d", text: "Reflecting, journaling and strategic planning" },
+          { key: "e", text: "Taking something apart to see how it works" },
+          { key: "f", text: "Reading a biography of someone inspirational" }
+        ]
+      },
+      {
+        id: 5,
+        q: "What do you usually read for?",
+        opts: [
+          { key: "a", text: "College exams and core textbooks" },
+          { key: "b", text: "Practical engineering & tech skills" },
+          { key: "c", text: "Personal growth & career leadership" },
+          { key: "d", text: "Escape, recreation & imagination" },
+          { key: "e", text: "Curiosity across science and humanity" }
+        ]
+      }
+    ];
 
-        const foundStudent = REAL_STUDENTS.find(s => s.rollNo === usn);
-        if (foundStudent && (pw === usn || pw === foundStudent.rollNo || pw === 'student123')) {
-          const rec = (typeof nxLookupUSN === 'function' ? nxLookupUSN(usn).rec : null) || {
-            name: foundStudent.name,
-            email: foundStudent.email,
-            phone: foundStudent.phone,
-            usn: foundStudent.rollNo,
-            dept: foundStudent.dept,
-            year: "3",
-            semester: "6",
-            college: "Malnad college of engineering"
+    window.__suQuizAnswers = {};
+    window.__obQuizAnswers = {};
+
+    function renderInteractiveQuiz(containerId, progressId, errorId, answerStore) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      NX_QUIZ_QUESTIONS.forEach((qItem, idx) => {
+        const qBox = document.createElement('div');
+        qBox.className = 'p-3 bg-brand-ivory/90 dark:bg-brand-darkSurface/90 rounded-2xl border border-brand-rosewood/15 text-left';
+        
+        const qTitle = document.createElement('div');
+        qTitle.className = 'text-xs font-bold text-brand-rosewood dark:text-white mb-2 flex items-center justify-between';
+        qTitle.innerHTML = `<span><strong class="text-brand-gold">Q${idx + 1}.</strong> ${qItem.q}</span><span id="${containerId}_check_${idx}" class="text-[10px] text-gray-400">${answerStore[idx] ? '✓ Selected' : 'Required'}</span>`;
+        qBox.appendChild(qTitle);
+
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
+
+        qItem.opts.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          const isSelected = answerStore[idx] === opt.key;
+          btn.className = `p-2 rounded-xl text-xs text-left transition-all border flex items-center gap-2 ${
+            isSelected
+              ? 'border-brand-rosewood bg-brand-rosewood/15 text-brand-rosewood font-bold shadow-sm'
+              : 'border-brand-rosewood/10 hover:border-brand-rosewood/30 bg-white/70 text-gray-700'
+          }`;
+          btn.innerHTML = `<span class="w-4 h-4 rounded-full border border-current flex items-center justify-center text-[10px] shrink-0 ${isSelected ? 'bg-brand-rosewood text-white' : ''}">${opt.key.toUpperCase()}</span><span class="truncate">${opt.text}</span>`;
+          btn.onclick = () => {
+            answerStore[idx] = opt.key;
+            const errEl = document.getElementById(errorId);
+            if (errEl) errEl.hidden = true;
+            renderInteractiveQuiz(containerId, progressId, errorId, answerStore);
           };
+          grid.appendChild(btn);
+        });
+
+        qBox.appendChild(grid);
+        container.appendChild(qBox);
+      });
+
+      // Update progress
+      const answeredCount = Object.keys(answerStore).length;
+      const progEl = document.getElementById(progressId);
+      if (progEl) {
+        progEl.textContent = answeredCount === 6 ? '6/6 answered ✓' : `${answeredCount}/6 answered`;
+        progEl.className = answeredCount === 6 ? 'text-[11px] font-bold text-green-700' : 'text-[11px] font-medium text-brand-rosewood/80';
+      }
+    }
+
+    window.ensureSuQuizRendered = function () {
+      renderInteractiveQuiz('suQuizContainer', 'suQuizProgress', 'suQuizE', window.__suQuizAnswers);
+    };
+
+    window.ensureObQuizRendered = function () {
+      renderInteractiveQuiz('obQuizContainer', 'obQuizProgress', 'obQuizE', window.__obQuizAnswers);
+    };
+
+    // Direct student USN login hook connected to MongoDB Backend
+    window.nxaDoIn = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const usnInput = document.getElementById('siUsn');
+      const pwInput = document.getElementById('siPw');
+      const btn = document.getElementById('siGo');
+      const banner = document.getElementById('nxaBanner');
+      const errEl = document.getElementById('siPwE');
+
+      if (errEl) errEl.hidden = true;
+      if (banner) { banner.hidden = true; banner.textContent = ''; }
+
+      const usn = (usnInput ? usnInput.value : '').trim().toUpperCase();
+      const pw = pwInput ? pwInput.value : '';
+
+      if (!usn) {
+        if (errEl) { errEl.textContent = 'Please enter your student USN.'; errEl.hidden = false; }
+        return;
+      }
+      if (!pw) {
+        if (errEl) { errEl.textContent = 'Please enter your password.'; errEl.hidden = false; }
+        return;
+      }
+
+      const origText = btn ? btn.textContent : 'Sign in';
+      if (btn) { btn.disabled = true; btn.textContent = 'Authenticating…'; }
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: usn, password: pw })
+        });
+        const json = await res.json();
+
+        if (json.success && json.data) {
+          const studentData = json.data;
+          authToken = studentData.token;
+          localStorage.setItem('booknexus_token', authToken);
+          localStorage.setItem('bookhive_token', authToken);
+          localStorage.setItem('currentUser', JSON.stringify(studentData));
+          localStorage.setItem('bookhive_user', JSON.stringify(studentData));
+          sessionStorage.setItem('booknexus_token', authToken);
+          sessionStorage.setItem('currentUser', JSON.stringify(studentData));
+          window.currentUser = studentData;
+          window.currentRole = 'student';
+
           if (pwInput) pwInput.value = '';
-          if (typeof window.finishStudent === 'function') {
-            window.finishStudent(rec);
-            return;
+          if (typeof closeModal === 'function') closeModal('authModal');
+          if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
+          if (typeof showToast === 'function') showToast(`Welcome back, ${studentData.name || studentData.usn}!`, 'success');
+          if (typeof updateNavProfile === 'function') updateNavProfile();
+          if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
+          if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
+          return;
+        } else if (json.needsOnboarding) {
+          // Incomplete student account -> redirect to complete onboarding
+          window.__onboardingToken = json.data?.token || '';
+          if (document.getElementById('obUsn')) document.getElementById('obUsn').value = usn;
+          if (typeof window.nxaView === 'function') window.nxaView('onboard');
+          if (typeof showToast === 'function') showToast('Please complete student onboarding and reading quiz.', 'info');
+          return;
+        } else {
+          if (errEl) {
+            errEl.textContent = json.message || 'Invalid USN or password.';
+            errEl.hidden = false;
+          }
+          if (banner) {
+            banner.className = 'nxa-banner bad';
+            banner.textContent = json.message || 'Invalid USN or password.';
+            banner.hidden = false;
           }
         }
-        return origDoIn.call(this, ev);
-      };
-    }
+      } catch (netErr) {
+        console.error('USN Login API error:', netErr);
+        if (errEl) {
+          errEl.textContent = 'Server connection error. Please try again.';
+          errEl.hidden = false;
+        }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    // New Student Registration Submission Hook
+    window.nxaDoUp = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const banner = document.getElementById('nxaBanner');
+      const quizErr = document.getElementById('suQuizE');
+      const btn = document.getElementById('suGo');
+      if (banner) { banner.hidden = true; banner.textContent = ''; }
+      if (quizErr) quizErr.hidden = true;
+
+      const name = (document.getElementById('suName')?.value || '').trim();
+      const usn = (document.getElementById('suUsn')?.value || '').trim().toUpperCase();
+      const email = (document.getElementById('suEmail')?.value || '').trim().toLowerCase();
+      const phone = (document.getElementById('suPhone')?.value || '').trim();
+      const dept = document.getElementById('suDept')?.value || 'COMPUTER SCIENCE AND BUSINESS SYSTEMS';
+      const sem = document.getElementById('suSem')?.value || '6';
+      const pw = document.getElementById('suPw')?.value || '';
+      const pw2 = document.getElementById('suPw2')?.value || '';
+
+      if (!name || !usn || !email || !phone || !pw || !pw2) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Please fill in all 8 required registration fields.';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      if (pw !== pw2) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Passwords do not match.';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      if (pw.length < 6) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Password must be at least 6 characters long.';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      const answeredKeys = Object.keys(window.__suQuizAnswers || {});
+      if (answeredKeys.length < 6) {
+        if (quizErr) {
+          quizErr.textContent = `Please answer all 6 quiz questions to calculate your personalized recommendations (${answeredKeys.length}/6 completed).`;
+          quizErr.hidden = false;
+        }
+        return;
+      }
+
+      const origText = btn ? btn.textContent : 'Create Account';
+      if (btn) { btn.disabled = true; btn.textContent = 'Creating Account & Preferences…'; }
+
+      try {
+        const payload = {
+          name,
+          usn,
+          email,
+          phone,
+          department: dept,
+          semester: sem,
+          password: pw,
+          confirmPassword: pw2,
+          quizAnswers: window.__suQuizAnswers
+        };
+
+        const res = await fetch(`${API_BASE}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.success && json.data) {
+          const studentData = json.data.user || json.data;
+          authToken = json.data.token || '';
+          localStorage.setItem('booknexus_token', authToken);
+          localStorage.setItem('bookhive_token', authToken);
+          localStorage.setItem('currentUser', JSON.stringify(studentData));
+          sessionStorage.setItem('booknexus_token', authToken);
+          sessionStorage.setItem('currentUser', JSON.stringify(studentData));
+          window.currentUser = studentData;
+          window.currentRole = 'student';
+
+          if (typeof closeModal === 'function') closeModal('authModal');
+          if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
+          if (typeof showToast === 'function') showToast(`Account created! Welcome to BookNexus, ${studentData.name}!`, 'success');
+          if (typeof updateNavProfile === 'function') updateNavProfile();
+          if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
+          if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
+          return;
+        } else {
+          if (banner) {
+            banner.className = 'nxa-banner bad';
+            banner.textContent = json.message || 'Registration failed. Please check your details.';
+            banner.hidden = false;
+          }
+        }
+      } catch (apiErr) {
+        console.error('Registration API error:', apiErr);
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Network error while registering. Please try again.';
+          banner.hidden = false;
+        }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    // Google Student Onboarding Completion Hook
+    window.nxaDoOnboard = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const banner = document.getElementById('nxaBanner');
+      const quizErr = document.getElementById('obQuizE');
+      const btn = document.getElementById('obGo');
+      if (banner) { banner.hidden = true; banner.textContent = ''; }
+      if (quizErr) quizErr.hidden = true;
+
+      const usn = (document.getElementById('obUsn')?.value || '').trim().toUpperCase();
+      const phone = (document.getElementById('obPhone')?.value || '').trim();
+      const dept = document.getElementById('obDept')?.value || 'COMPUTER SCIENCE AND BUSINESS SYSTEMS';
+      const sem = document.getElementById('obSem')?.value || '6';
+
+      if (!usn || !phone) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Please enter your student USN and contact phone number.';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      const answeredKeys = Object.keys(window.__obQuizAnswers || {});
+      if (answeredKeys.length < 6) {
+        if (quizErr) {
+          quizErr.textContent = `Please answer all 6 quiz questions to discover your personalized book recommendations (${answeredKeys.length}/6 completed).`;
+          quizErr.hidden = false;
+        }
+        return;
+      }
+
+      const token = window.__onboardingToken || localStorage.getItem('booknexus_onboarding_token') || authToken;
+      if (!token) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Session expired. Please sign in with Google again.';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      const origText = btn ? btn.textContent : 'Complete Profile';
+      if (btn) { btn.disabled = true; btn.textContent = 'Saving Profile & Calculating Genres…'; }
+
+      try {
+        const payload = {
+          usn,
+          phone,
+          department: dept,
+          semester: sem,
+          quizAnswers: window.__obQuizAnswers
+        };
+
+        const res = await fetch(`${API_BASE}/auth/complete-onboarding`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.success && json.data) {
+          const studentData = json.data.user || json.data;
+          authToken = json.data.token || token;
+          localStorage.setItem('booknexus_token', authToken);
+          localStorage.setItem('bookhive_token', authToken);
+          localStorage.setItem('currentUser', JSON.stringify(studentData));
+          sessionStorage.setItem('booknexus_token', authToken);
+          sessionStorage.setItem('currentUser', JSON.stringify(studentData));
+          window.currentUser = studentData;
+          window.currentRole = 'student';
+
+          if (typeof closeModal === 'function') closeModal('authModal');
+          if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
+          if (typeof showToast === 'function') showToast(`Onboarding complete! Welcome, ${studentData.name}!`, 'success');
+          if (typeof updateNavProfile === 'function') updateNavProfile();
+          if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
+          if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
+          return;
+        } else {
+          if (banner) {
+            banner.className = 'nxa-banner bad';
+            banner.textContent = json.message || 'Onboarding completion failed.';
+            banner.hidden = false;
+          }
+        }
+      } catch (err) {
+        console.error('Complete onboarding API error:', err);
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Network error during onboarding. Please try again.';
+          banner.hidden = false;
+        }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
 
     const staffGo = document.getElementById('stGo');
     if (staffGo) {
@@ -3052,6 +3455,7 @@
       hookRentalBlockchain();
       hookEmailNotifications();
       initCampusPaymentSystem();
+      if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
     });
   } else {
     setupRealData();
@@ -3059,5 +3463,6 @@
     hookRentalBlockchain();
     hookEmailNotifications();
     initCampusPaymentSystem();
+    if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
   }
 })();
