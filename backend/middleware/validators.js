@@ -25,7 +25,15 @@ const registerRules = [
     }
     return true;
   }),
-  body("role").optional().isIn(["student", "owner", "admin"]).withMessage("Role must be student, owner, or admin"),
+  body("role").optional().custom((val) => {
+    if (val === "admin" || val === "librarian") {
+      throw new Error("Direct registration for administrative roles is not permitted");
+    }
+    if (!["student", "owner"].includes(val)) {
+      throw new Error("Role must be student");
+    }
+    return true;
+  }),
 ];
 
 const loginRules = [

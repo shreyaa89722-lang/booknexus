@@ -8,9 +8,11 @@ const userSchema = new mongoose.Schema(
         password: { type: String, required: function () { return !this.googleId; }, minlength: 6, select: false },
         role: {
             type: String,
-            enum: ["student", "owner", "admin"],
+            enum: ["student", "owner", "admin", "librarian"],
             default: "student",
         },
+        adminId: { type: String, trim: true, uppercase: true },
+        librarianId: { type: String, trim: true, uppercase: true },
         googleId: { type: String, unique: true, sparse: true },
         preferences: {
             genres: [{ type: String }],

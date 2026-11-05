@@ -72,7 +72,12 @@ const registerUser = asyncHandler(async (req, res) => {
         isQuizDone = true;
     }
 
-    const allowedRole = ["student", "owner", "admin"].includes(role) ? role : "student";
+    if (role && (role === "admin" || role === "librarian")) {
+        res.status(403);
+        throw new Error("Direct registration for administrative roles is not permitted. Please contact the system administrator.");
+    }
+
+    const allowedRole = "student";
 
     // 4. Create new student user
     const user = await User.create({
@@ -395,9 +400,175 @@ const logoutUser = asyncHandler(async (req, res) => {
     res.json({ success: true, message: "Logged out successfully" });
 });
 
+// @desc   Verify whether an email is eligible for a specific role (student, admin, librarian)
+// @route  POST /api/auth/verify-role-eligibility
+const verifyRoleEligibility = asyncHandler(async (req, res) => {
+    const { email, role } = req.body;
+    if (!email || !role) {
+        res.status(400);
+        throw new Error("Email and role are required");
+    }
+
+    const cleanEmail = String(email).trim().toLowerCase();
+    const cleanRole = String(role).trim().toLowerCase();
+
+    if (!["student", "admin", "librarian"].includes(cleanRole)) {
+        res.status(400);
+        throw new Error("Invalid role specified");
+    }
+
+    if (cleanRole === "admin") {
+        const adminUser = await User.findOne({ email: cleanEmail, role: "admin" });
+        if (!adminUser) {
+            return res.status(403).json({
+                success: false,
+                eligible: false,
+                message: "You are not authorised to access this role. Please sign in using your registered account."
+            });
+        }
+        return res.json({
+            success: true,
+            eligible: true,
+            role: "admin",
+            message: "Admin email verified. Please provide Admin credentials."
+        });
+    }
+
+    if (cleanRole === "librarian") {
+        const librarianUser = await User.findOne({ email: cleanEmail, role: "librarian" });
+        if (!librarianUser) {
+            return res.status(403).json({
+                success: false,
+                eligible: false,
+                message: "You are not authorised to access this role. Please sign in using your registered account."
+            });
+        }
+        return res.json({
+            success: true,
+            eligible: true,
+            role: "librarian",
+            message: "Librarian email verified. Please provide Librarian credentials."
+        });
+    }
+
+    // Role: student
+    const studentUser = await User.findOne({ email: cleanEmail });
+    if (studentUser && studentUser.role !== "student") {
+        return res.status(403).json({
+            success: false,
+            eligible: false,
+            message: "This email is registered under an administrative role. Please use the appropriate role login."
+        });
+    }
+
+    return res.json({
+        success: true,
+        eligible: true,
+        role: "student",
+        isRegistered: !!studentUser,
+        student: studentUser ? {
+            usn: studentUser.usn,
+            name: studentUser.name,
+            registrationCompleted: studentUser.registrationCompleted
+        } : null
+    });
+});
+
+// @desc   Three-factor role login (Email identity + Role + ID/USN + Password)
+// @route  POST /api/auth/role-login
+const roleLogin = asyncHandler(async (req, res) => {
+    const { email, identifier, password, role } = req.body;
+
+    if (!email || !identifier || !password || !role) {
+        res.status(400);
+        throw new Error("Email, ID/USN, password, and role are required");
+    }
+
+    const cleanEmail = String(email).trim().toLowerCase();
+    const cleanRole = String(role).trim().toLowerCase();
+    const cleanId = String(identifier).trim().toUpperCase();
+
+    if (!["student", "admin", "librarian"].includes(cleanRole)) {
+        res.status(400);
+        throw new Error("Invalid role specified");
+    }
+
+    // 1. Find user by email and specified role
+    const user = await User.findOne({ email: cleanEmail, role: cleanRole }).select("+password");
+    if (!user) {
+        if (cleanRole === "admin" || cleanRole === "librarian") {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorised to access this role. Please sign in using your registered account."
+            });
+        }
+        return res.status(401).json({
+            success: false,
+            message: "Invalid student credentials or email mismatch."
+        });
+    }
+
+    // 2. Validate identifier matches role-specific ID
+    let idMatches = false;
+    if (cleanRole === "admin") {
+        idMatches = (user.adminId && user.adminId.toUpperCase() === cleanId) ||
+                    (user.usn && user.usn.toUpperCase() === cleanId);
+    } else if (cleanRole === "librarian") {
+        idMatches = (user.librarianId && user.librarianId.toUpperCase() === cleanId) ||
+                    (user.usn && user.usn.toUpperCase() === cleanId);
+    } else if (cleanRole === "student") {
+        idMatches = (user.usn && user.usn.toUpperCase() === cleanId);
+    }
+
+    if (!idMatches) {
+        res.status(401);
+        throw new Error(`Invalid ${cleanRole === "admin" ? "Admin ID" : cleanRole === "librarian" ? "Librarian ID" : "USN"} for this registered email`);
+    }
+
+    // 3. Compare password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+        res.status(401);
+        throw new Error("Invalid password");
+    }
+
+    // 4. Trigger sign-in alert email
+    try {
+        const emailEventService = require("../services/emailEventService");
+        emailEventService.onUserLogin(user, {
+            time: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "full", timeStyle: "medium" }),
+            device: req.headers["user-agent"] || "Web Browser",
+            ip: req.ip || "127.0.0.1",
+        }).catch((e) => console.warn("Sign-in notification warning:", e.message));
+    } catch (notifyErr) {}
+
+    const token = generateToken(user._id, user.role);
+
+    res.json({
+        success: true,
+        data: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            usn: user.usn,
+            adminId: user.adminId,
+            librarianId: user.librarianId,
+            role: user.role,
+            branch: user.branch,
+            college: user.college,
+            semester: user.semester,
+            registrationCompleted: user.registrationCompleted,
+            quizCompleted: user.quizCompleted,
+            token,
+        },
+    });
+});
+
 module.exports = {
     registerUser,
     loginUser,
+    verifyRoleEligibility,
+    roleLogin,
     completeOnboarding,
     getMe,
     updatePreferences,

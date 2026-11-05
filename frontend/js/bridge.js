@@ -1826,11 +1826,11 @@
         Object.assign(NX_COLLEGE, COLLEGE_RECORDS);
       }
 
-      // Add sample USNs helper chips in auth modal
+      // Production auth modal: clean interface without demo chips
       const chipsEl = document.getElementById('nxaChips');
       if (chipsEl) {
-        chipsEl.innerHTML = '<span>Registered 6th Sem USNs</span>' +
-          REAL_STUDENTS.slice(0, 8).map(s => `<button type="button" onclick="document.getElementById('siUsn').value='${s.rollNo}';document.getElementById('siPw').value='${s.rollNo}';if(typeof showToast==='function')showToast('Filled USN & Default Password for ${s.name}','info');">${s.rollNo}</button>`).join('');
+        chipsEl.innerHTML = '';
+        chipsEl.style.display = 'none';
       }
 
       // Live USN input listeners: clear any missing errors
@@ -2242,8 +2242,10 @@
           if (pwInput) pwInput.value = '';
           if (typeof closeModal === 'function') closeModal('authModal');
           if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
+          if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
           if (typeof showToast === 'function') showToast(`Welcome back, ${studentData.name || studentData.usn}!`, 'success');
           if (typeof updateNavProfile === 'function') updateNavProfile();
+          if (typeof switchNav === 'function') switchNav('dashboard');
           if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
           if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
           return;
@@ -2366,8 +2368,10 @@
 
           if (typeof closeModal === 'function') closeModal('authModal');
           if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
+          if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
           if (typeof showToast === 'function') showToast(`Account created! Welcome to BookNexus, ${studentData.name}!`, 'success');
           if (typeof updateNavProfile === 'function') updateNavProfile();
+          if (typeof switchNav === 'function') switchNav('dashboard');
           if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
           if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
           return;
@@ -2467,8 +2471,10 @@
 
           if (typeof closeModal === 'function') closeModal('authModal');
           if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
+          if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
           if (typeof showToast === 'function') showToast(`Onboarding complete! Welcome, ${studentData.name}!`, 'success');
           if (typeof updateNavProfile === 'function') updateNavProfile();
+          if (typeof switchNav === 'function') switchNav('dashboard');
           if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
           if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
           return;
@@ -2491,35 +2497,7 @@
       }
     };
 
-    const staffGo = document.getElementById('stGo');
-    if (staffGo) {
-      staffGo.addEventListener('click', async (e) => {
-        const id = (document.getElementById('stId')?.value || '').trim();
-        const pw = (document.getElementById('stPw')?.value || '').trim();
-
-        if (id.toLowerCase().includes('admin') || id === 'admin@booknexus.com' || id === 'ADMIN-001') {
-          try {
-            const authRes = await fetch(`${API_BASE}/auth/login`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: 'admin@booknexus.com', password: pw || 'Admin@123' })
-            });
-            const authData = await authRes.json();
-            if (authData.success && authData.data && authData.data.token) {
-              authToken = authData.data.token;
-              localStorage.setItem('booknexus_token', authToken);
-              console.log('✅ Admin authenticated with MongoDB backend!');
-              if (typeof setUserRole === 'function') setUserRole('admin');
-              if (typeof closeModal === 'function') closeModal('authModal');
-              if (typeof showToast === 'function') showToast('Signed in as Authority Admin (Connected to MongoDB)', 'success');
-              return;
-            }
-          } catch (err) {
-            console.warn('Admin API login warning:', err.message);
-          }
-        }
-      });
-    }
+    // Staff role-login is handled centrally by window.nxaDoSt connected to /api/auth/role-login
   }
 
   function hookRentalBlockchain() {
@@ -2614,16 +2592,28 @@
       const email = (currentUser && currentUser.email) ? currentUser.email : '';
       const res = await fetch(`${API_BASE}/notifications${email ? '?email=' + encodeURIComponent(email) : ''}`);
       const json = await res.json();
-      if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+      if (json && json.success && Array.isArray(json.data)) {
         cachedNotifications = json.data;
         const c = document.getElementById('notificationsList');
         const badge = document.getElementById('notifBadge');
         const cnt = document.getElementById('notifCountText');
 
-        if (cnt) cnt.innerText = `${json.data.length} Email Notifications`;
+        if (cnt) cnt.innerText = `${json.data.length} Notifications`;
         if (badge) {
           badge.innerText = json.data.length;
-          badge.style.display = 'flex';
+          badge.style.display = json.data.length > 0 ? 'flex' : 'none';
+        }
+
+        if (json.data.length === 0) {
+          if (c) {
+            c.innerHTML = `
+              <div class="py-12 px-4 text-center">
+                <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">notifications_none</span>
+                <p class="text-sm font-bold text-brand-rosewood dark:text-gray-200">No notifications yet</p>
+                <p class="text-xs text-gray-500 mt-1">When you borrow, rent, or return books, activity alerts will appear here.</p>
+              </div>`;
+          }
+          return;
         }
 
         if (c) {
@@ -3063,7 +3053,19 @@
 
   function renderLiveStudentTransactions() {
     const tbody = document.getElementById('studentTransactionsTableBody');
-    if (!tbody || !liveTransactions.length) return;
+    if (!tbody) return;
+
+    if (!liveTransactions || !liveTransactions.length) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="py-10 text-center text-xs font-semibold text-gray-500">
+            <span class="material-symbols-outlined text-3xl text-gray-400 block mb-1">receipt_long</span>
+            No payment or transaction records found.
+          </td>
+        </tr>
+      `;
+      return;
+    }
 
     tbody.innerHTML = liveTransactions.map(t => {
       const bTitle = t.book?.title || t.type?.replace(/_/g, ' ') || 'Library Material';
@@ -3086,7 +3088,19 @@
 
   function renderLiveAdminLedger() {
     const tbody = document.getElementById('adminLedgerTableBody');
-    if (!tbody || !liveTransactions.length) return;
+    if (!tbody) return;
+
+    if (!liveTransactions || !liveTransactions.length) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="py-10 text-center text-xs font-semibold text-gray-500">
+            <span class="material-symbols-outlined text-3xl text-gray-400 block mb-1">account_balance_wallet</span>
+            No campus transactions recorded yet.
+          </td>
+        </tr>
+      `;
+      return;
+    }
 
     tbody.innerHTML = liveTransactions.map(t => {
       const bTitle = t.book?.title || t.type?.replace(/_/g, ' ') || 'Library Material';
@@ -3352,6 +3366,15 @@
             </button>
           </div>
         </div>
+        ${(!stats.borrowTotal && !stats.activeRentalsCount && !stats.returnsTotal && !stats.paymentsTotal && !stats.totalPenaltyAmount) ? `
+          <div class="p-4 rounded-2xl bg-white/80 dark:bg-brand-darkCard border border-brand-rosewood/15 text-center mt-3">
+            <span class="material-symbols-outlined text-2xl text-brand-sage block mb-1">auto_stories</span>
+            <p class="text-xs font-bold text-brand-rosewood dark:text-white">You haven't borrowed or rented any books yet. Explore the catalog to get started.</p>
+            <button type="button" onclick="if(typeof switchNav==='function')switchNav('browse');" class="mt-2.5 px-4 py-1.5 rounded-full bg-brand-rosewood text-white text-[11px] font-bold shadow-sm hover:bg-brand-rosewoodHover inline-flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">explore</span> Explore Catalog
+            </button>
+          </div>
+        ` : ''}
       </div>
     `;
   }

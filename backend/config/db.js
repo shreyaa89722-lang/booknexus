@@ -34,11 +34,12 @@ const connectDB = async () => {
       try {
         const savedUri = fs.readFileSync(uriFile, "utf8").trim();
         if (savedUri) {
-          await mongoose.connect(savedUri, { serverSelectionTimeoutMS: 2000 });
+          await mongoose.connect(savedUri, { serverSelectionTimeoutMS: 5000 });
           console.log(`✅ MongoDB connected to existing local instance at ${savedUri}`);
           return;
         }
       } catch (err) {
+        console.warn(`⚠️ Connect to savedUri ${uriFile} failed: ${err.message}`);
         // Saved URI instance no longer reachable, proceed to start new instance
       }
     }
@@ -46,7 +47,7 @@ const connectDB = async () => {
     // Try connecting to standard 27017 local mongo instance first
     try {
       await mongoose.connect("mongodb://127.0.0.1:27017/bookhive", {
-        serverSelectionTimeoutMS: 2000,
+        serverSelectionTimeoutMS: 5000,
       });
       console.log(`✅ MongoDB connected to existing local instance at 127.0.0.1:27017/bookhive`);
       fs.writeFileSync(uriFile, "mongodb://127.0.0.1:27017/bookhive", "utf8");

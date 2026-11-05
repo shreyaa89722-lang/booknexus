@@ -16,17 +16,18 @@ const getNotifications = asyncHandler(async (req, res) => {
           ...(req.user && req.user._id ? [{ user: req.user._id }] : [])
         ]
       }).sort({ createdAt: -1 }).limit(50);
-    } else {
+    } else if (req.user && (req.user.role === "admin" || req.user.role === "librarian")) {
       notifications = await Notification.find().sort({ createdAt: -1 }).limit(50);
+    } else {
+      notifications = [];
     }
   } catch (err) {
     console.warn("Notification find notice:", err.message);
   }
 
-  // Fallback to in-memory buffer if DB returned none
-  if (notifications.length === 0 && emailService.recentNotifications.length > 0) {
-    notifications = emailService.recentNotifications.filter(n => !userEmail || n.userEmail === userEmail);
-    if (notifications.length === 0) notifications = emailService.recentNotifications;
+  // Fallback to in-memory buffer ONLY if matching this specific user's email
+  if (notifications.length === 0 && emailService.recentNotifications.length > 0 && userEmail) {
+    notifications = emailService.recentNotifications.filter(n => n.userEmail === userEmail);
   }
 
   res.json({

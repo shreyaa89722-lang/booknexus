@@ -2,6 +2,8 @@ const express = require("express");
 const {
     registerUser,
     loginUser,
+    verifyRoleEligibility,
+    roleLogin,
     completeOnboarding,
     getMe,
     updatePreferences,
@@ -17,6 +19,8 @@ const router = express.Router();
 
 router.post("/register", registerRules, validate, registerUser);
 router.post("/login", loginRules, validate, loginUser);
+router.post("/verify-role-eligibility", verifyRoleEligibility);
+router.post("/role-login", roleLogin);
 router.post("/complete-onboarding", completeOnboarding);
 router.get("/google/config", getGoogleConfig);
 router.post("/google", googleLogin);

@@ -56,6 +56,12 @@
         }
     </script>
     
+    <script>
+      window.API_BASE = (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"))
+        ? (window.location.port === "3000" ? "/api" : "http://localhost:5000/api")
+        : "/api";
+    </script>
+    
     <style>
         :root {
             --bg-main: #FDFBF7;
@@ -1228,6 +1234,28 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <span class="material-symbols-outlined text-sm">account_circle</span>
                     <span id="userAuthLabel">Sign In</span>
                 </button>
+                <script>
+                  (function() {
+                    try {
+                      var t = localStorage.getItem('booknexus_token') || sessionStorage.getItem('booknexus_token') || localStorage.getItem('bookhive_token') || sessionStorage.getItem('bookhive_token');
+                      var u = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || localStorage.getItem('bookhive_user');
+                      var s = localStorage.getItem('nx_auth_session') || sessionStorage.getItem('nx_auth_session');
+                      var usn = localStorage.getItem('nx_current_usn');
+                      if (t || u || s || usn) {
+                        var l = document.getElementById('userAuthLabel');
+                        var b = document.getElementById('userAuthBtn');
+                        if (l) l.textContent = 'Sign Out';
+                        if (b) {
+                          var ic = b.querySelector('.material-symbols-outlined');
+                          if (ic) ic.textContent = 'logout';
+                          b.onclick = function(e) { if (e && e.preventDefault) e.preventDefault(); if (window.nxSignOut) window.nxSignOut(); };
+                          b.setAttribute('onclick', 'window.nxSignOut()');
+                          b.title = 'Sign Out';
+                        }
+                      }
+                    } catch(e) {}
+                  })();
+                </script>
                 <button id="profileBtn" onclick="openProfile()" aria-label="Open profile" class="bg-brand-rosewood hover:bg-brand-rosewoodHover dark:bg-brand-dustyRose text-white text-xs font-bold px-3.5 py-2 rounded-full transition-all shadow-sm flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-sm">person</span>
                     <span class="hidden sm:inline">Profile</span>
@@ -1463,19 +1491,19 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="bg-brand-cream dark:bg-brand-darkCard p-6 rounded-2xl border border-brand-rosewood/15 dark:border-brand-darkBorder">
                 <div class="text-xs font-bold uppercase text-gray-500">Currently Borrowed</div>
-                <div class="font-display font-bold text-3xl text-brand-rosewood dark:text-white mt-2" id="studentBorrowedCount">2 Books</div>
+                <div class="font-display font-bold text-3xl text-brand-rosewood dark:text-white mt-2" id="studentBorrowedCount">0 Books</div>
                 <div class="text-[11px] font-medium text-brand-sage mt-1">Free 14-day borrowing active</div>
             </div>
 
             <div class="bg-brand-cream dark:bg-brand-darkCard p-6 rounded-2xl border border-brand-rosewood/15 dark:border-brand-darkBorder">
                 <div class="text-xs font-bold uppercase text-gray-500">Library Alerts</div>
-                <div class="font-display font-bold text-3xl text-brand-rosewood dark:text-white mt-2" id="studentAlertsCount">1 Alert</div>
-                <div class="text-[11px] font-medium text-brand-dustyRose mt-1">1 overdue warning received</div>
+                <div class="font-display font-bold text-3xl text-brand-rosewood dark:text-white mt-2" id="studentAlertsCount">0 Alerts</div>
+                <div class="text-[11px] font-medium text-brand-dustyRose mt-1" id="studentAlertsSub">No active warnings</div>
             </div>
 
             <div class="bg-brand-cream dark:bg-brand-darkCard p-6 rounded-2xl border border-brand-rosewood/15 dark:border-brand-darkBorder">
                 <div class="text-xs font-bold uppercase text-gray-500">Library Fine Balance</div>
-                <div class="font-display font-bold text-3xl text-brand-burgundy dark:text-brand-dustyRose mt-2" id="studentFineBalance">₹20</div>
+                <div class="font-display font-bold text-3xl text-brand-burgundy dark:text-brand-dustyRose mt-2" id="studentFineBalance">₹0</div>
                 <div class="text-[11px] font-bold text-gray-500 mt-1" id="studentFineRate">Fine Rate: ₹5/day</div>
                 <div class="text-[11px] font-medium text-gray-500 mt-1">Payable at Central Library Desk</div>
             </div>
@@ -1544,10 +1572,10 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                 <span class="material-symbols-outlined text-base">storefront</span> Browse Rental Listings
             </button>
             <button id="subTabBtnMyRentals" onclick="switchRentalsSubTab('myRentals')" class="py-3 px-5 text-xs font-bold border-b-2 border-transparent text-gray-500 hover:text-brand-rosewood flex items-center gap-2">
-                <span class="material-symbols-outlined text-base">timeline</span> My Rentals & OTPs (<span id="countMyRentals">2</span>)
+                <span class="material-symbols-outlined text-base">timeline</span> My Rentals & OTPs (<span id="countMyRentals">0</span>)
             </button>
             <button id="subTabBtnMyListings" onclick="switchRentalsSubTab('myListings')" class="py-3 px-5 text-xs font-bold border-b-2 border-transparent text-gray-500 hover:text-brand-rosewood flex items-center gap-2">
-                <span class="material-symbols-outlined text-base">collections_bookmark</span> My Listed Inventory (<span id="countMyListings">1</span>)
+                <span class="material-symbols-outlined text-base">collections_bookmark</span> My Listed Inventory (<span id="countMyListings">0</span>)
             </button>
         </div>
 
@@ -16328,149 +16356,22 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 ];
 
     // Saved Book IDs
-    let savedBookIds = [1, 101];
+    let savedBookIds = [];
 
-    // Student Library Borrowed Books (Free Library)
-    let studentBorrowedBooks = [
-        {
-            id: "b-101",
-            bookId: 4,
-            title: "Introduction to Linear Algebra",
-            author: "Gilbert Strang",
-            borrowDate: "Sep 20, 2026",
-            dueDate: "Oct 04, 2026",
-            status: "ON TIME",
-            daysRemaining: 6,
-            fine: 0,
-            cover: "https://covers.openlibrary.org/b/isbn/9780980232776-L.jpg"
-        },
-        {
-            id: "b-102",
-            bookId: 5,
-            title: "Clean Code",
-            author: "Robert C. Martin",
-            borrowDate: "Sep 10, 2026",
-            dueDate: "Sep 24, 2026",
-            status: "OVERDUE",
-            daysRemaining: -4,
-            fine: 20,
-            cover: "https://covers.openlibrary.org/b/isbn/9780132350884-L.jpg"
-        }
-    ];
+    // Student Library Borrowed Books (Free Library) - strictly user-scoped
+    let studentBorrowedBooks = [];
 
-    // Student Rentals Workflow Objects
-    let activeStudentRentals = [
-        {
-            id: "r-901",
-            bookId: 101,
-            title: "Design Patterns",
-            author: "Erich Gamma et al.",
-            cover: "https://covers.openlibrary.org/b/isbn/9780201633610-L.jpg",
-            price: "₹45/wk",
-            deposit: "₹100",
-            renterAnonId: "Renter #B21",
-            renterRealName: "H M Nanditha",
-            renterRoll: "CS2026-042",
-            ownerAnonId: "Owner #A47",
-            ownerRealName: "Sarah Jenkins",
-            ownerRoll: "CS2026-012",
-            status: "PICKUP PENDING",
-            renterOtp: "RENTER-4921",
-            ownerOtp: "OWNER-8314",
-            requestDate: "Sep 26, 2026"
-        },
-        {
-            id: "r-902",
-            bookId: 102,
-            title: "A History of Western Philosophy",
-            author: "Bertrand Russell",
-            cover: "https://covers.openlibrary.org/b/isbn/9780671201586-L.jpg",
-            price: "₹50/wk",
-            deposit: "₹100",
-            renterAnonId: "Renter #B21",
-            renterRealName: "H M Nanditha",
-            renterRoll: "CS2026-042",
-            ownerAnonId: "Owner #A82",
-            ownerRealName: "Alex Miller",
-            ownerRoll: "HU2026-005",
-            status: "ACTIVE",
-            renterOtp: "RENTER-1102",
-            ownerOtp: "OWNER-9921",
-            requestDate: "Sep 20, 2026"
-        }
-    ];
+    // Student Rentals Workflow Objects - strictly user-scoped
+    let activeStudentRentals = [];
 
-    // Student Library Directory (for Librarian view)
-    let librarianStudentsList = [
-        {
-            name: "H M Nanditha",
-            rollNo: "CS2026-042",
-            dept: "Computer Science",
-            year: "",
-            phone: "+91 9876543210",
-            email: "nanditha@univ.edu",
-            borrowedCount: 2,
-            fineBalance: 20,
-            history: ["Algorithms to Live By (Returned)", "Linear Algebra (Active)", "Clean Code (Overdue)"]
-        },
-        {
-            name: "Rahul Sharma",
-            rollNo: "EC2026-018",
-            dept: "Engineering",
-            year: "",
-            phone: "+91 9876543211",
-            email: "rahul@univ.edu",
-            borrowedCount: 1,
-            fineBalance: 0,
-            history: ["Principia Mathematica (Returned)", "Clean Code (Active)"]
-        },
-        {
-            name: "Ananya Patel",
-            rollNo: "MA2026-009",
-            dept: "Mathematics",
-            year: "",
-            phone: "+91 9876543212",
-            email: "ananya@univ.edu",
-            borrowedCount: 0,
-            fineBalance: 0,
-            history: ["Linear Algebra (Returned)"]
-        }
-    ];
+    // Student Library Directory (for Librarian view) - populated dynamically from genuine student accounts
+    let librarianStudentsList = [];
 
-    // System Notifications Store
-    let notificationsList = [
-        {
-            id: 1,
-            title: "Library Alert: Book Overdue",
-            message: "Your borrowed library book 'Clean Code' is 4 days overdue. Outstanding Fine: ₹20.",
-            time: "10 mins ago",
-            type: "warning",
-            read: false
-        },
-        {
-            id: 2,
-            title: "Pickup Center OTP Ready",
-            message: "Your rental request for 'Design Patterns' was approved! The admin will send your OTP when you are at the Pickup Center.",
-            time: "2 hours ago",
-            type: "success",
-            read: false
-        },
-        {
-            id: 3,
-            title: "Library Borrowing Reminder",
-            message: "'Introduction to Linear Algebra' is due in 6 days.",
-            time: "1 day ago",
-            type: "info",
-            read: true
-        }
-    ];
+    // System Notifications Store - strictly user-scoped
+    let notificationsList = [];
 
-    // Transactions Store
-    let transactionsList = [
-        { id: "TXN-00124", title: "Design Patterns", type: "Rental Deposit Escrow", date: "26 Sep 2026", amount: "₹145", status: "Pending Verification" },
-        { id: "TXN-00123", title: "A History of Western Philosophy", type: "Rental Fee", date: "20 Sep 2026", amount: "₹50", status: "Completed" },
-        { id: "TXN-00122", title: "Clean Code", type: "Library Overdue Fine", date: "24 Sep 2026", amount: "₹20", status: "Pending Payment" }
-    ];
+    // Transactions Store - strictly user-scoped
+    let transactionsList = [];
 
     // Active Catalog Filters
     let activeFilters = {
@@ -18340,15 +18241,8 @@ textarea.pf-inp{resize:vertical;min-height:96px}
        ============================================================ */
     const DAY = 86400000, fmtD = t => t ? new Date(t).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
     const T0 = Date.now();
-    let libLedger = [
-        { id: 'L1', roll: 'CS2026-042', bookId: 4, borrowAt: T0 - 8 * DAY, dueAt: T0 + 6 * DAY, returnAt: null, fine: 0, paid: null, method: '', payAt: null, by: 'Librarian Desk' },
-        { id: 'L2', roll: 'CS2026-042', bookId: 5, borrowAt: T0 - 18 * DAY, dueAt: T0 - 4 * DAY, returnAt: null, fine: 0, paid: null, method: '', payAt: null, by: 'Librarian Desk' },
-        { id: 'L3', roll: 'CS2026-042', bookId: 1, borrowAt: T0 - 40 * DAY, dueAt: T0 - 26 * DAY, returnAt: T0 - 27 * DAY, fine: 0, paid: null, method: '', payAt: null, by: 'Librarian Desk' }
-    ];
-    let libAlerts = [
-        { id: 'A1', roll: 'CS2026-042', title: 'Overdue: Clean Code', text: 'Your book "Clean Code" is overdue. Please return it and clear the fine at the library desk.', time: new Date(T0 - 3600000).toLocaleString(), read: false, replies: [] },
-        { id: 'A2', roll: 'CS2026-042', title: 'Due soon: Introduction to Linear Algebra', text: 'Due in 6 days.', time: new Date(T0 - 86400000).toLocaleString(), read: true, replies: [] }
-    ];
+    let libLedger = [];
+    let libAlerts = [];
     let libNotifOn = true, libTab = 'borrowed', receipts = {};
     const bookOf = id => booksData.find(b => b.id === id);
     const studentByRoll = r => librarianStudentsList.find(s => s.rollNo === r);
@@ -20256,6 +20150,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         profEl('mobileMenu')?.classList.add('hidden');
         currentView = 'profile'; profEditing = false; profDraft = null; profErrors = {}; profStatus = null; profSec = null; pfIntro = true;
         profSyncLive(); renderProfile(); window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
     }
     function profEdit() { if (!nxProfile.verified) return; profSyncLive(); profSec = 'all'; profDraft = profClone(nxProfile); profDraft.qz = { mode: 'view', step: 0, answers: profClone(nxProfile.quizAnswers || {}) }; profEditing = true; profErrors = {}; profStatus = null; renderProfile(); const e = profEl('pfsec-editor'); if (e) e.scrollIntoView({ behavior: PF_NO_MOTION() ? 'auto' : 'smooth', block: 'start' }); profEl('pf_nickname')?.focus({ preventScroll: true }); }
     function profCancel() { profSec = null; profEditing = false; profDraft = null; profErrors = {}; profStatus = null; renderProfile(); showToast('Changes discarded', 'info'); }
@@ -20376,12 +20271,17 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     /* ---------- Profile page: real-data loaders + renderer (premium redesign) ---------- */
     const PF_NO_MOTION = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     const PF_CONTACT = { email: 'Email', phone: 'Phone', inapp: 'In-app notifications only' };
-    function pfLoad() {   // every number below comes from existing app data; nothing is made up
-        const g = (f, d) => { try { return f(); } catch (e) { return d; } }, roll = currentUser.rollNo;
-        const led = g(() => libLedger.filter(r => r.roll === roll), []), rn = g(() => activeStudentRentals.filter(r => r.renterRoll === roll), []), own = g(() => activeStudentRentals.filter(r => r.ownerRoll === roll), []);
-        const listed = g(() => booksData.filter(b => b.type === 'rent' && b.ownerRoll === roll), []), earn = g(() => own.reduce((s, r) => s + (rxMoney(r).paid || 0), 0), 0);
+    function pfLoad() {   // genuine user-specific counts only; 0 for new students without records
+        const g = (f, d) => { try { return f(); } catch (e) { return d; } };
+        const roll = (currentUser && (currentUser.rollNo || currentUser.usn)) || localStorage.getItem('nx_current_usn') || '';
+        const led = roll ? g(() => libLedger.filter(r => r && r.roll === roll), []) : [];
+        const rn = roll ? g(() => activeStudentRentals.filter(r => r && r.renterRoll === roll), []) : [];
+        const own = roll ? g(() => activeStudentRentals.filter(r => r && r.ownerRoll === roll), []) : [];
+        const listed = roll ? g(() => booksData.filter(b => b && b.type === 'rent' && b.ownerRoll === roll), []) : [];
+        const earn = g(() => own.reduce((s, r) => s + (rxMoney(r).paid || 0), 0), 0);
         const cat = arr => { const m = {}; arr.forEach(r => { const b = g(() => bookOf(r.bookId), null), k = b && (b.genreLabel || b.genre); if (k) m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 5); };
-        const fine = g(() => led.filter(r => !r.returnAt).reduce((t, r) => t + fineOf(r).amt, 0), 0), searched = g(() => Object.entries(searches).filter(e => e[0] && e[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, 6), []);
+        const fine = g(() => led.filter(r => !r.returnAt).reduce((t, r) => t + fineOf(r).amt, 0), 0);
+        const searched = g(() => Object.entries(searches).filter(e => e[0] && e[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, 6), []);
         return { borrowed: led.length, returned: led.filter(r => r.returnAt).length, active: led.filter(r => !r.returnAt).length, rentals: rn.length, rentDone: rn.filter(r => r.status === 'COMPLETED').length,
             listed: listed.length, earn, fine, hasOwn: listed.length > 0 || own.length > 0, saved: g(() => savedBookIds.length, 0), borrowCats: cat(led), rentCats: cat(rn), searched };
     }
@@ -20578,6 +20478,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
             root.querySelectorAll('[data-pfn]').forEach(el => { const to = +el.dataset.pfn, pre = el.dataset.pre || '', t0 = performance.now(); (function s(t) { const q = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - q, 3); el.textContent = pre + Math.round(to * e).toLocaleString('en-IN'); if (q < 1) requestAnimationFrame(s); })(t0); });
             requestAnimationFrame(() => requestAnimationFrame(() => root.querySelectorAll('.pf-arc').forEach(c => c.style.strokeDashoffset = c.dataset.off)));
         }
+        if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
     }
     (function pfMotion() {   // gentle cursor + scroll response for the hero (skipped for reduced-motion and touch)
         const root = profEl('profileRoot'); if (!root || root.dataset.pfBound) return; root.dataset.pfBound = '1';
@@ -21986,6 +21887,9 @@ function dbOpen(k) {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { const m = document.getElementById('dbModal'); if (m) m.style.display = 'none'; } });
 let dbW = 0; window.addEventListener('resize', () => { clearTimeout(dbW); dbW = setTimeout(() => { const h = document.getElementById('dashboardHost'), v = document.getElementById('viewDashboard'); if (h && v && !v.classList.contains('hidden') && Math.abs((h.dataset.w || 0) - h.clientWidth) > 40) renderDashboardView(); }, 200); });
 function renderDashboardView(keepFocus) {
+    if (window.renderDashboardView && window.renderDashboardView !== renderDashboardView) {
+        return window.renderDashboardView(keepFocus);
+    }
     const host = document.getElementById('dashboardHost'); if (!host) return;
     const ALL = DBX.all = dbData(), F = ALL.filter(a => dbHit(a)), E = dbEnts(F), L = F.filter(a => a.src === 'Library'), R = F.filter(a => a.src === 'Rentals'), EL = dbEnts(L), ER = dbEnts(R), c = (X, f) => X.filter(f).length, n = (X, v) => X.filter(a => a.grp === v).length;
     const spent = dbSum(F, 'spent'), earned = dbSum(F, 'earned'), refund = dbSum(F, 'refund'), pend = dbSum(F, 'pending'), fineOut = F.filter(a => a.kind === 'pending' && /^Fine/.test(a.type)).reduce((s, a) => s + a.amt, 0);
@@ -22053,54 +21957,9 @@ function renderDashboardView(keepFocus) {
 .rv-empty{text-align:center;color:#6B7280;padding:18px 0}.rv-empty .material-symbols-outlined{font-size:34px;opacity:.5}.rv-empty p{margin:4px 0 0;font-size:12.5px;font-weight:600}.rv-empty.sm{padding:8px 0 2px}
 </style>
 <script>
-/* ===== Book ratings & reviews: only completed returns (Library or Rental) can review ===== */
-const bnxReviews = [];                       /* real + demo reviews share one shape: {id,bookId,rating,text,date,source,txn,reviewer,demo} */
-const bnxSeedStats = {};                     /* demo popularity baselines; real completed returns are ADDED on top */
-(function seed() {
-    const lib = booksData.filter(b => b.type === 'library').slice(0, 4), ren = booksData.filter(b => b.type === 'rent').slice(0, 3), D = 864e5, n = Date.now();
-    const R = [[5, 'Very useful for understanding the concepts. Easy to follow and well organized.'], [4, 'Clear explanations and good examples. A few chapters felt dense.'], [3, 'Solid content, but the edition feels a bit dated in places.'], [5, 'Perfect for beginners. I kept coming back to it all semester.'], [4, 'Well structured and practical. Worth reading before exams.']];
-    lib.forEach((b, i) => { bnxSeedStats[b.id] = { borrowed: 24 + i * 9, rented: 0 }; [0, 1, 2, 3].forEach(k => { const r = R[(i + k) % R.length]; bnxReviews.push({ id: 'dm-' + b.id + '-' + k, bookId: b.id, rating: r[0], text: r[1], date: n - (k * 17 + i * 5 + 6) * D, source: 'Library', txn: 'demo', reviewer: 'Student Reviewer', demo: true }); }); });
-    ren.forEach((b, i) => { bnxSeedStats[b.id] = { borrowed: 0, rented: 6 + i * 4 }; [0, 1, 2].forEach(k => { const r = R[(i + k + 1) % R.length]; bnxReviews.push({ id: 'dm-' + b.id + '-' + k, bookId: b.id, rating: r[0], text: r[1], date: n - (k * 13 + i * 4 + 4) * D, source: 'Rental', txn: 'demo', reviewer: 'Student Reviewer', demo: true }); }); });
-})();
-/* ===== Demo ratings & reviews for EVERY library and rental book (same record shape as above) ===== */
-(function seedAllReviews() {
-    const D = 864e5, n = Date.now();
-    const NAMES = ['Meghana R.', 'Aditya K.', 'Sneha P.', 'Rahul M.', 'Ishita S.', 'Karthik N.', 'Pooja B.', 'Vivek T.', 'Ananya D.', 'Rohit G.', 'Divya L.', 'Sanjana H.', 'Harsha V.', 'Nandini C.', 'Arjun S.', 'Keerthi A.', 'Manish J.', 'Shreya U.', 'Tejas W.', 'Bhavya Y.', 'Prateek F.', 'Lavanya Q.', 'Suhas O.', 'Rakshita Z.'];
-    const POOL = {
-        tech: [[5, 'Explains the hard parts step by step. The worked examples got me through the internals and the lab record.'], [5, 'The best reference for this subject I have used. Clear diagrams and plenty of practice problems.'], [4, 'Very thorough and well organised. A few chapters are dense, but the exercises make up for it.'], [4, 'Solid coverage of the syllabus. I used it alongside my class notes and it filled every gap.'], [4, 'Good explanations and good end-of-chapter questions. Worth borrowing before the exams.'], [3, 'Content is great but it is heavy going for a first read. Better as a second reference.'], [5, 'Concepts finally clicked after reading the first three chapters. Highly recommended.'], [3, 'Useful book, though some examples feel dated compared with what we study now.'], [4, 'Clean layout and a logical flow from basics to advanced topics.'], [5, 'Perfect for assignments and viva preparation. I kept coming back to it all semester.']],
-        sci: [[5, 'Fascinating and easy to follow even without a strong background. Could not put it down.'], [4, 'Makes complicated ideas feel approachable. Great for a weekend read between classes.'], [5, 'Brilliantly written. It changed how I think about the subject.'], [4, 'Well researched with great examples. A couple of sections drag a little.'], [3, 'Interesting ideas, but I expected more depth in the middle chapters.'], [4, 'Great for curious readers and useful for seminar topics too.'], [5, 'One of the most engaging non-textbook reads in the library.'], [4, 'Clear writing and memorable stories that make the science stick.']],
-        ideas: [[5, 'Practical and thought-provoking. I started applying the ideas the same week.'], [4, 'Clear, well argued and full of real examples. Some chapters repeat the same point.'], [5, 'A book I will happily re-read. It gave me a lot to think about.'], [4, 'Easy to read and genuinely useful for study and career planning.'], [3, 'Good ideas, but a bit long. The summaries at the end of each chapter helped.'], [5, 'Inspiring and well written. My whole study group passed it around.'], [4, 'Thoughtful and balanced. A great pick for the humanities elective.'], [3, 'Worth reading once. Not everything felt new, but the core message is strong.']],
-        fiction: [[5, 'Absolutely gripping. I finished it in two evenings and wanted more.'], [4, 'Beautifully written with characters that stay with you. The ending is worth the wait.'], [5, 'A true classic. Every page is worth reading slowly.'], [4, 'Great story and an easy read for a break between exams.'], [3, 'Enjoyable overall, though the pacing slows down in the middle.'], [5, 'Loved the atmosphere and the writing. Highly recommended for book club.'], [4, 'Memorable plot and strong themes. Perfect for literature discussions.'], [3, 'Good, but I liked the idea more than the execution. Still glad I read it.']],
-        reference: [[5, 'Exactly what I needed for my project report. Clear rules and plenty of examples.'], [4, 'Reliable and easy to look things up in. A must-have for academic writing.'], [5, 'Saved me hours while formatting my references. I use it constantly.'], [4, 'Well indexed and comprehensive. Heavy to carry, so I read it at the library desk.'], [3, 'Useful, but you need patience to find some entries.'], [4, 'Handy for assignments and seminar papers. Clear and authoritative.']]
-    };
-    const LIBX = [[5, 'Found it on the shelf quickly and the copy was in good shape.'], [4, 'Easy to borrow at the desk. Returned on time with no trouble.'], [3, 'Had to wait a few days for a copy, but it was worth it.']];
-    const RENX = [[5, 'Book matched the listing exactly and the pickup at the center was smooth.'], [4, 'Condition was as described. Fair weekly rent for what you get.'], [3, 'Worth the rent, though the cover was a bit worn. Handover was easy.']];
-    const catOf = b => {
-        const g = String(b.stdGenre || b.genreLabel || '');
-        if (/^Reference$/.test(g)) return 'reference';
-        if (/Academic|Computer|Engineering|Mathematics/.test(g)) return 'tech';
-        if (/Science/.test(g) && !/Fiction/.test(g)) return 'sci';
-        if (/History|Philosophy|Self-Help|Business|Non-Fiction|Biography/.test(g)) return 'ideas';
-        if (/Fiction|Mystery|Romance|Poetry|Fantasy|Literature/.test(g)) return 'fiction';
-        return 'ideas';
-    };
-    booksData.forEach(b => {
-        const have = bnxReviews.filter(r => r.bookId === b.id).length, want = 4 + ((b.id * 7 + 3) % 4);
-        if (!bnxSeedStats[b.id]) {
-            const dm = b.demand || 15;
-            bnxSeedStats[b.id] = b.type === 'library' ? { borrowed: 14 + Math.round(dm * 1.3) + (b.id % 9), rented: 0 } : { borrowed: 0, rented: 4 + Math.round(dm / 4) + (b.id % 4) };
-        }
-        if (have >= want) return;
-        const pool = POOL[catOf(b)].concat(b.type === 'library' ? LIBX : RENX), used = new Set(), src = b.type === 'library' ? 'Library' : 'Rental';
-        for (let k = have; k < want; k++) {
-            let ix = (b.id * 5 + k * 3 + (k * k)) % pool.length, g = 0;
-            while (used.has(ix) && g++ < pool.length) ix = (ix + 1) % pool.length;
-            used.add(ix);
-            const r = pool[ix], days = 3 + ((b.id * 11 + k * 23) % 140);
-            bnxReviews.push({ id: 'dm2-' + b.id + '-' + k, bookId: b.id, rating: r[0], text: r[1], date: n - days * D, source: src, txn: 'demo', reviewer: NAMES[(b.id * 3 + k * 5) % NAMES.length], demo: true });
-        }
-    });
-})();
+/* ===== Book ratings & reviews: genuine student reviews only ===== */
+const bnxReviews = [];                       /* genuine reviews share shape: {id,bookId,rating,text,date,source,txn,reviewer} */
+const bnxSeedStats = {};                     /* dynamic popularity stats */
 
 const rvE = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const rvOf = id => bnxReviews.filter(r => r.bookId === id);
@@ -23047,6 +22906,9 @@ window.renderDashboardView = async function () {
       }
     } catch (e) {
       console.warn('Dashboard fetch notice:', e.message);
+      REN = [];
+      LIB = [];
+      rebuildTransactions();
     }
   } else {
     REN = [];
@@ -24736,29 +24598,141 @@ window.nxaView = function (v, keep) {
   Object.keys(VIEWS).forEach(k => { const f = $(VIEWS[k]); if (f) f.hidden = true; });
   return _view.apply(this, arguments);
 };
-/* role tabs: ignored until the first step is done; Librarian / Admin only ever ask for their ID and password */
-{ const _role = window.nxaRole; window.nxaRole = function (r) {
+/* role tabs: verified via backend eligibility API; Librarian / Admin only ever accessible with registered email + ID + password */
+{ 
+  window.nxaRole = async function (r) {
     if (!idDone) { window.nxaView('ch'); return; }
-    roleUi(true); $('nxaRp').hidden = r === 'student';
-    return _role.apply(this, arguments);
-  };
-  const _reset = window.nxaReset; window.nxaReset = function () { em = ''; idLabel = ''; idDone = false; const e = $('nxlEm'); if (e) e.value = ''; return _reset.apply(this, arguments); };
-  /* a login can only open the account linked to it */
-  /* Librarian / Admin: the email from the first step must be the one saved in Authority Access; here only the Staff ID and password are asked */
-  const _st = window.nxaDoSt; window.nxaDoSt = function (e) {
-    const kit = K(), idv = ($('stId').value || '').trim();
-    if (idDone && idv) {
-      if (idv.includes('@')) { e.preventDefault(); kit.clearErrs($('nxaVSt')); kit.fieldErr('stId', 'Enter your Staff ID here. Your email was already given in the first step.'); $('stId').focus(); return; }
-      const s = kit.findStaff(idv);
-      if (s && (!/@/.test(em) || String(s.rec.email || '').toLowerCase() !== em)) { e.preventDefault(); kit.clearErrs($('nxaVSt')); kit.fieldErr('stId', 'This Staff ID isn’t linked to ' + (idLabel || em) + '. Go back and use the email saved for this account.'); $('stId').focus(); return; }
+    roleUi(true);
+    unpress();
+    const activeBtn = document.querySelector(`#nxa .nxa-seg button[data-r="${r}"]`);
+    if (activeBtn) activeBtn.setAttribute('aria-pressed', 'true');
+    window.nxaR = r;
+    K().banner('');
+
+    const targetEmail = em || (window.currentUser && window.currentUser.email) || '';
+
+    if (r === 'admin' || r === 'librarian') {
+      $('nxaRp').hidden = false;
+      $('nxaUser').hidden = true;
+      $('nxaStaff').hidden = true;
+
+      // Cryptographic backend role eligibility verification
+      try {
+        const apiBase = window.API_BASE || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? (window.location.port === '3000' ? '/api' : 'http://localhost:5000/api') : '/api');
+        const res = await fetch(`${apiBase}/auth/verify-role-eligibility`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: targetEmail, role: r })
+        });
+        const json = await res.json();
+
+        if (!res.ok || !json.eligible) {
+          $('nxaUser').hidden = true;
+          $('nxaStaff').hidden = true;
+          K().banner(json.message || "You are not authorised to access this role. Please sign in using your registered account.", 'bad');
+          return;
+        }
+
+        // Verified role identity: display staff credentials input
+        $('nxaStaff').hidden = false;
+        $('nxaVSt').hidden = false;
+        if ($('nxaVSt2')) $('nxaVSt2').hidden = true;
+        const h = $('authModal') && $('authModal').querySelector('h3'), u = $('nxaSub');
+        if (h) h.textContent = r === 'admin' ? 'Admin Authentication' : 'Librarian Authentication';
+        if (u) u.textContent = `Authorised email: ${targetEmail}`;
+        const stIdL = document.querySelector('label[for="stId"]');
+        const stIdIn = $('stId');
+        if (stIdL) stIdL.textContent = r === 'admin' ? 'Admin ID' : 'Librarian ID';
+        if (stIdIn) {
+          stIdIn.placeholder = r === 'admin' ? 'e.g. ADMIN001' : 'e.g. STAFF-LIB-01';
+          stIdIn.value = '';
+          stIdIn.focus();
+        }
+      } catch (err) {
+        $('nxaUser').hidden = true;
+        $('nxaStaff').hidden = true;
+        K().banner("Unable to verify role eligibility. Please check your network connection.", 'bad');
+      }
+      return;
     }
-    return _st.apply(this, arguments);
+
+    // Role: student (user)
+    $('nxaRp').hidden = true;
+    $('nxaStaff').hidden = true;
+    $('nxaUser').hidden = false;
+    userStep();
   };
-  const _in = window.nxaDoIn; window.nxaDoIn = function (e) {
+
+  const _reset = window.nxaReset; 
+  window.nxaReset = function () { em = ''; idLabel = ''; idDone = false; const e = $('nxlEm'); if (e) e.value = ''; return _reset.apply(this, arguments); };
+
+  /* Three-factor backend authenticated role login */
+  window.nxaDoSt = async function (e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const kit = K(), idv = ($('stId').value || '').trim(), pw = $('stPw').value;
+    const role = window.nxaR || 'admin';
+    const targetEmail = em || (window.currentUser && window.currentUser.email) || '';
+
+    if (!idv) return kit.fieldErr('stId', `Enter your ${role === 'admin' ? 'Admin ID' : 'Librarian ID'}.`);
+    if (!pw) return kit.fieldErr('stPw', 'Enter your password.');
+
+    kit.clearErrs($('nxaVSt'));
+    kit.banner('');
+    kit.setBusy($('stGo'), true, 'Authenticating…');
+
+    try {
+      const apiBase = window.API_BASE || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? (window.location.port === '3000' ? '/api' : 'http://localhost:5000/api') : '/api');
+      const res = await fetch(`${apiBase}/auth/role-login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: targetEmail, identifier: idv, password: pw, role })
+      });
+      const json = await res.json();
+
+      if (res.ok && json.success && json.data) {
+        kit.setBusy($('stGo'), false);
+        const userData = json.data;
+        const token = userData.token;
+        localStorage.setItem('booknexus_token', token);
+        localStorage.setItem('bookhive_token', token);
+        localStorage.setItem('currentUser', JSON.stringify(userData));
+        sessionStorage.setItem('booknexus_token', token);
+        sessionStorage.setItem('currentUser', JSON.stringify(userData));
+        window.currentUser = userData;
+        window.currentRole = userData.role;
+        window.nxCurStaff = userData.adminId || userData.librarianId || userData.usn;
+        if (typeof window.nxSessionSet === 'function') {
+          window.nxSessionSet(userData.role, window.nxCurStaff, userData.name, userData.email);
+        }
+        if (typeof setUserRole === 'function') setUserRole(userData.role);
+        closeModal('authModal');
+        if (typeof showToast === 'function') showToast(`Signed in successfully as ${userData.name} (${userData.role})`, 'success');
+        if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
+        if (userData.role === 'admin') {
+          if (typeof switchNav === 'function') switchNav('adminDesk');
+        } else if (userData.role === 'librarian') {
+          if (typeof switchNav === 'function') switchNav('librarianDesk');
+        }
+        return;
+      } else {
+        kit.setBusy($('stGo'), false);
+        const msg = json.message || 'Authentication failed.';
+        kit.banner(msg, 'bad');
+        return kit.fieldErr('stPw', msg);
+      }
+    } catch (netErr) {
+      kit.setBusy($('stGo'), false);
+      kit.banner('Network error during authentication. Please try again.', 'bad');
+    }
+  };
+
+  const _in = window.nxaDoIn; 
+  window.nxaDoIn = function (e) {
     const kit = K(), u = kit.normUsn($('siUsn').value);
     if (idDone && curUsn && u && nxLookupUSN(u).state === 'found' && u !== curUsn) { e.preventDefault(); kit.clearErrs($('nxaVIn')); kit.fieldErr('siUsn', 'This USN isn’t linked to ' + (idLabel || em) + '. Enter the USN you signed up with.'); $('siUsn').focus(); return; }
     return _in.apply(this, arguments);
-  }; }
+  }; 
+}
 window.nxlBack = function () { window.nxaView('ch'); $('nxlEm').value = /^(tel|uid):/.test(em) ? '' : em; };
 
 function findUsn(email) {

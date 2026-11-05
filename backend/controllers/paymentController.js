@@ -162,8 +162,8 @@ const verifyPayment = asyncHandler(async (req, res) => {
     });
   }
 
-  // Authorized verifier check: must be admin or have valid server code
-  const isAuthorizedVerifier = req.user.role === "admin";
+  // Authorized verifier check: must be admin, librarian, or have valid server code
+  const isAuthorizedVerifier = req.user.role === "admin" || req.user.role === "librarian";
   const hasValidVerificationCode = serverVerificationCode && serverVerificationCode.length >= 6;
 
   if (!isAuthorizedVerifier && !hasValidVerificationCode) {
@@ -257,7 +257,7 @@ const processRefund = asyncHandler(async (req, res) => {
     throw new Error("Associated rental not found");
   }
 
-  const isAuthorized = req.user.role === "admin" || (rental.owner && rental.owner.toString() === req.user._id.toString());
+  const isAuthorized = req.user.role === "admin" || req.user.role === "librarian" || (rental.owner && rental.owner.toString() === req.user._id.toString());
   if (!isAuthorized) {
     res.status(403);
     throw new Error("Not authorized to issue refunds for this rental");
@@ -298,7 +298,7 @@ const processRefund = asyncHandler(async (req, res) => {
  */
 const getTransactions = asyncHandler(async (req, res) => {
   let filter = { user: req.user._id };
-  if (req.user.role === "admin") {
+  if (req.user.role === "admin" || req.user.role === "librarian") {
     filter = {};
     if (req.query.status) {
       filter.status = req.query.status;

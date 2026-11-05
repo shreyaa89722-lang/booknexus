@@ -276,10 +276,12 @@ const returnRental = asyncHandler(async (req, res) => {
 // @route  GET /api/rentals
 const getRentals = asyncHandler(async (req, res) => {
     let filter = {};
-    if (req.user.role === "student") {
-        filter = { renter: req.user._id };
-    } else if (req.user.role === "owner") {
-        filter = { $or: [{ owner: req.user._id }, { renter: req.user._id }] };
+    if (req.user && (req.user.role === "admin" || req.user.role === "librarian")) {
+        filter = {};
+    } else if (req.user) {
+        filter = { $or: [{ renter: req.user._id }, { owner: req.user._id }] };
+    } else {
+        return res.status(401).json({ success: false, message: "Not authorized" });
     }
 
     const rentals = await Rental.find(filter)
