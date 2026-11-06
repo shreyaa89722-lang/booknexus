@@ -39,7 +39,34 @@ app.use(express.urlencoded({ extended: true }));
 // Strips out any $ or . operators from request data to block NoSQL injection
 app.use(mongoSanitize());
 
-app.use(cors({ origin: process.env.CLIENT_URL || true, credentials: true }));
+// Production CORS Configuration
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5000",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:5000",
+  "https://booknexus-lemon.vercel.app",
+  "https://booknexus-winterwinty.vercel.app",
+  ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",").map(o => o.trim()) : [])
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.endsWith(".vercel.app") ||
+      (process.env.CLIENT_URL && process.env.CLIENT_URL.includes(origin))
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
+}));
+
 if (process.env.NODE_ENV !== "test") app.use(morgan("dev"));
 
 // General rate limiter — applies to all API routes

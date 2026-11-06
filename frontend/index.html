@@ -57,9 +57,17 @@
     </script>
     
     <script>
-      window.API_BASE = (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"))
-        ? (window.location.port === "3000" ? "/api" : "http://localhost:5000/api")
-        : "/api";
+      (function() {
+        var isLocal = typeof window !== "undefined" && (
+          window.location.hostname === "localhost" || 
+          window.location.hostname === "127.0.0.1"
+        );
+        // Production backend API URL (Render / Railway / custom domain)
+        var prodBackend = window.__BACKEND_URL__ || "https://booknexus-api.onrender.com";
+        window.API_BASE = isLocal 
+          ? (window.location.port === "3000" ? "/api" : "http://localhost:5000/api")
+          : (prodBackend ? prodBackend.replace(/\/$/, "") + "/api" : "/api");
+      })();
     </script>
     
     <style>
