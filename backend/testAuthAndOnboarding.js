@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 
 dotenv.config({ path: path.join(__dirname, ".env") });
 
-const User = require("./models/User");
+const User = require("./models/user");
 const { loginUser, registerUser, completeOnboarding } = require("./controllers/authController");
 const { protect } = require("./middleware/authMiddleware");
 const quizService = require("./services/quizService");

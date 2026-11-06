@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { OAuth2Client } = require("google-auth-library");
-const User = require("../models/User");
+const User = require("../models/user");
 const generateToken = require("../utils/generateToken");
 const { sendSignInNotification } = require("../services/emailService");
 

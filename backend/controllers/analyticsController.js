@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
-const Book = require("../models/Book");
-const User = require("../models/User");
-const Rental = require("../models/Rental");
+const Book = require("../models/book");
+const User = require("../models/user");
+const Rental = require("../models/rental");
 const Transaction = require("../models/transaction");
 
 // @desc   Get system-wide usage analytics (Admin only)

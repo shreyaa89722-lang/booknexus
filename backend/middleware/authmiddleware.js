@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
-const User = require("../models/User");
+const User = require("../models/user");
 
 // Checks that a valid login token was sent, and attaches the user to the request
 const protect = asyncHandler(async (req, res, next) => {

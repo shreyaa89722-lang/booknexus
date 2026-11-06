@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const User = require("../models/User");
+const User = require("../models/user");
 const generateToken = require("../utils/generateToken");
 const { sendSignInNotification } = require("../services/emailService");
 const { evaluateQuizSubmission } = require("../services/quizService");

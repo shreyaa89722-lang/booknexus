@@ -1,5 +1,5 @@
-const Book = require("../models/Book");
-const Rental = require("../models/Rental");
+const Book = require("../models/book");
+const Rental = require("../models/rental");
 
 // Turns a list of words into a frequency map, e.g. ["Sci-Fi","Sci-Fi"] -> { "sci-fi": 2 }
 function buildVector(tokens) {

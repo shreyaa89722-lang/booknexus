@@ -11,9 +11,9 @@ const jwt = require("jsonwebtoken");
 
 dotenv.config({ path: path.join(__dirname, ".env") });
 
-const User = require("./models/User");
-const Book = require("./models/Book");
-const Rental = require("./models/Rental");
+const User = require("./models/user");
+const Book = require("./models/book");
+const Rental = require("./models/rental");
 const Transaction = require("./models/transaction");
 const { loginUser, registerUser, completeOnboarding } = require("./controllers/authController");
 const { protect } = require("./middleware/authMiddleware");

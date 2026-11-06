@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
-const User = require('./models/User');
-const Book = require('./models/Book');
+const User = require('./models/user');
+const Book = require('./models/book');
 
 const EXPORT_PATH = path.join(__dirname, 'students_export.json');
 const DATA_DIR = path.join(__dirname, 'data', 'db');

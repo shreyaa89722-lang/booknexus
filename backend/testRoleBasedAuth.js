@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-const User = require('./models/User');
+const User = require('./models/user');
 
 const API_BASE = 'http://localhost:5000/api';
 

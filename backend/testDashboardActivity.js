@@ -11,10 +11,10 @@ const jwt = require("jsonwebtoken");
 dotenv.config({ path: path.join(__dirname, ".env") });
 
 const connectDB = require("./config/db");
-const User = require("./models/User");
-const Rental = require("./models/Rental");
+const User = require("./models/user");
+const Rental = require("./models/rental");
 const Transaction = require("./models/transaction");
-const Book = require("./models/Book");
+const Book = require("./models/book");
 const { getUserDashboard, getOverview } = require("./controllers/analyticsController");
 const { getRentals } = require("./controllers/rentalController");
 const { getTransactions } = require("./controllers/paymentController");

@@ -8,8 +8,8 @@ const dotenv = require("dotenv");
 dotenv.config({ path: path.join(__dirname, ".env") });
 
 const connectDB = require("./config/db");
-const User = require("./models/User");
-const Rental = require("./models/Rental");
+const User = require("./models/user");
+const Rental = require("./models/rental");
 const Transaction = require("./models/transaction");
 const { getUserDashboard, getOverview } = require("./controllers/analyticsController");
 

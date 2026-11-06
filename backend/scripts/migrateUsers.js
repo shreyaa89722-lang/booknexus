@@ -7,7 +7,7 @@ async function migrate() {
     console.log("Connecting to MongoDB:", mongoUri);
     await mongoose.connect(mongoUri);
 
-    const User = require("../models/User");
+    const User = require("../models/user");
 
     // 1. Clean empty strings for usn so sparse unique index succeeds
     const emptyUsnRes = await User.collection.updateMany(

@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const Book = require("../models/Book");
+const Book = require("../models/book");
 
 // @desc   Create a book (library stock or a P2P listing)
 // @route  POST /api/books

@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
-const Rental = require("../models/Rental");
-const Book = require("../models/Book");
-const User = require("../models/User");
+const Rental = require("../models/rental");
+const Book = require("../models/book");
+const User = require("../models/user");
 const { recordRentalOnChain, recordReturnOnChain } = require("../services/blockchainService");
 const emailService = require("../services/emailService");
 const emailEventService = require("../services/emailEventService");

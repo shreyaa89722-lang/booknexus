@@ -1248,8 +1248,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                       var t = localStorage.getItem('booknexus_token') || sessionStorage.getItem('booknexus_token') || localStorage.getItem('bookhive_token') || sessionStorage.getItem('bookhive_token');
                       var u = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || localStorage.getItem('bookhive_user');
                       var s = localStorage.getItem('nx_auth_session') || sessionStorage.getItem('nx_auth_session');
-                      var usn = localStorage.getItem('nx_current_usn');
-                      if (t || u || s || usn) {
+                      if (t && (u || s)) {
                         var l = document.getElementById('userAuthLabel');
                         var b = document.getElementById('userAuthBtn');
                         if (l) l.textContent = 'Sign Out';
@@ -2535,18 +2534,10 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     };
 
     // User State
-    let currentRole = "student"; // 'student', 'librarian', 'admin'
-    let currentUser = {
-        name: "H M Nanditha",
-        rollNo: "CS2026-042",
-        email: "nanditha@univ.edu",
-        dept: "Computer Science",
-        year: "",
-        phone: "+91 9876543210",
-        anonId: "Renter #B21"
-    };
-    window.currentUser = currentUser;
-    window.currentRole = currentRole;
+    let currentRole = "guest";
+    let currentUser = null;
+    window.currentUser = null;
+    window.currentRole = "guest";
 
     // Library & Rental Books Catalog
     let booksData = [
@@ -25421,20 +25412,12 @@ function label() {
     storedUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || localStorage.getItem('bookhive_user') || 'null');
   } catch (e) { storedUser = null; }
 
-  // Check all signals of active user session:
-  // 1. Session object S (from nxSessionSet)
-  // 2. Global window.currentUser
-  // 3. Stored user from localStorage/sessionStorage
-  // 4. Linked USN (nxGetLinkedUSN or nxActiveUSN or nx_current_usn)
-  // 5. Active auth token
-  const userIdentifier = (typeof S !== 'undefined' && S && (S.email || S.name || S.id)) ||
-                         (typeof currentUser !== 'undefined' && currentUser && (currentUser.email || currentUser.name || currentUser.rollNo || currentUser.usn || currentUser._id)) ||
-                         (storedUser && (storedUser.email || storedUser.name || storedUser.usn || storedUser.rollNo || storedUser._id)) ||
-                         (typeof nxGetLinkedUSN === 'function' && nxGetLinkedUSN()) ||
-                         (typeof nxActiveUSN === 'function' && nxActiveUSN()) ||
-                         localStorage.getItem('nx_current_usn');
+  const hasSession = (typeof S !== 'undefined' && S && (S.email || S.id) && S.role && S.role !== 'guest');
+  const hasUser = (typeof currentUser !== 'undefined' && currentUser && (currentUser.email || currentUser._id || currentUser.rollNo || currentUser.usn));
+  const hasStored = (storedUser && (storedUser.email || storedUser._id || storedUser.usn || storedUser.rollNo));
 
-  const isSignedIn = !!(userIdentifier || token);
+  // A visitor is ONLY signed in if they have a real auth token AND an active user/session
+  const isSignedIn = !!(token && (hasSession || hasUser || hasStored));
   const iconEl = b ? b.querySelector('.material-symbols-outlined') : null;
 
   if (isSignedIn) {

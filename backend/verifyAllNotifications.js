@@ -20,9 +20,9 @@ const emailService = require("./services/emailService");
 const emailEventService = require("./services/emailEventService");
 const emailWorker = require("./services/emailWorker");
 const { renderTemplate } = require("./services/emailTemplates");
-const User = require("./models/User");
-const Book = require("./models/Book");
-const Rental = require("./models/Rental");
+const User = require("./models/user");
+const Book = require("./models/book");
+const Rental = require("./models/rental");
 const EmailOutbox = require("./models/emailOutbox");
 
 const TARGET_EMAIL = process.env.RESEND_TEST_RECIPIENT || "solowinterr@gmail.com";

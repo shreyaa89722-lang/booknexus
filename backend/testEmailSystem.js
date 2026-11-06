@@ -25,11 +25,11 @@ const emailEventService = require("./services/emailEventService");
 const emailWorker = require("./services/emailWorker");
 const emailScheduler = require("./services/emailScheduler");
 const { verifyResendSignature } = require("./controllers/emailWebhookController");
-const User = require("./models/User");
-const Book = require("./models/Book");
-const Rental = require("./models/Rental");
-const Transaction = require("./models/Transaction");
-const EmailOutbox = require("./models/EmailOutbox");
+const User = require("./models/user");
+const Book = require("./models/book");
+const Rental = require("./models/rental");
+const Transaction = require("./models/transaction");
+const EmailOutbox = require("./models/emailOutbox");
 
 let passCount = 0;
 let failCount = 0;

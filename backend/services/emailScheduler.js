@@ -1,7 +1,7 @@
-const Rental = require("../models/Rental");
+const Rental = require("../models/rental");
 const Transaction = require("../models/transaction");
-const User = require("../models/User");
-const Book = require("../models/Book");
+const User = require("../models/user");
+const Book = require("../models/book");
 const emailEventService = require("./emailEventService");
 
 let schedulerTimer = null;
