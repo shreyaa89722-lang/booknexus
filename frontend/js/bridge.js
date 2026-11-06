@@ -1988,14 +1988,10 @@
         if (sub) sub.textContent = 'Please enter your student details and official USN to continue.';
 
         // Blank out details (except email if provided) so user starts clean
-        ['nxlName', 'nxlUsn', 'nxlNp', 'nxlNp2', 'nxlNick', 'nxlBio'].forEach(id => {
+        ['nxlName', 'nxlUsn', 'nxlDob', 'nxlNp', 'nxlNp2', 'nxlNick', 'nxlBio'].forEach(id => {
           const el = document.getElementById(id);
           if (el) el.value = '';
         });
-        const phoneInput = document.getElementById('nxlPhone');
-        if (phoneInput) phoneInput.value = '';
-        const deptInput = document.getElementById('nxlDept');
-        if (deptInput && !deptInput.value) deptInput.value = 'Computer Science and Business Systems';
 
         if (typeof window.nwShow === 'function') window.nwShow(1, true);
 

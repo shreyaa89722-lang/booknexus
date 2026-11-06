@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema(
             promotional: { type: Boolean, default: false },
         },
         usn: { type: String, trim: true, uppercase: true },
+        dob: { type: String, trim: true },
         mobile: { type: String, trim: true },
         branch: { type: String, trim: true },
         college: { type: String, trim: true },

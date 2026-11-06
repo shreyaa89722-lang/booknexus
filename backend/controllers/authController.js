@@ -14,6 +14,7 @@ const registerUser = asyncHandler(async (req, res) => {
         confirmPassword,
         role,
         usn,
+        dob,
         mobile,
         branch,
         department,
@@ -86,6 +87,7 @@ const registerUser = asyncHandler(async (req, res) => {
         password,
         role: allowedRole,
         usn: cleanUsn || undefined,
+        dob: dob ? String(dob).trim() : undefined,
         mobile: mobile ? String(mobile).trim() : undefined,
         branch: cleanBranch || undefined,
         college: cleanCollege,
@@ -221,7 +223,7 @@ const completeOnboarding = asyncHandler(async (req, res) => {
         throw new Error("User account not found or not authenticated");
     }
 
-    const { usn, mobile, branch, department, college, semester, quizAnswers } = req.body;
+    const { usn, dob, mobile, branch, department, college, semester, quizAnswers } = req.body;
 
     if (!usn || !usn.trim()) {
         res.status(400);
@@ -255,6 +257,7 @@ const completeOnboarding = asyncHandler(async (req, res) => {
 
     // Update profile
     user.usn = cleanUsn;
+    if (dob) user.dob = String(dob).trim();
     if (mobile) user.mobile = String(mobile).trim();
     if (cleanBranch) user.branch = cleanBranch;
     user.college = cleanCollege;

@@ -2242,10 +2242,8 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <p class="nxa-note"><span class="material-symbols-outlined">verified_user</span><span>Create your official BookNexus student profile. Please enter your student details and USN.</span></p>
                     <div class="nxa-f"><label for="nxlName" class="nxa-l">Full name</label><input id="nxlName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="Full name as in college records"><p class="nxa-err" id="nxlNameE" hidden></p></div>
                     <div class="nxa-f"><label for="nxlUsn" class="nxa-l">USN</label><input id="nxlUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="nxlUsnE" hidden></p></div>
+                    <div class="nxa-f" id="nxlDobWrap"><label for="nxlDob" class="nxa-l">Date of birth (DOB)</label><input id="nxlDob" class="nxa-in pl" type="date"><p class="nxa-err" id="nxlDobE" hidden></p></div>
                     <div class="nxa-f" id="nxlEmWrap"><label for="nxlEmail" class="nxa-l">College email</label><input id="nxlEmail" class="nxa-in pl" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="120" placeholder="e.g. student@college.edu"><p class="nxa-err" id="nxlEmailE" hidden></p></div>
-                    <div class="nxa-f"><label for="nxlPhone" class="nxa-l">Phone number</label><input id="nxlPhone" class="nxa-in pl" type="tel" autocomplete="tel" maxlength="16" placeholder="+91 98765 43210"><p class="nxa-err" id="nxlPhoneE" hidden></p></div>
-                    <div class="nxa-f"><label for="nxlDept" class="nxa-l">Department</label><input id="nxlDept" class="nxa-in pl" type="text" maxlength="60" placeholder="e.g. Computer Science and Business Systems"><p class="nxa-err" id="nxlDeptE" hidden></p></div>
-                    <div class="nxa-f"><label for="nxlSem" class="nxa-l">Semester</label><select id="nxlSem" class="nxa-in pl"><option value="Semester 1">Semester 1</option><option value="Semester 2">Semester 2</option><option value="Semester 3">Semester 3</option><option value="Semester 4">Semester 4</option><option value="Semester 5">Semester 5</option><option value="Semester 6" selected>Semester 6</option><option value="Semester 7">Semester 7</option><option value="Semester 8">Semester 8</option></select><p class="nxa-err" id="nxlSemE" hidden></p></div>
                     <div class="nxa-f" id="nxlPwWrap"><label for="nxlNp" class="nxa-l">Create password</label><div class="nxa-pw"><input id="nxlNp" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="nxlNpX"></div><p class="nxa-err" id="nxlNpE" hidden></p></div>
                     <div class="nxa-f" id="nxlPw2Wrap"><label for="nxlNp2" class="nxa-l">Confirm password</label><div class="nxa-pw"><input id="nxlNp2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="nxlNp2E" hidden></p></div>
                     </div>
@@ -17847,14 +17845,13 @@ textarea.pf-inp{resize:vertical;min-height:96px}
             // Populate or clear fields
             if (document.getElementById('nxlName')) document.getElementById('nxlName').value = name || '';
             if (document.getElementById('nxlUsn')) document.getElementById('nxlUsn').value = usn || '';
-            if (document.getElementById('nxlPhone')) document.getElementById('nxlPhone').value = '';
-            if (document.getElementById('nxlDept')) document.getElementById('nxlDept').value = 'Computer Science and Business Systems';
+            if (document.getElementById('nxlDob')) document.getElementById('nxlDob').value = '';
             if (document.getElementById('nxlNp')) document.getElementById('nxlNp').value = '';
             if (document.getElementById('nxlNp2')) document.getElementById('nxlNp2').value = '';
 
             if (typeof nwShow === 'function') nwShow(1, true);
 
-            const targetField = usn ? document.getElementById('nxlPhone') : (name ? document.getElementById('nxlUsn') : document.getElementById('nxlName'));
+            const targetField = usn ? document.getElementById('nxlDob') : (name ? document.getElementById('nxlUsn') : document.getElementById('nxlName'));
             if (targetField) targetField.focus();
 
             setTimeout(() => { window.__openingCreateAccount = false; }, 300);
@@ -24795,9 +24792,7 @@ window.nxlCreate = async function (e) {
   e.preventDefault(); if (busy) return; const kit = K(), f = $('nxaVNew'); kit.clearErrs(f); kit.banner('');
   const name = $('nxlName').value.trim().replace(/\s+/g, ' ');
   const rawU = $('nxlUsn').value.trim();
-  const phone = $('nxlPhone') ? $('nxlPhone').value.trim() : '';
-  const dept = $('nxlDept') ? $('nxlDept').value.trim() : 'Computer Science and Business Systems';
-  const sem = $('nxlSem') ? $('nxlSem').value.trim() : 'Semester 6';
+  const dob = $('nxlDob') ? $('nxlDob').value.trim() : '';
   const pw = $('nxlNp') ? $('nxlNp').value : '';
   const pw2 = $('nxlNp2') ? $('nxlNp2').value : '';
   const isGoogle = !!window.__googleOnboardingData;
@@ -24812,6 +24807,7 @@ window.nxlCreate = async function (e) {
     usn = kit.normUsn(rawU);
     $('nxlUsn').value = usn;
   }
+  if (!dob) ok = kit.fieldErr('nxlDob', 'Select your date of birth.') && ok;
 
   if (!isGoogle) {
     if (!collegeEmail) ok = kit.fieldErr('nxlEmail', 'Enter your college email address.') && ok;
@@ -24824,7 +24820,7 @@ window.nxlCreate = async function (e) {
 
   if (!ok && nwStep === 2) nwShow(1, true);
   if (!ok) {
-    for (const id of ['nxlName', 'nxlUsn', 'nxlEmail', 'nxlPhone', 'nxlDept', 'nxlNp', 'nxlNp2']) {
+    for (const id of ['nxlName', 'nxlUsn', 'nxlDob', 'nxlEmail', 'nxlNp', 'nxlNp2']) {
       const i = $(id); if (i && i.hasAttribute('aria-invalid')) { i.focus(); break; }
     }
     return;
@@ -24866,11 +24862,11 @@ window.nxlCreate = async function (e) {
         },
         body: JSON.stringify({
           usn,
-          mobile: phone,
-          branch: dept,
-          department: dept,
+          dob,
+          branch: 'Computer Science and Business Systems',
+          department: 'Computer Science and Business Systems',
           college: 'Malnad college of engineering',
-          semester: sem,
+          semester: 'Semester 6',
           quizAnswers: quizPayload,
           email: window.__googleOnboardingData.email,
           googleId: window.__googleOnboardingData.googleId
@@ -24885,11 +24881,11 @@ window.nxlCreate = async function (e) {
           name,
           email: collegeEmail,
           usn,
-          mobile: phone,
-          branch: dept,
-          department: dept,
+          dob,
+          branch: 'Computer Science and Business Systems',
+          department: 'Computer Science and Business Systems',
           college: 'Malnad college of engineering',
-          semester: sem,
+          semester: 'Semester 6',
           password: pw,
           confirmPassword: pw2,
           quizAnswers: quizPayload
