@@ -5,6 +5,7 @@ const fs = require("fs");
 let mongodInstance = null;
 
 const connectDB = async () => {
+  const isProduction = process.env.NODE_ENV === "production";
   const uri = process.env.ATLAS_MONGO_URI || process.env.MONGO_URI;
   const isAtlas = uri && uri.startsWith("mongodb") && !uri.includes("127.0.0.1") && !uri.includes("localhost");
 
@@ -12,13 +13,21 @@ const connectDB = async () => {
     try {
       console.log("Connecting to Atlas MongoDB...");
       const conn = await mongoose.connect(uri, {
-        serverSelectionTimeoutMS: 4000,
+        serverSelectionTimeoutMS: 8000,
       });
       console.log(`✅ MongoDB connected to Atlas: ${conn.connection.host}`);
       return;
     } catch (err) {
+      if (isProduction) {
+        console.error(`🚨 CRITICAL: Production MongoDB Atlas connection failed: ${err.message}`);
+        console.error("Please verify that your MongoDB Atlas cluster is online, network access allows connection from your host, and ATLAS_MONGO_URI is correct.");
+        throw new Error(`Production MongoDB Atlas connection failed: ${err.message}`);
+      }
       console.warn(`⚠️ Atlas connection failed (${err.message}). Falling back to local persistent MongoDB...`);
     }
+  } else if (isProduction) {
+    console.error("🚨 CRITICAL: No valid ATLAS_MONGO_URI configured in production environment.");
+    throw new Error("No valid ATLAS_MONGO_URI configured in production environment.");
   }
 
   // Connect to local MongoDB

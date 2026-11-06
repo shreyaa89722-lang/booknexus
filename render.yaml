@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: booknexus-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_URL
+        value: https://booknexus-lemon.vercel.app,https://booknexus-winterwinty.vercel.app
+      - key: APP_BASE_URL
+        value: https://booknexus-lemon.vercel.app
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: EMAIL_FROM
+        value: onboarding@resend.dev
+      - key: EMAIL_FROM_NAME
+        value: BookNexus
+      - key: CAMPUS_UPI_PAYEE_NAME
+        value: BookNexus Campus Library
+      - key: ATLAS_MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_TEST_RECIPIENT
+        sync: false
+      - key: CAMPUS_UPI_ID
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SEPOLIA_RPC_URL
+        sync: false
+      - key: CONTRACT_ADDRESS
+        sync: false
+      - key: BACKEND_WALLET_PRIVATE_KEY
+        sync: false
+

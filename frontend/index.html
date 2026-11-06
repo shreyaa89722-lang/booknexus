@@ -22863,7 +22863,7 @@ window.renderDashboardView = async function () {
   const token = localStorage.getItem('booknexus_token') || sessionStorage.getItem('booknexus_token') || localStorage.getItem('bookhive_token');
   if (token) {
     try {
-      const res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/analytics/user-dashboard', {
+      const res = await fetch((window.API_BASE || '/api') + '/analytics/user-dashboard', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       if (res.ok) {
@@ -23968,7 +23968,7 @@ window.nvSave = gate(() => {
 
     setBusy($('siGo'), true, 'Signing in…');
     try {
-      const res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/login', {
+      const res = await fetch((window.API_BASE || '/api') + '/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier: usn, password: pw })
@@ -24626,7 +24626,7 @@ window.nxaView = function (v, keep) {
 
       // Cryptographic backend role eligibility verification
       try {
-        const apiBase = window.API_BASE || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? (window.location.port === '3000' ? '/api' : 'http://localhost:5000/api') : '/api');
+        const apiBase = window.API_BASE || '/api';
         const res = await fetch(`${apiBase}/auth/verify-role-eligibility`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -24689,7 +24689,7 @@ window.nxaView = function (v, keep) {
     kit.setBusy($('stGo'), true, 'Authenticating…');
 
     try {
-      const apiBase = window.API_BASE || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? (window.location.port === '3000' ? '/api' : 'http://localhost:5000/api') : '/api');
+      const apiBase = window.API_BASE || '/api';
       const res = await fetch(`${apiBase}/auth/role-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -24888,7 +24888,7 @@ window.nxlCreate = async function (e) {
     let res = null;
     if (isGoogle) {
       // Call complete onboarding API for Google user
-      res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/complete-onboarding', {
+      res = await fetch((window.API_BASE || '/api') + '/auth/complete-onboarding', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24908,7 +24908,7 @@ window.nxlCreate = async function (e) {
       });
     } else {
       // Call student registration API with password
-      res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/register', {
+      res = await fetch((window.API_BASE || '/api') + '/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -24979,7 +24979,7 @@ window.handleGoogleSignIn = async function (response) {
       if (typeof showToast === 'function') showToast('No credential returned from Google', 'warning');
       return;
     }
-    const res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/google', {
+    const res = await fetch((window.API_BASE || '/api') + '/auth/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ credential: response.credential })
@@ -25033,7 +25033,7 @@ window.handleGoogleSignInDirect = async function (email, name, googleId) {
     let data = null;
     let needsOnboarding = false;
     try {
-      const res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/google', {
+      const res = await fetch((window.API_BASE || '/api') + '/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -25245,7 +25245,7 @@ function triggerGoogleTokenClient() {
             if (typeof showToast === 'function') showToast('Verifying Google account with BookNexus...', 'info');
 
             try {
-              const apiBase = window.API_BASE || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? (window.location.port === '3000' ? '/api' : 'http://localhost:5000/api') : '/api');
+              const apiBase = window.API_BASE || '/api';
               const res = await fetch(`${apiBase}/auth/google`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -25497,7 +25497,7 @@ window.nxSignOut = function () {
   setNote('');
   showToast('You have signed out.', 'info');
   try {
-    fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/logout', { method: 'POST' }).catch(() => {});
+    fetch((window.API_BASE || '/api') + '/auth/logout', { method: 'POST' }).catch(() => {});
   } catch (e) {}
 };
 
@@ -25567,7 +25567,7 @@ document.addEventListener('click', function (e) {
 
 async function initGoogleConfig() {
   try {
-    const res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/google/config');
+    const res = await fetch((window.API_BASE || '/api') + '/auth/google/config');
     const json = await res.json();
     if (json && json.success && json.clientId) {
       window.GOOGLE_CLIENT_ID = json.clientId;
@@ -25639,7 +25639,7 @@ async function restore() {
   // Validate token with backend if online
   if (token) {
     try {
-      const res = await fetch((window.API_BASE || 'http://localhost:5000/api') + '/auth/me', {
+      const res = await fetch((window.API_BASE || '/api') + '/auth/me', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       if (res.status === 401) {
