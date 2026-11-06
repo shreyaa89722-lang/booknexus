@@ -25032,11 +25032,15 @@ window.handleGoogleSignInDirect = async function (email, name, googleId) {
       };
     }
 
-    if (needsOnboarding) {
+    if (needsOnboarding || !data) {
       window.__googleOnboardingData = data;
-      localStorage.setItem('booknexus_last_google_email', data.email);
-      if (typeof openCreateAccount === 'function') openCreateAccount(data.email, data.usn || '', data.name || '');
-      if (typeof showToast === 'function') showToast('First-time Google sign-in detected. Please complete student onboarding.', 'info');
+      localStorage.setItem('booknexus_last_google_email', cleanEmail);
+      if (typeof openCreateAccount === 'function') {
+        openCreateAccount(cleanEmail, (data && data.usn) || '', (data && data.name) || cleanEmail.split('@')[0]);
+      } else if (typeof window.nxaView === 'function') {
+        window.nxaView('nw');
+      }
+      if (typeof showToast === 'function') showToast('Please enter your student details and complete the reading quiz.', 'info');
       return;
     }
 
@@ -25071,12 +25075,21 @@ window.nxlGoogleEmail = function (e) {
     if (err) { err.textContent = 'Enter a valid email address.'; err.hidden = false; }
     return;
   }
-  window.handleGoogleSignInDirect(val);
+  // Direct user straight to registration details & quiz
+  if (typeof window.openCreateAccount === 'function') {
+    window.openCreateAccount(val);
+  } else if (typeof window.nxaView === 'function') {
+    window.nxaView('nw');
+  }
 };
 
 window.nxlSelectGoogleAccount = function (email) {
   if (email) {
-    window.handleGoogleSignInDirect(email, email.split('@')[0]);
+    if (typeof window.openCreateAccount === 'function') {
+      window.openCreateAccount(email);
+    } else {
+      window.handleGoogleSignInDirect(email, email.split('@')[0]);
+    }
   } else {
     window.startGoogleOAuth();
   }
@@ -25151,10 +25164,11 @@ window.startGoogleOAuth = function () {
     };
     s.onerror = () => {
       resetGoogleBtnState();
-      if (typeof showToast === 'function') {
-        showToast('Google library blocked by browser shields. Enter your email below.', 'warning');
+      if (typeof window.openCreateAccount === 'function') {
+        window.openCreateAccount();
+      } else if (typeof window.nxaView === 'function') {
+        window.nxaView('nw');
       }
-      if (typeof window.nxaView === 'function') window.nxaView('gg');
     };
     document.head.appendChild(s);
   } else {
@@ -25163,10 +25177,11 @@ window.startGoogleOAuth = function () {
       if (window.google && window.google.accounts && window.google.accounts.oauth2) {
         triggerGoogleTokenClient();
       } else {
-        if (typeof showToast === 'function') {
-          showToast('Google sign-in popup blocked or unavailable. Enter your email below.', 'warning');
+        if (typeof window.openCreateAccount === 'function') {
+          window.openCreateAccount();
+        } else if (typeof window.nxaView === 'function') {
+          window.nxaView('nw');
         }
-        if (typeof window.nxaView === 'function') window.nxaView('gg');
       }
     }, 800);
   }
@@ -25182,11 +25197,10 @@ function triggerGoogleTokenClient() {
   _googleWatchdogTimer = setTimeout(() => {
     resetGoogleBtnState();
     console.warn('Google sign-in timed out or popup stalled.');
-    if (typeof showToast === 'function') {
-      showToast('Google sign-in is taking longer than expected. You can try again or enter your email below.', 'warning');
-    }
-    if (typeof window.nxaView === 'function') {
-      window.nxaView('gg');
+    if (typeof window.openCreateAccount === 'function') {
+      window.openCreateAccount();
+    } else if (typeof window.nxaView === 'function') {
+      window.nxaView('nw');
     }
   }, 25000);
 
@@ -25202,10 +25216,11 @@ function triggerGoogleTokenClient() {
           if (err && err.type === 'popup_closed') {
             if (typeof showToast === 'function') showToast('Google sign-in cancelled.', 'info');
           } else {
-            if (typeof showToast === 'function') {
-              showToast('Google sign-in popup blocked or unavailable. Enter your email below.', 'warning');
+            if (typeof window.openCreateAccount === 'function') {
+              window.openCreateAccount();
+            } else if (typeof window.nxaView === 'function') {
+              window.nxaView('nw');
             }
-            if (typeof window.nxaView === 'function') window.nxaView('gg');
           }
         },
         callback: async (tokenResponse) => {
@@ -25226,17 +25241,12 @@ function triggerGoogleTokenClient() {
                 const data = json.data;
                 if (json.needsOnboarding) {
                   // First-time or incomplete Google user -> Onboarding workflow
-                  window.__onboardingToken = data.token;
-                  localStorage.setItem('booknexus_onboarding_token', data.token);
-                  const nameEl = document.getElementById('obGoogleName');
-                  const emailEl = document.getElementById('obGoogleEmail');
-                  const avatarEl = document.getElementById('obGoogleAvatar');
-                  if (nameEl) nameEl.textContent = data.name || 'Student';
-                  if (emailEl) emailEl.textContent = data.email || '';
-                  if (avatarEl) avatarEl.textContent = (data.name ? data.name[0] : 'G').toUpperCase();
-                  if (data.usn && document.getElementById('obUsn')) document.getElementById('obUsn').value = data.usn;
-                  if (data.phone && document.getElementById('obPhone')) document.getElementById('obPhone').value = data.phone;
-                  if (typeof window.nxaView === 'function') window.nxaView('onboard');
+                  window.__googleOnboardingData = data;
+                  if (typeof openCreateAccount === 'function') {
+                    openCreateAccount(data.email, data.usn || '', data.name || '');
+                  } else if (typeof window.nxaView === 'function') {
+                    window.nxaView('nw');
+                  }
                   if (typeof showToast === 'function') showToast('Google identity verified! Complete student details and reading quiz to finish.', 'info');
                   return;
                 }
@@ -25260,18 +25270,16 @@ function triggerGoogleTokenClient() {
                 if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
               } else {
                 if (typeof showToast === 'function') showToast(json.message || 'Google sign-in could not be verified.', 'warning');
-                if (typeof window.nxaView === 'function') window.nxaView('gg');
+                if (typeof window.openCreateAccount === 'function') window.openCreateAccount();
               }
             } catch (apiErr) {
               console.error('API /auth/google error:', apiErr);
-              if (typeof showToast === 'function') showToast('Server connection failed: ' + apiErr.message, 'error');
-              if (typeof window.nxaView === 'function') window.nxaView('gg');
+              if (typeof window.openCreateAccount === 'function') window.openCreateAccount();
             }
           } else if (tokenResponse && tokenResponse.error) {
             console.warn('Google OAuth response error:', tokenResponse.error);
             if (tokenResponse.error !== 'popup_closed_by_user') {
-              if (typeof showToast === 'function') showToast('Google sign-in: ' + tokenResponse.error, 'warning');
-              if (typeof window.nxaView === 'function') window.nxaView('gg');
+              if (typeof window.openCreateAccount === 'function') window.openCreateAccount();
             }
           }
         }
@@ -25283,8 +25291,11 @@ function triggerGoogleTokenClient() {
   } catch (err) {
     resetGoogleBtnState();
     console.error('Google tokenClient prompt error:', err);
-    if (typeof showToast === 'function') showToast('Could not open Google popup. Enter your email below.', 'warning');
-    if (typeof window.nxaView === 'function') window.nxaView('gg');
+    if (typeof window.openCreateAccount === 'function') {
+      window.openCreateAccount();
+    } else if (typeof window.nxaView === 'function') {
+      window.nxaView('nw');
+    }
   }
 }
 

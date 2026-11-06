@@ -1964,13 +1964,18 @@
           if (nwEm.parentElement) nwEm.parentElement.hidden = !em;
         }
 
+        const emInput = document.getElementById('nxlEmail');
+        if (emInput && em) {
+          emInput.value = em;
+        }
+
         const rpBar = document.getElementById('nxaRp');
         if (rpBar) rpBar.hidden = true;
 
         const nxa = document.getElementById('nxa');
         if (nxa) nxa.classList.add('nx-roles');
 
-        ['nxaVCh', 'nxaVPw', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVFp'].forEach(id => {
+        ['nxaVCh', 'nxaVPw', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVFp', 'nxaVGg'].forEach(id => {
           const el = document.getElementById(id);
           if (el) el.hidden = true;
         });
@@ -1978,15 +1983,19 @@
         if (nForm) nForm.hidden = false;
 
         const h = document.querySelector('#authModal h3');
-        if (h) h.textContent = 'Create your account';
+        if (h) h.textContent = 'Create Student Account';
         const sub = document.getElementById('nxaSub');
-        if (sub) sub.textContent = 'Just your name, USN and a password.';
+        if (sub) sub.textContent = 'Please enter your student details and official USN to continue.';
 
-        // Blank out all fields so user starts completely clean
-        ['nxlName', 'nxlUsn', 'nxlDob', 'nxlNp', 'nxlNp2', 'nxlNick', 'nxlBio'].forEach(id => {
+        // Blank out details (except email if provided) so user starts clean
+        ['nxlName', 'nxlUsn', 'nxlNp', 'nxlNp2', 'nxlNick', 'nxlBio'].forEach(id => {
           const el = document.getElementById(id);
           if (el) el.value = '';
         });
+        const phoneInput = document.getElementById('nxlPhone');
+        if (phoneInput) phoneInput.value = '';
+        const deptInput = document.getElementById('nxlDept');
+        if (deptInput && !deptInput.value) deptInput.value = 'Computer Science and Business Systems';
 
         if (typeof window.nwShow === 'function') window.nwShow(1, true);
 
