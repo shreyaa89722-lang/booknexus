@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 async function migrateAuthority() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/bookhive");
+  await mongoose.connect(process.env.ATLAS_MONGO_URI || process.env.MONGO_URI || "mongodb://127.0.0.1:27017/bookhive");
   const User = mongoose.model("User", new mongoose.Schema({}, { strict: false }));
 
   const totalBefore = await User.countDocuments();

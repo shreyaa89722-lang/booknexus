@@ -1238,31 +1238,10 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 
             <!-- Profile / Sign In Button -->
             <div class="flex items-center gap-2">
-                <button id="userAuthBtn" onclick="openModal('authModal')" class="bg-brand-rosewood hover:bg-brand-rosewoodHover dark:bg-brand-dustyRose text-white text-xs font-bold px-3.5 py-2 rounded-full transition-all shadow-sm flex items-center gap-1.5">
+                <button id="userAuthBtn" onclick="openModal('authModal')" class="bg-brand-rosewood hover:bg-brand-rosewoodHover dark:bg-brand-dustyRose text-white text-xs font-bold px-3.5 py-2 rounded-full transition-all shadow-sm flex items-center gap-1.5" title="Sign In">
                     <span class="material-symbols-outlined text-sm">account_circle</span>
                     <span id="userAuthLabel">Sign In</span>
                 </button>
-                <script>
-                  (function() {
-                    try {
-                      var t = localStorage.getItem('booknexus_token') || sessionStorage.getItem('booknexus_token') || localStorage.getItem('bookhive_token') || sessionStorage.getItem('bookhive_token');
-                      var u = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || localStorage.getItem('bookhive_user');
-                      var s = localStorage.getItem('nx_auth_session') || sessionStorage.getItem('nx_auth_session');
-                      if (t && (u || s)) {
-                        var l = document.getElementById('userAuthLabel');
-                        var b = document.getElementById('userAuthBtn');
-                        if (l) l.textContent = 'Sign Out';
-                        if (b) {
-                          var ic = b.querySelector('.material-symbols-outlined');
-                          if (ic) ic.textContent = 'logout';
-                          b.onclick = function(e) { if (e && e.preventDefault) e.preventDefault(); if (window.nxSignOut) window.nxSignOut(); };
-                          b.setAttribute('onclick', 'window.nxSignOut()');
-                          b.title = 'Sign Out';
-                        }
-                      }
-                    } catch(e) {}
-                  })();
-                </script>
                 <button id="profileBtn" onclick="openProfile()" aria-label="Open profile" class="bg-brand-rosewood hover:bg-brand-rosewoodHover dark:bg-brand-dustyRose text-white text-xs font-bold px-3.5 py-2 rounded-full transition-all shadow-sm flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-sm">person</span>
                     <span class="hidden sm:inline">Profile</span>
@@ -25407,34 +25386,30 @@ function label() {
                 localStorage.getItem('bookhive_token') || 
                 sessionStorage.getItem('bookhive_token');
 
-  let storedUser = null;
-  try {
-    storedUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || localStorage.getItem('bookhive_user') || 'null');
-  } catch (e) { storedUser = null; }
-
   const hasSession = (typeof S !== 'undefined' && S && (S.email || S.id) && S.role && S.role !== 'guest');
-  const hasUser = (typeof currentUser !== 'undefined' && currentUser && (currentUser.email || currentUser._id || currentUser.rollNo || currentUser.usn));
-  const hasStored = (storedUser && (storedUser.email || storedUser._id || storedUser.usn || storedUser.rollNo));
+  const userIdentifier = (S && (S.name || S.email || S.id)) || (typeof currentUser !== 'undefined' && currentUser && (currentUser.name || currentUser.email || currentUser.usn || currentUser.rollNo)) || 'User';
 
-  // A visitor is ONLY signed in if they have a real auth token AND an active user/session
-  const isSignedIn = !!(token && (hasSession || hasUser || hasStored));
+  // A visitor is ONLY signed in if they have a real auth token AND an active user session
+  const isSignedIn = !!(token && hasSession);
   const iconEl = b ? b.querySelector('.material-symbols-outlined') : null;
 
   if (isSignedIn) {
+    document.body.classList.remove('nx-guest');
     if (l) l.textContent = 'Sign Out';
     if (iconEl) iconEl.textContent = 'logout';
     if (b) {
       b.onclick = function(e) { if (e && e.preventDefault) e.preventDefault(); window.nxSignOut(); };
-      b.setAttribute('onclick', 'nxSignOut()');
-      b.title = 'Sign Out (' + (userIdentifier || 'User') + ')';
+      b.setAttribute('onclick', 'window.nxSignOut()');
+      b.title = 'Sign Out (' + userIdentifier + ')';
     }
   } else {
+    document.body.classList.add('nx-guest');
     if (l) l.textContent = 'Sign In';
     if (iconEl) iconEl.textContent = 'account_circle';
     if (b) {
       b.onclick = function(e) { if (e && e.preventDefault) e.preventDefault(); openModal('authModal'); };
       b.setAttribute('onclick', "openModal('authModal')");
-      b.removeAttribute('title');
+      b.title = 'Sign In';
     }
   }
 }
@@ -25468,8 +25443,13 @@ window.nxSignOut = function () {
     localStorage.removeItem('bookhive_token');
     localStorage.removeItem('bookhive_user');
     localStorage.removeItem('booknexus_last_google_email');
+    localStorage.removeItem('nx_auth_session');
+    localStorage.removeItem('booknexus_onboarding_token');
     sessionStorage.removeItem('booknexus_token');
     sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('bookhive_token');
+    sessionStorage.removeItem('bookhive_user');
+    sessionStorage.removeItem('nx_auth_session');
   } catch (e) { }
   window.nxCurStaff = null;
   document.body.classList.add('nx-guest');

@@ -14,7 +14,7 @@ async function runTests() {
   console.log('   BOOKNEXUS ROLE-BASED AUTH & SECURITY TEST SUITE   ');
   console.log('====================================================');
 
-  await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/bookhive');
+  await mongoose.connect(process.env.ATLAS_MONGO_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/bookhive');
   console.log('Connected to MongoDB');
 
   const totalUsers = await User.countDocuments();
