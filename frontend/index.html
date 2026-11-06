@@ -2248,21 +2248,8 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <div class="nxa-f" id="nxlPw2Wrap"><label for="nxlNp2" class="nxa-l">Confirm password</label><div class="nxa-pw"><input id="nxlNp2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="nxlNp2E" hidden></p></div>
                     </div>
                     <div id="nxlS2" class="nxs-s2" hidden>
-                        <div class="nxs-grp">
-                            <label for="nxlNick" class="nxa-l">What should we call you?</label>
-                            <input id="nxlNick" class="nxa-in pl" type="text" autocomplete="nickname" maxlength="30" placeholder="e.g. Nandi">
-                            <p class="nxa-hint">Required. Your official name and USN are never replaced.</p><p class="nxa-err" id="nxlNickE" hidden></p>
-                        </div>
-                        <div class="nxs-grp">
-                            <div class="nxs-gh"><label for="nxlBio" class="nxa-l">About me</label><small>Shown in your profile header</small></div>
-                            <textarea id="nxlBio" class="nxa-in pl nxs-ta" rows="4" maxlength="300" placeholder="Tell fellow readers a little about you: what you read, what you’re curious about."></textarea>
-                            <div class="nxs-ft"><p class="nxa-err" id="nxlBioE" hidden></p><span class="nxs-cnt" id="nxlBioC">0/300</span></div>
-                        </div>
-                        <div class="nxs-grp">
-                            <span class="nxa-l" id="nxlGenL">Books you like</span>
-                            <div id="nxlGen" role="group" aria-labelledby="nxlGenL"></div>
-                            <p class="nxa-err" id="nxlGenE" hidden></p>
-                        </div>
+                        <div id="nxlGen" role="group" aria-label="Genre Discovery Quiz"></div>
+                        <p class="nxa-err" id="nxlGenE" hidden></p>
                     </div>
                     <button class="nxa-go" id="nxlNwBtn">Continue</button>
                     <p class="nxa-sw" id="nxlBk" hidden><button type="button" class="nxa-link" onclick="nxlStep(1)">Back to college details</button></p>
@@ -20009,6 +19996,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
        ============================================================ */
     const nxDefContact = phone => phone ? ['email', 'phone', 'inapp'] : ['email', 'inapp'];   /* all three by default; phone only when a number is on file */
     const NX_GENRES = ['Fiction', 'Non-fiction', 'Science', 'Mathematics', 'Computer Science', 'Engineering', 'Literature', 'Philosophy', 'History', 'Academic/Textbook', 'Self-help', 'Biography'];
+    window.NX_GENRES = NX_GENRES;
     const profOrd = n => ({ 1: '1st', 2: '2nd', 3: '3rd' }[n] || n + 'th');
     /* ---- college records (stand-in for the college database; keyed by USN). Official fields + Secret ID live here, never in user-editable state ---- */
     const NX_COLLEGE_X = { 'CS2026-042': { year: 3, semester: 5, branch: 'Computer Science & Engineering', dob: '14 Aug 2005', secretId: currentUser.anonId }, 'EC2026-018': { year: 2, semester: 3, branch: 'Electronics & Communication Engineering', dob: '02 Mar 2006', secretId: 'ID-C14' }, 'MA2026-009': { year: 4, semester: 7, branch: 'Information Science & Engineering', dob: '21 Nov 2004', secretId: 'ID-D09' } };
@@ -20194,7 +20182,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         { q: 'What do you usually read for?', w: 1, opts: [['a', 'Exams and coursework', ['Academic/Textbook']], ['b', 'Skills for my career', ['Computer Science', 'Engineering', 'Non-fiction']], ['c', 'Personal growth', ['Self-help', 'Biography']], ['d', 'Escape and relaxation', ['Fiction']], ['e', 'Pure curiosity', ['Science', 'History', 'Philosophy', 'Non-fiction']]] }
     ];
     NX_QUIZ.forEach(Q => { Q.max = Q.opts.length; Q.hint = 'Choose as many as you like'; });
+    window.NX_QUIZ = NX_QUIZ;
     function profQuizScores(ans) { const sc = {}; NX_QUIZ.forEach((Q, qi) => (ans[qi] || []).forEach(id => { const o = Q.opts.find(x => x[0] === id); if (o) o[2].forEach(g => sc[g] = (sc[g] || 0) + Q.w); })); return sc; }
+    window.profQuizScores = profQuizScores;
     function profQuizStart() { profDraft.qz = { mode: 'quiz', step: 0, answers: {} }; delete profErrors.quiz; renderProfile(); }
     function profQuizPick(qi, id) { const Q = NX_QUIZ[qi], a = profDraft.qz.answers[qi] || (profDraft.qz.answers[qi] = []), i = a.indexOf(id); if (i >= 0) a.splice(i, 1); else { a.push(id); if (a.length > Q.max) a.shift(); } renderProfile(); profEl('pfq' + id)?.focus({ preventScroll: true }); }
     function profQuizNav(d) { const z = profDraft.qz; if (d > 0 && !(z.answers[z.step] || []).length) return; if (d > 0 && z.step === NX_QUIZ.length - 1) return profQuizFinish(); z.step = Math.max(0, z.step + d); renderProfile(); }
@@ -24739,53 +24729,175 @@ window.nxlPwGo = async function (e) {
   } catch (err) { kit.banner('Login failed: ' + (err && err.message ? err.message : 'unexpected error') + '. Please try again.', 'bad'); }
   finally { busy = false; b.disabled = false; b.textContent = 'Log in'; }
 };
-/* ---- sign-up step 2: the same three questions as Edit Profile (name, about me, books you like) ---- */
-let nwStep = 1; const SU = { genres: [], answers: {}, cur: {}, mode: 'view', q: 0 };
+/* ---- sign-up step 2: The Interactive 6-Question Discovery Quiz ---- */
+const NX_GENRES = window.NX_GENRES || ['Fiction', 'Non-fiction', 'Science', 'Mathematics', 'Computer Science', 'Engineering', 'Literature', 'Philosophy', 'History', 'Academic/Textbook', 'Self-help', 'Biography'];
+const NX_QUIZ = window.NX_QUIZ || [
+    { q: 'What pulls you into a book?', w: 2, opts: [['a', 'A story to get lost in', ['Fiction', 'Literature']], ['b', 'Something real that happened', ['Non-fiction', 'History', 'Biography']], ['c', 'How things work', ['Science', 'Engineering', 'Computer Science']], ['d', 'Ideas that change how I think', ['Philosophy', 'Literature']], ['e', 'Ways to improve my life', ['Self-help', 'Non-fiction']], ['f', 'Clear explanations for my course', ['Academic/Textbook', 'Mathematics']]] },
+    { q: 'It’s midnight and the library is yours. Where do you wander?', w: 2, opts: [['a', 'Fantasy, novels and classics', ['Fiction', 'Literature']], ['b', 'Old maps and dusty archives', ['History', 'Biography']], ['c', 'Circuit boards and lab manuals', ['Engineering', 'Science', 'Computer Science']], ['d', 'A quiet corner with big questions', ['Philosophy', 'Literature']], ['e', 'A study desk piled with notes', ['Academic/Textbook', 'Mathematics']], ['f', 'The self-growth shelf', ['Self-help', 'Non-fiction']]] },
+    { q: 'Which subjects do you enjoy most?', w: 2, opts: [['a', 'Numbers and logic', ['Mathematics', 'Computer Science']], ['b', 'Machines and building things', ['Engineering', 'Science']], ['c', 'The past and its people', ['History', 'Biography']], ['d', 'Life and the universe', ['Science', 'Philosophy']], ['e', 'Language and storytelling', ['Fiction', 'Literature']], ['f', 'The mind and habits', ['Self-help', 'Philosophy']]] },
+    { q: 'Who would you invite to dinner?', w: 1, opts: [['a', 'A scientist who just made a discovery', ['Science', 'Mathematics']], ['b', 'A historian with wild stories', ['History', 'Non-fiction']], ['c', 'A philosopher who loves to argue', ['Philosophy', 'Literature']], ['d', 'A founder who built something big', ['Biography', 'Self-help', 'Non-fiction']], ['e', 'An inventor with a toolbox', ['Engineering', 'Computer Science']], ['f', 'A novelist with a plot twist', ['Fiction', 'Literature']]] },
+    { q: 'A free rainy afternoon. What are you doing?', w: 1, opts: [['a', 'Curled up with a gripping novel', ['Fiction', 'Literature']], ['b', 'Watching a documentary, then reading more about it', ['Non-fiction', 'History', 'Science']], ['c', 'Solving puzzles or writing code', ['Mathematics', 'Computer Science']], ['d', 'Journaling and planning my goals', ['Self-help', 'Philosophy']], ['e', 'Taking something apart to see how it works', ['Engineering', 'Science']], ['f', 'Reading someone’s life story', ['Biography']]] },
+    { q: 'What do you usually read for?', w: 1, opts: [['a', 'Exams and coursework', ['Academic/Textbook']], ['b', 'Skills for my career', ['Computer Science', 'Engineering', 'Non-fiction']], ['c', 'Personal growth', ['Self-help', 'Biography']], ['d', 'Escape and relaxation', ['Fiction']], ['e', 'Pure curiosity', ['Science', 'History', 'Philosophy', 'Non-fiction']]] }
+];
+NX_QUIZ.forEach(Q => { Q.max = Q.opts.length; Q.hint = 'Choose as many as you like'; });
+
+const profQuizScores = window.profQuizScores || function(ans) {
+    const sc = {};
+    NX_QUIZ.forEach((Q, qi) => (ans[qi] || []).forEach(id => {
+        const o = Q.opts.find(x => x[0] === id);
+        if (o) o[2].forEach(g => sc[g] = (sc[g] || 0) + Q.w);
+    }));
+    return sc;
+};
+
+let nwStep = 1;
+const SU = { genres: [], answers: {}, cur: {}, mode: 'quiz', q: 0 };
 const suEsc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-function suReset() { SU.genres = []; SU.answers = {}; SU.cur = {}; SU.mode = 'view'; SU.q = 0; const c = $('nxlBioC'); if (c) c.textContent = '0/300'; suRender(); nwShow(1, true); }
-function suRender(keepFocus) {
-  const box = $('nxlGen'); if (!box) return; const n = NX_QUIZ.length;
-  if (SU.mode === 'quiz') {
-    const Q = NX_QUIZ[SU.q], sel = SU.cur[SU.q] || [], last = SU.q === n - 1;
-    box.innerHTML = `<div class="nxs-qz" id="nxlQz" tabindex="-1"><div class="nxs-qp" role="progressbar" aria-valuemin="1" aria-valuemax="${n}" aria-valuenow="${SU.q + 1}"><i style="width:${(SU.q + 1) / n * 100}%"></i></div><p class="nxa-hint" style="margin:8px 0 0">Question ${SU.q + 1} of ${n}. ${Q.hint}.</p><h5>${suEsc(Q.q)}</h5><div class="nxs-qo">${Q.opts.map(([id, l]) => `<button type="button" data-q="${id}" aria-pressed="${sel.includes(id)}">${suEsc(l)}</button>`).join('')}</div><div class="nxs-qa"><button type="button" class="nxa-link" data-act="skip">Pick genres myself</button><span style="display:flex;gap:8px">${SU.q ? '<button type="button" class="nxs-sm ghost" data-act="back">Back</button>' : ''}<button type="button" class="nxs-sm" data-act="next" ${sel.length ? '' : 'disabled'}>${last ? 'See my genres' : 'Next'}</button></span></div></div>`;
-  } else {
-    const done = Object.keys(SU.answers).length > 0;
-    box.innerHTML = `<p class="nxa-hint" style="margin:0">${SU.mode === 'result' ? 'Suggested from your answers. Tap to add or remove genres.' : 'Choose the genres you like, or take a one-minute quiz and we’ll suggest some. You can choose as many answers as you like.'}</p><div class="nxs-gp" role="group" aria-label="Favorite genres">${NX_GENRES.map(g => `<button type="button" data-g="${suEsc(g)}" aria-pressed="${SU.genres.includes(g)}">${suEsc(g)}</button>`).join('')}</div><button type="button" class="nxs-qbtn" data-act="start"><span class="material-symbols-outlined" aria-hidden="true">quiz</span>${done ? 'Retake the genre quiz' : 'Take a quiz to find your genres'}</button>`;
-  }
-  if (keepFocus) { const b = keepFocus.g ? [...box.querySelectorAll('[data-g]')].find(x => x.dataset.g === keepFocus.g) : keepFocus.q ? box.querySelector('[data-q="' + keepFocus.q + '"]') : null; if (b) b.focus({ preventScroll: true }); }
-}
-function suFinish() {   /* same scoring as the profile quiz: top 5 genres, ties with 5th kept (max 7), minimum score 2 */
-  const sc = profQuizScores(SU.cur), ranked = Object.keys(sc).filter(g => NX_GENRES.includes(g) && sc[g] >= 2).sort((a, b) => sc[b] - sc[a] || NX_GENRES.indexOf(a) - NX_GENRES.indexOf(b));
-  const cut = ranked.length > 5 ? sc[ranked[4]] : 0;
-  SU.genres = ranked.filter((g, i) => i < 5 || sc[g] >= cut).slice(0, 7); SU.answers = JSON.parse(JSON.stringify(SU.cur)); SU.mode = 'result';
-}
-document.addEventListener('click', e => {
-  const t = e.target.closest && e.target.closest('#nxlGen button'); if (!t) return;
-  const err = $('nxlGenE'); if (err) { err.hidden = true; err.textContent = ''; }
-  if (t.dataset.g) { const i = SU.genres.indexOf(t.dataset.g); i >= 0 ? SU.genres.splice(i, 1) : SU.genres.push(t.dataset.g); return suRender({ g: t.dataset.g }); }
-  if (t.dataset.q) { const Q = NX_QUIZ[SU.q], a = SU.cur[SU.q] || (SU.cur[SU.q] = []), i = a.indexOf(t.dataset.q); if (i >= 0) a.splice(i, 1); else { a.push(t.dataset.q); if (a.length > Q.max) a.shift(); } return suRender({ q: t.dataset.q }); }
-  const act = t.dataset.act;
-  if (act === 'start') { SU.mode = 'quiz'; SU.q = 0; SU.cur = {}; suRender(); const z = $('nxlQz'); if (z) z.focus({ preventScroll: true }); }
-  else if (act === 'skip') { SU.mode = 'view'; suRender(); }
-  else if (act === 'back') { SU.q = Math.max(0, SU.q - 1); suRender(); }
-  else if (act === 'next') { if (!(SU.cur[SU.q] || []).length) return; if (SU.q === NX_QUIZ.length - 1) { suFinish(); suRender(); } else { SU.q++; suRender(); } }
-});
-document.addEventListener('input', e => { if (e.target && e.target.id === 'nxlBio') { const c = $('nxlBioC'); if (c) c.textContent = e.target.value.length + '/300'; } });
-function nwShow(n, quiet) {
-  nwStep = n; const two = n === 2;
-  $('nxlS1').hidden = two; $('nxlS2').hidden = !two; $('nxlBk').hidden = !two; $('nxlP2').className = two ? 'on' : '';
-  $('nxlStepLbl').textContent = two ? 'Step 2 of 2 · Literary & Academic Quiz' : 'Step 1 of 2 · Student Details';
-  $('nxlNwBtn').textContent = two ? 'Submit Registration' : 'Continue to Quiz';
-  const h = $('authModal') && $('authModal').querySelector('h3'), u = $('nxaSub');
-  if (h) h.textContent = two ? 'Genre Discovery Quiz' : (window.__googleOnboardingData ? 'Complete Student Onboarding' : 'Create Student Account');
-  if (u) u.textContent = two ? 'Answer all 6 questions to help BookNexus match textbooks and books to your reading interests.' : 'Please enter your student details and official USN.';
-  if (two) {
-    if (!Object.keys(SU.answers).length && !Object.keys(SU.cur).length) {
-      SU.mode = 'quiz'; SU.q = 0; SU.cur = {};
-    }
+
+function suReset() {
+    SU.genres = [];
+    SU.answers = {};
+    SU.cur = {};
+    SU.mode = 'quiz';
+    SU.q = 0;
     suRender();
-  }
-  if (!quiet) { const box = $('nxa') && $('nxa').closest('[style*="overflow-y"]'); if (box) box.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => { const el = $(two ? 'nxlQz' : 'nxlName'); if (el) el.focus({ preventScroll: true }); }, 60); }
+    nwShow(1, true);
+}
+
+function suRender(keepFocus) {
+    const box = $('nxlGen');
+    if (!box) return;
+    const n = NX_QUIZ.length;
+    if (SU.mode === 'quiz') {
+        const Q = NX_QUIZ[SU.q] || NX_QUIZ[0];
+        const sel = SU.cur[SU.q] || [];
+        const last = SU.q === n - 1;
+        box.innerHTML = `
+          <div class="nxs-qz" id="nxlQz" tabindex="-1">
+            <div class="nxs-qp" role="progressbar" aria-valuemin="1" aria-valuemax="${n}" aria-valuenow="${SU.q + 1}">
+              <i style="width:${((SU.q + 1) / n) * 100}%"></i>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+              <span class="nxa-hint" style="font-weight:700;color:var(--nx-burgundy, #6C3B3D)">Question ${SU.q + 1} of ${n}</span>
+              <span class="nxa-hint">${Q.hint}</span>
+            </div>
+            <h5 style="margin:8px 0 14px;font-size:17px;font-weight:700;color:#46282A;text-align:left;">${suEsc(Q.q)}</h5>
+            <div class="nxs-qo" style="display:grid;gap:8px;">
+              ${Q.opts.map(([id, l]) => `
+                <button type="button" data-q="${id}" class="quiz-opt-btn" aria-pressed="${sel.includes(id)}" style="text-align:left;padding:12px 14px;border-radius:14px;border:1.5px solid ${sel.includes(id) ? '#46282A' : 'rgba(70,40,42,0.18)'};background:${sel.includes(id) ? '#46282A' : '#fff'};color:${sel.includes(id) ? '#fff' : '#1b1214'};cursor:pointer;font-weight:600;font-size:13px;display:flex;align-items:center;gap:10px;">
+                  <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:${sel.includes(id) ? '#fff' : 'rgba(70,40,42,0.1)'};color:${sel.includes(id) ? '#46282A' : 'inherit'};font-size:11px;font-weight:800;text-transform:uppercase;">${id}</span>
+                  <span>${suEsc(l)}</span>
+                </button>
+              `).join('')}
+            </div>
+            <div class="nxs-qa" style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;">
+              ${SU.q > 0 ? '<button type="button" class="nxs-sm ghost" data-act="back" style="padding:8px 18px;border-radius:999px;border:1px solid rgba(70,40,42,0.3);background:transparent;cursor:pointer;font-weight:700;">Back</button>' : '<span></span>'}
+              <button type="button" class="nxs-sm" data-act="next" ${sel.length ? '' : 'disabled'} style="padding:9px 22px;border-radius:999px;border:none;background:#46282A;color:#fff;cursor:pointer;font-weight:700;">
+                ${last ? 'See Matched Genres' : 'Next Question →'}
+              </button>
+            </div>
+          </div>
+        `;
+    } else {
+        box.innerHTML = `
+          <div class="nxs-qz" style="text-align:center;padding:18px;">
+            <div style="font-size:28px;margin-bottom:6px;">🎉</div>
+            <h5 style="margin:0 0 6px;font-size:18px;font-weight:700;color:#46282A;">Quiz Completed!</h5>
+            <p class="nxa-hint" style="margin:0 0 12px;">Based on your answers, your personalized reading genres:</p>
+            <div class="nxs-gp" role="group" aria-label="Favorite genres" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:16px;">
+              ${SU.genres.map(g => `<span style="padding:6px 14px;border-radius:999px;background:#46282A;color:#fff;font-size:12px;font-weight:700;">${suEsc(g)}</span>`).join('')}
+            </div>
+            <p style="font-size:12px;color:#16a34a;font-weight:700;">All 6 questions answered! Click "Submit Registration" below to open your dashboard.</p>
+            <button type="button" class="nxa-link" data-act="retake" style="margin-top:10px;font-size:11px;color:#71717a;text-decoration:underline;background:none;border:none;cursor:pointer;">Retake quiz</button>
+          </div>
+        `;
+    }
+    if (keepFocus) {
+        const b = keepFocus.q ? box.querySelector('[data-q="' + keepFocus.q + '"]') : null;
+        if (b) b.focus({ preventScroll: true });
+    }
+}
+
+function suFinish() {
+    const sc = profQuizScores(SU.cur);
+    const ranked = Object.keys(sc).filter(g => NX_GENRES.includes(g) && sc[g] >= 2).sort((a, b) => sc[b] - sc[a] || NX_GENRES.indexOf(a) - NX_GENRES.indexOf(b));
+    const cut = ranked.length > 5 ? sc[ranked[4]] : 0;
+    SU.genres = ranked.filter((g, i) => i < 5 || sc[g] >= cut).slice(0, 7);
+    if (!SU.genres.length) SU.genres = ['Computer Science', 'Academic/Textbook', 'Science'];
+    SU.answers = JSON.parse(JSON.stringify(SU.cur));
+    SU.mode = 'result';
+}
+
+document.addEventListener('click', e => {
+    const t = e.target.closest && e.target.closest('#nxlGen button');
+    if (!t) return;
+    const err = $('nxlGenE');
+    if (err) { err.hidden = true; err.textContent = ''; }
+    
+    if (t.dataset.q) {
+        const Q = (NX_QUIZ && NX_QUIZ[SU.q]) || { max: 6 };
+        const a = SU.cur[SU.q] || (SU.cur[SU.q] = []);
+        const i = a.indexOf(t.dataset.q);
+        if (i >= 0) a.splice(i, 1);
+        else { a.push(t.dataset.q); if (a.length > (Q.max || 6)) a.shift(); }
+        return suRender({ q: t.dataset.q });
+    }
+    const act = t.dataset.act;
+    if (act === 'start' || act === 'retake') {
+        SU.mode = 'quiz';
+        SU.q = 0;
+        SU.cur = {};
+        suRender();
+        const z = $('nxlQz');
+        if (z) z.focus({ preventScroll: true });
+    } else if (act === 'back') {
+        SU.q = Math.max(0, SU.q - 1);
+        suRender();
+    } else if (act === 'next') {
+        if (!(SU.cur[SU.q] || []).length) return;
+        if (SU.q >= NX_QUIZ.length - 1) {
+            suFinish();
+            suRender();
+            const submitBtn = $('nxlNwBtn');
+            if (submitBtn) {
+                submitBtn.textContent = 'Submit Registration';
+                submitBtn.focus();
+            }
+        } else {
+            SU.q++;
+            suRender();
+        }
+    }
+});
+
+function nwShow(n, quiet) {
+    nwStep = n;
+    const two = n === 2;
+    $('nxlS1').hidden = two;
+    $('nxlS2').hidden = !two;
+    $('nxlBk').hidden = !two;
+    $('nxlP2').className = two ? 'on' : '';
+    $('nxlStepLbl').textContent = two ? 'Step 2 of 2 · Literary & Academic Quiz' : 'Step 1 of 2 · Student Details';
+    $('nxlNwBtn').textContent = two ? (SU.mode === 'result' ? 'Submit Registration' : 'Finish Quiz Above') : 'Continue to Quiz';
+    const h = $('authModal') && $('authModal').querySelector('h3'), u = $('nxaSub');
+    if (h) h.textContent = two ? 'Genre Discovery Quiz' : (window.__googleOnboardingData ? 'Complete Student Onboarding' : 'Create Student Account');
+    if (u) u.textContent = two ? 'Answer all 6 questions to help BookNexus match textbooks and books to your reading interests.' : 'Please enter your student details and official USN.';
+    if (two) {
+        if (!Object.keys(SU.answers).length && !Object.keys(SU.cur).length) {
+            SU.mode = 'quiz';
+            SU.q = 0;
+            SU.cur = {};
+        }
+        suRender();
+    }
+    if (!quiet) {
+        const box = $('nxa') && $('nxa').closest('[style*="overflow-y"]');
+        if (box) box.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+            const el = $(two ? 'nxlQz' : 'nxlName');
+            if (el) el.focus({ preventScroll: true });
+        }, 60);
+    }
 }
 window.nxlStep = function (n) { K().clearErrs($('nxaVNew')); K().banner(''); nwShow(n); };
 window.nxlCreate = async function (e) {
