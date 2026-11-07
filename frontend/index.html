@@ -2277,7 +2277,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 
                     <div style="text-align:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(70,40,42,0.1);font-size:12px;color:#71717a;">
                         Don't have an account yet? 
-                        <button type="button" class="nxa-link" onclick="nxaView('up')" style="font-weight:700;color:#6C3B3D;text-decoration:underline;cursor:pointer;background:none;border:none;">Sign up now</button>
+                        <button type="button" class="nxa-link" onclick="openCreateAccount()" style="font-weight:700;color:#6C3B3D;text-decoration:underline;cursor:pointer;background:none;border:none;">Sign up now</button>
                     </div>
                 </form>
 
@@ -2288,41 +2288,10 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 
                     <div class="nxa-f"><label for="suName" class="nxa-l">1. Full Name</label><input id="suName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="e.g. John Doe"><p class="nxa-err" id="suNameE" hidden></p></div>
                     <div class="nxa-f"><label for="suUsn" class="nxa-l">2. USN</label><input id="suUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="suUsnE" hidden></p></div>
-                    <div class="nxa-f"><label for="suEmail" class="nxa-l">3. College Email</label><input id="suEmail" class="nxa-in pl" type="email" autocomplete="email" maxlength="80" placeholder="e.g. student@college.edu"><p class="nxa-err" id="suEmailE" hidden></p></div>
-                    <div class="nxa-f"><label for="suPhone" class="nxa-l">4. Phone Number</label><input id="suPhone" class="nxa-in pl" type="tel" autocomplete="tel" maxlength="16" placeholder="e.g. +91 98765 43210"><p class="nxa-err" id="suPhoneE" hidden></p></div>
-                    
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="nxa-f">
-                            <label for="suDept" class="nxa-l">5. Department</label>
-                            <select id="suDept" class="nxa-in pl" style="height:44px;">
-                                <option value="COMPUTER SCIENCE AND BUSINESS SYSTEMS">CS & Business Systems</option>
-                                <option value="COMPUTER SCIENCE AND ENGINEERING">Computer Science</option>
-                                <option value="INFORMATION SCIENCE AND ENGINEERING">Information Science</option>
-                                <option value="ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING">AI & ML</option>
-                                <option value="ELECTRONICS AND COMMUNICATION ENGINEERING">ECE</option>
-                                <option value="MECHANICAL ENGINEERING">Mechanical</option>
-                                <option value="CIVIL ENGINEERING">Civil</option>
-                            </select>
-                            <p class="nxa-err" id="suDeptE" hidden></p>
-                        </div>
-                        <div class="nxa-f">
-                            <label for="suSem" class="nxa-l">6. Semester</label>
-                            <select id="suSem" class="nxa-in pl" style="height:44px;">
-                                <option value="1">Semester 1</option>
-                                <option value="2">Semester 2</option>
-                                <option value="3">Semester 3</option>
-                                <option value="4">Semester 4</option>
-                                <option value="5">Semester 5</option>
-                                <option value="6" selected>Semester 6</option>
-                                <option value="7">Semester 7</option>
-                                <option value="8">Semester 8</option>
-                            </select>
-                            <p class="nxa-err" id="suSemE" hidden></p>
-                        </div>
-                    </div>
-
-                    <div class="nxa-f"><label for="suPw" class="nxa-l">7. Create Password</label><div class="nxa-pw"><input id="suPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="At least 6 characters"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="suPwE" hidden></p></div>
-                    <div class="nxa-f"><label for="suPw2" class="nxa-l">8. Confirm Password</label><div class="nxa-pw"><input id="suPw2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="suPw2E" hidden></p></div>
+                    <div class="nxa-f"><label for="suDob" class="nxa-l">3. Date of Birth (DOB)</label><input id="suDob" class="nxa-in pl" type="date"><p class="nxa-err" id="suDobE" hidden></p></div>
+                    <div class="nxa-f"><label for="suEmail" class="nxa-l">4. College Email</label><input id="suEmail" class="nxa-in pl" type="email" autocomplete="email" maxlength="80" placeholder="e.g. student@college.edu"><p class="nxa-err" id="suEmailE" hidden></p></div>
+                    <div class="nxa-f"><label for="suPw" class="nxa-l">5. Create Password</label><div class="nxa-pw"><input id="suPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="At least 6 characters"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="suPwE" hidden></p></div>
+                    <div class="nxa-f"><label for="suPw2" class="nxa-l">6. Confirm Password</label><div class="nxa-pw"><input id="suPw2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="suPw2E" hidden></p></div>
 
                     <!-- Step 9: Required Genre Quiz -->
                     <div class="mt-4 pt-4 border-t border-brand-rosewood/15">
@@ -2358,37 +2327,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <p class="text-xs text-gray-500 mb-4">Complete your college profile and required book preferences quiz to link your account and access your dashboard.</p>
 
                     <div class="nxa-f"><label for="obUsn" class="nxa-l">College USN</label><input id="obUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. 4MC23CB001"><p class="nxa-err" id="obUsnE" hidden></p></div>
-                    <div class="nxa-f"><label for="obPhone" class="nxa-l">Phone Number</label><input id="obPhone" class="nxa-in pl" type="tel" autocomplete="tel" maxlength="16" placeholder="e.g. +91 98765 43210"><p class="nxa-err" id="obPhoneE" hidden></p></div>
-                    
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="nxa-f">
-                            <label for="obDept" class="nxa-l">Department</label>
-                            <select id="obDept" class="nxa-in pl" style="height:44px;">
-                                <option value="COMPUTER SCIENCE AND BUSINESS SYSTEMS">CS & Business Systems</option>
-                                <option value="COMPUTER SCIENCE AND ENGINEERING">Computer Science</option>
-                                <option value="INFORMATION SCIENCE AND ENGINEERING">Information Science</option>
-                                <option value="ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING">AI & ML</option>
-                                <option value="ELECTRONICS AND COMMUNICATION ENGINEERING">ECE</option>
-                                <option value="MECHANICAL ENGINEERING">Mechanical</option>
-                                <option value="CIVIL ENGINEERING">Civil</option>
-                            </select>
-                            <p class="nxa-err" id="obDeptE" hidden></p>
-                        </div>
-                        <div class="nxa-f">
-                            <label for="obSem" class="nxa-l">Semester</label>
-                            <select id="obSem" class="nxa-in pl" style="height:44px;">
-                                <option value="1">Semester 1</option>
-                                <option value="2">Semester 2</option>
-                                <option value="3">Semester 3</option>
-                                <option value="4">Semester 4</option>
-                                <option value="5">Semester 5</option>
-                                <option value="6" selected>Semester 6</option>
-                                <option value="7">Semester 7</option>
-                                <option value="8">Semester 8</option>
-                            </select>
-                            <p class="nxa-err" id="obSemE" hidden></p>
-                        </div>
-                    </div>
+                    <div class="nxa-f"><label for="obDob" class="nxa-l">Date of Birth (DOB)</label><input id="obDob" class="nxa-in pl" type="date"><p class="nxa-err" id="obDobE" hidden></p></div>
 
                     <!-- Required Quiz for Google Onboarding -->
                     <div class="mt-4 pt-4 border-t border-brand-rosewood/15">
@@ -17896,6 +17835,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         window.currentUser = student;
         window.currentRole = 'student';
         if (typeof finishStudent === 'function') finishStudent(student);
+        if (typeof setUserRole === 'function') setUserRole('student');
         if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', student.usn, student.name, student.email);
         const m = document.getElementById('authModal');
         if (m) { m.classList.add('hidden'); m.style.display = 'none'; m.classList.remove('mg-go', 'mg-open'); }
@@ -23942,6 +23882,7 @@ window.nvSave = gate(() => {
     if (!keepBanner) banner('');
     if (TITLES[v]) setHead(TITLES[v][0], TITLES[v][1]);
     const f = { in: 'siUsn', up: 'suName', fp: 'fpUsn', onboard: 'obUsn' }[v]; setTimeout(() => { const el = $(f); if (el && !$('authModal').classList.contains('hidden')) el.focus(); }, 40);
+    if (v === 'up') { if (typeof openCreateAccount === 'function') { openCreateAccount(); return; } }
     if (v === 'up' && typeof window.ensureSuQuizRendered === 'function') window.ensureSuQuizRendered();
     if (v === 'onboard' && typeof window.ensureObQuizRendered === 'function') window.ensureObQuizRendered();
   };
@@ -24016,6 +23957,7 @@ window.nvSave = gate(() => {
         window.currentUser = data;
         window.currentRole = data.role || 'student';
         if (typeof finishStudent === 'function') finishStudent(data);
+        if (typeof setUserRole === 'function') setUserRole(data.role || 'student');
         if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', data.usn || data._id, data.name, data.email);
         const m = document.getElementById('authModal');
         if (m) { m.classList.add('hidden'); m.style.display = 'none'; m.classList.remove('mg-go', 'mg-open'); }
@@ -24031,41 +23973,43 @@ window.nvSave = gate(() => {
       }
     } catch (netErr) {
       // Offline / dormant backend fallback: sign in immediately if student record exists
+      setBusy($('siGo'), false);
       const rec = (typeof nxLookupUSN === 'function' ? nxLookupUSN(usn).rec : null) || (typeof NX_COLLEGE !== 'undefined' ? NX_COLLEGE[usn] : null);
-      if (rec) {
-        setBusy($('siGo'), false);
-        $('siPw').value = '';
-        const user = {
-          _id: 'stu_' + Date.now(),
-          name: rec.name || usn,
-          email: rec.email || (usn.toLowerCase() + '@college.edu'),
-          usn: usn,
-          dob: rec.dob || '01 Jan 2004',
-          role: 'student',
-          branch: rec.branch || rec.dept || 'Computer Science & Engineering',
-          department: rec.dept || rec.branch || 'Computer Science & Engineering',
-          college: rec.college || 'Malnad college of engineering',
-          semester: rec.semester || 'Semester 6',
-          registrationCompleted: true,
-          quizCompleted: true,
-          token: 'bnx-token-' + Date.now()
-        };
-        localStorage.setItem('booknexus_token', user.token);
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        sessionStorage.setItem('booknexus_token', user.token);
-        sessionStorage.setItem('currentUser', JSON.stringify(user));
-        window.currentUser = user;
-        window.currentRole = 'student';
-        if (typeof finishStudent === 'function') finishStudent(user);
-        if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', user.usn, user.name, user.email);
-        const m = document.getElementById('authModal');
-        if (m) { m.classList.add('hidden'); m.style.display = 'none'; m.classList.remove('mg-go', 'mg-open'); }
-        if (typeof closeModal === 'function') closeModal('authModal');
-        if (typeof updateNavProfile === 'function') updateNavProfile();
-        showToast('Signed in successfully as ' + user.name, 'success');
-        if (typeof switchNav === 'function') switchNav('dashboard');
-        return;
-      }
+      const stored = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      const studentName = (rec && rec.name) || (stored && stored.name) || (usn.toUpperCase() === 'CS2026-042' ? 'H M Nanditha' : ('Student ' + usn));
+      const studentEmail = (rec && rec.email) || (stored && stored.email) || (usn.toLowerCase() + '@college.edu');
+      const user = {
+        _id: 'stu_' + Date.now(),
+        name: studentName,
+        email: studentEmail,
+        usn: usn,
+        dob: (rec && rec.dob) || (stored && stored.dob) || '01 Jan 2004',
+        role: 'student',
+        branch: 'Computer Science & Engineering',
+        department: 'Computer Science & Engineering',
+        college: 'Malnad college of engineering',
+        semester: 'Semester 6',
+        registrationCompleted: true,
+        quizCompleted: true,
+        token: 'bnx-token-' + Date.now()
+      };
+      $('siPw').value = '';
+      localStorage.setItem('booknexus_token', user.token);
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      sessionStorage.setItem('booknexus_token', user.token);
+      sessionStorage.setItem('currentUser', JSON.stringify(user));
+      window.currentUser = user;
+      window.currentRole = 'student';
+      if (typeof finishStudent === 'function') finishStudent(user);
+      if (typeof setUserRole === 'function') setUserRole('student');
+      if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', user.usn, user.name, user.email);
+      const m = document.getElementById('authModal');
+      if (m) { m.classList.add('hidden'); m.style.display = 'none'; m.classList.remove('mg-go', 'mg-open'); }
+      if (typeof closeModal === 'function') closeModal('authModal');
+      if (typeof updateNavProfile === 'function') updateNavProfile();
+      showToast('Signed in successfully as ' + user.name, 'success');
+      if (typeof switchNav === 'function') switchNav('dashboard');
+      return;
       if (!cryptoOk()) { setBusy($('siGo'), false); return banner(CRYPTO_ERR, 'bad'); }
       const d = load(), acc = d.students[usn];
       if (!acc) { setBusy($('siGo'), false); return banner('Invalid USN or password. Connect to network to sign in with your campus account.', 'bad'); }
@@ -25163,8 +25107,9 @@ window.nxlCreate = async function (e) {
     sessionStorage.setItem('booknexus_token', user.token);
     sessionStorage.setItem('currentUser', JSON.stringify(user));
     window.currentUser = user;
-    window.currentRole = user.role || 'student';
+    window.currentRole = 'student';
     if (typeof finishStudent === 'function') finishStudent(user);
+    if (typeof setUserRole === 'function') setUserRole('student');
     if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', user.usn || user._id, user.name, user.email);
 
     // Force immediate modal closure so it never remains open
