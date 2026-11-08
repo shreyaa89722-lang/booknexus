@@ -58,3 +58,4 @@ Module._resolveFilename = function (request, parent, isMain, options) {
 };
 
 module.exports = { findCaseInsensitive };
+

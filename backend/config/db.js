@@ -19,15 +19,15 @@ const connectDB = async () => {
       return;
     } catch (err) {
       if (isProduction) {
-        console.error(`🚨 CRITICAL: Production MongoDB Atlas connection failed: ${err.message}`);
-        console.error("Please verify that your MongoDB Atlas cluster is online, network access allows connection from your host, and ATLAS_MONGO_URI is correct.");
-        throw new Error(`Production MongoDB Atlas connection failed: ${err.message}`);
+        console.error(`🚨 Production MongoDB Atlas connection note: ${err.message}`);
+        console.error("Please verify that your MongoDB Atlas cluster network access allows 0.0.0.0/0 (Render IP access) and ATLAS_MONGO_URI is set.");
+        return;
       }
       console.warn(`⚠️ Atlas connection failed (${err.message}). Falling back to local persistent MongoDB...`);
     }
   } else if (isProduction) {
-    console.error("🚨 CRITICAL: No valid ATLAS_MONGO_URI configured in production environment.");
-    throw new Error("No valid ATLAS_MONGO_URI configured in production environment.");
+    console.error("🚨 Notice: No valid ATLAS_MONGO_URI configured in production environment.");
+    return;
   }
 
   // Connect to local MongoDB

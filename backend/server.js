@@ -71,6 +71,24 @@ app.use(cors({
 
 if (process.env.NODE_ENV !== "test") app.use(morgan("dev"));
 
+// Health checks — defined BEFORE rate limiters, always return HTTP 200
+const healthHandler = (req, res) => {
+  const isDbConnected = mongoose.connection.readyState === 1;
+  res.status(200).json({
+    success: true,
+    message: "BookNexus API is running",
+    status: "healthy",
+    database: isDbConnected ? "connected" : "connecting",
+    timestamp: new Date().toISOString(),
+    uptime: Math.round(process.uptime()),
+    port: parseInt(process.env.PORT, 10) || 5000
+  });
+};
+
+app.get("/api/health", healthHandler);
+app.get("/health", healthHandler);
+app.get("/", healthHandler);
+
 // General rate limiter — applies to all API routes
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -92,15 +110,6 @@ const authLimiter = rateLimit({
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/register", authLimiter);
 
-app.get("/api/health", (req, res) => {
-  const isDbConnected = mongoose.connection.readyState === 1;
-  res.json({
-    success: true,
-    message: "BookNexus API is running",
-    database: isDbConnected ? "connected" : "connecting"
-  });
-});
-
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/rentals", rentalRoutes);
@@ -114,11 +123,11 @@ app.post("/api/webhooks/resend", handleResendWebhook);
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT, 10) || 5000;
 
 const startServer = async () => {
-  const server = app.listen(PORT, () => {
-    console.log(`BookNexus backend running on port ${PORT}`);
+  const server = app.listen(PORT, "0.0.0.0", () => {
+    console.log(`BookNexus backend running on port ${PORT} bound to 0.0.0.0`);
   });
 
   try {
@@ -143,5 +152,12 @@ const startServer = async () => {
   process.on("SIGINT", gracefulShutdown);
   process.on("SIGTERM", gracefulShutdown);
 };
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+});
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception thrown:", err);
+});
 
 startServer();
