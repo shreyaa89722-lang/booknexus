@@ -24908,7 +24908,7 @@ document.addEventListener('click', e => {
             t.disabled = true;
             t.textContent = 'Submitting & Opening Student Page…';
             suFinish();
-            window.nxlCreate(e);
+            window.nxlCreate(e, t);
         } else {
             SU.q++;
             suRender();
@@ -24950,9 +24950,17 @@ function nwShow(n, quiet) {
     }
 }
 window.nxlStep = function (n) { K().clearErrs($('nxaVNew')); K().banner(''); nwShow(n); };
-window.nxlCreate = async function (e) {
+window.nxlCreate = async function (e, triggeringBtn) {
   if (e && e.preventDefault) e.preventDefault();
-  if (busy) return;
+  if (window.__isSubmittingQuiz || busy) return;
+
+  const activeBtn = triggeringBtn || 
+                    (e && e.target && e.target.closest && e.target.closest('button')) || 
+                    document.querySelector('#nxlGen button[data-act="next"]') || 
+                    document.querySelector('#nxlGen button.nxs-sm') || 
+                    $('nxlNwBtn');
+  const origBtnText = activeBtn ? activeBtn.textContent : 'Submit Registration ✓';
+
   const kit = K(), f = $('nxaVNew');
   kit.clearErrs(f);
   kit.banner('');
@@ -24985,8 +24993,12 @@ window.nxlCreate = async function (e) {
     else if (pw && pw !== pw2) ok = kit.fieldErr('nxlNp2', 'Passwords do not match.') && ok;
   }
 
-  if (!ok && nwStep === 2) nwShow(1, true);
   if (!ok) {
+    if (activeBtn) {
+      activeBtn.disabled = false;
+      activeBtn.textContent = origBtnText || 'Submit Registration ✓';
+    }
+    if (nwStep === 2) nwShow(1, true);
     for (const id of ['nxlName', 'nxlUsn', 'nxlDob', 'nxlEmail', 'nxlNp', 'nxlNp2']) {
       const i = $(id); if (i && i.hasAttribute('aria-invalid')) { i.focus(); break; }
     }
@@ -25006,8 +25018,12 @@ window.nxlCreate = async function (e) {
   const totalQuestions = (typeof NX_QUIZ !== 'undefined') ? NX_QUIZ.length : 6;
   const answeredCount = Object.keys(SU.answers || {}).length || Object.keys(SU.cur || {}).length;
   if (answeredCount < totalQuestions) {
+    if (activeBtn) {
+      activeBtn.disabled = false;
+      activeBtn.textContent = origBtnText || 'Submit Registration ✓';
+    }
     const g = $('nxlGenE');
-    if (g) { g.textContent = `Please complete all ${totalQuestions} questions of the quiz to finish registration.`; g.hidden = false; }
+    if (g) { g.textContent = `Please complete all ${totalQuestions} questions of the quiz to finish registration (${answeredCount}/${totalQuestions} answered).`; g.hidden = false; }
     SU.mode = 'quiz';
     suRender();
     const qz = $('nxlQz');
@@ -25015,7 +25031,12 @@ window.nxlCreate = async function (e) {
     return;
   }
 
+  window.__isSubmittingQuiz = true;
   busy = true;
+  if (activeBtn) {
+    activeBtn.disabled = true;
+    activeBtn.textContent = 'Submitting & Opening Student Page…';
+  }
   const b = $('nxlNwBtn');
   if (b) { b.disabled = true; b.textContent = 'Completing registration…'; }
 
@@ -25072,7 +25093,15 @@ window.nxlCreate = async function (e) {
       if (res && res.ok) {
         const json = await res.json();
         if (json && json.success) {
-          user = json.data;
+          user = json.data.user || json.data;
+          if (json.data && json.data.token) user.token = json.data.token;
+        }
+      } else if (res && (res.status === 400 || res.status === 409)) {
+        const json = await res.json().catch(() => ({}));
+        if (json && json.message && /already exists|already registered/i.test(json.message)) {
+          kit.banner(json.message, 'bad');
+          if (nwStep === 2) nwShow(1, true);
+          return;
         }
       }
     } catch (apiErr) {
@@ -25137,7 +25166,12 @@ window.nxlCreate = async function (e) {
     showToast('Welcome to BookNexus!', 'success');
     if (typeof switchNav === 'function') switchNav('dashboard');
   } finally {
+    window.__isSubmittingQuiz = false;
     busy = false;
+    if (activeBtn) {
+      activeBtn.disabled = false;
+      activeBtn.textContent = origBtnText || 'Submit Registration ✓';
+    }
     if (b) {
       b.disabled = false;
       b.textContent = 'Submit Registration';

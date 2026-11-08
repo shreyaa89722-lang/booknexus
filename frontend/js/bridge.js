@@ -2294,17 +2294,18 @@
 
       const name = (document.getElementById('suName')?.value || '').trim();
       const usn = (document.getElementById('suUsn')?.value || '').trim().toUpperCase();
+      const dob = (document.getElementById('suDob')?.value || '').trim();
       const email = (document.getElementById('suEmail')?.value || '').trim().toLowerCase();
       const phone = (document.getElementById('suPhone')?.value || '').trim();
-      const dept = document.getElementById('suDept')?.value || 'COMPUTER SCIENCE AND BUSINESS SYSTEMS';
-      const sem = document.getElementById('suSem')?.value || '6';
+      const dept = document.getElementById('suDept')?.value || 'Computer Science and Business Systems';
+      const sem = document.getElementById('suSem')?.value || 'Semester 6';
       const pw = document.getElementById('suPw')?.value || '';
       const pw2 = document.getElementById('suPw2')?.value || '';
 
-      if (!name || !usn || !email || !phone || !pw || !pw2) {
+      if (!name || !usn || !email || !dob || !pw || !pw2) {
         if (banner) {
           banner.className = 'nxa-banner bad';
-          banner.textContent = 'Please fill in all 8 required registration fields.';
+          banner.textContent = 'Please fill in all required fields (Name, USN, DOB, Email, Password).';
           banner.hidden = false;
         }
         return;
@@ -2344,10 +2345,13 @@
         const payload = {
           name,
           usn,
+          dob,
           email,
-          phone,
-          department: dept,
-          semester: sem,
+          phone: phone || '',
+          branch: 'Computer Science and Business Systems',
+          department: dept || 'Computer Science and Business Systems',
+          college: 'Malnad college of engineering',
+          semester: sem || 'Semester 6',
           password: pw,
           confirmPassword: pw2,
           quizAnswers: window.__suQuizAnswers
@@ -2409,14 +2413,15 @@
       if (quizErr) quizErr.hidden = true;
 
       const usn = (document.getElementById('obUsn')?.value || '').trim().toUpperCase();
+      const dob = (document.getElementById('obDob')?.value || '').trim();
       const phone = (document.getElementById('obPhone')?.value || '').trim();
-      const dept = document.getElementById('obDept')?.value || 'COMPUTER SCIENCE AND BUSINESS SYSTEMS';
-      const sem = document.getElementById('obSem')?.value || '6';
+      const dept = document.getElementById('obDept')?.value || 'Computer Science and Business Systems';
+      const sem = document.getElementById('obSem')?.value || 'Semester 6';
 
-      if (!usn || !phone) {
+      if (!usn || !dob) {
         if (banner) {
           banner.className = 'nxa-banner bad';
-          banner.textContent = 'Please enter your student USN and contact phone number.';
+          banner.textContent = 'Please enter your student USN and select your Date of Birth.';
           banner.hidden = false;
         }
         return;
