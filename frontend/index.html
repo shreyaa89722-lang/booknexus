@@ -1196,7 +1196,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 @media(prefers-reduced-motion:reduce){.pf *,.pf *::before,.pf *::after{animation:none!important;transition:none!important}.pf-orb,.pf-fb,.pf-glass{translate:none!important}.pf-book{transform:rotateX(58deg) rotateZ(-14deg)!important}}
 </style>
 
-<style id="nxGuestEarly">body.nx-guest #notifBadge{display:none!important}body.nx-guest #desktopNavLinks .nav-btn:not(#navHome){display:none!important}body.nx-guest #mobileNavLinks>:not(:first-child){display:none!important}</style>
+<style id="nxGuestEarly">body.nx-guest #notifBadge{display:none!important}body.nx-guest #desktopNavLinks #navMyLibrary,body.nx-guest #desktopNavLinks #navDashboard,body.nx-guest #desktopNavLinks #navLibrarianDesk,body.nx-guest #desktopNavLinks #navAdminDesk,body.nx-guest #desktopNavLinks #navTransactions{display:none!important}body.nx-guest #mobileNavLinks .nav-btn-auth{display:none!important}</style>
 </head>
 <body class="nx-guest antialiased min-h-screen flex flex-col font-sans selection:bg-brand-dustyRose selection:text-white">
 
@@ -16364,9 +16364,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
             mobileHTML = `
                 <button onclick="switchNav('home'); toggleMobileMenu();" class="block w-full text-left py-2 px-3 text-sm font-bold text-brand-rosewood dark:text-white">Home</button>
                 <button onclick="switchNav('browse'); toggleMobileMenu();" class="block w-full text-left py-2 px-3 text-sm font-bold text-brand-rosewood dark:text-white">Browse Catalog</button>
-                <button onclick="switchNav('myLibrary'); toggleMobileMenu();" class="block w-full text-left py-2 px-3 text-sm font-bold text-brand-rosewood dark:text-white">My Library</button>
+                <button onclick="switchNav('myLibrary'); toggleMobileMenu();" class="nav-btn-auth block w-full text-left py-2 px-3 text-sm font-bold text-brand-rosewood dark:text-white">My Library</button>
                 <button onclick="switchNav('rentals'); toggleMobileMenu();" class="block w-full text-left py-2 px-3 text-sm font-bold text-brand-rosewood dark:text-white">Student Rentals</button>
-                <button onclick="switchNav('dashboard'); toggleMobileMenu();" class="block w-full text-left py-2 px-3 text-sm font-bold text-brand-rosewood dark:text-white">Dashboard</button>
+                <button onclick="switchNav('dashboard'); toggleMobileMenu();" class="nav-btn-auth block w-full text-left py-2 px-3 text-sm font-bold text-brand-rosewood dark:text-white">Dashboard</button>
             `;
         } else if (currentRole === 'librarian') {
             // RULE 2: Librarian MUST NOT see any Student Rentals navigation or P2P data!
@@ -17115,7 +17115,8 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         const container = document.getElementById('myListingsContainer');
         if (!container) return;
 
-        const myListings = booksData.filter(b => b.type === 'rent' && b.ownerRealName === currentUser.name);
+        const myName = (currentUser && currentUser.name) || '';
+        const myListings = myName ? booksData.filter(b => b.type === 'rent' && b.ownerRealName === myName) : [];
         
         if (myListings.length === 0) {
             container.innerHTML = `<div class="col-span-full py-8 text-center text-xs font-medium text-gray-500">No active rental listings created yet. Click "+ List a Book for Rental" above.</div>`;
@@ -18210,13 +18211,14 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     const studentByRoll = r => librarianStudentsList.find(s => s.rollNo === r);
     const fineOf = (rec, asOf = Date.now()) => { const end = rec.returnAt || asOf; const late = Math.max(0, Math.ceil((end - rec.dueAt) / DAY)); return { late, amt: late * libraryConfig.fineRatePerDay }; };
     function syncLegacy() {   // keep original student views/stats in sync with the ledger
-        studentBorrowedBooks = libLedger.filter(r => r.roll === currentUser.rollNo && !r.returnAt).map(r => { const b = bookOf(r.bookId), f = fineOf(r); return { id: r.id, bookId: r.bookId, title: b.title, author: b.author, cover: b.cover, borrowDate: fmtD(r.borrowAt), dueDate: fmtD(r.dueAt), status: f.late ? 'OVERDUE' : 'ON TIME', daysRemaining: Math.ceil((r.dueAt - Date.now()) / DAY), fine: f.amt }; });
+        const myRoll = (currentUser && currentUser.rollNo) || '';
+        studentBorrowedBooks = myRoll ? libLedger.filter(r => r.roll === myRoll && !r.returnAt).map(r => { const b = bookOf(r.bookId), f = fineOf(r); return { id: r.id, bookId: r.bookId, title: b.title, author: b.author, cover: b.cover, borrowDate: fmtD(r.borrowAt), dueDate: fmtD(r.dueAt), status: f.late ? 'OVERDUE' : 'ON TIME', daysRemaining: Math.ceil((r.dueAt - Date.now()) / DAY), fine: f.amt }; }) : [];
         librarianStudentsList.forEach(s => { const mine = libLedger.filter(r => r.roll === s.rollNo); s.borrowedCount = mine.filter(r => !r.returnAt).length; s.fineBalance = mine.reduce((a, r) => a + (r.returnAt ? (r.paid === false ? r.fine : 0) : fineOf(r).amt), 0); });
         renderHomeStats();
     }
     function libNotify(roll, title, text) {
         libAlerts.unshift({ id: 'A' + Date.now(), roll, title, text, time: new Date().toLocaleString(), read: false, replies: [] });
-        if (roll === currentUser.rollNo) pushNotif(title, text, 'info', 'Library');
+        if (currentUser && roll === currentUser.rollNo) pushNotif(title, text, 'info', 'Library');
     }
     function statusOf(r) {
         if (!r.returnAt) return fineOf(r).late ? 'Overdue — Fine Pending' : 'Borrowed';
@@ -18235,7 +18237,8 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     function renderStudentLibraryTabs() {
         ensureStudentTabs(); syncLegacy();
         const host = document.getElementById('libTabsHost'); if (!host) return;
-        const mine = libLedger.filter(r => r.roll === currentUser.rollNo), myAlerts = libAlerts.filter(a => a.roll === currentUser.rollNo);
+        const myRoll = (currentUser && currentUser.rollNo) || '';
+        const mine = myRoll ? libLedger.filter(r => r.roll === myRoll) : [], myAlerts = myRoll ? libAlerts.filter(a => a.roll === myRoll) : [];
         const unread = myAlerts.filter(a => !a.read).length;
         const tabs = [['borrowed', 'Currently Borrowed Books'], ['alerts', `Library Alerts & Notices${libNotifOn && unread ? ` (${unread})` : ''}`], ['history', 'Borrowing & Fine History']];
         let body = '';
@@ -19303,7 +19306,8 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     const _syncL = syncLegacy;
     syncLegacy = function () {
         _syncL();
-        const un = libAlerts.filter(a => a.roll === currentUser.rollNo && !a.read).length, el = document.getElementById('studentAlertsCount');
+        const myRoll = (currentUser && currentUser.rollNo) || '';
+        const un = myRoll ? libAlerts.filter(a => a.roll === myRoll && !a.read).length : 0, el = document.getElementById('studentAlertsCount');
         if (el) el.innerText = libNotifOn ? `${un} Unread` : 'Muted';
     };
     const _toast = showToast;
@@ -21214,8 +21218,9 @@ html:not(.dark) #viewHome .gx-nav { background: rgba(70,40,42,.04); }
         try { (nxProfile.genres || []).forEach(t => add(t, 3, 'interest', 'topic')); } catch (e) { }
         try { if (nxProfile.dept) add(nxProfile.dept, 1, 'dept', 'topic'); } catch (e) { }
         Object.keys(searches).forEach(t => { add(t, 1.5 * Math.min(searches[t], 4), 'search', 'both'); });
-        try { rentalRequests.filter(q => q.fromRoll === currentUser.rollNo).forEach(q => addBook(byId(q.bookId), 2, 'activity')); } catch (e) { }
-        try { activeStudentRentals.filter(r => r.renterRoll === currentUser.rollNo).forEach(r => addBook(byId(r.bookId), 2, 'activity')); } catch (e) { }
+        const myRoll = (currentUser && currentUser.rollNo) || '';
+        try { if (myRoll) rentalRequests.filter(q => q.fromRoll === myRoll).forEach(q => addBook(byId(q.bookId), 2, 'activity')); } catch (e) { }
+        try { if (myRoll) activeStudentRentals.filter(r => r.renterRoll === myRoll).forEach(r => addBook(byId(r.bookId), 2, 'activity')); } catch (e) { }
         try { studentBorrowedBooks.forEach(r => addBook(byId(r.bookId), 2, 'activity')); } catch (e) { }
         try { savedBookIds.forEach(id => addBook(byId(id), 1.5, 'saved')); } catch (e) { }
         try { stockReminders.forEach(r => addBook(byId(r.bookId), 1, 'saved')); } catch (e) { }
@@ -21223,15 +21228,17 @@ html:not(.dark) #viewHome .gx-nav { background: rgba(70,40,42,.04); }
     }
     function owned() {   // books the student already has / is dealing with: ranked after fresh ones
         const s = new Set();
+        const myRoll = (currentUser && currentUser.rollNo) || '';
         try { savedBookIds.forEach(id => s.add(id)); } catch (e) { }
-        try { rentalRequests.filter(q => q.fromRoll === currentUser.rollNo && ['REQUESTED', 'APPROVED'].includes(q.status)).forEach(q => s.add(q.bookId)); } catch (e) { }
-        try { activeStudentRentals.filter(r => r.renterRoll === currentUser.rollNo).forEach(r => s.add(r.bookId)); } catch (e) { }
+        try { if (myRoll) rentalRequests.filter(q => q.fromRoll === myRoll && ['REQUESTED', 'APPROVED'].includes(q.status)).forEach(q => s.add(q.bookId)); } catch (e) { }
+        try { if (myRoll) activeStudentRentals.filter(r => r.renterRoll === myRoll).forEach(r => s.add(r.bookId)); } catch (e) { }
         try { studentBorrowedBooks.filter(r => r.status !== 'RETURNED').forEach(r => s.add(r.bookId)); } catch (e) { }
         return s;
     }
     const isOut = b => b.availableCopies <= 0;
     function pick(n) {
-        const S = signals(), have = owned(), pool = booksData.filter(b => b.ownerRoll !== currentUser.rollNo && !(window.nxCmsHidden && window.nxCmsHidden.has(b.id)));
+        const myRoll = (currentUser && currentUser.rollNo) || '';
+        const S = signals(), have = owned(), pool = booksData.filter(b => (!myRoll || b.ownerRoll !== myRoll) && !(window.nxCmsHidden && window.nxCmsHidden.has(b.id)));
         const scored = pool.map(b => {
             const topic = norm([b.title, genreOf(b), deptOf(b), b.genreLabel, b.genreTag].join(' ')), auth = norm(b.author), by = {};
             let score = 0;
@@ -23989,7 +23996,6 @@ window.nvSave = gate(() => {
         if (typeof updateNavProfile === 'function') updateNavProfile();
         if (typeof switchNav === 'function') switchNav('dashboard');
       } catch (err) { setBusy($('siGo'), false); banner('Sign-in failed. Please try again.', 'bad'); }
-    }
   };
 
   /* ---------- student sign up ---------- */
@@ -25602,13 +25608,14 @@ window.nxaView('ch');
 (function () {
 'use strict';
 const SKEY = 'bnx_session_v1', $ = id => document.getElementById(id);
-const PUBLIC_VIEWS = ['home'];
+const PUBLIC_VIEWS = ['home', 'browse', 'rentals'];
 let S = null, pending = null, viaPrompt = false;
 window.nxSession = () => S ? { role: S.role, id: S.id, name: S.name, email: S.email } : null;
 
 const st = document.createElement('style');
 st.textContent = '#authModal{z-index:70}#nxGateNote{display:none}#nxGateNote.on{display:block}body.nx-guest #notifBadge{display:none!important}'
-  + 'body.nx-guest #desktopNavLinks .nav-btn:not(#navHome){display:none!important}body.nx-guest #mobileNavLinks>:not(:first-child){display:none!important}';   /* signed out: only Home is shown in the menu */
+  + 'body.nx-guest #desktopNavLinks #navMyLibrary,body.nx-guest #desktopNavLinks #navDashboard,body.nx-guest #desktopNavLinks #navLibrarianDesk,body.nx-guest #desktopNavLinks #navAdminDesk,body.nx-guest #desktopNavLinks #navTransactions{display:none!important}'
+  + 'body.nx-guest #mobileNavLinks .nav-btn-auth{display:none!important}';
 document.head.appendChild(st);
 document.body.classList.add('nx-guest');
 
@@ -25724,6 +25731,10 @@ window.nxSignOut = function () {
 
 /* the sign-in window can be closed (browsing stays open); closing it forgets what the visitor was trying to do */
 { const om = window.openModal; window.openModal = function (id) {
+  if (id === 'listBookModal' && !S) {
+    prompt('Sign in to list a book for rental.', role => { if (role === 'student') om('listBookModal'); });
+    return;
+  }
   if (id === 'authModal') {
     const token = localStorage.getItem('booknexus_token') || sessionStorage.getItem('booknexus_token');
     const stored = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
@@ -25772,19 +25783,15 @@ guard('handleListRentalSubmit', 'Sign in to list a book for rent.');
 guard('nxToggleOfferAlerts', 'Sign in to manage your offer alerts.');
 guard('toggleNotificationDrawer', 'Sign in to see your notifications.', () => window.toggleNotificationDrawer());
 guard('clearAllNotifications', 'Sign in to manage your notifications.');
-['openBookDetail', 'cpDeptGo', 'nxExploreRentals', 'nxExploreMore', 'filterByGenreDirect', 'selectGenreFilter'].forEach(n => guard(n, 'Sign in or create an account to explore Book NEXUS.'));
-
-/* Home: before sign-in, anything on the page that leads into the site (Browse, Explore, department tiles, book cards, offers...)
-   asks the visitor to sign in or create an account. Only the hero carousel controls stay free. After signing in, the click is replayed. */
-const FREE_ON_HOME = '.nx-hnav,[onclick*="nxHeroGo"],#nxHeroStage,#gxPrev,#gxNext,.gx-dot,.gxPrev,.gxNext';
-document.addEventListener('click', function (e) {
-  if (S) return;
-  const home = $('viewHome'); if (!home || !home.contains(e.target)) return;
-  const el = e.target.closest('button,a,[onclick],[role="button"],[tabindex],summary,label'); if (!el || !home.contains(el)) return;
-  if (el.matches(FREE_ON_HOME) || el.closest(FREE_ON_HOME)) return;
-  e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-  prompt('Sign in or create an account to explore Book NEXUS.', role => { if (role === 'student' && el.isConnected) el.click(); });
-}, true);
+{ const sst = window.switchRentalsSubTab; if (typeof sst === 'function') {
+  window.switchRentalsSubTab = function (tabKey) {
+    if ((tabKey === 'myRentals' || tabKey === 'myListings') && !S) {
+      prompt('Sign in to view your rentals and listings.', role => { if (role === 'student') sst(tabKey); });
+      return;
+    }
+    return sst(tabKey);
+  };
+} }
 
 async function initGoogleConfig() {
   try {
