@@ -23972,44 +23972,12 @@ window.nvSave = gate(() => {
         return fieldErr('siPw', msg);
       }
     } catch (netErr) {
-      // Offline / dormant backend fallback: sign in immediately if student record exists
       setBusy($('siGo'), false);
-      const rec = (typeof nxLookupUSN === 'function' ? nxLookupUSN(usn).rec : null) || (typeof NX_COLLEGE !== 'undefined' ? NX_COLLEGE[usn] : null);
-      const stored = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      const studentName = (rec && rec.name) || (stored && stored.name) || (usn.toUpperCase() === 'CS2026-042' ? 'H M Nanditha' : ('Student ' + usn));
-      const studentEmail = (rec && rec.email) || (stored && stored.email) || (usn.toLowerCase() + '@college.edu');
-      const user = {
-        _id: 'stu_' + Date.now(),
-        name: studentName,
-        email: studentEmail,
-        usn: usn,
-        dob: (rec && rec.dob) || (stored && stored.dob) || '01 Jan 2004',
-        role: 'student',
-        branch: 'Computer Science & Engineering',
-        department: 'Computer Science & Engineering',
-        college: 'Malnad college of engineering',
-        semester: 'Semester 6',
-        registrationCompleted: true,
-        quizCompleted: true,
-        token: 'bnx-token-' + Date.now()
-      };
-      $('siPw').value = '';
-      localStorage.setItem('booknexus_token', user.token);
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      sessionStorage.setItem('booknexus_token', user.token);
-      sessionStorage.setItem('currentUser', JSON.stringify(user));
-      window.currentUser = user;
-      window.currentRole = 'student';
-      if (typeof finishStudent === 'function') finishStudent(user);
-      if (typeof setUserRole === 'function') setUserRole('student');
-      if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', user.usn, user.name, user.email);
-      const m = document.getElementById('authModal');
-      if (m) { m.classList.add('hidden'); m.style.display = 'none'; m.classList.remove('mg-go', 'mg-open'); }
-      if (typeof closeModal === 'function') closeModal('authModal');
-      if (typeof updateNavProfile === 'function') updateNavProfile();
-      showToast('Signed in successfully as ' + user.name, 'success');
-      if (typeof switchNav === 'function') switchNav('dashboard');
-      return;
+      const msg = (netErr && netErr.name === 'AbortError')
+        ? 'Server took too long to respond. The server is waking up. Please try again.'
+        : 'Server is waking up. Please wait and try again.';
+      return banner(msg, 'bad');
+    }
       if (!cryptoOk()) { setBusy($('siGo'), false); return banner(CRYPTO_ERR, 'bad'); }
       const d = load(), acc = d.students[usn];
       if (!acc) { setBusy($('siGo'), false); return banner('Invalid USN or password. Connect to network to sign in with your campus account.', 'bad'); }
@@ -25040,15 +25008,29 @@ window.nxlCreate = async function (e, triggeringBtn) {
   const b = $('nxlNwBtn');
   if (b) { b.disabled = true; b.textContent = 'Completing registration…'; }
 
+  let wakeTimer = null;
   try {
     const quizPayload = Object.keys(SU.answers).length ? SU.answers : SU.cur;
     let user = null;
 
-    // Attempt backend registration with fast 1.8s timeout
+    // Set up request with 45-second timeout to handle Render cold-start spin-ups
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), 45000) : null;
+
+    // If server takes more than 4 seconds, inform the user that the backend is waking up
+    wakeTimer = setTimeout(() => {
+      if (activeBtn && window.__isSubmittingQuiz) {
+        activeBtn.textContent = 'Server is waking up (please wait)…';
+      }
+      if (b && window.__isSubmittingQuiz) {
+        b.textContent = 'Server is waking up (please wait)…';
+      }
+    }, 4000);
+
+    let res = null;
+    let networkError = null;
+
     try {
-      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      const timer = controller ? setTimeout(() => controller.abort(), 1800) : null;
-      let res = null;
       if (isGoogle) {
         res = await fetch((window.API_BASE || '/api') + '/auth/complete-onboarding', {
           method: 'POST',
@@ -25089,59 +25071,81 @@ window.nxlCreate = async function (e, triggeringBtn) {
           })
         });
       }
+    } catch (fetchErr) {
+      networkError = fetchErr;
+    } finally {
       if (timer) clearTimeout(timer);
-      if (res && res.ok) {
-        const json = await res.json();
-        if (json && json.success) {
-          user = json.data.user || json.data;
-          if (json.data && json.data.token) user.token = json.data.token;
-        }
-      } else if (res && (res.status === 400 || res.status === 409)) {
-        const json = await res.json().catch(() => ({}));
-        if (json && json.message && /already exists|already registered/i.test(json.message)) {
-          kit.banner(json.message, 'bad');
-          if (nwStep === 2) nwShow(1, true);
-          return;
-        }
+      if (wakeTimer) clearTimeout(wakeTimer);
+    }
+
+    // 1. Handle network failures or cold-start timeouts without forging accounts
+    if (networkError) {
+      const isTimeout = networkError.name === 'AbortError';
+      const msg = isTimeout
+        ? 'Server took too long to respond. The server is waking up. Please wait a moment and try again.'
+        : 'Server is waking up. Please wait and try again.';
+      kit.banner(msg, 'bad');
+      return;
+    }
+
+    // 2. Handle HTTP response status
+    if (!res) {
+      kit.banner('Could not connect to registration server. Please try again.', 'bad');
+      return;
+    }
+
+    if (res.ok) {
+      const json = await res.json().catch(() => null);
+      if (json && json.success && json.data) {
+        user = json.data.user || json.data;
+        if (json.data.token) user.token = json.data.token;
       }
-    } catch (apiErr) {
-      console.warn('Backend API note:', apiErr.message);
+    } else {
+      const errJson = await res.json().catch(() => ({}));
+      const errMsg = errJson.message || 'Registration failed on server.';
+
+      if (res.status === 400 || res.status === 409) {
+        kit.banner(errMsg, 'bad');
+        // If it's a conflict or field issue, take user back to Step 1 so they can view and adjust it
+        if (/already exists|already registered|email|password|usn/i.test(errMsg) && nwStep === 2) {
+          nwShow(1, true);
+        }
+        return;
+      } else if (res.status === 404) {
+        kit.banner('Server registration endpoint was not found or server is restarting. Please wait a moment and try again.', 'bad');
+        return;
+      } else if (res.status >= 500) {
+        kit.banner('Server encountered an error (' + res.status + '). Server is waking up or restarting. Please try again.', 'bad');
+        return;
+      } else {
+        kit.banner(errMsg, 'bad');
+        return;
+      }
     }
 
-    // Resilient local account fallback if remote backend is asleep or unreachable
-    if (!user) {
-      user = {
-        _id: 'stu_' + Date.now(),
-        name: name || 'Student',
-        email: collegeEmail || ((usn ? usn.toLowerCase() : 'student') + '@college.edu'),
-        usn: usn || '4MC23CB001',
-        dob: dob || '01 Jan 2004',
-        role: 'student',
-        branch: 'Computer Science and Business Systems',
-        department: 'Computer Science and Business Systems',
-        college: 'Malnad college of engineering',
-        semester: 'Semester 6',
-        registrationCompleted: true,
-        quizCompleted: true,
-        secretId: 'Renter #' + (usn ? usn.slice(-3) : '001'),
-        token: 'bnx-token-' + Date.now(),
-        preferences: { genres: (SU.genres && SU.genres.length) ? SU.genres : ['Computer Science', 'Academic/Textbook', 'Science'] }
-      };
+    // 3. Strictly require real persisted user object from backend
+    if (!user || !user._id) {
+      kit.banner('Registration could not be confirmed by the server. Please try again.', 'bad');
+      return;
     }
 
+    // 4. Successful registration verified by backend: store real credentials and navigate
     window.__googleOnboardingData = null;
-    localStorage.setItem('booknexus_token', user.token);
-    localStorage.setItem('bookhive_token', user.token);
+    if (user.token) {
+      localStorage.setItem('booknexus_token', user.token);
+      localStorage.setItem('bookhive_token', user.token);
+      sessionStorage.setItem('booknexus_token', user.token);
+    }
     localStorage.setItem('currentUser', JSON.stringify(user));
-    sessionStorage.setItem('booknexus_token', user.token);
     sessionStorage.setItem('currentUser', JSON.stringify(user));
     window.currentUser = user;
-    window.currentRole = 'student';
+    window.currentRole = user.role || 'student';
+
     if (typeof finishStudent === 'function') finishStudent(user);
-    if (typeof setUserRole === 'function') setUserRole('student');
+    if (typeof setUserRole === 'function') setUserRole(user.role || 'student');
     if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', user.usn || user._id, user.name, user.email);
 
-    // Force immediate modal closure so it never remains open
+    // Force immediate modal closure
     const modalEl = document.getElementById('authModal');
     if (modalEl) {
       modalEl.classList.add('hidden');
@@ -25154,18 +25158,10 @@ window.nxlCreate = async function (e, triggeringBtn) {
     showToast('Welcome to BookNexus, ' + user.name + '! Registration completed successfully.', 'success');
     if (typeof switchNav === 'function') switchNav('dashboard');
   } catch (err) {
-    console.error('Registration finish note:', err);
-    const modalEl = document.getElementById('authModal');
-    if (modalEl) {
-      modalEl.classList.add('hidden');
-      modalEl.style.display = 'none';
-      modalEl.classList.remove('mg-go', 'mg-open');
-    }
-    if (typeof closeModal === 'function') closeModal('authModal');
-    if (typeof updateNavProfile === 'function') updateNavProfile();
-    showToast('Welcome to BookNexus!', 'success');
-    if (typeof switchNav === 'function') switchNav('dashboard');
+    console.error('Registration error:', err);
+    kit.banner('An unexpected error occurred during registration. Please try again.', 'bad');
   } finally {
+    if (wakeTimer) clearTimeout(wakeTimer);
     window.__isSubmittingQuiz = false;
     busy = false;
     if (activeBtn) {

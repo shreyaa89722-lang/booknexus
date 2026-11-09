@@ -2395,7 +2395,7 @@
         console.error('Registration API error:', apiErr);
         if (banner) {
           banner.className = 'nxa-banner bad';
-          banner.textContent = 'Network error while registering. Please try again.';
+          banner.textContent = 'Server is waking up. Please wait and try again.';
           banner.hidden = false;
         }
       } finally {
