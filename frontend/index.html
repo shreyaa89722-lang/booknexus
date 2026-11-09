@@ -1289,131 +1289,156 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 <main class="flex-1 pt-24 pb-16">
 
     <!-- ================= VIEW 1: LANDING / HOME ================= -->
-    <div id="viewHome" class="view-panel max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+    <div id="viewHome" class="view-panel max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
-        <!-- Hero Section (redesigned) -->
-        <div class="nx-hero">
-            <div class="nx-hero__copy">
-                <span class="nx-eyebrow"><span class="material-symbols-outlined">school</span> Official Campus Book Network</span>
-                <h1 class="nx-h1">Connecting College Library & Student Book Rentals.</h1>
-                <p class="nx-lead">Borrow free textbooks directly from the university library stock or rent peer books securely through the official Book NEXUS pickup center.</p>
-                <div class="nx-actions">
-                    <button onclick="switchNav('browse')" class="nx-btn nx-btn--primary"><span class="material-symbols-outlined">local_library</span> Explore Free Library</button>
-                    <button onclick="nxExploreRentals()" class="nx-btn nx-btn--ghost"><span class="material-symbols-outlined">handshake</span> Explore Student Rentals</button>
+        <!-- Academic Header & Instant Search Toolbar -->
+        <header class="text-center md:text-left pt-2 pb-6 border-b border-brand-rosewood/15 dark:border-brand-darkBorder">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-brand-parchment dark:bg-brand-darkCard text-brand-dustyRose border border-brand-rosewood/15 mb-3">
+                        <span class="material-symbols-outlined text-sm">school</span> Official Campus Academic Library
+                    </span>
+                    <h1 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-brand-rosewood dark:text-white leading-tight">
+                        Find your next chapter.
+                    </h1>
+                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 font-medium max-w-2xl mt-2">
+                        Browse free university library textbooks and student-to-student peer rentals instantly across all campus departments.
+                    </p>
+                </div>
+                
+                <!-- Quick Search Bar -->
+                <div class="w-full md:w-96 relative flex-shrink-0">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                    <input id="homeSearchInput" type="text" placeholder="Search by title, author, subject, or ISBN…"
+                           class="w-full pl-11 pr-10 py-3 bg-brand-cream dark:bg-brand-darkCard border-2 border-brand-rosewood/25 dark:border-brand-darkBorder rounded-2xl text-xs sm:text-sm font-medium text-brand-rosewood dark:text-white focus:outline-none focus:border-brand-rosewood focus:ring-2 focus:ring-brand-rosewood/20 shadow-sm"
+                           oninput="handleHomeSearch(this.value)">
+                    <button id="homeClearSearchBtn" onclick="clearHomeSearch()" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-rosewood">
+                        <span class="material-symbols-outlined text-base">cancel</span>
+                    </button>
                 </div>
             </div>
-            <div class="nx-stage" id="nxHeroStage"></div>
-        </div>
-        <!-- Trending shelf -->
-        <section id="nxShelf">
-            <div class="nx-sec-head"><div><span class="nx-eyebrow">Curated collection</span><h2 class="nx-h2" style="margin-top:12px">Trending on Campus</h2><p>Books currently finding their way through the campus.</p></div></div>
-            <div class="nx-shelf" id="nxShelfRow"></div>
-        </section>
-        <!-- Book showcase (layered gallery) -->
-        <section id="nxGallery" aria-label="For You">
-            <div class="nx-sec-head"><div><h2 class="nx-h2">For You</h2><p>Books picked for your interests and taste.</p></div></div>
-            <div class="gx" id="gxStage" aria-label="Featured books"></div>
-            <div class="gx-cap" id="gxCap" aria-live="off"></div>
-            <div class="gx-bar">
-                <div class="gx-ctl"><button type="button" class="gx-nav" id="gxPrev" aria-label="Previous book"><span class="material-symbols-outlined">arrow_back</span></button><div class="gx-dots" id="gxDots"></div><button type="button" class="gx-nav" id="gxNext" aria-label="Next book"><span class="material-symbols-outlined">arrow_forward</span></button></div>
-                <button type="button" class="nx-btn nx-btn--primary gx-more" onclick="nxExploreMore()" aria-label="Explore more books in the catalog">Explore More<span class="material-symbols-outlined">arrow_forward</span></button>
-            </div>
-        </section>
-        <!-- Quick Stats -->
-        <div class="nx-stats">
-            <div><span class="nx-stat__n" id="homeTotalBooks">214</span><span class="nx-stat__l"><span class="material-symbols-outlined">menu_book</span>Total Catalogued</span></div>
-            <div><span class="nx-stat__n" id="homeAvailableLibrary">142</span><span class="nx-stat__l"><span class="material-symbols-outlined">library_add_check</span>Free Library Stock</span></div>
-            <div><span class="nx-stat__n" id="homeActiveRentals">38</span><span class="nx-stat__l"><span class="material-symbols-outlined">sell</span>Active Rentals</span></div>
-            <div><span class="nx-stat__n">100%</span><span class="nx-stat__l"><span class="material-symbols-outlined">verified</span>OTP Verified Pickup</span></div>
-        </div>
-        <!-- Campus Offers -->
-        <section id="nxOffers">
-            <div class="nx-sec-head"><div><span class="nx-eyebrow"><span class="material-symbols-outlined">redeem</span>Student perks</span><h2 class="nx-h2" style="margin-top:12px">Campus Offers</h2><p>A few good reasons to open a book this week.</p></div></div>
-            <div class="nx-of">
-                <article class="nx-of__card nx-of--feat" data-offer="first" role="link" tabindex="0" aria-label="First rental offer: see eligible books">
-                    <span class="nx-of__tag">New to renting</span>
-                    <div class="nx-of__big"><b>₹0</b><span>service fee<br>on your first rental</span></div>
-                    <h3>Your first rental, on us.</h3>
-                    <p>Rent your first book from a fellow student without the service fee. Pickup is still OTP-verified at the Book NEXUS center.</p>
-                    <div class="nx-of__tear">
-                        <button type="button" class="nx-of__code" data-code="FIRSTREAD" onclick="event.stopPropagation();nxCopyCode(this)" aria-label="Copy code FIRSTREAD">FIRSTREAD<i>Copy</i></button>
-                        <button type="button" class="nx-btn nx-btn--primary"><span class="material-symbols-outlined">handshake</span>Browse rentals</button>
-                    </div>
-                </article>
-                <article class="nx-of__card nx-of--rent" data-offer="happy" role="link" tabindex="0" aria-label="Happy rent week offer: see eligible books">
-                    <span class="nx-of__tag">Happy rent week </span>
-                    <div class="nx-of__price">₹40<small>/ week</small></div>
-                    <h3>Textbooks that cost less than a chai a day.</h3>
-                    <p>Weekly rentals from just ₹40. Return on time and your deposit comes back with a smile, plus your next week is on us.</p>
-                    <div class="nx-spines" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-                    <div class="nx-of__shelfline" aria-hidden="true"></div>
-                    <button type="button" class="nx-btn nx-btn--ghost">Grab the ₹40 picks<span class="material-symbols-outlined">arrow_forward</span></button>
-                </article>
-                <article class="nx-of__card nx-of--free" data-offer="bonus" role="link" tabindex="0" aria-label="Bonus rental days offer: see eligible books">
-                    <span class="nx-of__ic"><span class="material-symbols-outlined">more_time</span></span>
-                    <h3>Bonus rental days!</h3>
-                    <p>Rent any student-listed book and get 2 extra days, free.</p>
-                    <button type="button" class="nx-of__link">See eligible books<span class="material-symbols-outlined">arrow_forward</span></button>
-                </article>
-                <article class="nx-of__card nx-of--bundle" data-offer="sale" role="link" tabindex="0" aria-label="Heavy discounts offer: see discounted books">
-                    <div class="nx-of__stamp" aria-hidden="true"><div><b>95%</b>off<br>sale</div></div>
-                    <span class="nx-of__tag">Heavy discounts</span>
-                    <h3 style="max-width:12ch">Up to 95% off, big steals.</h3>
-                    <p>Selected student-listed textbooks are at heavy discounts on the first week’s rent. Grab them before they’re gone.</p>
-                    <button type="button" class="nx-of__link">See discounted books<span class="material-symbols-outlined">arrow_forward</span></button>
-                </article>
-                <div class="nx-of__strip"><button type="button" id="nxOfferBell" class="nx-of__bell" onclick="nxToggleOfferAlerts()" aria-pressed="true" aria-label="Turn offer notifications off"><span class="material-symbols-outlined">notifications_active</span></button><span class="t" id="nxOfferStripText">Offer alerts are on. Every new offer lands in your notifications under “Offers”. Tap the bell to switch them off.</span><button type="button" class="nx-btn nx-btn--ghost" onclick="toggleNotificationDrawer()">Open notifications</button></div>
-            </div>
-        </section>
-        <!-- How Book NEXUS Works Section -->
-        <div class="nx-how">
-            <div class="nx-sec-head"><div><span class="nx-eyebrow">Dual Access Model</span><h2 class="nx-h2" style="margin-top:12px">How Book NEXUS Works</h2><p>Seamlessly combining institutional library stock with controlled student rentals.</p></div></div>
-            <div class="nx-duo">
-                <article class="nx-panel nx-panel--lib">
-                    <span class="nx-panel__no" aria-hidden="true">01</span>
-                    <div class="nx-panel__head">
-                        <span class="nx-panel__ic"><span class="material-symbols-outlined">account_balance</span></span>
-                        <div><h3>100% Free Campus Library</h3><span class="nx-panel__tag">Controlled by College Librarian</span></div>
-                    </div>
-                    <ul class="nx-points">
-                        <li><span class="material-symbols-outlined">check_circle</span><span>Check real-time stock availability online before visiting library.</span></li>
-                        <li><span class="material-symbols-outlined">check_circle</span><span>Borrow books for free for the number of days set by the College Librarian.</span></li>
-                        <li><span class="material-symbols-outlined">check_circle</span><span>Returns &amp; overdue fines managed exclusively by the Librarian.</span></li>
-                    </ul>
-                    <button onclick="switchNav('browse')" class="nx-btn nx-btn--primary nx-panel__cta">Browse Library Books Catalog →</button>
-                </article>
-                <article class="nx-panel nx-panel--rent">
-                    <span class="nx-panel__no" aria-hidden="true">02</span>
-                    <div class="nx-panel__head">
-                        <span class="nx-panel__ic"><span class="material-symbols-outlined">storefront</span></span>
-                        <div><h3>Controlled Student Rentals</h3><span class="nx-panel__tag">Anonymous &amp; Admin Verified</span></div>
-                    </div>
-                    <ul class="nx-points">
-                        <li><span class="material-symbols-outlined">shield</span><span>Student identities remain private throughout the rental process, with personal details not exposed to the other party.</span></li>
-                        <li><span class="material-symbols-outlined">pin</span><span>Physical exchange happens at the Book NEXUS campus pickup center.</span></li>
-                        <li><span class="material-symbols-outlined">key</span><span>Dual OTP verification (Renter OTP &amp; Owner OTP) confirmed by Admin.</span></li>
-                    </ul>
-                    <button onclick="nxExploreRentals()" class="nx-btn nx-btn--ghost nx-panel__cta">Explore Student Rentals →</button>
-                </article>
-            </div>
-        </div>
 
-        <!-- Featured Departments -->
-        <section id="nxDepts">
-            <div class="nx-sec-head"><div><span class="nx-eyebrow">Categorized Learning</span><h2 class="nx-h2" style="margin-top:12px">Explore by Academic Department</h2></div></div>
-            <div class="nx-depts">
-                <button onclick="filterByGenreDirect('cs', 'Computer Science')" class="nx-dept"><span class="nx-dept__i material-symbols-outlined">terminal</span><span class="nx-dept__t"><b>Computer Science</b></span><span class="nx-dept__go material-symbols-outlined">arrow_forward</span></button>
-                <button onclick="filterByGenreDirect('eng', 'Engineering')" class="nx-dept"><span class="nx-dept__i material-symbols-outlined">engineering</span><span class="nx-dept__t"><b>Engineering</b></span><span class="nx-dept__go material-symbols-outlined">arrow_forward</span></button>
-                <button onclick="filterByGenreDirect('math', 'Mathematics')" class="nx-dept"><span class="nx-dept__i material-symbols-outlined">calculate</span><span class="nx-dept__t"><b>Mathematics</b></span><span class="nx-dept__go material-symbols-outlined">arrow_forward</span></button>
-                <button onclick="filterByGenreDirect('sci', 'Science')" class="nx-dept"><span class="nx-dept__i material-symbols-outlined">science</span><span class="nx-dept__t"><b>Science</b></span><span class="nx-dept__go material-symbols-outlined">arrow_forward</span></button>
-                <button onclick="filterByGenreDirect('bus', 'Business')" class="nx-dept"><span class="nx-dept__i material-symbols-outlined">show_chart</span><span class="nx-dept__t"><b>Business</b></span><span class="nx-dept__go material-symbols-outlined">arrow_forward</span></button>
-                <button onclick="filterByGenreDirect('lit', 'Literature')" class="nx-dept"><span class="nx-dept__i material-symbols-outlined">menu_book</span><span class="nx-dept__t"><b>Literature</b></span><span class="nx-dept__go material-symbols-outlined">arrow_forward</span></button>
+            <!-- Quick Filter Pills: Access Type & Department -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mt-6 pt-4 border-t border-brand-rosewood/10 dark:border-brand-darkBorder">
+                <!-- Type pills -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-brand-rosewood dark:text-brand-dustyRose mr-1">Access:</span>
+                    <button onclick="setHomeFilter('all')" id="homeTabAll" class="home-filter-btn active px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-rosewood text-white shadow-sm transition-all">All Books</button>
+                    <button onclick="setHomeFilter('library')" id="homeTabLib" class="home-filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-parchment dark:bg-brand-darkCard text-brand-rosewood dark:text-gray-200 border border-brand-rosewood/20 hover:bg-brand-rosewood/10 transition-all">📖 Free Library Books</button>
+                    <button onclick="setHomeFilter('rent')" id="homeTabRent" class="home-filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-parchment dark:bg-brand-darkCard text-brand-rosewood dark:text-gray-200 border border-brand-rosewood/20 hover:bg-brand-rosewood/10 transition-all">🏷️ Student Rentals</button>
+                    <button onclick="setHomeFilter('avail')" id="homeTabAvail" class="home-filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-parchment dark:bg-brand-darkCard text-brand-rosewood dark:text-gray-200 border border-brand-rosewood/20 hover:bg-brand-rosewood/10 transition-all">✅ Available Now Only</button>
+                </div>
+
+                <!-- Genre / Department Pills -->
+                <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                    <button onclick="setHomeGenre('all')" id="homeGenreAll" class="home-genre-btn active px-2.5 py-1 rounded-lg font-bold bg-brand-rosewood/15 text-brand-rosewood dark:text-brand-dustyRose">All Depts</button>
+                    <button onclick="setHomeGenre('cs')" id="homeGenreCs" class="home-genre-btn px-2.5 py-1 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-rosewood/10">Computer Science</button>
+                    <button onclick="setHomeGenre('eng')" id="homeGenreEng" class="home-genre-btn px-2.5 py-1 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-rosewood/10">Engineering</button>
+                    <button onclick="setHomeGenre('math')" id="homeGenreMath" class="home-genre-btn px-2.5 py-1 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-rosewood/10">Mathematics</button>
+                    <button onclick="setHomeGenre('sci')" id="homeGenreSci" class="home-genre-btn px-2.5 py-1 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-rosewood/10">Science</button>
+                    <button onclick="setHomeGenre('bus')" id="homeGenreBus" class="home-genre-btn px-2.5 py-1 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-rosewood/10">Business</button>
+                    <button onclick="setHomeGenre('lit')" id="homeGenreLit" class="home-genre-btn px-2.5 py-1 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-rosewood/10">Literature</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- SECTION 1: TRENDING BOOKS -->
+        <section id="secTrending" class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-dustyRose flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">local_fire_department</span> Campus High Demand
+                    </span>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold text-brand-rosewood dark:text-white mt-0.5">Trending Books</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Most borrowed library titles and popular student rentals this semester.</p>
+                </div>
+                <button onclick="switchNav('browse'); setQuickType('all');" class="text-xs font-bold text-brand-rosewood dark:text-brand-dustyRose hover:underline flex items-center gap-1">
+                    View Catalog <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </button>
+            </div>
+            <div id="homeTrendingGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+                <!-- Dynamically populated -->
             </div>
         </section>
 
-        <!-- Closing band -->
-        <div class="nx-cta"><div><span class="nx-eyebrow">Book NEXUS</span><h2 class="nx-h2" style="margin-top:12px">Step inside the library.</h2><p>Free campus borrowing and verified student rentals, together in one place.</p></div><div class="nx-actions"><button onclick="switchNav('browse')" class="nx-btn nx-btn--primary">Explore Free Library</button><button onclick="nxExploreRentals()" class="nx-btn nx-btn--ghost">Explore Student Rentals</button></div></div>
+        <!-- SECTION 2: RECOMMENDED FOR YOU -->
+        <section id="secRecommended" class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-sage flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">auto_awesome</span> Curated for You
+                    </span>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold text-brand-rosewood dark:text-white mt-0.5">Recommended for You</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Curated based on university curriculum, course syllabi, and student ratings.</p>
+                </div>
+            </div>
+            <div id="homeRecommendedGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: RECENTLY ADDED -->
+        <section id="secRecent" class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-dustyRose flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">new_releases</span> Fresh Arrivals
+                    </span>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold text-brand-rosewood dark:text-white mt-0.5">Recently Added</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Newly catalogued central library stock and recent student book listings.</p>
+                </div>
+            </div>
+            <div id="homeRecentGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- SECTION 4: ALL AVAILABLE BOOKS (FULL CATALOG GRID) -->
+        <section id="secAvailable" class="space-y-4 pt-4 border-t border-brand-rosewood/15 dark:border-brand-darkBorder">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-sage flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">menu_book</span> Live Campus Collection
+                    </span>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold text-brand-rosewood dark:text-white mt-0.5">Available Books</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Browse all catalogued textbooks. Visitors can view full details; sign in to borrow or rent.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="homeBookCounter" class="text-xs font-bold text-brand-rosewood dark:text-brand-dustyRose bg-brand-cream dark:bg-brand-darkCard px-3 py-1.5 rounded-full border border-brand-rosewood/15 dark:border-brand-darkBorder">
+                        Showing 0 books
+                    </span>
+                    <select id="homeSortSelect" onchange="renderHomeSections()" class="bg-brand-cream dark:bg-brand-darkCard border border-brand-rosewood/20 dark:border-brand-darkBorder text-brand-rosewood dark:text-white text-xs font-bold px-3 py-1.5 rounded-full cursor-pointer focus:outline-none">
+                        <option value="default">Relevance</option>
+                        <option value="title">Title (A-Z)</option>
+                        <option value="author">Author</option>
+                        <option value="stock">Highest Stock</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="homeAvailableGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Dynamically populated with complete book cards -->
+            </div>
+        </section>
+
+        <!-- Academic Campus Overview Notice -->
+        <div class="p-6 rounded-3xl bg-brand-parchment dark:bg-brand-darkCard border border-brand-rosewood/15 dark:border-brand-darkBorder flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4 text-center md:text-left">
+                <span class="material-symbols-outlined text-4xl text-brand-rosewood dark:text-brand-dustyRose">local_library</span>
+                <div>
+                    <h3 class="font-display font-bold text-lg text-brand-rosewood dark:text-white">Dual Access Model: Free Library & Peer Rentals</h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">Borrow institutional library stock with zero fees or rent directly from fellow students with secure campus pickup.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <button onclick="openModal('authModal')" class="px-5 py-2.5 rounded-full text-xs font-bold bg-brand-rosewood text-white shadow-sm hover:bg-brand-burgundy transition-all">
+                    Sign In to Borrow or Rent
+                </button>
+            </div>
+        </div>
+
     </div>
+
 
 
     <!-- ================= VIEW 2: BOOK CATALOG (STUDENT & GENERAL) ================= -->
@@ -16297,7 +16322,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     document.addEventListener('DOMContentLoaded', () => {
         // Load initial state
         setUserRole('student');
-        renderBookGrid();
+        renderBookGrid(); if (typeof renderHomeSections === 'function') renderHomeSections();
         
         // Setup Search Outside Click Listener
         document.addEventListener('click', (e) => {
@@ -16430,7 +16455,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         }
 
         // Render views dynamically
-        if (viewName === 'home') renderHomeStats();
+        if (viewName === 'home') { renderHomeStats(); if (typeof renderHomeSections === 'function') renderHomeSections(); }
         if (viewName === 'browse') renderBookGrid();
         if (viewName === 'myLibrary') renderStudentLibraryView();
         if (viewName === 'rentals') renderStudentRentalsView();
@@ -16456,11 +16481,12 @@ textarea.pf-inp{resize:vertical;min-height:96px}
        HOME VIEW & STATS
        ============================================================ */
     function renderHomeStats() {
-        document.getElementById('homeTotalBooks').innerText = booksData.length;
+        const tb = document.getElementById('homeTotalBooks'); if (tb) tb.innerText = booksData.length;
         const libraryBooks = booksData.filter(b => b.type === 'library');
         const availableLibraryCopies = libraryBooks.reduce((acc, curr) => acc + curr.availableCopies, 0);
-        document.getElementById('homeAvailableLibrary').innerText = availableLibraryCopies;
-        document.getElementById('homeActiveRentals').innerText = activeStudentRentals.length;
+        const alb = document.getElementById('homeAvailableLibrary'); if (alb) alb.innerText = availableLibraryCopies;
+        const ar = document.getElementById('homeActiveRentals'); if (ar) ar.innerText = activeStudentRentals.length;
+        if (typeof renderHomeSections === 'function') renderHomeSections();
     }
 
     /* ============================================================
@@ -16616,6 +16642,225 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     }
 
     /* RENDER CATALOG GRID WITH AUTOMATIC STOCK BADGES (RULE 7) */
+    
+    /* ============================================================
+       BOOK-FIRST HOMEPAGE LOGIC & LIVE DISCOVERY SECTIONS
+       ============================================================ */
+    window.homeFilterState = {
+        type: 'all',
+        genre: 'all',
+        search: '',
+        sort: 'default'
+    };
+
+    window.setHomeFilter = function(type) {
+        window.homeFilterState.type = type;
+        document.querySelectorAll('.home-filter-btn').forEach(b => {
+            b.classList.remove('active', 'bg-brand-rosewood', 'text-white');
+            b.classList.add('bg-brand-parchment', 'text-brand-rosewood');
+        });
+        const activeBtn = document.getElementById(type === 'all' ? 'homeTabAll' : type === 'library' ? 'homeTabLib' : type === 'rent' ? 'homeTabRent' : 'homeTabAvail');
+        if (activeBtn) {
+            activeBtn.classList.add('active', 'bg-brand-rosewood', 'text-white');
+            activeBtn.classList.remove('bg-brand-parchment', 'text-brand-rosewood');
+        }
+        renderHomeSections();
+    };
+
+    window.setHomeGenre = function(genre) {
+        window.homeFilterState.genre = genre;
+        document.querySelectorAll('.home-genre-btn').forEach(b => {
+            b.classList.remove('active', 'bg-brand-rosewood/15', 'text-brand-rosewood', 'font-bold');
+            b.classList.add('text-gray-600', 'font-medium');
+        });
+        const idMap = { all: 'homeGenreAll', cs: 'homeGenreCs', eng: 'homeGenreEng', math: 'homeGenreMath', sci: 'homeGenreSci', bus: 'homeGenreBus', lit: 'homeGenreLit' };
+        const btn = document.getElementById(idMap[genre]);
+        if (btn) {
+            btn.classList.add('active', 'bg-brand-rosewood/15', 'text-brand-rosewood', 'font-bold');
+            btn.classList.remove('text-gray-600', 'font-medium');
+        }
+        renderHomeSections();
+    };
+
+    window.handleHomeSearch = function(val) {
+        window.homeFilterState.search = (val || '').toLowerCase().trim();
+        const btn = document.getElementById('homeClearSearchBtn');
+        if (btn) btn.classList.toggle('hidden', !window.homeFilterState.search);
+        renderHomeSections();
+    };
+
+    window.clearHomeSearch = function() {
+        const inp = document.getElementById('homeSearchInput');
+        if (inp) inp.value = '';
+        handleHomeSearch('');
+    };
+
+    function renderCompactHomeCard(book, tag) {
+        const isSaved = typeof savedBookIds !== 'undefined' && savedBookIds.includes(book.id);
+        const coverSrc = book.cover || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400';
+        const isLib = book.type === 'library';
+        const availText = isLib
+            ? (book.availableCopies > 0 ? `${book.availableCopies} available` : 'Out of stock')
+            : (book.price || 'Peer rental');
+        const availClass = isLib
+            ? (book.availableCopies > 0 ? 'text-brand-sage' : 'text-red-500')
+            : 'text-brand-dustyRose';
+
+        const safeTitle = String(book.title || '').replace(/"/g, '&quot;');
+        const safeAuthor = String(book.author || '').replace(/"/g, '&quot;');
+
+        return `
+            <div onclick="openBookDetail(${book.id})" class="bg-brand-cream dark:bg-brand-darkCard rounded-2xl p-3 border border-brand-rosewood/15 dark:border-brand-darkBorder flex flex-col h-full cursor-pointer group shadow-sm hover:shadow-md transition-all">
+                <div class="relative w-full aspect-[3/4] rounded-xl mb-3 overflow-hidden bg-brand-parchment flex-shrink-0">
+                    <img src="${coverSrc}" alt="${safeTitle}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+                    <div class="absolute bottom-2 right-2 bg-brand-rosewood/95 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                        ${book.price || (isLib ? 'Free' : 'Rental')}
+                    </div>
+                    ${tag ? `<div class="absolute top-2 left-2 bg-brand-rosewood text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow">${tag}</div>` : ''}
+                </div>
+                <div class="flex flex-col flex-1 min-w-0">
+                    <span class="text-[9px] font-bold uppercase tracking-wider text-brand-dustyRose truncate mb-0.5">${book.genreLabel || 'Textbook'}</span>
+                    <h4 class="font-display text-xs sm:text-sm font-bold text-brand-rosewood dark:text-white leading-tight mb-1 line-clamp-2" title="${safeTitle}">${book.title}</h4>
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400 font-medium mb-2 line-clamp-1">By ${book.author}</p>
+                    <div class="mt-auto pt-2 border-t border-brand-rosewood/10 dark:border-brand-darkBorder flex items-center justify-between text-[10px] font-bold">
+                        <span class="${availClass}">${availText}</span>
+                        <span class="text-brand-rosewood dark:text-brand-dustyRose group-hover:underline">Details →</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderBookCard(book) {
+        const isSaved = typeof savedBookIds !== 'undefined' && savedBookIds.includes(book.id);
+        let stockBadgeHTML = '';
+        if (book.type === 'library') {
+            if (book.availableCopies <= 0) {
+                stockBadgeHTML = `<span class="bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 text-[10px] font-bold px-2 py-0.5 rounded">Out of Stock (0/${book.totalCopies})</span>`;
+            } else if (book.availableCopies === 1) {
+                stockBadgeHTML = `<span class="bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 text-[10px] font-bold px-2 py-0.5 rounded">Low Stock (1/${book.totalCopies})</span>`;
+            } else {
+                stockBadgeHTML = `<span class="bg-brand-sage/10 text-brand-sage border border-brand-sage/20 text-[10px] font-bold px-2 py-0.5 rounded">${book.totalCopies} total / ${book.availableCopies} available</span>`;
+            }
+        } else {
+            stockBadgeHTML = `<span class="bg-brand-dustyRose/10 text-brand-dustyRose border border-brand-dustyRose/20 text-[10px] font-bold px-2 py-0.5 rounded">Listed by ${book.ownerAnonId || 'Peer Student'}</span>`;
+        }
+
+        const badgeType = book.type === 'rent'
+            ? `<div class="absolute top-3 left-3 bg-brand-dustyRose text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">RENTAL</div>`
+            : `<div class="absolute top-3 left-3 bg-brand-sage text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">FREE LIBRARY</div>`;
+
+        const coverSrc = book.cover || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400';
+        const safeTitle = String(book.title || '').replace(/"/g, '&quot;');
+        const safeAuthor = String(book.author || '').replace(/"/g, '&quot;');
+
+        return `
+            <div onclick="openBookDetail(${book.id})" class="book-card bg-brand-cream dark:bg-brand-darkCard rounded-2xl p-4 border border-brand-rosewood/15 dark:border-brand-darkBorder flex flex-col h-full cursor-pointer group shadow-sm hover:shadow-md transition-shadow">
+                <div class="relative w-full aspect-[3/4] rounded-xl mb-4 overflow-hidden bg-brand-parchment flex-shrink-0">
+                    ${badgeType}
+                    <button onclick="event.stopPropagation(); toggleSaveBook(${book.id})" 
+                            class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-brand-rosewood flex items-center justify-center shadow transition-transform active:scale-90"
+                            title="${isSaved ? 'Remove from Saved' : 'Save for Later'}">
+                        <span class="material-symbols-outlined text-base ${isSaved ? 'text-brand-dustyRose' : ''}" style="font-variation-settings: 'FILL' ${isSaved ? 1 : 0};">bookmark</span>
+                    </button>
+                    <img src="${coverSrc}" alt="${safeTitle}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+                    <div class="absolute bottom-3 right-3 bg-brand-rosewood/95 text-white text-xs font-bold px-3 py-1 rounded-lg shadow border border-white/20">
+                        ${book.price}
+                    </div>
+                </div>
+                <div class="flex flex-col flex-1">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-brand-dustyRose mb-1">${book.genreLabel || 'Academic'}</span>
+                    <h3 class="font-display text-base font-bold text-brand-rosewood dark:text-white leading-tight mb-1 line-clamp-2">${book.title}</h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 font-medium mb-3 line-clamp-1">By ${book.author}</p>
+                    <div class="mt-auto pt-3 border-t border-brand-rosewood/10 dark:border-brand-darkBorder flex items-center justify-between">
+                        ${stockBadgeHTML}
+                        <button class="text-xs font-bold text-brand-rosewood dark:text-brand-dustyRose hover:underline">Details →</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    window.renderHomeSections = function() {
+        if (typeof booksData === 'undefined' || !booksData || !booksData.length) return;
+        
+        const state = window.homeFilterState || { type: 'all', genre: 'all', search: '', sort: 'default' };
+
+        // 1. Trending Books (6 high-demand / rating books)
+        const trendingEl = document.getElementById('homeTrendingGrid');
+        if (trendingEl) {
+            const trendingList = [...booksData].sort((a, b) => ((b.demand || 0) * 10 + (b.rating || 0)) - ((a.demand || 0) * 10 + (a.rating || 0))).slice(0, 6);
+            trendingEl.innerHTML = trendingList.map(b => renderCompactHomeCard(b, 'Trending')).join('');
+        }
+
+        // 2. Recommended for You (6 curated books)
+        const recEl = document.getElementById('homeRecommendedGrid');
+        if (recEl) {
+            let recList = [];
+            if (typeof currentUser !== 'undefined' && currentUser && currentUser.branch) {
+                const bBranch = currentUser.branch.toLowerCase();
+                recList = booksData.filter(b => (b.genreLabel || '').toLowerCase().includes(bBranch) || (b.genre || '').toLowerCase().includes(bBranch));
+            }
+            if (recList.length < 6) {
+                const remaining = booksData.filter(b => !recList.includes(b));
+                recList = [...recList, ...remaining].slice(0, 6);
+            }
+            recEl.innerHTML = recList.map(b => renderCompactHomeCard(b, 'Curated')).join('');
+        }
+
+        // 3. Recently Added (6 newest arrivals)
+        const recentEl = document.getElementById('homeRecentGrid');
+        if (recentEl) {
+            const recentList = [...booksData].slice(-6).reverse();
+            recentEl.innerHTML = recentList.map(b => renderCompactHomeCard(b, 'New')).join('');
+        }
+
+        // 4. Available Books (Filtered collection)
+        const availEl = document.getElementById('homeAvailableGrid');
+        const counterEl = document.getElementById('homeBookCounter');
+        
+        let filtered = booksData.filter(b => {
+            if (state.type === 'library' && b.type !== 'library') return false;
+            if (state.type === 'rent' && b.type !== 'rent') return false;
+            if (state.type === 'avail' && b.type === 'library' && b.availableCopies <= 0) return false;
+            if (state.genre !== 'all' && b.genre !== state.genre) return false;
+            if (state.search) {
+                const q = state.search;
+                const matchTitle = (b.title || '').toLowerCase().includes(q);
+                const matchAuthor = (b.author || '').toLowerCase().includes(q);
+                const matchGenre = (b.genreLabel || '').toLowerCase().includes(q);
+                const matchIsbn = (b.isbn || '').includes(q);
+                if (!matchTitle && !matchAuthor && !matchGenre && !matchIsbn) return false;
+            }
+            return true;
+        });
+
+        const sortVal = document.getElementById('homeSortSelect')?.value || 'default';
+        if (sortVal === 'title') filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+        else if (sortVal === 'author') filtered.sort((a, b) => (a.author || '').localeCompare(b.author || ''));
+        else if (sortVal === 'stock') filtered.sort((a, b) => (b.availableCopies || 0) - (a.availableCopies || 0));
+
+        if (counterEl) {
+            counterEl.innerText = `Showing ${filtered.length} book${filtered.length === 1 ? '' : 's'}`;
+        }
+
+        if (availEl) {
+            if (!filtered.length) {
+                availEl.innerHTML = `
+                    <div class="col-span-full py-16 text-center bg-brand-cream dark:bg-brand-darkCard rounded-3xl border border-brand-rosewood/15 p-8">
+                        <span class="material-symbols-outlined text-5xl text-gray-400 mb-2">menu_book</span>
+                        <h3 class="font-display text-xl font-bold text-brand-rosewood dark:text-white mb-1">No books found</h3>
+                        <p class="text-xs text-gray-500 mb-4">No books currently match your selected filters. Try searching with a different term or resetting filters.</p>
+                        <button onclick="setHomeFilter('all'); setHomeGenre('all'); clearHomeSearch();" class="bg-brand-rosewood text-white text-xs font-bold px-6 py-2.5 rounded-full shadow">Reset All Filters</button>
+                    </div>
+                `;
+            } else {
+                availEl.innerHTML = filtered.map(b => renderBookCard(b)).join('');
+            }
+        }
+    };
+
+
     function renderBookGrid() {
         const grid = document.getElementById('bookGrid');
         const counter = document.getElementById('resultsCounterText');
@@ -16709,6 +16954,11 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     }
 
     function toggleSaveBook(id) {
+        if (typeof currentUser === 'undefined' || !currentUser || !currentUser.email) {
+            showToast('Please sign in to save books to your reading list.', 'info');
+            openModal('authModal');
+            return;
+        }
         const idx = savedBookIds.indexOf(id);
         if (idx > -1) {
             savedBookIds.splice(idx, 1);
@@ -16818,6 +17068,11 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 
     // Free Library Borrow Action
     function handleBorrowLibraryBook(bookId) {
+        if (typeof currentUser === 'undefined' || !currentUser || !currentUser.email) {
+            showToast('Please sign in with your student account to borrow library books.', 'info');
+            openModal('authModal');
+            return;
+        }
         const book = booksData.find(b => b.id === bookId);
         if (!book || book.availableCopies <= 0) return;
 
@@ -16851,6 +17106,11 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 
     // Request Student Rental Action
     function handleRequestStudentRental(bookId) {
+        if (typeof currentUser === 'undefined' || !currentUser || !currentUser.email) {
+            showToast('Please sign in with your student account to rent textbooks.', 'info');
+            openModal('authModal');
+            return;
+        }
         const book = booksData.find(b => b.id === bookId);
         if (!book) return;
 
@@ -17915,9 +18175,10 @@ textarea.pf-inp{resize:vertical;min-height:96px}
        ============================================================ */
     const LIVE_RENTAL = ['ACTIVE', 'ACTIVE RENTAL', 'RETURN PENDING', 'RETURN PENDING OWNER COLLECTION'];
     function renderHomeStats() {
-        document.getElementById('homeTotalBooks').innerText = booksData.length;
-        document.getElementById('homeAvailableLibrary').innerText = booksData.filter(b => b.type === 'library').reduce((a, b) => a + b.availableCopies, 0);
-        document.getElementById('homeActiveRentals').innerText = activeStudentRentals.filter(r => LIVE_RENTAL.includes(r.status)).length;
+        const tb = document.getElementById('homeTotalBooks'); if (tb) tb.innerText = booksData.length;
+        const alb = document.getElementById('homeAvailableLibrary'); if (alb) alb.innerText = booksData.filter(b => b.type === 'library').reduce((a, b) => a + b.availableCopies, 0);
+        const ar = document.getElementById('homeActiveRentals'); if (ar) ar.innerText = activeStudentRentals.filter(r => LIVE_RENTAL.includes(r.status)).length;
+        if (typeof renderHomeSections === 'function') renderHomeSections();
     }
 
     /* ============================================================
@@ -20110,6 +20371,11 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     }
     function nxaStaff() { const r = nxaR; setUserRole(r); closeModal('authModal'); }
     function openProfile() {
+        if (typeof currentUser === 'undefined' || !currentUser || !currentUser.email) {
+            showToast('Please sign in to view your profile and account settings.', 'info');
+            openModal('authModal');
+            return;
+        }
         document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
         profEl('viewProfile').classList.remove('hidden');
         document.body.classList.remove('nx-home');
