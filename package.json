@@ -7,5 +7,24 @@
     "build": "npm --prefix backend install && npm --prefix frontend install && npm --prefix frontend run build",
     "start": "node server.js",
     "backend": "npm --prefix backend start"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.17.0",
+    "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.6.2",
+    "express-validator": "^7.3.2",
+    "google-auth-library": "^11.3.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.5.1",
+    "morgan": "^1.11.0",
+    "nodemailer": "^10.0.0",
+    "resend": "^6.35.0",
+    "xlsx": "^0.18.5"
   }
 }

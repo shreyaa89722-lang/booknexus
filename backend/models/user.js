@@ -28,6 +28,8 @@ const userSchema = new mongoose.Schema(
         },
         usn: { type: String, trim: true, uppercase: true },
         dob: { type: String, trim: true },
+        preferredName: { type: String, trim: true },
+        bio: { type: String, trim: true },
         mobile: { type: String, trim: true },
         branch: { type: String, trim: true },
         college: { type: String, trim: true },

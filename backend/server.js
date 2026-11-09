@@ -160,4 +160,8 @@ process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception thrown:", err);
 });
 
-startServer();
+if (require.main === module || !process.env.VERCEL) {
+  startServer();
+}
+
+module.exports = { app, connectDB };

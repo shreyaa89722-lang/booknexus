@@ -1,5 +1,14 @@
 const { ethers } = require("ethers");
-const contractABI = require("../blockchain/BookRentalABI.json");
+let contractABI;
+try {
+  contractABI = require("../blockchain/BookRentalABI");
+} catch (e) {
+  try {
+    contractABI = require("../blockchain/BookRentalABI.json");
+  } catch (err) {
+    contractABI = [];
+  }
+}
 
 function getBlockchainInstance() {
   const rpcUrl = process.env.SEPOLIA_RPC_URL;

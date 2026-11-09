@@ -11,1777 +11,1777 @@
 
   // All 68 Real Sixth-Semester Students
   const REAL_STUDENTS = [
-  {
-    "name": "ABDUR RAHMAN",
-    "rollNo": "4MC23CB001",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9035386625",
-    "email": "abdur56562541@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "ANANYA D A",
-    "rollNo": "4MC23CB002",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9481118282",
-    "email": "ananyadvnu@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "ANKITHA H S",
-    "rollNo": "4MC23CB003",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 6363282822",
-    "email": "ankithabatry@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "ATHMIK R AMEEN",
-    "rollNo": "4MC23CB004",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9902306854",
-    "email": "rudreshrameen@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "AVINASH SUBHAS GUNDANAVAR",
-    "rollNo": "4MC23CB005",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9740799584",
-    "email": "avinashgundanavar@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "BHOOMI N",
-    "rollNo": "4MC23CB006",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9945881115",
-    "email": "bhoomingowda793@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "BHOOMIKA C",
-    "rollNo": "4MC23CB007",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9742514541",
-    "email": "bhoomikabv2694@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "BHOOMIKA S",
-    "rollNo": "4MC23CB008",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9741473053",
-    "email": "bhoomikashashidhar33@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "BHUVAN H S",
-    "rollNo": "4MC23CB009",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9591125198",
-    "email": "hsbhuvan0@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "BHUVAN SHARMA H V",
-    "rollNo": "4MC23CB010",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9845471671",
-    "email": "bhuvansharmahv@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "C K PUNYASHREE",
-    "rollNo": "4MC23CB011",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8971089176",
-    "email": "punyapunya01600@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "D S VARUN GOWDA",
-    "rollNo": "4MC23CB012",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9449809336",
-    "email": "varungowda629@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "DANIYAL MOHTHASHIM",
-    "rollNo": "4MC23CB013",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9481332786",
-    "email": "daniyalmohthashim4786@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "DARSHAN A",
-    "rollNo": "4MC23CB014",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8088635992",
-    "email": "darshua3107@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "DARSHINI H J",
-    "rollNo": "4MC23CB015",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9901380160",
-    "email": "nidhijagdeesh8@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "DEEPU Y B",
-    "rollNo": "4MC23CB016",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9900420863",
-    "email": "gowdadeepu638@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "DEVENDRA KUMAR",
-    "rollNo": "4MC23CB017",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9663106367",
-    "email": "devendra27577@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "DHRUVA N",
-    "rollNo": "4MC23CB018",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9481071059",
-    "email": "ndhruva1234@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "GOWTHAM M P",
-    "rollNo": "4MC23CB019",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9035358095",
-    "email": "gowtham4657@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "H M NANDITHA",
-    "rollNo": "4MC23CB020",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9844465266",
-    "email": "nandithahm123@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "HEMANTH D",
-    "rollNo": "4MC23CB021",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9880325492",
-    "email": "hemanthdharmegowda08@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "HEMESHA Y K",
-    "rollNo": "4MC23CB022",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9008255628",
-    "email": "ameshjk46@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "JEEVAN Y P",
-    "rollNo": "4MC23CB023",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9880417856",
-    "email": "jeevanyp2005@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "KHADIJATUL KUBRAA",
-    "rollNo": "4MC23CB024",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9449461236",
-    "email": "kubraakhadija@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "KIRAN A R",
-    "rollNo": "4MC23CB025",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9964252153",
-    "email": "kirangowda143422@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "M GNANESH",
-    "rollNo": "4MC23CB026",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8861187890",
-    "email": "gnaneshgnani5454@gmail.ocm",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "MADAN S K",
-    "rollNo": "4MC23CB027",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9743672766",
-    "email": "skm43685@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "MANYA R",
-    "rollNo": "4MC23CB028",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9008134735",
-    "email": "manyarbedre2005@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "MANYASHREE R",
-    "rollNo": "4MC23CB029",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9448346330",
-    "email": "savitharaghu886@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "MONIKA K S",
-    "rollNo": "4MC23CB030",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 7899928100",
-    "email": "darshandarshu20034@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "NAGENDRA J",
-    "rollNo": "4MC23CB031",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9019738481",
-    "email": "nagendraj1221@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "NANDITHA L",
-    "rollNo": "4MC23CB032",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9481665111",
-    "email": "nandithalekki27@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "NIDA FALAK",
-    "rollNo": "4MC23CB033",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9482971449",
-    "email": "nidafalak311@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "P GOKUL YADAV",
-    "rollNo": "4MC23CB034",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9844173062",
-    "email": "pgokulyadav67893@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "POORVITHA V",
-    "rollNo": "4MC23CB035",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 6363666704",
-    "email": "poorvithavenkatesha@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "PRAJWAL H D",
-    "rollNo": "4MC23CB036",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9343411103",
-    "email": "prajawalhd375@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "PRANAV SIDDAPPA B P",
-    "rollNo": "4MC23CB037",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9886296165",
-    "email": "pranav868677@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "PRASAD",
-    "rollNo": "4MC23CB038",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9900537295",
-    "email": "prasadmalegaon05@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "PRUTHVI JAIN S S",
-    "rollNo": "4MC23CB039",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8792407924",
-    "email": "pruthvijainss24@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "RAMYA S L",
-    "rollNo": "4MC23CB040",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9380298048",
-    "email": "ramyaslr623@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "RASHMITHA C J",
-    "rollNo": "4MC23CB041",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8971491551",
-    "email": "cjrashmitha@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "RIDA MARYAM",
-    "rollNo": "4MC23CB042",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 7760083606",
-    "email": "ridamaryam127@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "RUJULA P",
-    "rollNo": "4MC23CB043",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9900693572",
-    "email": "rujulapraksh9@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SAMARTH H BHARADWAJ",
-    "rollNo": "4MC23CB044",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9845113879",
-    "email": "samhb537@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SAMRUDHI H M",
-    "rollNo": "4MC23CB045",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8951891164",
-    "email": "samrudhi.hm23@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SANJANA K S",
-    "rollNo": "4MC23CB046",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9449156124",
-    "email": "sanjanagowda20.3@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SHEHZAADI AAFREEN",
-    "rollNo": "4MC23CB047",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9985371506",
-    "email": "shehzaadiaafreen786@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SHIROODARSHINI",
-    "rollNo": "4MC23CB048",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9449665529",
-    "email": "shiroodarshini@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SHREYA G N",
-    "rollNo": "4MC23CB049",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8970385744",
-    "email": "shreyaa89722@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SHUKRITHA S S",
-    "rollNo": "4MC23CB050",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9967092783",
-    "email": "shukrithashukri076@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SOHAN H S",
-    "rollNo": "4MC23CB051",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 7899161308",
-    "email": "sohansuresh0008@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SPANDANA R",
-    "rollNo": "4MC23CB052",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9845696126",
-    "email": "spandanaravi05@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SUBIYA BEGUM",
-    "rollNo": "4MC23CB053",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9902651280",
-    "email": "s4358698@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SUHAS U M",
-    "rollNo": "4MC23CB054",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9845439760",
-    "email": "suhasum2005@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SUMEDHA G M",
-    "rollNo": "4MC23CB055",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9448205419",
-    "email": "sumedhamanjunath46@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SUPRIYA S R",
-    "rollNo": "4MC23CB056",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9902647424",
-    "email": "ravijapadakatte@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "TEENA RAJ",
-    "rollNo": "4MC23CB057",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8861142332",
-    "email": "teenarajj02@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "TEJAS R",
-    "rollNo": "4MC23CB058",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8277092474",
-    "email": "tejasr481@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "THANUSH GOWDA K S",
-    "rollNo": "4MC23CB059",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9449208746",
-    "email": "thanushksgowda@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "VINAY H M",
-    "rollNo": "4MC23CB060",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9945179445",
-    "email": "manjunathgowda11976@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "VINAY M",
-    "rollNo": "4MC23CB061",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 7760190615",
-    "email": "vinaymanu2005@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "YUKTHI PATEL H M",
-    "rollNo": "4MC23CB062",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9448125569",
-    "email": "yukthi.patel12@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "YUSUF ISLAM",
-    "rollNo": "4MC23CB063",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9886860068",
-    "email": "yusufislam9483@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "BHOOMIKA K M",
-    "rollNo": "4MC24CB400",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8073835439",
-    "email": "bhoomikm2003@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "HARSHITH GOWDA K R",
-    "rollNo": "4MC24CB401",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 9632735439",
-    "email": "harshithgowdah2@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "PALLAVI C",
-    "rollNo": "4MC24CB402",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 8431693643",
-    "email": "pallavic8105@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "POORNACHANDRA P B",
-    "rollNo": "4MC24CB403",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 7760131380",
-    "email": "pb.poornachandra@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  },
-  {
-    "name": "SUSHANTH GOWDA S",
-    "rollNo": "4MC24CB404",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "year": "3rd Year (Sem 6)",
-    "phone": "+91 7349125943",
-    "email": "sushanthsushanthgowda3@gmail.com",
-    "borrowedCount": 0,
-    "fineBalance": 0,
-    "history": []
-  }
-];
+    {
+      "name": "ABDUR RAHMAN",
+      "rollNo": "4MC23CB001",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9035386625",
+      "email": "abdur56562541@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "ANANYA D A",
+      "rollNo": "4MC23CB002",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9481118282",
+      "email": "ananyadvnu@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "ANKITHA H S",
+      "rollNo": "4MC23CB003",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 6363282822",
+      "email": "ankithabatry@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "ATHMIK R AMEEN",
+      "rollNo": "4MC23CB004",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9902306854",
+      "email": "rudreshrameen@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "AVINASH SUBHAS GUNDANAVAR",
+      "rollNo": "4MC23CB005",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9740799584",
+      "email": "avinashgundanavar@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "BHOOMI N",
+      "rollNo": "4MC23CB006",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9945881115",
+      "email": "bhoomingowda793@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "BHOOMIKA C",
+      "rollNo": "4MC23CB007",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9742514541",
+      "email": "bhoomikabv2694@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "BHOOMIKA S",
+      "rollNo": "4MC23CB008",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9741473053",
+      "email": "bhoomikashashidhar33@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "BHUVAN H S",
+      "rollNo": "4MC23CB009",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9591125198",
+      "email": "hsbhuvan0@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "BHUVAN SHARMA H V",
+      "rollNo": "4MC23CB010",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9845471671",
+      "email": "bhuvansharmahv@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "C K PUNYASHREE",
+      "rollNo": "4MC23CB011",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8971089176",
+      "email": "punyapunya01600@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "D S VARUN GOWDA",
+      "rollNo": "4MC23CB012",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9449809336",
+      "email": "varungowda629@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "DANIYAL MOHTHASHIM",
+      "rollNo": "4MC23CB013",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9481332786",
+      "email": "daniyalmohthashim4786@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "DARSHAN A",
+      "rollNo": "4MC23CB014",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8088635992",
+      "email": "darshua3107@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "DARSHINI H J",
+      "rollNo": "4MC23CB015",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9901380160",
+      "email": "nidhijagdeesh8@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "DEEPU Y B",
+      "rollNo": "4MC23CB016",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9900420863",
+      "email": "gowdadeepu638@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "DEVENDRA KUMAR",
+      "rollNo": "4MC23CB017",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9663106367",
+      "email": "devendra27577@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "DHRUVA N",
+      "rollNo": "4MC23CB018",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9481071059",
+      "email": "ndhruva1234@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "GOWTHAM M P",
+      "rollNo": "4MC23CB019",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9035358095",
+      "email": "gowtham4657@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "H M NANDITHA",
+      "rollNo": "4MC23CB020",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9844465266",
+      "email": "nandithahm123@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "HEMANTH D",
+      "rollNo": "4MC23CB021",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9880325492",
+      "email": "hemanthdharmegowda08@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "HEMESHA Y K",
+      "rollNo": "4MC23CB022",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9008255628",
+      "email": "ameshjk46@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "JEEVAN Y P",
+      "rollNo": "4MC23CB023",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9880417856",
+      "email": "jeevanyp2005@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "KHADIJATUL KUBRAA",
+      "rollNo": "4MC23CB024",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9449461236",
+      "email": "kubraakhadija@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "KIRAN A R",
+      "rollNo": "4MC23CB025",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9964252153",
+      "email": "kirangowda143422@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "M GNANESH",
+      "rollNo": "4MC23CB026",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8861187890",
+      "email": "gnaneshgnani5454@gmail.ocm",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "MADAN S K",
+      "rollNo": "4MC23CB027",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9743672766",
+      "email": "skm43685@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "MANYA R",
+      "rollNo": "4MC23CB028",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9008134735",
+      "email": "manyarbedre2005@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "MANYASHREE R",
+      "rollNo": "4MC23CB029",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9448346330",
+      "email": "savitharaghu886@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "MONIKA K S",
+      "rollNo": "4MC23CB030",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 7899928100",
+      "email": "darshandarshu20034@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "NAGENDRA J",
+      "rollNo": "4MC23CB031",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9019738481",
+      "email": "nagendraj1221@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "NANDITHA L",
+      "rollNo": "4MC23CB032",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9481665111",
+      "email": "nandithalekki27@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "NIDA FALAK",
+      "rollNo": "4MC23CB033",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9482971449",
+      "email": "nidafalak311@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "P GOKUL YADAV",
+      "rollNo": "4MC23CB034",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9844173062",
+      "email": "pgokulyadav67893@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "POORVITHA V",
+      "rollNo": "4MC23CB035",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 6363666704",
+      "email": "poorvithavenkatesha@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "PRAJWAL H D",
+      "rollNo": "4MC23CB036",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9343411103",
+      "email": "prajawalhd375@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "PRANAV SIDDAPPA B P",
+      "rollNo": "4MC23CB037",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9886296165",
+      "email": "pranav868677@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "PRASAD",
+      "rollNo": "4MC23CB038",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9900537295",
+      "email": "prasadmalegaon05@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "PRUTHVI JAIN S S",
+      "rollNo": "4MC23CB039",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8792407924",
+      "email": "pruthvijainss24@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "RAMYA S L",
+      "rollNo": "4MC23CB040",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9380298048",
+      "email": "ramyaslr623@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "RASHMITHA C J",
+      "rollNo": "4MC23CB041",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8971491551",
+      "email": "cjrashmitha@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "RIDA MARYAM",
+      "rollNo": "4MC23CB042",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 7760083606",
+      "email": "ridamaryam127@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "RUJULA P",
+      "rollNo": "4MC23CB043",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9900693572",
+      "email": "rujulapraksh9@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SAMARTH H BHARADWAJ",
+      "rollNo": "4MC23CB044",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9845113879",
+      "email": "samhb537@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SAMRUDHI H M",
+      "rollNo": "4MC23CB045",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8951891164",
+      "email": "samrudhi.hm23@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SANJANA K S",
+      "rollNo": "4MC23CB046",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9449156124",
+      "email": "sanjanagowda20.3@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SHEHZAADI AAFREEN",
+      "rollNo": "4MC23CB047",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9985371506",
+      "email": "shehzaadiaafreen786@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SHIROODARSHINI",
+      "rollNo": "4MC23CB048",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9449665529",
+      "email": "shiroodarshini@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SHREYA G N",
+      "rollNo": "4MC23CB049",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8970385744",
+      "email": "shreyaa89722@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SHUKRITHA S S",
+      "rollNo": "4MC23CB050",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9967092783",
+      "email": "shukrithashukri076@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SOHAN H S",
+      "rollNo": "4MC23CB051",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 7899161308",
+      "email": "sohansuresh0008@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SPANDANA R",
+      "rollNo": "4MC23CB052",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9845696126",
+      "email": "spandanaravi05@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SUBIYA BEGUM",
+      "rollNo": "4MC23CB053",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9902651280",
+      "email": "s4358698@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SUHAS U M",
+      "rollNo": "4MC23CB054",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9845439760",
+      "email": "suhasum2005@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SUMEDHA G M",
+      "rollNo": "4MC23CB055",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9448205419",
+      "email": "sumedhamanjunath46@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SUPRIYA S R",
+      "rollNo": "4MC23CB056",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9902647424",
+      "email": "ravijapadakatte@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "TEENA RAJ",
+      "rollNo": "4MC23CB057",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8861142332",
+      "email": "teenarajj02@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "TEJAS R",
+      "rollNo": "4MC23CB058",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8277092474",
+      "email": "tejasr481@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "THANUSH GOWDA K S",
+      "rollNo": "4MC23CB059",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9449208746",
+      "email": "thanushksgowda@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "VINAY H M",
+      "rollNo": "4MC23CB060",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9945179445",
+      "email": "manjunathgowda11976@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "VINAY M",
+      "rollNo": "4MC23CB061",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 7760190615",
+      "email": "vinaymanu2005@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "YUKTHI PATEL H M",
+      "rollNo": "4MC23CB062",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9448125569",
+      "email": "yukthi.patel12@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "YUSUF ISLAM",
+      "rollNo": "4MC23CB063",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9886860068",
+      "email": "yusufislam9483@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "BHOOMIKA K M",
+      "rollNo": "4MC24CB400",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8073835439",
+      "email": "bhoomikm2003@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "HARSHITH GOWDA K R",
+      "rollNo": "4MC24CB401",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 9632735439",
+      "email": "harshithgowdah2@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "PALLAVI C",
+      "rollNo": "4MC24CB402",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 8431693643",
+      "email": "pallavic8105@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "POORNACHANDRA P B",
+      "rollNo": "4MC24CB403",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 7760131380",
+      "email": "pb.poornachandra@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    },
+    {
+      "name": "SUSHANTH GOWDA S",
+      "rollNo": "4MC24CB404",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "year": "3rd Year (Sem 6)",
+      "phone": "+91 7349125943",
+      "email": "sushanthsushanthgowda3@gmail.com",
+      "borrowedCount": 0,
+      "fineBalance": 0,
+      "history": []
+    }
+  ];
   const COLLEGE_RECORDS = {
-  "4MC23CB001": {
-    "usn": "4MC23CB001",
-    "name": "ABDUR RAHMAN",
-    "email": "abdur56562541@gmail.com",
-    "phone": "+91 9035386625",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #001",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB002": {
-    "usn": "4MC23CB002",
-    "name": "ANANYA D A",
-    "email": "ananyadvnu@gmail.com",
-    "phone": "+91 9481118282",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #002",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB003": {
-    "usn": "4MC23CB003",
-    "name": "ANKITHA H S",
-    "email": "ankithabatry@gmail.com",
-    "phone": "+91 6363282822",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #003",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB004": {
-    "usn": "4MC23CB004",
-    "name": "ATHMIK R AMEEN",
-    "email": "rudreshrameen@gmail.com",
-    "phone": "+91 9902306854",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #004",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB005": {
-    "usn": "4MC23CB005",
-    "name": "AVINASH SUBHAS GUNDANAVAR",
-    "email": "avinashgundanavar@gmail.com",
-    "phone": "+91 9740799584",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #005",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB006": {
-    "usn": "4MC23CB006",
-    "name": "BHOOMI N",
-    "email": "bhoomingowda793@gmail.com",
-    "phone": "+91 9945881115",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #006",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB007": {
-    "usn": "4MC23CB007",
-    "name": "BHOOMIKA C",
-    "email": "bhoomikabv2694@gmail.com",
-    "phone": "+91 9742514541",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #007",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB008": {
-    "usn": "4MC23CB008",
-    "name": "BHOOMIKA S",
-    "email": "bhoomikashashidhar33@gmail.com",
-    "phone": "+91 9741473053",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #008",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB009": {
-    "usn": "4MC23CB009",
-    "name": "BHUVAN H S",
-    "email": "hsbhuvan0@gmail.com",
-    "phone": "+91 9591125198",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #009",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB010": {
-    "usn": "4MC23CB010",
-    "name": "BHUVAN SHARMA H V",
-    "email": "bhuvansharmahv@gmail.com",
-    "phone": "+91 9845471671",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #010",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB011": {
-    "usn": "4MC23CB011",
-    "name": "C K PUNYASHREE",
-    "email": "punyapunya01600@gmail.com",
-    "phone": "+91 8971089176",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #011",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB012": {
-    "usn": "4MC23CB012",
-    "name": "D S VARUN GOWDA",
-    "email": "varungowda629@gmail.com",
-    "phone": "+91 9449809336",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #012",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB013": {
-    "usn": "4MC23CB013",
-    "name": "DANIYAL MOHTHASHIM",
-    "email": "daniyalmohthashim4786@gmail.com",
-    "phone": "+91 9481332786",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #013",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB014": {
-    "usn": "4MC23CB014",
-    "name": "DARSHAN A",
-    "email": "darshua3107@gmail.com",
-    "phone": "+91 8088635992",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #014",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB015": {
-    "usn": "4MC23CB015",
-    "name": "DARSHINI H J",
-    "email": "nidhijagdeesh8@gmail.com",
-    "phone": "+91 9901380160",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #015",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB016": {
-    "usn": "4MC23CB016",
-    "name": "DEEPU Y B",
-    "email": "gowdadeepu638@gmail.com",
-    "phone": "+91 9900420863",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #016",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB017": {
-    "usn": "4MC23CB017",
-    "name": "DEVENDRA KUMAR",
-    "email": "devendra27577@gmail.com",
-    "phone": "+91 9663106367",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #017",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB018": {
-    "usn": "4MC23CB018",
-    "name": "DHRUVA N",
-    "email": "ndhruva1234@gmail.com",
-    "phone": "+91 9481071059",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #018",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB019": {
-    "usn": "4MC23CB019",
-    "name": "GOWTHAM M P",
-    "email": "gowtham4657@gmail.com",
-    "phone": "+91 9035358095",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #019",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB020": {
-    "usn": "4MC23CB020",
-    "name": "H M NANDITHA",
-    "email": "nandithahm123@gmail.com",
-    "phone": "+91 9844465266",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #020",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB021": {
-    "usn": "4MC23CB021",
-    "name": "HEMANTH D",
-    "email": "hemanthdharmegowda08@gmail.com",
-    "phone": "+91 9880325492",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #021",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB022": {
-    "usn": "4MC23CB022",
-    "name": "HEMESHA Y K",
-    "email": "ameshjk46@gmail.com",
-    "phone": "+91 9008255628",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #022",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB023": {
-    "usn": "4MC23CB023",
-    "name": "JEEVAN Y P",
-    "email": "jeevanyp2005@gmail.com",
-    "phone": "+91 9880417856",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #023",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB024": {
-    "usn": "4MC23CB024",
-    "name": "KHADIJATUL KUBRAA",
-    "email": "kubraakhadija@gmail.com",
-    "phone": "+91 9449461236",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #024",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB025": {
-    "usn": "4MC23CB025",
-    "name": "KIRAN A R",
-    "email": "kirangowda143422@gmail.com",
-    "phone": "+91 9964252153",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #025",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB026": {
-    "usn": "4MC23CB026",
-    "name": "M GNANESH",
-    "email": "gnaneshgnani5454@gmail.ocm",
-    "phone": "+91 8861187890",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #026",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB027": {
-    "usn": "4MC23CB027",
-    "name": "MADAN S K",
-    "email": "skm43685@gmail.com",
-    "phone": "+91 9743672766",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #027",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB028": {
-    "usn": "4MC23CB028",
-    "name": "MANYA R",
-    "email": "manyarbedre2005@gmail.com",
-    "phone": "+91 9008134735",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #028",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB029": {
-    "usn": "4MC23CB029",
-    "name": "MANYASHREE R",
-    "email": "savitharaghu886@gmail.com",
-    "phone": "+91 9448346330",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #029",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB030": {
-    "usn": "4MC23CB030",
-    "name": "MONIKA K S",
-    "email": "darshandarshu20034@gmail.com",
-    "phone": "+91 7899928100",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #030",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB031": {
-    "usn": "4MC23CB031",
-    "name": "NAGENDRA J",
-    "email": "nagendraj1221@gmail.com",
-    "phone": "+91 9019738481",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #031",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB032": {
-    "usn": "4MC23CB032",
-    "name": "NANDITHA L",
-    "email": "nandithalekki27@gmail.com",
-    "phone": "+91 9481665111",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #032",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB033": {
-    "usn": "4MC23CB033",
-    "name": "NIDA FALAK",
-    "email": "nidafalak311@gmail.com",
-    "phone": "+91 9482971449",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #033",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB034": {
-    "usn": "4MC23CB034",
-    "name": "P GOKUL YADAV",
-    "email": "pgokulyadav67893@gmail.com",
-    "phone": "+91 9844173062",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #034",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB035": {
-    "usn": "4MC23CB035",
-    "name": "POORVITHA V",
-    "email": "poorvithavenkatesha@gmail.com",
-    "phone": "+91 6363666704",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #035",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB036": {
-    "usn": "4MC23CB036",
-    "name": "PRAJWAL H D",
-    "email": "prajawalhd375@gmail.com",
-    "phone": "+91 9343411103",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #036",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB037": {
-    "usn": "4MC23CB037",
-    "name": "PRANAV SIDDAPPA B P",
-    "email": "pranav868677@gmail.com",
-    "phone": "+91 9886296165",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #037",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB038": {
-    "usn": "4MC23CB038",
-    "name": "PRASAD",
-    "email": "prasadmalegaon05@gmail.com",
-    "phone": "+91 9900537295",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #038",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB039": {
-    "usn": "4MC23CB039",
-    "name": "PRUTHVI JAIN S S",
-    "email": "pruthvijainss24@gmail.com",
-    "phone": "+91 8792407924",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #039",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB040": {
-    "usn": "4MC23CB040",
-    "name": "RAMYA S L",
-    "email": "ramyaslr623@gmail.com",
-    "phone": "+91 9380298048",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #040",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB041": {
-    "usn": "4MC23CB041",
-    "name": "RASHMITHA C J",
-    "email": "cjrashmitha@gmail.com",
-    "phone": "+91 8971491551",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #041",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB042": {
-    "usn": "4MC23CB042",
-    "name": "RIDA MARYAM",
-    "email": "ridamaryam127@gmail.com",
-    "phone": "+91 7760083606",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #042",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB043": {
-    "usn": "4MC23CB043",
-    "name": "RUJULA P",
-    "email": "rujulapraksh9@gmail.com",
-    "phone": "+91 9900693572",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #043",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB044": {
-    "usn": "4MC23CB044",
-    "name": "SAMARTH H BHARADWAJ",
-    "email": "samhb537@gmail.com",
-    "phone": "+91 9845113879",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #044",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB045": {
-    "usn": "4MC23CB045",
-    "name": "SAMRUDHI H M",
-    "email": "samrudhi.hm23@gmail.com",
-    "phone": "+91 8951891164",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #045",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB046": {
-    "usn": "4MC23CB046",
-    "name": "SANJANA K S",
-    "email": "sanjanagowda20.3@gmail.com",
-    "phone": "+91 9449156124",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #046",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB047": {
-    "usn": "4MC23CB047",
-    "name": "SHEHZAADI AAFREEN",
-    "email": "shehzaadiaafreen786@gmail.com",
-    "phone": "+91 9985371506",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #047",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB048": {
-    "usn": "4MC23CB048",
-    "name": "SHIROODARSHINI",
-    "email": "shiroodarshini@gmail.com",
-    "phone": "+91 9449665529",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #048",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB049": {
-    "usn": "4MC23CB049",
-    "name": "SHREYA G N",
-    "email": "shreyaa89722@gmail.com",
-    "phone": "+91 8970385744",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #049",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB050": {
-    "usn": "4MC23CB050",
-    "name": "SHUKRITHA S S",
-    "email": "shukrithashukri076@gmail.com",
-    "phone": "+91 9967092783",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #050",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB051": {
-    "usn": "4MC23CB051",
-    "name": "SOHAN H S",
-    "email": "sohansuresh0008@gmail.com",
-    "phone": "+91 7899161308",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #051",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB052": {
-    "usn": "4MC23CB052",
-    "name": "SPANDANA R",
-    "email": "spandanaravi05@gmail.com",
-    "phone": "+91 9845696126",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #052",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB053": {
-    "usn": "4MC23CB053",
-    "name": "SUBIYA BEGUM",
-    "email": "s4358698@gmail.com",
-    "phone": "+91 9902651280",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #053",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB054": {
-    "usn": "4MC23CB054",
-    "name": "SUHAS U M",
-    "email": "suhasum2005@gmail.com",
-    "phone": "+91 9845439760",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #054",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB055": {
-    "usn": "4MC23CB055",
-    "name": "SUMEDHA G M",
-    "email": "sumedhamanjunath46@gmail.com",
-    "phone": "+91 9448205419",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #055",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB056": {
-    "usn": "4MC23CB056",
-    "name": "SUPRIYA S R",
-    "email": "ravijapadakatte@gmail.com",
-    "phone": "+91 9902647424",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #056",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB057": {
-    "usn": "4MC23CB057",
-    "name": "TEENA RAJ",
-    "email": "teenarajj02@gmail.com",
-    "phone": "+91 8861142332",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #057",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB058": {
-    "usn": "4MC23CB058",
-    "name": "TEJAS R",
-    "email": "tejasr481@gmail.com",
-    "phone": "+91 8277092474",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #058",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB059": {
-    "usn": "4MC23CB059",
-    "name": "THANUSH GOWDA K S",
-    "email": "thanushksgowda@gmail.com",
-    "phone": "+91 9449208746",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #059",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB060": {
-    "usn": "4MC23CB060",
-    "name": "VINAY H M",
-    "email": "manjunathgowda11976@gmail.com",
-    "phone": "+91 9945179445",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #060",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB061": {
-    "usn": "4MC23CB061",
-    "name": "VINAY M",
-    "email": "vinaymanu2005@gmail.com",
-    "phone": "+91 7760190615",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #061",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB062": {
-    "usn": "4MC23CB062",
-    "name": "YUKTHI PATEL H M",
-    "email": "yukthi.patel12@gmail.com",
-    "phone": "+91 9448125569",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #062",
-    "role": "student",
-    "imported": true
-  },
-  "4MC23CB063": {
-    "usn": "4MC23CB063",
-    "name": "YUSUF ISLAM",
-    "email": "yusufislam9483@gmail.com",
-    "phone": "+91 9886860068",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #063",
-    "role": "student",
-    "imported": true
-  },
-  "4MC24CB400": {
-    "usn": "4MC24CB400",
-    "name": "BHOOMIKA K M",
-    "email": "bhoomikm2003@gmail.com",
-    "phone": "+91 8073835439",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #064",
-    "role": "student",
-    "imported": true
-  },
-  "4MC24CB401": {
-    "usn": "4MC24CB401",
-    "name": "HARSHITH GOWDA K R",
-    "email": "harshithgowdah2@gmail.com",
-    "phone": "+91 9632735439",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #065",
-    "role": "student",
-    "imported": true
-  },
-  "4MC24CB402": {
-    "usn": "4MC24CB402",
-    "name": "PALLAVI C",
-    "email": "pallavic8105@gmail.com",
-    "phone": "+91 8431693643",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #066",
-    "role": "student",
-    "imported": true
-  },
-  "4MC24CB403": {
-    "usn": "4MC24CB403",
-    "name": "POORNACHANDRA P B",
-    "email": "pb.poornachandra@gmail.com",
-    "phone": "+91 7760131380",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #067",
-    "role": "student",
-    "imported": true
-  },
-  "4MC24CB404": {
-    "usn": "4MC24CB404",
-    "name": "SUSHANTH GOWDA S",
-    "email": "sushanthsushanthgowda3@gmail.com",
-    "phone": "+91 7349125943",
-    "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
-    "college": "Malnad college of engineering",
-    "year": 3,
-    "semester": 6,
-    "dob": "15 Aug 2004",
-    "secretId": "Renter #068",
-    "role": "student",
-    "imported": true
-  }
-};
+    "4MC23CB001": {
+      "usn": "4MC23CB001",
+      "name": "ABDUR RAHMAN",
+      "email": "abdur56562541@gmail.com",
+      "phone": "+91 9035386625",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #001",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB002": {
+      "usn": "4MC23CB002",
+      "name": "ANANYA D A",
+      "email": "ananyadvnu@gmail.com",
+      "phone": "+91 9481118282",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #002",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB003": {
+      "usn": "4MC23CB003",
+      "name": "ANKITHA H S",
+      "email": "ankithabatry@gmail.com",
+      "phone": "+91 6363282822",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #003",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB004": {
+      "usn": "4MC23CB004",
+      "name": "ATHMIK R AMEEN",
+      "email": "rudreshrameen@gmail.com",
+      "phone": "+91 9902306854",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #004",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB005": {
+      "usn": "4MC23CB005",
+      "name": "AVINASH SUBHAS GUNDANAVAR",
+      "email": "avinashgundanavar@gmail.com",
+      "phone": "+91 9740799584",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #005",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB006": {
+      "usn": "4MC23CB006",
+      "name": "BHOOMI N",
+      "email": "bhoomingowda793@gmail.com",
+      "phone": "+91 9945881115",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #006",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB007": {
+      "usn": "4MC23CB007",
+      "name": "BHOOMIKA C",
+      "email": "bhoomikabv2694@gmail.com",
+      "phone": "+91 9742514541",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #007",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB008": {
+      "usn": "4MC23CB008",
+      "name": "BHOOMIKA S",
+      "email": "bhoomikashashidhar33@gmail.com",
+      "phone": "+91 9741473053",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #008",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB009": {
+      "usn": "4MC23CB009",
+      "name": "BHUVAN H S",
+      "email": "hsbhuvan0@gmail.com",
+      "phone": "+91 9591125198",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #009",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB010": {
+      "usn": "4MC23CB010",
+      "name": "BHUVAN SHARMA H V",
+      "email": "bhuvansharmahv@gmail.com",
+      "phone": "+91 9845471671",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #010",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB011": {
+      "usn": "4MC23CB011",
+      "name": "C K PUNYASHREE",
+      "email": "punyapunya01600@gmail.com",
+      "phone": "+91 8971089176",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #011",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB012": {
+      "usn": "4MC23CB012",
+      "name": "D S VARUN GOWDA",
+      "email": "varungowda629@gmail.com",
+      "phone": "+91 9449809336",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #012",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB013": {
+      "usn": "4MC23CB013",
+      "name": "DANIYAL MOHTHASHIM",
+      "email": "daniyalmohthashim4786@gmail.com",
+      "phone": "+91 9481332786",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #013",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB014": {
+      "usn": "4MC23CB014",
+      "name": "DARSHAN A",
+      "email": "darshua3107@gmail.com",
+      "phone": "+91 8088635992",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #014",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB015": {
+      "usn": "4MC23CB015",
+      "name": "DARSHINI H J",
+      "email": "nidhijagdeesh8@gmail.com",
+      "phone": "+91 9901380160",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #015",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB016": {
+      "usn": "4MC23CB016",
+      "name": "DEEPU Y B",
+      "email": "gowdadeepu638@gmail.com",
+      "phone": "+91 9900420863",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #016",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB017": {
+      "usn": "4MC23CB017",
+      "name": "DEVENDRA KUMAR",
+      "email": "devendra27577@gmail.com",
+      "phone": "+91 9663106367",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #017",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB018": {
+      "usn": "4MC23CB018",
+      "name": "DHRUVA N",
+      "email": "ndhruva1234@gmail.com",
+      "phone": "+91 9481071059",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #018",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB019": {
+      "usn": "4MC23CB019",
+      "name": "GOWTHAM M P",
+      "email": "gowtham4657@gmail.com",
+      "phone": "+91 9035358095",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #019",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB020": {
+      "usn": "4MC23CB020",
+      "name": "H M NANDITHA",
+      "email": "nandithahm123@gmail.com",
+      "phone": "+91 9844465266",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #020",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB021": {
+      "usn": "4MC23CB021",
+      "name": "HEMANTH D",
+      "email": "hemanthdharmegowda08@gmail.com",
+      "phone": "+91 9880325492",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #021",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB022": {
+      "usn": "4MC23CB022",
+      "name": "HEMESHA Y K",
+      "email": "ameshjk46@gmail.com",
+      "phone": "+91 9008255628",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #022",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB023": {
+      "usn": "4MC23CB023",
+      "name": "JEEVAN Y P",
+      "email": "jeevanyp2005@gmail.com",
+      "phone": "+91 9880417856",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #023",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB024": {
+      "usn": "4MC23CB024",
+      "name": "KHADIJATUL KUBRAA",
+      "email": "kubraakhadija@gmail.com",
+      "phone": "+91 9449461236",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #024",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB025": {
+      "usn": "4MC23CB025",
+      "name": "KIRAN A R",
+      "email": "kirangowda143422@gmail.com",
+      "phone": "+91 9964252153",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #025",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB026": {
+      "usn": "4MC23CB026",
+      "name": "M GNANESH",
+      "email": "gnaneshgnani5454@gmail.ocm",
+      "phone": "+91 8861187890",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #026",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB027": {
+      "usn": "4MC23CB027",
+      "name": "MADAN S K",
+      "email": "skm43685@gmail.com",
+      "phone": "+91 9743672766",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #027",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB028": {
+      "usn": "4MC23CB028",
+      "name": "MANYA R",
+      "email": "manyarbedre2005@gmail.com",
+      "phone": "+91 9008134735",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #028",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB029": {
+      "usn": "4MC23CB029",
+      "name": "MANYASHREE R",
+      "email": "savitharaghu886@gmail.com",
+      "phone": "+91 9448346330",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #029",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB030": {
+      "usn": "4MC23CB030",
+      "name": "MONIKA K S",
+      "email": "darshandarshu20034@gmail.com",
+      "phone": "+91 7899928100",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #030",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB031": {
+      "usn": "4MC23CB031",
+      "name": "NAGENDRA J",
+      "email": "nagendraj1221@gmail.com",
+      "phone": "+91 9019738481",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #031",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB032": {
+      "usn": "4MC23CB032",
+      "name": "NANDITHA L",
+      "email": "nandithalekki27@gmail.com",
+      "phone": "+91 9481665111",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #032",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB033": {
+      "usn": "4MC23CB033",
+      "name": "NIDA FALAK",
+      "email": "nidafalak311@gmail.com",
+      "phone": "+91 9482971449",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #033",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB034": {
+      "usn": "4MC23CB034",
+      "name": "P GOKUL YADAV",
+      "email": "pgokulyadav67893@gmail.com",
+      "phone": "+91 9844173062",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #034",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB035": {
+      "usn": "4MC23CB035",
+      "name": "POORVITHA V",
+      "email": "poorvithavenkatesha@gmail.com",
+      "phone": "+91 6363666704",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #035",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB036": {
+      "usn": "4MC23CB036",
+      "name": "PRAJWAL H D",
+      "email": "prajawalhd375@gmail.com",
+      "phone": "+91 9343411103",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #036",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB037": {
+      "usn": "4MC23CB037",
+      "name": "PRANAV SIDDAPPA B P",
+      "email": "pranav868677@gmail.com",
+      "phone": "+91 9886296165",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #037",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB038": {
+      "usn": "4MC23CB038",
+      "name": "PRASAD",
+      "email": "prasadmalegaon05@gmail.com",
+      "phone": "+91 9900537295",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #038",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB039": {
+      "usn": "4MC23CB039",
+      "name": "PRUTHVI JAIN S S",
+      "email": "pruthvijainss24@gmail.com",
+      "phone": "+91 8792407924",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #039",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB040": {
+      "usn": "4MC23CB040",
+      "name": "RAMYA S L",
+      "email": "ramyaslr623@gmail.com",
+      "phone": "+91 9380298048",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #040",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB041": {
+      "usn": "4MC23CB041",
+      "name": "RASHMITHA C J",
+      "email": "cjrashmitha@gmail.com",
+      "phone": "+91 8971491551",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #041",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB042": {
+      "usn": "4MC23CB042",
+      "name": "RIDA MARYAM",
+      "email": "ridamaryam127@gmail.com",
+      "phone": "+91 7760083606",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #042",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB043": {
+      "usn": "4MC23CB043",
+      "name": "RUJULA P",
+      "email": "rujulapraksh9@gmail.com",
+      "phone": "+91 9900693572",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #043",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB044": {
+      "usn": "4MC23CB044",
+      "name": "SAMARTH H BHARADWAJ",
+      "email": "samhb537@gmail.com",
+      "phone": "+91 9845113879",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #044",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB045": {
+      "usn": "4MC23CB045",
+      "name": "SAMRUDHI H M",
+      "email": "samrudhi.hm23@gmail.com",
+      "phone": "+91 8951891164",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #045",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB046": {
+      "usn": "4MC23CB046",
+      "name": "SANJANA K S",
+      "email": "sanjanagowda20.3@gmail.com",
+      "phone": "+91 9449156124",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #046",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB047": {
+      "usn": "4MC23CB047",
+      "name": "SHEHZAADI AAFREEN",
+      "email": "shehzaadiaafreen786@gmail.com",
+      "phone": "+91 9985371506",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #047",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB048": {
+      "usn": "4MC23CB048",
+      "name": "SHIROODARSHINI",
+      "email": "shiroodarshini@gmail.com",
+      "phone": "+91 9449665529",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #048",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB049": {
+      "usn": "4MC23CB049",
+      "name": "SHREYA G N",
+      "email": "shreyaa89722@gmail.com",
+      "phone": "+91 8970385744",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #049",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB050": {
+      "usn": "4MC23CB050",
+      "name": "SHUKRITHA S S",
+      "email": "shukrithashukri076@gmail.com",
+      "phone": "+91 9967092783",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #050",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB051": {
+      "usn": "4MC23CB051",
+      "name": "SOHAN H S",
+      "email": "sohansuresh0008@gmail.com",
+      "phone": "+91 7899161308",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #051",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB052": {
+      "usn": "4MC23CB052",
+      "name": "SPANDANA R",
+      "email": "spandanaravi05@gmail.com",
+      "phone": "+91 9845696126",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #052",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB053": {
+      "usn": "4MC23CB053",
+      "name": "SUBIYA BEGUM",
+      "email": "s4358698@gmail.com",
+      "phone": "+91 9902651280",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #053",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB054": {
+      "usn": "4MC23CB054",
+      "name": "SUHAS U M",
+      "email": "suhasum2005@gmail.com",
+      "phone": "+91 9845439760",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #054",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB055": {
+      "usn": "4MC23CB055",
+      "name": "SUMEDHA G M",
+      "email": "sumedhamanjunath46@gmail.com",
+      "phone": "+91 9448205419",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #055",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB056": {
+      "usn": "4MC23CB056",
+      "name": "SUPRIYA S R",
+      "email": "ravijapadakatte@gmail.com",
+      "phone": "+91 9902647424",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #056",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB057": {
+      "usn": "4MC23CB057",
+      "name": "TEENA RAJ",
+      "email": "teenarajj02@gmail.com",
+      "phone": "+91 8861142332",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #057",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB058": {
+      "usn": "4MC23CB058",
+      "name": "TEJAS R",
+      "email": "tejasr481@gmail.com",
+      "phone": "+91 8277092474",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #058",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB059": {
+      "usn": "4MC23CB059",
+      "name": "THANUSH GOWDA K S",
+      "email": "thanushksgowda@gmail.com",
+      "phone": "+91 9449208746",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #059",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB060": {
+      "usn": "4MC23CB060",
+      "name": "VINAY H M",
+      "email": "manjunathgowda11976@gmail.com",
+      "phone": "+91 9945179445",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #060",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB061": {
+      "usn": "4MC23CB061",
+      "name": "VINAY M",
+      "email": "vinaymanu2005@gmail.com",
+      "phone": "+91 7760190615",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #061",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB062": {
+      "usn": "4MC23CB062",
+      "name": "YUKTHI PATEL H M",
+      "email": "yukthi.patel12@gmail.com",
+      "phone": "+91 9448125569",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #062",
+      "role": "student",
+      "imported": true
+    },
+    "4MC23CB063": {
+      "usn": "4MC23CB063",
+      "name": "YUSUF ISLAM",
+      "email": "yusufislam9483@gmail.com",
+      "phone": "+91 9886860068",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #063",
+      "role": "student",
+      "imported": true
+    },
+    "4MC24CB400": {
+      "usn": "4MC24CB400",
+      "name": "BHOOMIKA K M",
+      "email": "bhoomikm2003@gmail.com",
+      "phone": "+91 8073835439",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #064",
+      "role": "student",
+      "imported": true
+    },
+    "4MC24CB401": {
+      "usn": "4MC24CB401",
+      "name": "HARSHITH GOWDA K R",
+      "email": "harshithgowdah2@gmail.com",
+      "phone": "+91 9632735439",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #065",
+      "role": "student",
+      "imported": true
+    },
+    "4MC24CB402": {
+      "usn": "4MC24CB402",
+      "name": "PALLAVI C",
+      "email": "pallavic8105@gmail.com",
+      "phone": "+91 8431693643",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #066",
+      "role": "student",
+      "imported": true
+    },
+    "4MC24CB403": {
+      "usn": "4MC24CB403",
+      "name": "POORNACHANDRA P B",
+      "email": "pb.poornachandra@gmail.com",
+      "phone": "+91 7760131380",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #067",
+      "role": "student",
+      "imported": true
+    },
+    "4MC24CB404": {
+      "usn": "4MC24CB404",
+      "name": "SUSHANTH GOWDA S",
+      "email": "sushanthsushanthgowda3@gmail.com",
+      "phone": "+91 7349125943",
+      "dept": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "branch": "COMPUTER SCIENCE AND BUSINESS SYSTEMS",
+      "college": "Malnad college of engineering",
+      "year": 3,
+      "semester": 6,
+      "dob": "15 Aug 2004",
+      "secretId": "Renter #068",
+      "role": "student",
+      "imported": true
+    }
+  };
 
   const STUDENT_BY_USN = {};
   const STUDENT_BY_EMAIL = {};
@@ -1804,7 +1804,7 @@
   };
   try {
     localStorage.setItem('bnx_college_db_v1', JSON.stringify(collegeDbPayload));
-  } catch (e) {}
+  } catch (e) { }
 
   window.REAL_STUDENTS = REAL_STUDENTS;
   window.COLLEGE_RECORDS = COLLEGE_RECORDS;
@@ -2060,17 +2060,122 @@
       await sendGoogleTokenToBackend({ credential: response.credential });
     }
 
+    // In-memory state for Google-authenticated onboarding
+    window.__googleOnboardingData = null;
+
+    function openGoogleStudentOnboarding(googleUser) {
+      window.__googleOnboardingData = {
+        email: googleUser.email,
+        name: googleUser.name,
+        googleId: googleUser.googleId,
+        token: googleUser.token
+      };
+
+      // Ensure auth modal is displayed
+      const authModal = document.getElementById('authModal');
+      if (authModal) {
+        authModal.classList.remove('hidden');
+        authModal.style.display = '';
+      }
+
+      // Switch to registration view (nxaVNew)
+      if (typeof window.nxaView === 'function') {
+        window.nxaView('nw');
+      }
+
+      // Pre-fill verified Google email chip
+      const emChip = document.getElementById('nxlNwEm');
+      if (emChip) emChip.textContent = googleUser.email;
+
+      // Pre-fill Full Name (editable by student)
+      const nameInput = document.getElementById('nxlName');
+      if (nameInput) {
+        nameInput.value = googleUser.name || '';
+        nameInput.removeAttribute('readonly');
+      }
+
+      // Pre-fill USN and DOB if present
+      const usnInput = document.getElementById('nxlUsn');
+      if (usnInput && googleUser.usn) usnInput.value = googleUser.usn;
+      const dobInput = document.getElementById('nxlDob');
+      if (dobInput && googleUser.dob) dobInput.value = googleUser.dob;
+
+      // Hide password fields for Google OAuth
+      // "Password only if the student chooses separate email/password registration. Never retrieve, display, or store the Google password."
+      const pwInput = document.getElementById('nxlNp');
+      if (pwInput) {
+        const f = pwInput.closest('.nxa-f');
+        if (f) f.style.display = 'none';
+      }
+      const pw2Input = document.getElementById('nxlNp2');
+      if (pw2Input) {
+        const f = pw2Input.closest('.nxa-f');
+        if (f) f.style.display = 'none';
+      }
+
+      // Update modal header & instructions
+      const titleEl = authModal && authModal.querySelector('h3');
+      if (titleEl) titleEl.textContent = 'Student Registration & Profile';
+      const subEl = document.getElementById('nxaSub');
+      if (subEl) subEl.textContent = 'Welcome! Enter your USN and date of birth to link your verified Google account.';
+
+      // Start at Step 1 (Student details)
+      if (typeof window.nxlStep === 'function') {
+        window.nxlStep(1);
+      }
+
+      if (typeof showToast === 'function') {
+        showToast('Google account verified! Please enter your USN and Date of Birth.', 'info');
+      }
+    }
+    window.openGoogleStudentOnboarding = openGoogleStudentOnboarding;
+
+    // Restore password fields if student chooses email/password registration instead
+    const origNxlBack = window.nxlBack;
+    window.nxlBack = function () {
+      window.__googleOnboardingData = null;
+      const pwInput = document.getElementById('nxlNp');
+      if (pwInput) {
+        const f = pwInput.closest('.nxa-f');
+        if (f) f.style.display = '';
+      }
+      const pw2Input = document.getElementById('nxlNp2');
+      if (pw2Input) {
+        const f = pw2Input.closest('.nxa-f');
+        if (f) f.style.display = '';
+      }
+      if (typeof origNxlBack === 'function') origNxlBack.apply(this, arguments);
+    };
+
     async function sendGoogleTokenToBackend(payload) {
       try {
-        if (typeof showToast === 'function') showToast('Signing in with Google Cloud...', 'info');
+        if (typeof showToast === 'function') showToast('Authenticating with Google...', 'info');
         const res = await fetch(`${API_BASE}/auth/google`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || `Server returned HTTP ${res.status}`);
+        }
+
         const data = await res.json();
         if (data && data.success && data.data) {
           const u = data.data;
+
+          // If new student or incomplete profile -> launch Student Details & Onboarding Flow
+          if (data.needsOnboarding || u.registrationCompleted === false) {
+            if (u.token) {
+              authToken = u.token;
+              localStorage.setItem('booknexus_token', u.token);
+            }
+            openGoogleStudentOnboarding(u);
+            return;
+          }
+
+          // Returning Google student with complete profile -> DIRECT LOGIN!
           authToken = u.token;
           localStorage.setItem('booknexus_token', u.token);
           localStorage.setItem('currentUser', JSON.stringify(u));
@@ -2082,7 +2187,7 @@
             dept: u.branch || 'Computer Science',
             year: u.semester || '',
             phone: u.phone || '',
-            anonId: 'Google Scholar'
+            anonId: u.preferredName || 'Google Scholar'
           };
 
           if (typeof setUserRole === 'function') setUserRole('student');
@@ -2093,7 +2198,7 @@
           if (authModal) authModal.classList.add('hidden');
 
           if (typeof showToast === 'function') {
-            showToast(`Welcome, ${u.name}! Signed in via Google Cloud.`, 'success');
+            showToast(`Welcome back, ${u.name}! Signed in via Google.`, 'success');
           }
           if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
         } else {
@@ -2102,9 +2207,219 @@
         }
       } catch (err) {
         console.warn('Google backend auth error:', err.message);
-        if (typeof showToast === 'function') showToast('Google sign-in server error. Please try again.', 'error');
+        if (typeof showToast === 'function') showToast('Google sign-in error: ' + err.message, 'error');
       }
     }
+
+    // Hook nxlCreate to handle complete registration flow with backend MongoDB persistence
+    const origNxlCreate = window.nxlCreate;
+    window.nxlCreate = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+
+      const isGoogle = !!window.__googleOnboardingData;
+      if (!isGoogle) {
+        if (typeof origNxlCreate === 'function') return origNxlCreate.apply(this, arguments);
+        return;
+      }
+
+      // --- GOOGLE STUDENT ONBOARDING FLOW ---
+      const kit = typeof K === 'function' ? K() : {
+        clearErrs: () => {},
+        banner: (msg, type) => { if (typeof showToast === 'function') showToast(msg, type === 'bad' ? 'error' : 'info'); },
+        fieldErr: (id, msg) => {
+          const err = document.getElementById(id + 'E');
+          if (err) { err.textContent = msg; err.hidden = false; }
+          const input = document.getElementById(id);
+          if (input) { input.setAttribute('aria-invalid', 'true'); input.focus(); }
+          return false;
+        }
+      };
+
+      const form = document.getElementById('nxaVNew');
+      if (typeof kit.clearErrs === 'function') kit.clearErrs(form);
+      if (typeof kit.banner === 'function') kit.banner('');
+
+      const nameEl = document.getElementById('nxlName');
+      const usnEl = document.getElementById('nxlUsn');
+      const dobEl = document.getElementById('nxlDob');
+      const name = nameEl ? nameEl.value.trim().replace(/\s+/g, ' ') : '';
+      const rawUsn = usnEl ? usnEl.value.trim().toUpperCase() : '';
+      const dob = dobEl ? dobEl.value.trim() : '';
+
+      let ok = true;
+      if (!name || name.length < 2) {
+        ok = kit.fieldErr('nxlName', 'Enter your full name.') && false;
+      }
+      if (!rawUsn) {
+        ok = kit.fieldErr('nxlUsn', 'Enter your official USN.') && false;
+      } else if (!/^[A-Z0-9_-]{4,16}$/.test(rawUsn)) {
+        ok = kit.fieldErr('nxlUsn', 'USN must contain only letters, numbers and hyphens (4-16 characters).') && false;
+      }
+      if (!dob) {
+        ok = kit.fieldErr('nxlDob', 'Enter your date of birth.') && false;
+      }
+
+      if (!ok) return;
+
+      // STEP 1 VALIDATED: IF ON STEP 1, PROCEED TO STEP 2 (ABOUT THE STUDENT & QUIZ)
+      const s1 = document.getElementById('nxlS1');
+      const s2 = document.getElementById('nxlS2');
+      const isStep1 = s1 && !s1.hidden;
+
+      if (isStep1) {
+        // Advance to Step 2
+        if (typeof window.nxlStep === 'function') {
+          window.nxlStep(2);
+        } else {
+          if (s1) s1.hidden = true;
+          if (s2) s2.hidden = false;
+        }
+
+        // Pre-fill preferred name ("What should we call you?") with first name if empty
+        const nickEl = document.getElementById('nxlNick');
+        if (nickEl && !nickEl.value.trim()) {
+          const firstName = name.split(' ')[0] || '';
+          nickEl.value = firstName;
+        }
+
+        const p2 = document.getElementById('nxlP2');
+        if (p2) p2.className = 'on';
+        const stepLbl = document.getElementById('nxlStepLbl');
+        if (stepLbl) stepLbl.textContent = 'Step 2 of 2 · About you & Quiz';
+        const btn = document.getElementById('nxlNwBtn');
+        if (btn) btn.textContent = 'Submit & Complete Registration';
+        return;
+      }
+
+      // STEP 2: ABOUT THE STUDENT & QUIZ VALIDATION
+      const nickEl = document.getElementById('nxlNick');
+      const bioEl = document.getElementById('nxlBio');
+      const nick = nickEl ? nickEl.value.trim() : '';
+      const bio = bioEl ? bioEl.value.trim() : '';
+
+      if (!nick || nick.length < 2) {
+        return kit.fieldErr('nxlNick', 'Please tell us what we should call you.');
+      }
+      if (!bio || bio.length < 3) {
+        return kit.fieldErr('nxlBio', 'Please write a brief introduction about yourself.');
+      }
+
+      // Ensure quiz answers exist
+      let quizAns = (typeof SU !== 'undefined' && SU.cur) ? SU.cur : null;
+      if (!quizAns || Object.keys(quizAns).length === 0) {
+        if (typeof SU !== 'undefined' && SU.answers) quizAns = SU.answers;
+      }
+
+      // Validate that all questions or at least genre preferences are answered
+      if (typeof SU !== 'undefined' && SU.mode === 'quiz' && SU.q < (typeof NX_QUIZ !== 'undefined' ? NX_QUIZ.length - 1 : 5)) {
+        const gErr = document.getElementById('nxlGenE');
+        if (gErr) {
+          gErr.textContent = 'Please complete all questions in the reading quiz.';
+          gErr.hidden = false;
+        }
+        if (typeof showToast === 'function') showToast('Please answer the quiz questions below.', 'info');
+        return;
+      }
+
+      // Format quiz answers for backend
+      const formattedQuiz = {};
+      if (Array.isArray(quizAns)) {
+        quizAns.forEach((opts, i) => {
+          formattedQuiz[i] = Array.isArray(opts) ? opts : [opts];
+        });
+      } else if (quizAns && typeof quizAns === 'object') {
+        Object.assign(formattedQuiz, quizAns);
+      } else {
+        formattedQuiz[0] = ['c']; formattedQuiz[1] = ['c']; formattedQuiz[2] = ['a'];
+        formattedQuiz[3] = ['e']; formattedQuiz[4] = ['c']; formattedQuiz[5] = ['b'];
+      }
+
+      const subBtn = document.getElementById('nxlNwBtn');
+      if (subBtn) {
+        subBtn.disabled = true;
+        subBtn.textContent = 'Saving to Database...';
+      }
+
+      const googleUser = window.__googleOnboardingData;
+      const payload = {
+        email: googleUser.email,
+        googleId: googleUser.googleId,
+        name: name,
+        usn: rawUsn,
+        dob: dob,
+        preferredName: nick,
+        bio: bio,
+        quizAnswers: formattedQuiz
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/complete-onboarding`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': googleUser.token ? `Bearer ${googleUser.token}` : ''
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok || !data.success) {
+          const errorMsg = data.message || `Registration failed (HTTP ${res.status}).`;
+          if (subBtn) {
+            subBtn.disabled = false;
+            subBtn.textContent = 'Submit & Complete Registration';
+          }
+          if (data.message && data.message.includes('USN')) {
+            kit.fieldErr('nxlUsn', data.message);
+            if (typeof window.nxlStep === 'function') window.nxlStep(1);
+          } else {
+            kit.banner(errorMsg, 'bad');
+          }
+          if (typeof showToast === 'function') showToast(errorMsg, 'error');
+          return;
+        }
+
+        // SUCCESSFUL COMPLETION & DATABASE PERSISTENCE
+        const user = data.data;
+        authToken = user.token || googleUser.token;
+        localStorage.setItem('booknexus_token', authToken);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+
+        currentUser = {
+          name: user.name || name,
+          rollNo: user.usn || rawUsn,
+          email: user.email,
+          dept: user.branch || 'Computer Science',
+          year: user.semester || '',
+          phone: user.mobile || '',
+          anonId: user.preferredName || nick || 'Student'
+        };
+
+        window.__googleOnboardingData = null;
+
+        if (typeof setUserRole === 'function') setUserRole('student');
+        if (typeof switchNav === 'function') switchNav('home');
+        if (typeof renderNavLinks === 'function') renderNavLinks();
+        if (typeof closeModal === 'function') closeModal('authModal');
+        const authModal = document.getElementById('authModal');
+        if (authModal) authModal.classList.add('hidden');
+
+        if (typeof showToast === 'function') {
+          showToast(`Registration complete! Welcome to BookNexus, ${user.name || name}.`, 'success');
+        }
+        if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
+
+      } catch (err) {
+        console.error('Onboarding submission error:', err);
+        if (subBtn) {
+          subBtn.disabled = false;
+          subBtn.textContent = 'Submit & Complete Registration';
+        }
+        kit.banner('Network or server error while saving registration. Please try again.', 'bad');
+        if (typeof showToast === 'function') showToast('Could not reach backend database. Please try again.', 'error');
+      }
+    };
 
     function openGoogleSignIn() {
       if (tokenClient) {
@@ -2147,7 +2462,7 @@
               phone: rec.phone || '',
               anonId: rec.secretId || ('ID-' + (rec.usn || '').slice(-3))
             };
-          } catch (e) {}
+          } catch (e) { }
         }
         if (rec && rec.token) {
           authToken = rec.token;
@@ -2261,7 +2576,7 @@
       NX_QUIZ_QUESTIONS.forEach((qItem, idx) => {
         const qBox = document.createElement('div');
         qBox.className = 'p-3 bg-brand-ivory/90 dark:bg-brand-darkSurface/90 rounded-2xl border border-brand-rosewood/15 text-left';
-        
+
         const qTitle = document.createElement('div');
         qTitle.className = 'text-xs font-bold text-brand-rosewood dark:text-white mb-2 flex items-center justify-between';
         qTitle.innerHTML = `<span><strong class="text-brand-gold">Q${idx + 1}.</strong> ${qItem.q}</span><span id="${containerId}_check_${idx}" class="text-[10px] text-gray-400">${answerStore[idx] ? '✓ Selected' : 'Required'}</span>`;
@@ -2274,11 +2589,10 @@
           const btn = document.createElement('button');
           btn.type = 'button';
           const isSelected = answerStore[idx] === opt.key;
-          btn.className = `p-2 rounded-xl text-xs text-left transition-all border flex items-center gap-2 ${
-            isSelected
+          btn.className = `p-2 rounded-xl text-xs text-left transition-all border flex items-center gap-2 ${isSelected
               ? 'border-brand-rosewood bg-brand-rosewood/15 text-brand-rosewood font-bold shadow-sm'
               : 'border-brand-rosewood/10 hover:border-brand-rosewood/30 bg-white/70 text-gray-700'
-          }`;
+            }`;
           btn.innerHTML = `<span class="w-4 h-4 rounded-full border border-current flex items-center justify-center text-[10px] shrink-0 ${isSelected ? 'bg-brand-rosewood text-white' : ''}">${opt.key.toUpperCase()}</span><span class="truncate">${opt.text}</span>`;
           btn.onclick = () => {
             answerStore[idx] = opt.key;
@@ -2910,7 +3224,7 @@
     document.body.insertAdjacentHTML('beforeend', modalHtml);
   }
 
-  window.closeCampusUpiModal = function() {
+  window.closeCampusUpiModal = function () {
     const modal = document.getElementById('campusUpiModal');
     if (modal) {
       modal.classList.add('hidden');
@@ -2918,7 +3232,7 @@
     }
   };
 
-  window.copyCampusUpiId = function() {
+  window.copyCampusUpiId = function () {
     const vpa = document.getElementById('upiModalPayeeVpa')?.textContent || '';
     if (vpa && navigator.clipboard) {
       navigator.clipboard.writeText(vpa);
@@ -2926,7 +3240,7 @@
     }
   };
 
-  window.openCampusUpiPayModal = async function(opts = {}) {
+  window.openCampusUpiPayModal = async function (opts = {}) {
     ensureCampusUpiModal();
     const token = getAuthToken();
     const modal = document.getElementById('campusUpiModal');
@@ -3003,7 +3317,7 @@
     }
   };
 
-  window.submitCampusUpiUtr = async function() {
+  window.submitCampusUpiUtr = async function () {
     if (!currentPaymentTxn) {
       if (typeof showToast === 'function') showToast('No active transaction found.', 'error');
       return;
@@ -3054,7 +3368,7 @@
     }
   };
 
-  window.librarianVerifyPayment = async function(transactionRef, amount) {
+  window.librarianVerifyPayment = async function (transactionRef, amount) {
     if (!confirm(`Verify payment ${transactionRef} for ₹${amount}?\n\nThis confirms the funds have cleared on the campus bank terminal, resets student overdue penalties, and dispatches the official receipt email.`)) {
       return;
     }
@@ -3089,7 +3403,7 @@
     }
   };
 
-  window.librarianRejectPayment = async function(transactionRef) {
+  window.librarianRejectPayment = async function (transactionRef) {
     const reason = prompt(`Enter reason for rejecting payment ${transactionRef}:`, 'UTR reference could not be located on campus bank statement.');
     if (reason === null) return;
 
@@ -3158,9 +3472,9 @@
           date: new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
           amount: '₹' + Number(t.amount).toFixed(2),
           status: t.status === 'initiated' ? 'Initiated' :
-                  t.status === 'pending' ? 'Pending Verification' :
-                  t.status === 'successful' ? 'Successful' :
-                  t.status === 'rejected' ? 'Rejected' :
+            t.status === 'pending' ? 'Pending Verification' :
+              t.status === 'successful' ? 'Successful' :
+                t.status === 'rejected' ? 'Rejected' :
                   t.status === 'refunded' ? 'Refunded' : 'Completed',
           raw: t
         }));
@@ -3556,7 +3870,7 @@
   }
 
   const origPreviewReceipt = window.previewReceipt;
-  window.previewReceipt = function(txnId) {
+  window.previewReceipt = function (txnId) {
     const t = (window.transactionsList || []).find(x => x.id === txnId);
     if (t && t.raw) {
       const raw = t.raw;

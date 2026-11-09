@@ -223,7 +223,7 @@ const completeOnboarding = asyncHandler(async (req, res) => {
         throw new Error("User account not found or not authenticated");
     }
 
-    const { usn, dob, mobile, branch, department, college, semester, quizAnswers } = req.body;
+    const { name, usn, dob, mobile, branch, department, college, semester, preferredName, bio, quizAnswers } = req.body;
 
     if (!usn || !usn.trim()) {
         res.status(400);
@@ -256,8 +256,13 @@ const completeOnboarding = asyncHandler(async (req, res) => {
     const cleanSemester = (semester || user.semester || "Sixth").trim();
 
     // Update profile
+    if (name && name.trim() && name.trim().length >= 2) {
+        user.name = name.trim();
+    }
     user.usn = cleanUsn;
     if (dob) user.dob = String(dob).trim();
+    if (preferredName) user.preferredName = String(preferredName).trim();
+    if (bio) user.bio = String(bio).trim();
     if (mobile) user.mobile = String(mobile).trim();
     if (cleanBranch) user.branch = cleanBranch;
     user.college = cleanCollege;
