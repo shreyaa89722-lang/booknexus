@@ -2002,13 +2002,126 @@
       }, 50);
     };
 
-    // Unified Google Sign-In caller delegating to central handler
+    // Google Cloud OAuth 2.0 & Identity Services Integration
+    let googleClientId = "678657142900-oibcoi8ind88u1l11e6mgk5cic8qqasm.apps.googleusercontent.com";
+    let tokenClient = null;
+
+    async function initGoogleAuth() {
+      try {
+        const res = await fetch(`${API_BASE}/auth/google/config`);
+        if (res.ok) {
+          const cfg = await res.json();
+          if (cfg && cfg.clientId) googleClientId = cfg.clientId;
+        }
+      } catch (e) {
+        console.warn('Google config notice:', e.message);
+      }
+
+      function setupGSI() {
+        if (!window.google || !window.google.accounts) return false;
+        try {
+          window.google.accounts.id.initialize({
+            client_id: googleClientId,
+            callback: handleGoogleCredentialResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+          });
+
+          if (window.google.accounts.oauth2) {
+            tokenClient = window.google.accounts.oauth2.initTokenClient({
+              client_id: googleClientId,
+              scope: 'email profile openid',
+              callback: async (tokenResponse) => {
+                if (tokenResponse && tokenResponse.access_token) {
+                  await sendGoogleTokenToBackend({ accessToken: tokenResponse.access_token });
+                }
+              },
+            });
+          }
+          return true;
+        } catch (err) {
+          console.warn('GSI setup notice:', err.message);
+          return false;
+        }
+      }
+
+      if (!setupGSI()) {
+        let tries = 0;
+        const t = setInterval(() => {
+          tries++;
+          if (setupGSI() || tries > 20) clearInterval(t);
+        }, 500);
+      }
+    }
+    window.initGoogleAuth = initGoogleAuth;
+
+    async function handleGoogleCredentialResponse(response) {
+      if (!response || !response.credential) return;
+      await sendGoogleTokenToBackend({ credential: response.credential });
+    }
+
+    async function sendGoogleTokenToBackend(payload) {
+      try {
+        if (typeof showToast === 'function') showToast('Signing in with Google Cloud...', 'info');
+        const res = await fetch(`${API_BASE}/auth/google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data && data.success && data.data) {
+          const u = data.data;
+          authToken = u.token;
+          localStorage.setItem('booknexus_token', u.token);
+          localStorage.setItem('currentUser', JSON.stringify(u));
+          
+          currentUser = {
+            name: u.name,
+            rollNo: u.usn || ('G-' + (u.email || '').split('@')[0]),
+            email: u.email,
+            dept: u.branch || 'Computer Science',
+            year: u.semester || '',
+            phone: u.phone || '',
+            anonId: 'Google Scholar'
+          };
+
+          if (typeof setUserRole === 'function') setUserRole('student');
+          if (typeof switchNav === 'function') switchNav('home');
+          if (typeof renderNavLinks === 'function') renderNavLinks();
+          if (typeof closeModal === 'function') closeModal('authModal');
+          const authModal = document.getElementById('authModal');
+          if (authModal) authModal.classList.add('hidden');
+
+          if (typeof showToast === 'function') {
+            showToast(`Welcome, ${u.name}! Signed in via Google Cloud.`, 'success');
+          }
+          if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
+        } else {
+          const msg = (data && data.message) || 'Google sign-in could not be completed.';
+          if (typeof showToast === 'function') showToast(msg, 'error');
+        }
+      } catch (err) {
+        console.warn('Google backend auth error:', err.message);
+        if (typeof showToast === 'function') showToast('Google sign-in server error. Please try again.', 'error');
+      }
+    }
+
     function openGoogleSignIn() {
-      if (typeof window.startGoogleOAuth === 'function') {
-        window.startGoogleOAuth();
+      if (tokenClient) {
+        tokenClient.requestAccessToken({ prompt: 'select_account' });
+      } else if (window.google && window.google.accounts && window.google.accounts.id) {
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            if (tokenClient) tokenClient.requestAccessToken({ prompt: 'select_account' });
+          }
+        });
+      } else {
+        initGoogleAuth();
+        if (typeof showToast === 'function') showToast('Connecting to Google Cloud...', 'info');
       }
     }
     window.openGoogleSignIn = openGoogleSignIn;
+    window.startGoogleOAuth = openGoogleSignIn;
 
     window.nxlSocial = function (kind) {
       if (kind === 'google') {
@@ -3488,6 +3601,7 @@
       hookRentalBlockchain();
       hookEmailNotifications();
       initCampusPaymentSystem();
+      initGoogleAuth();
       if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
     });
   } else {
@@ -3496,6 +3610,7 @@
     hookRentalBlockchain();
     hookEmailNotifications();
     initCampusPaymentSystem();
+    initGoogleAuth();
     if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
   }
 })();
