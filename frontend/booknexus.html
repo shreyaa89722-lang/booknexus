@@ -1472,19 +1472,19 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="bg-brand-cream dark:bg-brand-darkCard p-6 rounded-2xl border border-brand-rosewood/15 dark:border-brand-darkBorder">
                 <div class="text-xs font-bold uppercase text-gray-500">Currently Borrowed</div>
-                <div class="font-display font-bold text-3xl text-brand-rosewood dark:text-white mt-2" id="studentBorrowedCount">2 Books</div>
+                <div class="font-display font-bold text-3xl text-brand-rosewood dark:text-white mt-2" id="studentBorrowedCount">0 Books</div>
                 <div class="text-[11px] font-medium text-brand-sage mt-1">Free 14-day borrowing active</div>
             </div>
 
             <div class="bg-brand-cream dark:bg-brand-darkCard p-6 rounded-2xl border border-brand-rosewood/15 dark:border-brand-darkBorder">
                 <div class="text-xs font-bold uppercase text-gray-500">Library Alerts</div>
-                <div class="font-display font-bold text-3xl text-brand-rosewood dark:text-white mt-2" id="studentAlertsCount">1 Alert</div>
-                <div class="text-[11px] font-medium text-brand-dustyRose mt-1">1 overdue warning received</div>
+                <div class="font-display font-bold text-3xl text-brand-rosewood dark:text-white mt-2" id="studentAlertsCount">0 Alerts</div>
+                <div class="text-[11px] font-medium text-brand-dustyRose mt-1">No alerts yet</div>
             </div>
 
             <div class="bg-brand-cream dark:bg-brand-darkCard p-6 rounded-2xl border border-brand-rosewood/15 dark:border-brand-darkBorder">
                 <div class="text-xs font-bold uppercase text-gray-500">Library Fine Balance</div>
-                <div class="font-display font-bold text-3xl text-brand-burgundy dark:text-brand-dustyRose mt-2" id="studentFineBalance">₹20</div>
+                <div class="font-display font-bold text-3xl text-brand-burgundy dark:text-brand-dustyRose mt-2" id="studentFineBalance">₹0</div>
                 <div class="text-[11px] font-bold text-gray-500 mt-1" id="studentFineRate">Fine Rate: ₹5/day</div>
                 <div class="text-[11px] font-medium text-gray-500 mt-1">Payable at Central Library Desk</div>
             </div>
@@ -1553,7 +1553,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                 <span class="material-symbols-outlined text-base">storefront</span> Browse Rental Listings
             </button>
             <button id="subTabBtnMyRentals" onclick="switchRentalsSubTab('myRentals')" class="py-3 px-5 text-xs font-bold border-b-2 border-transparent text-gray-500 hover:text-brand-rosewood flex items-center gap-2">
-                <span class="material-symbols-outlined text-base">timeline</span> My Rentals & OTPs (<span id="countMyRentals">2</span>)
+                <span class="material-symbols-outlined text-base">timeline</span> My Rentals & OTPs (<span id="countMyRentals">0</span>)
             </button>
             <button id="subTabBtnMyListings" onclick="switchRentalsSubTab('myListings')" class="py-3 px-5 text-xs font-bold border-b-2 border-transparent text-gray-500 hover:text-brand-rosewood flex items-center gap-2">
                 <span class="material-symbols-outlined text-base">collections_bookmark</span> My Listed Inventory (<span id="countMyListings">1</span>)
@@ -1669,8 +1669,8 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 
                     <div class="bg-brand-parchment dark:bg-brand-darkSurface p-4 rounded-xl text-xs space-y-1">
                         <div class="flex justify-between"><span>Borrower:</span> <b id="returnBorrowerName">H M Nanditha</b></div>
-                        <div class="flex justify-between"><span>Due Date:</span> <b id="returnDueDate">Sep 24, 2026</b></div>
-                        <div class="flex justify-between"><span>Calculated Overdue Fine:</span> <b class="text-brand-burgundy" id="returnCalculatedFine">₹20 (4 Days Overdue)</b></div>
+                        <div class="flex justify-between"><span>Due Date:</span> <b id="returnDueDate">—</b></div>
+                        <div class="flex justify-between"><span>Calculated Overdue Fine:</span> <b class="text-brand-burgundy" id="returnCalculatedFine">₹0</b></div>
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -1725,7 +1725,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                             <option value="Due in 2 Days">"2 days left before due date"</option>
                             <option value="Due Today">"Book due today! Please return to desk."</option>
                             <option value="Book Overdue">"Book Overdue — Fine accumulating."</option>
-                            <option value="Fine Notice">"Fine Notice: Outstanding balance ₹20"</option>
+                            <option value="Fine Notice">"Fine Notice: Outstanding balance"</option>
                             <option value="Custom">Custom Message</option>
                         </select>
                     </div>
@@ -4677,9 +4677,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹100/wk",
   "deposit": "₹220",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 46,
@@ -6093,9 +6093,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹60/wk",
   "deposit": "₹130",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 6,
@@ -6347,9 +6347,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹100/wk",
   "deposit": "₹220",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 2,
   "totalCopies": 2,
   "demand": 4,
@@ -7936,9 +7936,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹30/wk",
   "deposit": "₹70",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 26,
@@ -8130,9 +8130,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹45/wk",
   "deposit": "₹100",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 15,
@@ -8349,9 +8349,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹100/wk",
   "deposit": "₹220",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 10,
@@ -8573,9 +8573,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹55/wk",
   "deposit": "₹120",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 27,
@@ -8858,9 +8858,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹80/wk",
   "deposit": "₹180",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 58,
@@ -10766,9 +10766,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹55/wk",
   "deposit": "₹120",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 18,
@@ -11492,9 +11492,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹55/wk",
   "deposit": "₹120",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 22,
@@ -12046,9 +12046,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹30/wk",
   "deposit": "₹70",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 43,
@@ -14413,9 +14413,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹15/wk",
   "deposit": "₹60",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 54,
@@ -15293,9 +15293,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹20/wk",
   "deposit": "₹60",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 24,
@@ -15869,9 +15869,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
   "type": "rent",
   "price": "₹55/wk",
   "deposit": "₹120",
-  "ownerAnonId": "Renter #B21",
-  "ownerRealName": "H M Nanditha",
-  "ownerRoll": "CS2026-042",
+  "ownerAnonId": "Owner #A27",
+  "ownerRealName": "Aarav Mehta",
+  "ownerRoll": "CS2026-020",
   "availableCopies": 1,
   "totalCopies": 1,
   "demand": 39,
@@ -16185,77 +16185,13 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 ];
 
     // Saved Book IDs
-    let savedBookIds = [1, 101];
+    let savedBookIds = [];
 
     // Student Library Borrowed Books (Free Library)
-    let studentBorrowedBooks = [
-        {
-            id: "b-101",
-            bookId: 4,
-            title: "Introduction to Linear Algebra",
-            author: "Gilbert Strang",
-            borrowDate: "Sep 20, 2026",
-            dueDate: "Oct 04, 2026",
-            status: "ON TIME",
-            daysRemaining: 6,
-            fine: 0,
-            cover: "https://covers.openlibrary.org/b/isbn/9780980232776-L.jpg?default=false"
-        },
-        {
-            id: "b-102",
-            bookId: 5,
-            title: "Clean Code",
-            author: "Robert C. Martin",
-            borrowDate: "Sep 10, 2026",
-            dueDate: "Sep 24, 2026",
-            status: "OVERDUE",
-            daysRemaining: -4,
-            fine: 20,
-            cover: "https://covers.openlibrary.org/b/isbn/9780132350884-L.jpg?default=false"
-        }
-    ];
+    let studentBorrowedBooks = [];
 
     // Student Rentals Workflow Objects
-    let activeStudentRentals = [
-        {
-            id: "r-901",
-            bookId: 101,
-            title: "Design Patterns",
-            author: "Erich Gamma et al.",
-            cover: "https://covers.openlibrary.org/b/isbn/9780201633610-L.jpg?default=false",
-            price: "₹45/wk",
-            deposit: "₹100",
-            renterAnonId: "Renter #B21",
-            renterRealName: "H M Nanditha",
-            renterRoll: "CS2026-042",
-            ownerAnonId: "Owner #A47",
-            ownerRealName: "Sarah Jenkins",
-            ownerRoll: "CS2026-012",
-            status: "PICKUP PENDING",
-            renterOtp: "RENTER-4921",
-            ownerOtp: "OWNER-8314",
-            requestDate: "Sep 26, 2026"
-        },
-        {
-            id: "r-902",
-            bookId: 102,
-            title: "A History of Western Philosophy",
-            author: "Bertrand Russell",
-            cover: "https://covers.openlibrary.org/b/isbn/9780671201586-L.jpg?default=false",
-            price: "₹50/wk",
-            deposit: "₹100",
-            renterAnonId: "Renter #B21",
-            renterRealName: "H M Nanditha",
-            renterRoll: "CS2026-042",
-            ownerAnonId: "Owner #A82",
-            ownerRealName: "Alex Miller",
-            ownerRoll: "HU2026-005",
-            status: "ACTIVE",
-            renterOtp: "RENTER-1102",
-            ownerOtp: "OWNER-9921",
-            requestDate: "Sep 20, 2026"
-        }
-    ];
+    let activeStudentRentals = [];
 
     // Student Library Directory (for Librarian view)
     let librarianStudentsList = [
@@ -16266,9 +16202,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
             year: "",
             phone: "+91 9876543210",
             email: "nanditha@univ.edu",
-            borrowedCount: 2,
-            fineBalance: 20,
-            history: ["Algorithms to Live By (Returned)", "Linear Algebra (Active)", "Clean Code (Overdue)"]
+            borrowedCount: 0,
+            fineBalance: 0,
+            history: []
         },
         {
             name: "Rahul Sharma",
@@ -16295,39 +16231,10 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     ];
 
     // System Notifications Store
-    let notificationsList = [
-        {
-            id: 1,
-            title: "Library Alert: Book Overdue",
-            message: "Your borrowed library book 'Clean Code' is 4 days overdue. Outstanding Fine: ₹20.",
-            time: "10 mins ago",
-            type: "warning",
-            read: false
-        },
-        {
-            id: 2,
-            title: "Pickup Center OTP Ready",
-            message: "Your rental request for 'Design Patterns' was approved! The admin will send your OTP when you are at the Pickup Center.",
-            time: "2 hours ago",
-            type: "success",
-            read: false
-        },
-        {
-            id: 3,
-            title: "Library Borrowing Reminder",
-            message: "'Introduction to Linear Algebra' is due in 6 days.",
-            time: "1 day ago",
-            type: "info",
-            read: true
-        }
-    ];
+    let notificationsList = [];
 
     // Transactions Store
-    let transactionsList = [
-        { id: "TXN-00124", title: "Design Patterns", type: "Rental Deposit Escrow", date: "26 Sep 2026", amount: "₹145", status: "Pending Verification" },
-        { id: "TXN-00123", title: "A History of Western Philosophy", type: "Rental Fee", date: "20 Sep 2026", amount: "₹50", status: "Completed" },
-        { id: "TXN-00122", title: "Clean Code", type: "Library Overdue Fine", date: "24 Sep 2026", amount: "₹20", status: "Pending Payment" }
-    ];
+    let transactionsList = [];
 
     // Active Catalog Filters
     let activeFilters = {
@@ -18107,15 +18014,8 @@ textarea.pf-inp{resize:vertical;min-height:96px}
        ============================================================ */
     const DAY = 86400000, fmtD = t => t ? new Date(t).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
     const T0 = Date.now();
-    let libLedger = [
-        { id: 'L1', roll: 'CS2026-042', bookId: 4, borrowAt: T0 - 8 * DAY, dueAt: T0 + 6 * DAY, returnAt: null, fine: 0, paid: null, method: '', payAt: null, by: 'Librarian Desk' },
-        { id: 'L2', roll: 'CS2026-042', bookId: 5, borrowAt: T0 - 18 * DAY, dueAt: T0 - 4 * DAY, returnAt: null, fine: 0, paid: null, method: '', payAt: null, by: 'Librarian Desk' },
-        { id: 'L3', roll: 'CS2026-042', bookId: 1, borrowAt: T0 - 40 * DAY, dueAt: T0 - 26 * DAY, returnAt: T0 - 27 * DAY, fine: 0, paid: null, method: '', payAt: null, by: 'Librarian Desk' }
-    ];
-    let libAlerts = [
-        { id: 'A1', roll: 'CS2026-042', title: 'Overdue: Clean Code', text: 'Your book "Clean Code" is overdue. Please return it and clear the fine at the library desk.', time: new Date(T0 - 3600000).toLocaleString(), read: false, replies: [] },
-        { id: 'A2', roll: 'CS2026-042', title: 'Due soon: Introduction to Linear Algebra', text: 'Due in 6 days.', time: new Date(T0 - 86400000).toLocaleString(), read: true, replies: [] }
-    ];
+    let libLedger = [];
+    let libAlerts = [];
     let libNotifOn = true, libTab = 'borrowed', receipts = {};
     const bookOf = id => booksData.find(b => b.id === id);
     const studentByRoll = r => librarianStudentsList.find(s => s.rollNo === r);
@@ -18273,6 +18173,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
        UPDATE 8: STUDENT LIBRARY DIRECTORY + SEND LIBRARY ALERTS
        ============================================================ */
     (function seedOthers() {   // give other roster students ledger data so directory/alerts are meaningful
+        return;   // fresh install: no sample borrowing records
         const o = librarianStudentsList.filter(s => s.rollNo !== currentUser.rollNo), lib = booksData.filter(b => b.type === 'library');
         if (o[0]) libLedger.push({ id: 'L91', roll: o[0].rollNo, bookId: lib[0].id, borrowAt: T0 - 13 * DAY, dueAt: T0 + 1 * DAY, returnAt: null, fine: 0, paid: null, method: '', payAt: null, by: 'Librarian Desk' });
         if (o[1]) { libLedger.push({ id: 'L92', roll: o[1].rollNo, bookId: lib[1].id, borrowAt: T0 - 20 * DAY, dueAt: T0 - 6 * DAY, returnAt: null, fine: 0, paid: null, method: '', payAt: null, by: 'Librarian Desk' }); libLedger.push({ id: 'L93', roll: o[1].rollNo, bookId: lib[3].id, borrowAt: T0 - 50 * DAY, dueAt: T0 - 36 * DAY, returnAt: T0 - 33 * DAY, fine: 3 * libraryConfig.fineRatePerDay, paid: true, method: 'Cash', payAt: T0 - 33 * DAY, by: 'Librarian Desk' }); }
@@ -18282,7 +18183,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
        Set DEMO_DATA = false to remove it completely.
        ============================================================ */
     (function seedDashboardDemo() {
-        const DEMO_DATA = true; if (!DEMO_DATA) return;
+        const DEMO_DATA = false; if (!DEMO_DATA) return;
         const mk = (name, rollNo, dept, year, ph) => ({ name, rollNo, dept, year, phone: '+91 98765 ' + ph, email: name.split(' ')[0].toLowerCase() + '@univ.edu', borrowedCount: 0, fineBalance: 0, history: [] });
         [mk('Priya Nair', 'ME2026-021', 'Mechanical Engineering', '', '43101'), mk('Arjun Mehta', 'CS2026-057', 'Computer Science', '', '43102'), mk('Sneha Kulkarni', 'IS2026-033', 'Information Science', '', '43103'),
          mk('Vikram Rao', 'EC2026-044', 'Engineering', '', '43104'), mk('Fatima Shaikh', 'MA2026-015', 'Mathematics', '', '43105'), mk('Karthik Iyer', 'PH2026-008', 'Physics', '', '43106'),
@@ -18412,13 +18313,8 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     currentUser.anonId = anonClean(currentUser.anonId);
     activeStudentRentals.forEach(r => { r.ownerAnonId = anonClean(r.ownerAnonId); r.renterAnonId = anonClean(r.renterAnonId); });
     booksData.forEach(b => { if (b.ownerAnonId) b.ownerAnonId = anonClean(b.ownerAnonId); });
-    if (!booksData.some(b => b.type === 'rent' && b.ownerRoll === currentUser.rollNo)) {
-        booksData.push({ id: 150, title: 'Operating System Concepts', author: 'Silberschatz, Galvin', genre: 'cs', genreLabel: 'Computer Science', genreTag: 'Academic/Textbook', dept: 'Computer Science', type: 'rent', price: '₹40/wk', numPrice: 40, deposit: '₹100', demand: 8, ownerAnonId: currentUser.anonId, ownerRealName: currentUser.name, ownerRoll: currentUser.rollNo, availableCopies: 1, totalCopies: 1, cover: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600', isbn: '978-1119800361', description: 'Classic operating systems textbook.', location: 'Book NEXUS Pickup Center', condition: 'Good', edition: '10th Edition', publisher: 'Wiley', year: 2021 });
-    }
-    let rentalRequests = [
-        { id: 'q1', bookId: 101, title: 'Design Patterns', fromRoll: currentUser.rollNo, toRoll: 'CS2026-012', anon: 'ID-A47', price: '₹45/wk', date: 'Sep 26, 2026', status: 'APPROVED', update: 'Owner accepted. Rental r-901 in progress.', rentalId: 'r-901' },
-        { id: 'q2', bookId: 150, title: 'Operating System Concepts', fromRoll: 'CS2026-077', toRoll: currentUser.rollNo, anon: 'ID-C09', price: '₹40/wk', date: 'Sep 28, 2026', status: 'REQUESTED', update: 'Waiting for your decision.' }
-    ];
+    
+    let rentalRequests = [];
     /* request lifecycle: every request carries its own creation time and a fixed 3-day validity while it awaits the owner */
     const REQ_TTL = 3 * 24 * 3600 * 1000; let reqSeq = 0;
     rentalRequests.forEach((q, i) => { if (!q.createdAt) q.createdAt = Date.now() - (rentalRequests.length - i) * 1000; if (!q.seq) q.seq = ++reqSeq; if (q.status === 'REQUESTED' && !q.expiresAt) q.expiresAt = q.createdAt + REQ_TTL; });
@@ -22160,32 +22056,8 @@ button.nd-li{background:transparent;color:inherit;text-align:left;font:inherit;c
 const DAY = 864e5, NOW = Date.now(), ago = d => NOW - d * DAY, inr = n => '₹' + Math.round(n).toLocaleString('en-IN'), esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const RM = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* ---- source records (rentals: B = borrowed from another student, L = lent to another student; s/e/due are days ago / days ago / days from now) ---- */
-const REN = [
- { id: 'RN-1041', role: 'B', t: 'Introduction to Algorithms', a: 'T. H. Cormen', d: 'Computer Science', w: 'Owner #A47', rent: 200, dep: 500, stage: 'Return Due', g: 'active', s: 12, due: 3, ds: 'held', pay: 1, pick: 1, rt: 'Return due in 3 days' },
- { id: 'RN-1044', role: 'B', t: 'Digital Design', a: 'M. Morris Mano', d: 'Electronics', w: 'Owner #C19', rent: 140, dep: 350, stage: 'Ready for Pickup', g: 'approved', s: 2, win: 2.3, ds: 'held', pay: 1, rt: 'Collect within the pickup window' },
- { id: 'RN-1048', role: 'B', t: 'Strength of Materials', a: 'R. K. Bansal', d: 'Civil', w: 'Owner #G14', rent: 130, dep: 320, stage: 'Waiting for Drop-off', g: 'approved', s: 1, ds: 'held', pay: 1, rt: 'Owner has not dropped off the book yet' },
- { id: 'RN-1046', role: 'B', t: 'Database System Concepts', a: 'A. Silberschatz', d: 'Computer Science', w: 'Owner #B31', rent: 180, dep: 450, stage: 'Requested', g: 'pending', s: 1, ds: 'none', pay: 0, rt: 'Awaiting owner approval' },
- { id: 'RN-1043', role: 'B', t: 'Computer Networks', a: 'A. S. Tanenbaum', d: 'Computer Science', w: 'Owner #D05', rent: 160, dep: 300, stage: 'Returned', g: 'returned', s: 16, e: 1, ds: 'pend', pay: 1, pick: 1, rt: 'Returned · deposit release pending' },
- { id: 'RN-1038', role: 'B', t: 'Operating System Concepts', a: 'A. Silberschatz', d: 'Computer Science', w: 'Owner #A12', rent: 160, dep: 400, stage: 'Completed', g: 'completed', s: 42, e: 28, ds: 'ret', pay: 1, pick: 1, rt: 'Returned on time' },
- { id: 'RN-1029', role: 'B', t: 'Higher Engineering Mathematics', a: 'B. S. Grewal', d: 'Mathematics', w: 'Owner #E22', rent: 120, dep: 300, stage: 'Completed', g: 'completed', s: 70, e: 56, ds: 'part', ret: 40, why: 'Late return by 2 days', pay: 1, pick: 1, rt: 'Returned 2 days late' },
- { id: 'RN-1033', role: 'B', t: 'Organic Chemistry', a: 'Morrison & Boyd', d: 'Chemistry', w: 'Owner #F08', rent: 150, dep: 350, stage: 'Cancelled', g: 'cancelled', s: 34, ds: 'none', pay: 0, rt: 'Owner declined the request' },
- { id: 'RN-1040', role: 'L', t: 'Data Structures Using C++', a: 'D. S. Malik', d: 'Computer Science', w: 'Renter #B12', rent: 150, dep: 400, stage: 'Rented', g: 'active', s: 9, due: 5, pick: 1, dr: 'Dropped off', rt: 'Return due in 5 days', earn: 0 },
- { id: 'RN-1045', role: 'L', t: 'Signals and Systems', a: 'A. V. Oppenheim', d: 'Electronics', w: 'Renter #A33', rent: 130, dep: 300, stage: 'Awaiting Drop-off', g: 'approved', s: 1, dl: .5, dr: 'You must drop off the book', rt: 'Not yet rented', earn: 0 },
- { id: 'RN-1049', role: 'L', t: 'Fluid Mechanics', a: 'R. K. Bansal', d: 'Civil', w: 'Renter #D14', rent: 190, dep: 380, stage: 'Dropped Off', g: 'approved', s: 3, win: 1.6, dr: 'Dropped off', rt: 'Awaiting borrower pickup', earn: 0 },
- { id: 'RN-1047', role: 'L', t: 'Principles of Economics', a: 'N. G. Mankiw', d: 'Economics', w: 'Renter #C08', rent: 170, dep: 350, stage: 'Request Received', g: 'pending', s: 0, dr: '—', rt: '—', earn: 0 },
- { id: 'RN-1042', role: 'L', t: 'Engineering Drawing', a: 'N. D. Bhatt', d: 'Mechanical', w: 'Renter #E09', rent: 140, dep: 300, stage: 'Return Pending', g: 'active', s: 21, dr: 'Dropped off', rt: 'Return verification pending', earn: 0 },
- { id: 'RN-1035', role: 'L', t: 'Engineering Physics', a: 'Gaur & Gupta', d: 'Physics', w: 'Renter #C08', rent: 210, dep: 400, stage: 'Completed', g: 'completed', s: 60, e: 45, dr: 'Dropped off', rt: 'Returned', earn: 1 },
- { id: 'RN-1031', role: 'L', t: 'Engineering Thermodynamics', a: 'P. K. Nag', d: 'Mechanical', w: 'Renter #D21', rent: 180, dep: 350, stage: 'Completed', g: 'completed', s: 88, e: 74, dr: 'Dropped off', rt: 'Returned', earn: 1 },
- { id: 'RN-1026', role: 'L', t: 'Introduction to Linear Algebra', a: 'Gilbert Strang', d: 'Mathematics', w: 'Renter #A33', rent: 260, dep: 450, stage: 'Completed', g: 'completed', s: 118, e: 101, dr: 'Dropped off', rt: 'Returned', earn: 1 }
-];
-const LIB = [
- { id: 'LB-301', t: 'Operating Systems: Three Easy Pieces', a: 'R. Arpaci-Dusseau', d: 'Computer Science', s: 130, due: 116, e: 117, rv: 'done' },
- { id: 'LB-302', t: 'Compilers: Principles and Techniques', a: 'A. V. Aho', d: 'Computer Science', s: 75, due: 61, e: 56, fine: 50, rv: 'done' },
- { id: 'LB-306', t: 'Artificial Intelligence: A Modern Approach', a: 'S. Russell', d: 'Computer Science', s: 25, due: 11, e: 9, rv: 'pending' },
- { id: 'LB-303', t: 'Discrete Mathematics', a: 'K. H. Rosen', d: 'Mathematics', s: 16, due: 2, out: 20 },
- { id: 'LB-304', t: 'Python Crash Course', a: 'E. Matthes', d: 'Computer Science', s: 3, due: -11 },
- { id: 'LB-305', t: 'Computer Organization and Architecture', a: 'W. Stallings', d: 'Computer Science', s: 8, due: -6 }
-];
+const REN = [];
+const LIB = [];
 /* ---- normalise: every record becomes dated events; all totals are derived from these ---- */
 const T = []; let seq = 0;
 const ev = o => { o.n = ++seq; o.tx = (o.f || o.b === 'finedue') ? 'TX-' + (7200 + seq) : ''; T.push(o); };
@@ -22530,6 +22402,16 @@ function render() {
  const fsel = (k, m) => `<label class="nd3-ff"><span class="nd3-fl">${FN[k]}</span><select id="ndF-${k}" onchange="NDX.set('${k}',this.value)">${Object.entries(m).map(([v, t]) => `<option value="${v}"${ND[k] === v ? ' selected' : ''}>${t}</option>`).join('')}</select></label>`;
  const FA = `<section class="nd3-fa" style="--i:0" aria-label="Dashboard filters"><div class="nd3-fg"><label class="nd3-ff nd3-fs"><span class="nd3-fl">Search</span><span class="nd3-sbox"><span class="material-symbols-outlined">search</span><input id="ndQ" type="search" placeholder="Book, author, ID or status…" value="${esc(ND.q)}" oninput="NDX.q(this.value)" aria-label="Search dashboard"></span></label>${fsel('time', TIMES)}<div class="nd3-ff nd3-fx"><span class="nd3-fl" aria-hidden="true">&nbsp;</span><button type="button" class="nd3-btn" onclick="NDX.clear()"${nf ? '' : ' disabled'}><span class="material-symbols-outlined">filter_alt_off</span>Clear all</button></div></div>${ND.time === 'custom' ? `<div class="nd3-cr"><label class="nd3-ff"><span class="nd3-fl">From</span><input id="ndF-from" class="db-sel" type="date" value="${ND.from}" onchange="NDX.set('from',this.value)"></label><label class="nd3-ff"><span class="nd3-fl">To</span><input id="ndF-to" class="db-sel" type="date" value="${ND.to}" onchange="NDX.set('to',this.value)"></label></div>` : ''}${nf ? `<div class="db-cr nd3-chips" aria-label="Active filters"><span class="db-ch" role="status" style="padding-right:10px"><em>Showing:</em>${esc(showing())}</span>${flt.map(k => `<span class="db-ch"><em>${FN[k]}</em>${LAB(k)}<button type="button" aria-label="Remove ${FN[k]} filter" onclick="NDX.set('${k}','${DEF[k]}')">×</button></span>`).join('')}${ND.card ? `<span class="db-ch"><em>Card</em>${CARDL[ND.card]}<button type="button" aria-label="Remove card filter" onclick="NDX.card('')">×</button></span>` : ''}${ND.q.trim() ? `<span class="db-ch"><em>Search</em>“${esc(ND.q)}”<button type="button" aria-label="Clear search" onclick="NDX.q('')">×</button></span>` : ''}</div>` : ''}</section>`;
  const oldMg = host.querySelector('.nd-mg');
+ /* fresh account: nothing borrowed, rented, lent or paid yet -> show a clean empty state instead of zero cards and charts */
+ if (!REN.length && !LIB.length) {
+  host.innerHTML = `<div class="db nd nd3" id="ndRoot"><header class="nd3-top" style="--i:0"><div><h1>Welcome to Book NEXUS</h1><p>Your dashboard will show your books, rentals and payments once you start using it.</p></div></header>
+  <div style="display:grid;justify-items:center;gap:10px;text-align:center;padding:56px 20px;margin-top:18px;border:1px dashed var(--l);border-radius:24px;background:var(--cd);color:var(--ink)">
+   <span class="material-symbols-outlined" style="font-size:44px;color:var(--ac)">auto_stories</span>
+   <b style="font:800 18px 'Manrope',sans-serif">No activity yet</b>
+   <p style="margin:0;max-width:420px;font:500 14px 'Manrope',sans-serif;color:var(--mu)">Borrow a book from the library or rent one from another student, and your overview will appear here.</p>
+  </div></div>`;
+  ND.ready = true; return;
+ }
  host.innerHTML = `<div class="db nd nd3${mode}" id="ndRoot"><div class="nd-bg"><i></i><i></i><i></i><span class="material-symbols-outlined">menu_book</span><span class="material-symbols-outlined">auto_stories</span><span class="material-symbols-outlined">book_2</span><span class="material-symbols-outlined">local_library</span></div>
  <div class="nd-mg" aria-hidden="true">${ndFly()}</div>
  <header class="nd3-top" style="--i:0"><div><span class="nd3-eye">${new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span><h1>Good ${hr < 12 ? 'morning' : hr < 17 ? 'afternoon' : 'evening'}, ${esc(nm)}</h1><p>Here’s what’s happening with your books, rentals and payments.</p></div>

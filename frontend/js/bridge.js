@@ -2017,6 +2017,14 @@
     let googleClientId = "678657142900-oibcoi8ind88u1l11e6mgk5cic8qqasm.apps.googleusercontent.com";
     let tokenClient = null;
 
+    // Google rejects the request before the account chooser when the page origin
+    // is not an Authorized JavaScript origin on the OAuth client, so name the
+    // origin that has to be registered instead of failing silently.
+    function googleBlockedMessage(type) {
+      if (type === 'popup_failed_to_open') return 'Your browser blocked the Google sign-in popup. Allow popups for this site and try again.';
+      return 'Google sign-in was blocked for ' + window.location.origin + '. Add that exact origin to Authorized JavaScript origins on the Google OAuth client.';
+    }
+
     async function initGoogleAuth() {
       try {
         const res = await fetch(`${API_BASE}/auth/google/config`);
@@ -2046,6 +2054,12 @@
                 if (tokenResponse && tokenResponse.access_token) {
                   await sendGoogleTokenToBackend({ accessToken: tokenResponse.access_token });
                 }
+              },
+              error_callback: (err) => {
+                const type = (err && err.type) || '';
+                if (type === 'popup_closed') return;
+                if (typeof showToast === 'function') showToast(googleBlockedMessage(type), 'error');
+                console.warn('Google sign-in error:', type, 'page origin:', window.location.origin);
               },
             });
           }
@@ -2365,6 +2379,7 @@
           window.currentUser = currentUser;
 
           if (typeof window.nxSessionSet === 'function') {
+            window.bnSessionUser = u;
             window.nxSessionSet('student', u._id, u.name, u.email);
           }
           document.body.classList.remove('nx-guest');
@@ -2435,6 +2450,11 @@
         const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
         if (span) span.textContent = 'Profile';
       }
+
+      liveRentals = [];
+      liveTransactions = [];
+      window.transactionsList = [];
+      clearDashboardUi();
 
       if (typeof setUserRole === 'function') setUserRole('student');
       if (typeof switchNav === 'function') switchNav('home');
@@ -2629,6 +2649,7 @@
         window.currentUser = currentUser;
 
         if (typeof window.nxSessionSet === 'function') {
+          window.bnSessionUser = user;
           window.nxSessionSet('student', user._id, user.name, user.email);
         }
         document.body.classList.remove('nx-guest');
@@ -2923,6 +2944,7 @@
           sessionStorage.setItem('booknexus_token', authToken);
           sessionStorage.setItem('currentUser', JSON.stringify(studentData));
           window.currentUser = studentData;
+          window.bnSessionUser = studentData;
           window.currentRole = 'student';
 
           if (pwInput) pwInput.value = '';
@@ -3054,6 +3076,7 @@
           sessionStorage.setItem('booknexus_token', authToken);
           sessionStorage.setItem('currentUser', JSON.stringify(studentData));
           window.currentUser = studentData;
+          window.bnSessionUser = studentData;
           window.currentRole = 'student';
 
           if (typeof closeModal === 'function') closeModal('authModal');
@@ -3158,6 +3181,7 @@
           sessionStorage.setItem('booknexus_token', authToken);
           sessionStorage.setItem('currentUser', JSON.stringify(studentData));
           window.currentUser = studentData;
+          window.bnSessionUser = studentData;
           window.currentRole = 'student';
 
           if (typeof closeModal === 'function') closeModal('authModal');
@@ -3902,6 +3926,8 @@
     `;
   }
 
+  // Keeps the rental list other panels read from, then defers every dashboard
+  // number to the one authoritative /analytics/user-dashboard response.
   async function fetchLiveRentalsAndSync() {
     const token = getAuthToken();
     if (!token) return;
@@ -3913,52 +3939,12 @@
       const json = await res.json();
       if (json && json.success && Array.isArray(json.data)) {
         liveRentals = json.data;
-
-        // Compute 6-metric tracking statistics
-        const borrowPending = liveRentals.filter(r => r.status === 'requested' || r.status === 'pending').length;
-        const borrowApproved = liveRentals.filter(r => r.status === 'approved').length;
-        const borrowRejected = liveRentals.filter(r => r.status === 'rejected').length;
-
-        const activeRentalsList = liveRentals.filter(r => r.status === 'active' || r.status === 'received' || r.status === 'approved');
-        const latestActive = activeRentalsList[0];
-
-        const returnsRequested = liveRentals.filter(r => r.status === 'returned').length;
-        const returnsApproved = liveRentals.filter(r => r.status === 'approved' && r.returnDate).length;
-        const returnsCompleted = liveRentals.filter(r => r.status === 'completed').length;
-
-        const overdueRentals = liveRentals.filter(r => (r.penaltyAmount > 0) || r.status === 'overdue');
-        const totalPenaltyAmount = overdueRentals.reduce((sum, r) => sum + (r.penaltyAmount || 0), 0);
-
-        const payInitiated = liveTransactions.filter(t => t.status === 'initiated').length;
-        const payPending = liveTransactions.filter(t => t.status === 'pending').length;
-        const paySuccessful = liveTransactions.filter(t => t.status === 'successful').length;
-
-        const stats = {
-          borrowTotal: liveRentals.length,
-          borrowPending,
-          borrowApproved,
-          borrowRejected,
-          activeRentalsCount: activeRentalsList.length,
-          latestActiveBook: latestActive?.book?.title || '',
-          latestDueDate: latestActive?.dueDate ? new Date(latestActive.dueDate).toLocaleDateString('en-IN') : '',
-          returnsTotal: returnsRequested + returnsApproved + returnsCompleted,
-          returnsRequested,
-          returnsApproved,
-          returnsCompleted,
-          overdueDays: overdueRentals.length > 0 ? 3 : 0,
-          totalPenaltyAmount,
-          overdueBookTitle: overdueRentals[0]?.book?.title || 'Academic Book',
-          paymentsTotal: liveTransactions.length,
-          payInitiated,
-          payPending,
-          paySuccessful
-        };
-
-        renderStudentDashboardTracker(stats);
       }
     } catch (err) {
       console.warn('Live rentals fetch notice:', err.message);
     }
+
+    await bnLoadDashboard(true);
   }
 
   function renderStudentDashboardTracker(stats = {}) {
@@ -3971,8 +3957,11 @@
       trackerEl = document.createElement('div');
       trackerEl.id = trackerId;
       trackerEl.className = 'my-6';
-      host.insertBefore(trackerEl, host.firstChild);
     }
+    // Mounted as a sibling of #dashboardHost: the dashboard rewrites its own
+    // innerHTML on every filter change, which used to delete this panel.
+    const mount = host.parentNode || host;
+    if (trackerEl.parentNode !== mount) mount.insertBefore(trackerEl, host);
 
     trackerEl.innerHTML = `
       <div class="p-6 bg-gradient-to-br from-brand-parchment via-brand-cream to-brand-parchment dark:from-brand-darkSurface dark:to-brand-darkCard rounded-3xl border border-brand-rosewood/20 shadow-md space-y-5">
@@ -4049,7 +4038,7 @@
           <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-darkCard border border-brand-rosewood/10 shadow-sm space-y-1 flex flex-col justify-between">
             <div>
               <div class="text-[10px] font-extrabold uppercase text-gray-500">6. Ledger</div>
-              <div class="text-xl font-extrabold text-brand-rosewood dark:text-white">${liveTransactions.length}</div>
+              <div class="text-xl font-extrabold text-brand-rosewood dark:text-white">${stats.ledgerTotal || 0}</div>
               <p class="text-[10px] text-gray-500">Verified receipts &amp; statement history</p>
             </div>
             <button type="button" onclick="if(typeof switchNav==='function')switchNav('transactions');" class="w-full py-1 px-2 rounded-lg bg-brand-rosewood text-white text-[10px] font-bold hover:bg-brand-rosewoodHover flex items-center justify-center gap-1">
@@ -4057,7 +4046,7 @@
             </button>
           </div>
         </div>
-        ${(!stats.borrowTotal && !stats.activeRentalsCount && !stats.returnsTotal && !stats.paymentsTotal && !stats.totalPenaltyAmount) ? `
+        ${(stats.hasActivity === false) ? `
           <div class="p-4 rounded-2xl bg-white/80 dark:bg-brand-darkCard border border-brand-rosewood/15 text-center mt-3">
             <span class="material-symbols-outlined text-2xl text-brand-sage block mb-1">auto_stories</span>
             <p class="text-xs font-bold text-brand-rosewood dark:text-white">You haven't borrowed or rented any books yet. Explore the catalog to get started.</p>
@@ -4153,13 +4142,212 @@
   window.fetchLiveTransactions = fetchLiveTransactions;
   window.fetchLiveRentalsAndSync = fetchLiveRentalsAndSync;
 
+
+  /* ==========================================================================
+     STUDENT DASHBOARD DATA
+     Every figure on the dashboard comes from the signed-in student's own
+     MongoDB records, fetched once from GET /api/analytics/user-dashboard and
+     handed to the dashboard renderer. Nothing is derived from sample data, and
+     no number is painted until the request has actually resolved.
+     ========================================================================== */
+
+  const DASH_DAY = 86400000;
+  let dashboardRequest = null;
+  let dashboardData = null;
+
+  const dAgo = v => (v ? (Date.now() - new Date(v).getTime()) / DASH_DAY : null);
+  const dAhead = v => (v ? (new Date(v).getTime() - Date.now()) / DASH_DAY : null);
+  const d1 = n => Math.round(n * 10) / 10;
+
+  function borrowStage(rec) {
+    switch (rec.group) {
+      case 'pending': return ['Requested', 'Awaiting owner approval'];
+      case 'cancelled': return ['Cancelled', 'Request declined'];
+      case 'approved': return rec.pickedUp
+        ? ['Return Due', 'Book is with you']
+        : ['Ready for Pickup', 'Collect within the pickup window'];
+      case 'active': return ['Return Due', 'Book is with you'];
+      case 'returned': return ['Returned', rec.depositState === 'pend' ? 'Returned · deposit release pending' : 'Returned'];
+      case 'completed': return ['Completed', 'Returned'];
+      default: return ['In progress', ''];
+    }
+  }
+
+  function lendStage(rec) {
+    switch (rec.group) {
+      case 'pending': return ['Request Received', '—', '—'];
+      case 'cancelled': return ['Cancelled', 'Declined', '—'];
+      case 'approved': return rec.pickedUp
+        ? ['Dropped Off', 'Dropped off', 'Awaiting borrower pickup']
+        : ['Awaiting Drop-off', 'You must drop off the book', 'Not yet rented'];
+      case 'active': return ['Rented', 'Dropped off', 'With the borrower'];
+      case 'returned': return ['Return Pending', 'Dropped off', 'Return verification pending'];
+      case 'completed': return ['Completed', 'Dropped off', 'Returned'];
+      default: return ['In progress', '—', '—'];
+    }
+  }
+
+  function toDashRental(rec) {
+    const out = {
+      id: rec.id, role: rec.role, t: rec.title, a: rec.author, d: rec.dept, w: rec.counterparty,
+      rent: rec.rentalFee || 0, dep: rec.depositAmount || 0, g: rec.group,
+      s: Math.max(0, d1(dAgo(rec.requestDate) || 0)),
+      ds: rec.depositState || 'none',
+      pay: rec.paid ? 1 : 0
+    };
+    if (rec.returnDate) out.e = Math.max(0, d1(dAgo(rec.returnDate)));
+    if (rec.depositRetained) { out.ret = rec.depositRetained; out.why = 'Late return · fine kept from the deposit'; }
+    if (rec.finePaid) out.fine = rec.finePaid;
+    if (rec.fineOutstanding) out.out = rec.fineOutstanding;
+
+    if (rec.role === 'B') {
+      const st = borrowStage(rec);
+      out.stage = st[0]; out.rt = st[1];
+      if (rec.pickedUp) out.pick = 1;
+      if (rec.dueDate && !rec.returnDate) {
+        out.due = d1(dAhead(rec.dueDate));
+        out.rt = out.due >= 0
+          ? 'Return due in ' + Math.max(0, Math.round(out.due)) + ' day(s)'
+          : 'Overdue by ' + Math.round(-out.due) + ' day(s)';
+      }
+      if (out.stage === 'Ready for Pickup') out.win = Math.max(0.1, d1(3 - (dAgo(rec.approvedDate) || 0)));
+    } else {
+      const st = lendStage(rec);
+      out.stage = st[0]; out.dr = st[1]; out.rt = st[2];
+      out.earn = rec.earned ? 1 : 0;
+      if (out.stage === 'Awaiting Drop-off') out.dl = Math.max(0.1, d1(2 - (dAgo(rec.approvedDate || rec.requestDate) || 0)));
+      if (out.stage === 'Dropped Off') out.win = Math.max(0.1, d1(3 - (dAgo(rec.approvedDate) || 0)));
+      if (rec.dueDate && !rec.returnDate) out.due = d1(dAhead(rec.dueDate));
+    }
+    return out;
+  }
+
+  function toDashLibrary(rec) {
+    const out = {
+      id: rec.id, t: rec.title, a: rec.author, d: rec.dept,
+      s: Math.max(0, d1(dAgo(rec.borrowedDate) || 0))
+    };
+    if (rec.dueDate) out.due = d1(dAgo(rec.dueDate));
+    if (rec.returnDate) out.e = Math.max(0, d1(dAgo(rec.returnDate)));
+    if (rec.finePaid) out.fine = rec.finePaid;
+    if (rec.fineOutstanding) out.out = rec.fineOutstanding;
+    return out;
+  }
+
+  function buildTrackerStats(data) {
+    const s = data.summary || {};
+    const borrowed = (data.rentals && data.rentals.borrowed) || [];
+    const lent = (data.rentals && data.rentals.lent) || [];
+    const txns = data.transactions || [];
+    const has = st => r => st.includes(r.status);
+
+    const activeList = borrowed.filter(has(['active', 'received', 'approved', 'overdue']));
+    const latest = activeList[0];
+    const overdue = borrowed.filter(r => r.status === 'overdue' || (r.dueDate && !r.returnDate && new Date(r.dueDate) < new Date()));
+    const overdueDays = overdue.reduce((max, r) => {
+      if (!r.dueDate) return max;
+      const d = Math.floor((Date.now() - new Date(r.dueDate).getTime()) / DASH_DAY);
+      return d > max ? d : max;
+    }, 0);
+
+    return {
+      borrowTotal: borrowed.length,
+      borrowPending: borrowed.filter(has(['requested', 'pending'])).length,
+      borrowApproved: borrowed.filter(has(['approved', 'active', 'received', 'overdue', 'returned', 'completed'])).length,
+      borrowRejected: borrowed.filter(has(['rejected'])).length,
+      activeRentalsCount: activeList.length,
+      latestActiveBook: (latest && latest.book && latest.book.title) || '',
+      latestDueDate: latest && latest.dueDate ? new Date(latest.dueDate).toLocaleDateString('en-IN') : '',
+      returnsTotal: borrowed.filter(has(['returned', 'completed'])).length + lent.filter(has(['returned', 'completed'])).length,
+      returnsRequested: borrowed.filter(has(['returned'])).length,
+      returnsApproved: lent.filter(has(['returned'])).length,
+      returnsCompleted: borrowed.filter(has(['completed'])).length + lent.filter(has(['completed'])).length,
+      overdueDays: Math.max(0, overdueDays),
+      totalPenaltyAmount: s.outstandingFines || 0,
+      overdueBookTitle: (overdue[0] && overdue[0].book && overdue[0].book.title) || 'Library Book',
+      paymentsTotal: txns.length,
+      payInitiated: txns.filter(t => t.status === 'initiated').length,
+      payPending: txns.filter(t => t.status === 'pending').length,
+      paySuccessful: txns.filter(t => t.status === 'successful').length,
+      ledgerTotal: txns.length,
+      hasActivity: data.hasActivity === true
+    };
+  }
+
+  function clearDashboardUi() {
+    dashboardData = null;
+    window.bnDashboardData = null;
+    window.bnSessionUser = null;
+    const el = document.getElementById('campusLifecycleTrackerHost');
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+    if (window.NDX && typeof window.NDX.setState === 'function') window.NDX.setState('signedout');
+  }
+
+  async function bnLoadDashboard(force) {
+    const token = getAuthToken();
+    if (!token) { clearDashboardUi(); return null; }
+    if (dashboardRequest && !force) return dashboardRequest;
+
+    if (window.NDX && typeof window.NDX.setState === 'function' && (force || !dashboardData)) {
+      window.NDX.setState('loading');
+    }
+
+    dashboardRequest = (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/analytics/user-dashboard`, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (res.status === 401) throw new Error('Your session has expired. Please sign in again.');
+        let json = null;
+        try { json = await res.json(); } catch (e) { json = null; }
+        if (!res.ok || !json || !json.success || !json.data) {
+          throw new Error((json && json.message) || ('The dashboard service replied with HTTP ' + res.status + '.'));
+        }
+
+        const data = json.data;
+        dashboardData = data;
+        window.bnDashboardData = data;
+
+        const recs = data.records || { rentals: [], library: [] };
+        if (window.NDX && typeof window.NDX.setData === 'function') {
+          window.NDX.setData((recs.rentals || []).map(toDashRental), (recs.library || []).map(toDashLibrary));
+        }
+        renderStudentDashboardTracker(buildTrackerStats(data));
+        return data;
+      } catch (err) {
+        console.warn('Dashboard load failed:', err.message);
+        if (window.NDX && typeof window.NDX.setState === 'function') window.NDX.setState('error', err.message);
+        return null;
+      } finally {
+        dashboardRequest = null;
+      }
+    })();
+
+    return dashboardRequest;
+  }
+
+  window.bnLoadDashboard = bnLoadDashboard;
+  window.bnClearDashboard = clearDashboardUi;
+
+  function hookDashboardNav() {
+    const orig = window.switchNav;
+    if (typeof orig !== 'function' || window.__bnDashNavHooked) return;
+    window.__bnDashNavHooked = true;
+    window.switchNav = function (key) {
+      const out = orig.apply(this, arguments);
+      if (key === 'dashboard') bnLoadDashboard(true);
+      return out;
+    };
+  }
+
   function initCampusPaymentSystem() {
     ensureCampusUpiModal();
     hookPayFineButtons();
-    setTimeout(() => {
-      fetchLiveTransactions();
-      fetchLiveRentalsAndSync();
-    }, 1000);
+    hookDashboardNav();
+    setTimeout(async () => {
+      await fetchLiveTransactions();
+      await fetchLiveRentalsAndSync();
+    }, 600);
   }
 
   if (document.readyState === 'loading') {

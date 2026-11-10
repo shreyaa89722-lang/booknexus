@@ -125,9 +125,9 @@ async function runDashboardTests() {
       title: "Test Academic Book",
       author: "Test Author",
       genre: "Computer Science",
-      price: 150,
-      availableCopies: 5,
-      totalCopies: 5,
+      subject: "Testing",
+      listingType: "p2p",
+      rentalPricePerWeek: 150,
     });
 
     // Create a genuine rental for newStudent

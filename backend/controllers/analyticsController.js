@@ -96,14 +96,14 @@ const getUserDashboard = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
   // Query rentals where authenticated user is the renter or owner
-  const [renterRentals, ownerRentals, userTransactions] = await Promise.all([
+  const [renterRentals, ownerRentals, userTransactions, totalBooksInCatalog, myListedBooks] = await Promise.all([
     Rental.find({ renter: userId })
-      .populate("book", "title author coverImage genre price")
+      .populate("book", "title author coverUrl genre subject listingType rentalPricePerWeek")
       .populate("owner", "name email usn")
       .sort({ createdAt: -1 })
       .lean(),
     Rental.find({ owner: userId })
-      .populate("book", "title author coverImage genre price")
+      .populate("book", "title author coverUrl genre subject listingType rentalPricePerWeek")
       .populate("renter", "name email usn")
       .sort({ createdAt: -1 })
       .lean(),
@@ -111,7 +111,75 @@ const getUserDashboard = asyncHandler(async (req, res) => {
       .populate("book", "title author")
       .sort({ createdAt: -1 })
       .lean(),
+    Book.countDocuments(),
+    Book.countDocuments({ owner: userId }),
   ]);
+
+  // ---------------------------------------------------------------------
+  // Per-rental money, derived from this user's own transaction records.
+  // A rental's fee falls back to the book's listed weekly price only when no
+  // transaction exists yet, so nothing here is invented.
+  // ---------------------------------------------------------------------
+  const sumTx = (rentalId, type, statuses) =>
+    userTransactions
+      .filter(
+        (tx) =>
+          tx.rental &&
+          tx.rental.toString() === rentalId.toString() &&
+          tx.type === type &&
+          statuses.includes(tx.status)
+      )
+      .reduce((total, tx) => total + (tx.amount || 0), 0);
+
+  const SETTLED = ["successful"];
+  const SETTLED_OR_PENDING = ["successful", "pending", "initiated"];
+
+  const moneyFor = (rental) => {
+    const id = rental._id;
+    const listPrice = (rental.book && rental.book.rentalPricePerWeek) || 0;
+    const feePaid = sumTx(id, "rental_fee", SETTLED);
+    const feeQuoted = sumTx(id, "rental_fee", SETTLED_OR_PENDING);
+    const depositAmount = sumTx(id, "deposit_held", SETTLED);
+    const depositReturned = sumTx(id, "deposit_refund", SETTLED);
+    const finePaid = sumTx(id, "fine_payment", SETTLED);
+    const penalty = rental.penaltyAmount || 0;
+    const fineOutstanding = Math.max(0, penalty - finePaid);
+
+    let depositState = "none";
+    if (depositAmount > 0) {
+      if (depositReturned >= depositAmount) depositState = "ret";
+      else if (depositReturned > 0) depositState = "part";
+      else if (rental.returnDate) depositState = "pend";
+      else depositState = "held";
+    }
+
+    return {
+      rentalFee: feeQuoted || listPrice,
+      rentalFeePaid: feePaid,
+      depositAmount,
+      depositReturned,
+      depositRetained: depositState === "part" ? depositAmount - depositReturned : 0,
+      depositState,
+      finePaid,
+      fineOutstanding,
+      paid: feePaid > 0,
+    };
+  };
+
+  const GROUP_OF = {
+    requested: "pending",
+    pending: "pending",
+    rejected: "cancelled",
+    approved: "approved",
+    active: "active",
+    received: "active",
+    overdue: "active",
+    returned: "returned",
+    completed: "completed",
+  };
+
+  const isLibraryRental = (r) =>
+    !r.owner || (r.book && r.book.listingType === "library");
 
   // Activity counts
   const borrowedRentals = renterRentals.filter((r) =>
@@ -134,12 +202,12 @@ const getUserDashboard = asyncHandler(async (req, res) => {
   );
 
   // Financial calculations
-  // Outstanding library fines: sum of penaltyAmount on overdue/active rentals
+  // Outstanding fines: any penalty on a rental of this user that has not been
+  // settled by a successful fine payment yet (not just the "overdue" status —
+  // a book can be returned late and still owe a fine).
   let outstandingFines = 0;
   renterRentals.forEach((r) => {
-    if (r.penaltyAmount && r.penaltyAmount > 0 && r.status === "overdue") {
-      outstandingFines += r.penaltyAmount;
-    }
+    outstandingFines += moneyFor(r).fineOutstanding;
   });
 
   // Successful transactions breakdown
@@ -169,10 +237,12 @@ const getUserDashboard = asyncHandler(async (req, res) => {
   // Adjust net active deposits held (cannot be negative)
   const netDepositsHeld = Math.max(0, depositsHeld - depositsReturned);
 
-  // Completed owner rentals earnings
+  // Earnings on books this user lent out and has already got back.
+  // The Book model stores `rentalPricePerWeek` — there is no `price` field, so
+  // the previous `r.book.price` lookup always produced 0.
   ownerRentals.forEach((r) => {
-    if (r.status === "completed" && r.book && r.book.price) {
-      rentalEarnings += r.book.price;
+    if (["completed", "returned"].includes(r.status)) {
+      rentalEarnings += moneyFor(r).rentalFee;
     }
   });
 
@@ -197,7 +267,7 @@ const getUserDashboard = asyncHandler(async (req, res) => {
       author: r.book?.author || "",
       status: r.status,
       date: r.createdAt,
-      amount: r.book?.price || 0,
+      amount: moneyFor(r).rentalFee,
       ref: "RN-" + r._id.toString().slice(-4).toUpperCase(),
     });
   });
@@ -211,7 +281,7 @@ const getUserDashboard = asyncHandler(async (req, res) => {
       author: r.book?.author || "",
       status: r.status,
       date: r.createdAt,
-      amount: r.book?.price || 0,
+      amount: moneyFor(r).rentalFee,
       ref: "RN-" + r._id.toString().slice(-4).toUpperCase(),
     });
   });
@@ -230,6 +300,79 @@ const getUserDashboard = asyncHandler(async (req, res) => {
   });
 
   recentActivity.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // ---------------------------------------------------------------------
+  // Normalised records the dashboard renders from. Dates stay ISO here; the
+  // client turns them into its own relative offsets.
+  // ---------------------------------------------------------------------
+  const shortRef = (prefix, r) => prefix + "-" + r._id.toString().slice(-6).toUpperCase();
+
+  const peerRentalRecord = (r, role) => {
+    const m = moneyFor(r);
+    // A late-return penalty is owed by the borrower, so it never appears on the
+    // owner's copy of the same rental.
+    const finePaid = role === "B" ? m.finePaid : 0;
+    const fineOutstanding = role === "B" ? m.fineOutstanding : 0;
+    const counterparty =
+      role === "B"
+        ? (r.owner && r.owner.name) || "Campus Library"
+        : (r.renter && r.renter.name) || "Student";
+    return {
+      id: shortRef("RN", r),
+      rentalId: r._id.toString(),
+      role,
+      title: (r.book && r.book.title) || "Book",
+      author: (r.book && r.book.author) || "",
+      dept: (r.book && (r.book.genre || r.book.subject)) || "",
+      counterparty,
+      status: r.status,
+      group: GROUP_OF[r.status] || "active",
+      requestDate: r.requestDate || r.createdAt,
+      approvedDate: r.approvedDate,
+      receivedDate: r.receivedDate,
+      dueDate: r.dueDate,
+      returnDate: r.returnDate,
+      rentalFee: m.rentalFee,
+      depositAmount: m.depositAmount,
+      depositReturned: m.depositReturned,
+      depositRetained: m.depositRetained,
+      depositState: m.depositState,
+      finePaid,
+      fineOutstanding,
+      paid: m.paid,
+      pickedUp: Boolean(r.receivedDate) || ["active", "received", "overdue", "returned", "completed"].includes(r.status),
+      earned: role === "L" && ["completed", "returned"].includes(r.status),
+    };
+  };
+
+  const libraryRecord = (r) => {
+    const m = moneyFor(r);
+    return {
+      id: shortRef("LB", r),
+      rentalId: r._id.toString(),
+      title: (r.book && r.book.title) || "Library Book",
+      author: (r.book && r.book.author) || "",
+      dept: (r.book && (r.book.genre || r.book.subject)) || "",
+      status: r.status,
+      group: GROUP_OF[r.status] || "active",
+      borrowedDate: r.receivedDate || r.approvedDate || r.requestDate || r.createdAt,
+      dueDate: r.dueDate,
+      returnDate: r.returnDate,
+      finePaid: m.finePaid,
+      fineOutstanding: m.fineOutstanding,
+    };
+  };
+
+  const libraryBorrowings = renterRentals.filter(isLibraryRental);
+  const peerBorrowings = renterRentals.filter((r) => !isLibraryRental(r));
+
+  const records = {
+    rentals: [
+      ...peerBorrowings.map((r) => peerRentalRecord(r, "B")),
+      ...ownerRentals.map((r) => peerRentalRecord(r, "L")),
+    ],
+    library: libraryBorrowings.map(libraryRecord),
+  };
 
   res.json({
     success: true,
@@ -252,7 +395,15 @@ const getUserDashboard = asyncHandler(async (req, res) => {
         depositsHeld: netDepositsHeld,
         depositsReturned,
         rentalEarnings,
+        rentalPayments,
+        otherSpent,
+        libraryBorrowed: libraryBorrowings.filter((r) => !r.returnDate && ["active", "received", "overdue"].includes(r.status)).length,
+        peerBorrowed: peerBorrowings.filter((r) => !r.returnDate && ["active", "received", "overdue"].includes(r.status)).length,
+        overdueCount: renterRentals.filter((r) => r.status === "overdue" || (r.dueDate && !r.returnDate && new Date(r.dueDate) < new Date() && ["active", "received", "approved"].includes(r.status))).length,
+        totalBooks: totalBooksInCatalog,
+        myListedBooks,
       },
+      records,
       rentals: {
         borrowed: renterRentals,
         lent: ownerRentals,

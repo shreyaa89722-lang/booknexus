@@ -285,7 +285,7 @@ const getRentals = asyncHandler(async (req, res) => {
     }
 
     const rentals = await Rental.find(filter)
-        .populate("book", "title author coverUrl genre subject listingType")
+        .populate("book", "title author coverUrl genre subject listingType rentalPricePerWeek availability")
         .populate("renter", "name email")
         .populate("owner", "name email")
         .sort({ createdAt: -1 });
