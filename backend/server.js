@@ -24,6 +24,7 @@ const emailWorker = require("./services/emailWorker");
 const emailScheduler = require("./services/emailScheduler");
 
 const app = express();
+app.set("trust proxy", 1);
 
 // --- Security middleware (order matters: these go early, before routes) ---
 app.use(helmet({

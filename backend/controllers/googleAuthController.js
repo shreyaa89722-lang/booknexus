@@ -14,77 +14,85 @@ const client = isValidClientId ? new OAuth2Client(configuredClientId) : new OAut
 // @desc   Login or register via Google (ID Token or Access Token)
 // @route  POST /api/auth/google
 const googleLogin = asyncHandler(async (req, res) => {
-    const { credential, accessToken, email, name, googleId } = req.body || {};
+    const { credential, accessToken } = req.body || {};
 
     let userEmail = null;
     let userName = null;
     let userGoogleId = null;
 
-    // 1. Try extracting verified info from Google ID token credential if provided
+    // 1. Primary: Cryptographically verify Google ID token credential using official google-auth-library
     if (credential) {
-        if (client && isValidClientId) {
-            try {
-                const ticket = await client.verifyIdToken({
-                    idToken: credential,
-                    audience: configuredClientId,
-                });
-                const payload = ticket.getPayload();
-                if (payload && payload.email) {
-                    userEmail = payload.email;
-                    userName = payload.name;
-                    userGoogleId = payload.sub;
-                }
-            } catch (err) {
-                console.warn("Google client verifyIdToken notice:", err.message);
-            }
+        if (!isValidClientId) {
+            res.status(500);
+            throw new Error("Google OAuth Client ID is not configured on the server");
         }
-
-        // Fallback: decode JWT payload if client ID was not registered in Google Cloud Console
-        if (!userEmail) {
-            try {
-                const parts = credential.split(".");
-                if (parts.length === 3) {
-                    const payload = JSON.parse(Buffer.from(parts[1], "base64").toString("utf8"));
-                    if (payload && payload.email) {
-                        userEmail = payload.email;
-                        userName = payload.name;
-                        userGoogleId = payload.sub;
-                    }
-                }
-            } catch (e) {
-                console.warn("JWT payload decode note:", e.message);
+        try {
+            const ticket = await client.verifyIdToken({
+                idToken: credential,
+                audience: configuredClientId,
+            });
+            const payload = ticket.getPayload();
+            if (!payload) {
+                res.status(401);
+                throw new Error("Google ID token verification returned an empty payload");
             }
+            // Strict audience & issuer verification
+            const validIssuers = ["accounts.google.com", "https://accounts.google.com"];
+            if (!validIssuers.includes(payload.iss)) {
+                res.status(401);
+                throw new Error("Google ID token issuer is invalid: " + payload.iss);
+            }
+            if (payload.aud !== configuredClientId) {
+                res.status(401);
+                throw new Error("Google ID token audience mismatch");
+            }
+            if (!payload.email) {
+                res.status(400);
+                throw new Error("Google account payload did not contain an email address");
+            }
+            if (payload.email_verified === false) {
+                res.status(401);
+                throw new Error("Your Google email is not verified. Please verify your Google account before signing in.");
+            }
+            userEmail = payload.email;
+            userName = payload.name || payload.email.split("@")[0];
+            userGoogleId = payload.sub;
+        } catch (err) {
+            console.warn("Google client verifyIdToken error:", err.message);
+            res.status(401);
+            throw new Error("Google token verification failed: " + err.message);
         }
     }
-
-    // 2. Try validating Google OAuth2 access token directly with Google if provided
-    if (!userEmail && accessToken) {
+    // 2. Secondary: OAuth2 Access Token fallback verified directly with Google
+    else if (accessToken) {
         try {
             const gRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
-            if (gRes.ok) {
-                const info = await gRes.json();
-                if (info && info.email) {
-                    userEmail = info.email;
-                    userName = info.name || info.email.split("@")[0];
-                    userGoogleId = info.sub;
-                }
+            if (!gRes.ok) {
+                res.status(401);
+                throw new Error("Failed to verify Google access token with Google API");
             }
+            const info = await gRes.json();
+            if (!info || !info.email) {
+                res.status(400);
+                throw new Error("Google userinfo did not contain an email address");
+            }
+            if (info.email_verified === false) {
+                res.status(401);
+                throw new Error("Your Google email is not verified. Please verify your Google account before signing in.");
+            }
+            userEmail = info.email;
+            userName = info.name || info.email.split("@")[0];
+            userGoogleId = info.sub;
         } catch (tokenErr) {
-            console.warn("Google accessToken verification notice:", tokenErr.message);
-        }
-    }
-
-    // 3. Fallback for testing / dev environments only (never trust raw email alone in production)
-    if (!userEmail && email) {
-        if (process.env.NODE_ENV === "production") {
+            console.warn("Google accessToken verification error:", tokenErr.message);
             res.status(401);
-            throw new Error("Valid Google OAuth credential or access token is required in production");
+            throw new Error("Google access token verification failed: " + tokenErr.message);
         }
-        userEmail = email;
-        userName = name || email.split("@")[0];
-        userGoogleId = googleId || ("g-" + Date.now());
+    } else {
+        res.status(400);
+        throw new Error("A valid Google ID token credential or access token is required.");
     }
 
     if (!userEmail) {
@@ -141,21 +149,21 @@ const googleLogin = asyncHandler(async (req, res) => {
         }
 
         // Case B: Existing user found - Link Google ID if not yet linked
-        let modified = false;
+        let updates = {};
         if (!user.googleId && userGoogleId) {
+            updates.googleId = userGoogleId;
             user.googleId = userGoogleId;
-            modified = true;
         }
         if (userName && (!user.name || user.name === cleanEmail.split("@")[0])) {
+            updates.name = userName;
             user.name = userName;
-            modified = true;
         }
-        if (modified) {
-            await user.save();
+        if (Object.keys(updates).length > 0) {
+            await User.updateOne({ _id: user._id }, { $set: updates });
         }
 
-        // Case C: Existing user whose onboarding is incomplete
-        if (user.registrationCompleted === false) {
+        // Case C: Existing user whose onboarding or quiz is incomplete
+        if (user.registrationCompleted === false || user.quizCompleted === false) {
             const token = generateToken(user._id);
             return res.status(200).json({
                 success: true,
@@ -166,11 +174,14 @@ const googleLogin = asyncHandler(async (req, res) => {
                     _id: user._id,
                     name: user.name,
                     email: user.email,
-                    usn: user.usn,
-                    mobile: user.mobile,
-                    branch: user.branch,
-                    college: user.college,
-                    semester: user.semester,
+                    usn: user.usn || "",
+                    dob: user.dob || "",
+                    mobile: user.mobile || "",
+                    branch: user.branch || "",
+                    college: user.college || "",
+                    semester: user.semester || "",
+                    preferredName: user.preferredName || "",
+                    bio: user.bio || "",
                     googleId: user.googleId,
                     role: user.role,
                     registrationCompleted: false,
@@ -217,6 +228,8 @@ const googleLogin = asyncHandler(async (req, res) => {
             name: user ? user.name : (userName || cleanEmail.split("@")[0]),
             email: cleanEmail,
             usn: user && user.usn ? user.usn : "",
+            preferredName: user && user.preferredName ? user.preferredName : (user ? user.name.split(" ")[0] : (userName || cleanEmail.split("@")[0])),
+            bio: user && user.bio ? user.bio : "",
             role: user ? user.role : "student",
             branch: user ? user.branch : "",
             college: user ? user.college : "",

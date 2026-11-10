@@ -1885,7 +1885,7 @@
               location: 'Main Campus Central Library Desk',
               condition: bb.condition || 'good',
               demand: 15,
-              cover: bb.coverUrl || 'data:image/svg+xml;utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 300 450\'%3E%3Crect width=\'300\' height=\'450\' fill=\'%2346282A\'/ %3E%3Ctext x=\'150\' y=\'225\' text-anchor=\'middle\' fill=\'%23FBF1E6\' font-size=\'18\'%3E' + encodeURIComponent(bb.title) + '%3C/text%3E%3C/svg%3E'
+              cover: bb.coverUrl || (typeof window.bnxCoverArt === 'function' ? window.bnxCoverArt({ title: bb.title, author: bb.author, genre: bb.genre }) : ('data:image/svg+xml;utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 300 450\'%3E%3Crect width=\'300\' height=\'450\' fill=\'%2346282A\'/ %3E%3Ctext x=\'150\' y=\'225\' text-anchor=\'middle\' fill=\'%23FBF1E6\' font-size=\'18\'%3E' + encodeURIComponent(bb.title) + '%3C/text%3E%3C/svg%3E'))
             });
           }
         });
@@ -2036,6 +2036,27 @@
         console.warn('Google config notice:', e.message);
       }
 
+      function renderGsiButton() {
+        const overlay = document.getElementById('g_id_signin_overlay');
+        if (overlay && window.google && window.google.accounts && window.google.accounts.id && window.google.accounts.id.renderButton) {
+          try {
+            overlay.innerHTML = '';
+            window.google.accounts.id.renderButton(overlay, {
+              type: 'standard',
+              theme: 'outline',
+              size: 'large',
+              text: 'continue_with',
+              shape: 'pill',
+              width: 320,
+              logo_alignment: 'left'
+            });
+          } catch (rErr) {
+            console.warn('GSI renderButton error:', rErr.message);
+          }
+        }
+      }
+      window.renderGoogleButtonOverlay = renderGsiButton;
+
       function setupGSI() {
         if (!window.google || !window.google.accounts) return false;
         try {
@@ -2045,6 +2066,8 @@
             auto_select: false,
             cancel_on_tap_outside: true,
           });
+
+          renderGsiButton();
 
           if (window.google.accounts.oauth2) {
             tokenClient = window.google.accounts.oauth2.initTokenClient({
@@ -2081,7 +2104,10 @@
     window.initGoogleAuth = initGoogleAuth;
 
     async function handleGoogleCredentialResponse(response) {
-      if (!response || !response.credential) return;
+      if (!response || !response.credential) {
+        console.warn('Google GSI callback received without credential');
+        return;
+      }
       await sendGoogleTokenToBackend({ credential: response.credential });
     }
 
@@ -2222,15 +2248,36 @@
       const authModal = document.getElementById('authModal');
       if (authModal) {
         authModal.classList.remove('hidden');
-        authModal.style.display = '';
+        authModal.style.display = 'flex';
       }
 
-      if (typeof window.nxaView === 'function') {
-        window.nxaView('nw');
+      // Explicitly unhide nxaUser and hide nxaStaff and nxaRp
+      const nxaUser = document.getElementById('nxaUser');
+      if (nxaUser) nxaUser.hidden = false;
+      const nxaStaff = document.getElementById('nxaStaff');
+      if (nxaStaff) nxaStaff.hidden = true;
+      const nxa = document.getElementById('nxa');
+      if (nxa) nxa.classList.remove('nx-roles');
+      const nxaRp = document.getElementById('nxaRp');
+      if (nxaRp) nxaRp.hidden = true;
+      const nxaBanner = document.getElementById('nxaBanner');
+      if (nxaBanner) { nxaBanner.hidden = true; nxaBanner.textContent = ''; }
+
+      // Hide all other modal forms
+      ['nxaVCh', 'nxaVPw', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVFp'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.hidden = true;
+      });
+
+      // Show nxaVNew form
+      const nxaVNew = document.getElementById('nxaVNew');
+      if (nxaVNew) {
+        nxaVNew.hidden = false;
+        nxaVNew.style.display = 'block';
       }
 
       const emChip = document.getElementById('nxlNwEm');
-      if (emChip) emChip.textContent = googleUser.email;
+      if (emChip) emChip.textContent = googleUser.email + '  ·  verified by Google';
 
       // PAGE 2: Field 1 - Full name prefilled from Google (editable)
       const nameInput = document.getElementById('nxlName');
@@ -2274,7 +2321,10 @@
       if (subEl) subEl.textContent = 'Enter your student details and create a password for BookNexus.';
 
       const btn = document.getElementById('nxlNwBtn');
-      if (btn) btn.textContent = 'Continue';
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Continue';
+      }
 
       // Ensure Step 1 (PAGE 2) is visible and Step 2 (PAGE 3) is hidden
       const s1 = document.getElementById('nxlS1');
@@ -2353,7 +2403,7 @@
           const u = data.data;
 
           // If new student or incomplete profile -> launch PAGE 2 (Student Details)
-          if (data.needsOnboarding || u.registrationCompleted === false) {
+          if (data.needsOnboarding || u.registrationCompleted === false || u.quizCompleted === false) {
             if (u.token) {
               authToken = u.token;
               localStorage.setItem('booknexus_token', u.token);
@@ -2362,14 +2412,29 @@
             return;
           }
 
-          // Returning Google student with complete profile -> DIRECT LOGIN TO HOME!
+          // Returning Google student with complete profile -> DIRECT ONE-CLICK LOGIN TO HOME!
           authToken = u.token;
           localStorage.setItem('booknexus_token', u.token);
           localStorage.setItem('currentUser', JSON.stringify(u));
           
+          const studentUsn = u.usn || ('USN-' + (u.email || '').split('@')[0].toUpperCase().slice(0, 8));
+          if (!window.NX_COLLEGE) window.NX_COLLEGE = {};
+          window.NX_COLLEGE[studentUsn] = {
+            usn: studentUsn,
+            name: u.name,
+            email: u.email,
+            dept: u.branch || 'Computer Science',
+            branch: u.branch || 'Computer Science',
+            semester: u.semester || '1',
+            college: u.college || 'Engineering Campus',
+            phone: u.mobile || u.phone || '',
+            dob: u.dob || '',
+            secretId: u.preferredName || u.name.split(' ')[0]
+          };
+
           currentUser = {
             name: u.name,
-            rollNo: u.usn || ('G-' + (u.email || '').split('@')[0]),
+            rollNo: studentUsn,
             email: u.email,
             dept: u.branch || 'Computer Science',
             year: u.semester || '',
@@ -2378,9 +2443,13 @@
           };
           window.currentUser = currentUser;
 
+          if (typeof window.nxLinkUSN === 'function') {
+            window.nxLinkUSN(window.NX_COLLEGE[studentUsn]);
+          }
+
           if (typeof window.nxSessionSet === 'function') {
             window.bnSessionUser = u;
-            window.nxSessionSet('student', u._id, u.name, u.email);
+            window.nxSessionSet('student', studentUsn, u.name, u.email);
           }
           document.body.classList.remove('nx-guest');
 
@@ -2417,6 +2486,7 @@
         console.warn('Google backend auth error:', err.message);
         if (typeof showToast === 'function') showToast('Google sign-in error: ' + err.message, 'error');
       }
+    }
     }
 
     // SIGN-OUT BEHAVIOUR
@@ -2648,9 +2718,28 @@
         };
         window.currentUser = currentUser;
 
+        const studentUsn = user.usn || ('USN-' + (user.email || '').split('@')[0].toUpperCase().slice(0, 8));
+        if (!window.NX_COLLEGE) window.NX_COLLEGE = {};
+        window.NX_COLLEGE[studentUsn] = {
+          usn: studentUsn,
+          name: user.name,
+          email: user.email,
+          dept: user.branch || 'Computer Science',
+          branch: user.branch || 'Computer Science',
+          semester: user.semester || '1',
+          college: user.college || 'Engineering Campus',
+          phone: user.mobile || user.phone || '',
+          dob: user.dob || '',
+          secretId: user.preferredName || nick || user.name.split(' ')[0]
+        };
+
+        if (typeof window.nxLinkUSN === 'function') {
+          window.nxLinkUSN(window.NX_COLLEGE[studentUsn]);
+        }
+
         if (typeof window.nxSessionSet === 'function') {
           window.bnSessionUser = user;
-          window.nxSessionSet('student', user._id, user.name, user.email);
+          window.nxSessionSet('student', studentUsn, user.name, user.email);
         }
         document.body.classList.remove('nx-guest');
 
@@ -2697,14 +2786,23 @@
     };
 
     function openGoogleSignIn() {
+      if (typeof window.renderGoogleButtonOverlay === 'function') {
+        window.renderGoogleButtonOverlay();
+      }
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        try {
+          window.google.accounts.id.prompt((notification) => {
+            if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
+              if (tokenClient) tokenClient.requestAccessToken({ prompt: 'select_account' });
+            }
+          });
+          return;
+        } catch (pe) {
+          console.warn('GSI prompt notice:', pe.message);
+        }
+      }
       if (tokenClient) {
         tokenClient.requestAccessToken({ prompt: 'select_account' });
-      } else if (window.google && window.google.accounts && window.google.accounts.id) {
-        window.google.accounts.id.prompt((notification) => {
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            if (tokenClient) tokenClient.requestAccessToken({ prompt: 'select_account' });
-          }
-        });
       } else {
         initGoogleAuth();
         if (typeof showToast === 'function') showToast('Connecting to Google Cloud...', 'info');

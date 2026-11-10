@@ -275,7 +275,7 @@
         .nx-slide[data-pos="r"] { transform: translateX(64%) scale(.74) rotateY(-28deg) rotateZ(5deg); z-index: 2; opacity: .5; filter: saturate(.8); }
         .nx-slide[data-pos="h"] { transform: translateX(0) scale(.6); z-index: 1; opacity: 0; pointer-events: none; }
         .nx-stage:hover .nx-slide[data-pos="main"] { transform: rotateY(-6deg) translateY(-8px) scale(1.03); }
-        .nx-slide img, .nx-book__cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 0; transition: opacity .7s var(--nx-ease), transform .8s var(--nx-ease); }
+        .nx-slide img, .nx-book__cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 1; transition: opacity .7s var(--nx-ease), transform .8s var(--nx-ease); }
         .nx-slide img.ld, .nx-book__cover img.ld { opacity: 1; }
         .nx-tc { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 14%; text-align: center; background: linear-gradient(160deg, var(--nx-walnut), var(--nx-surface)); border: 1px solid var(--nx-gold-soft); }
         .nx-tc b { font: 500 clamp(.9rem, 1.6vw, 1.25rem)/1.2 var(--nx-serif); color: var(--nx-ivory); } .nx-tc i { font: 400 11px var(--nx-sans); color: var(--nx-muted); font-style: normal; }
@@ -2195,7 +2195,10 @@ textarea.pf-inp{resize:vertical;min-height:96px}
             <div id="nxaRp" class="nxa-chip" hidden><span id="nxlRpEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
             <div id="nxaUser">
                 <div id="nxaVCh" class="nxa-form" hidden>
-                    <button type="button" class="nxa-soc" onclick="nxlSocial('google')"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 010-9.4l-7.9-6.1a24 24 0 000 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Continue with Google</button>
+                    <div id="googleSignInContainer" style="position:relative;width:100%;margin-bottom:12px">
+                        <div id="g_id_signin_overlay" style="position:absolute;inset:0;opacity:0.001;z-index:10;cursor:pointer;overflow:hidden;border-radius:9999px"></div>
+                        <button type="button" class="nxa-soc" id="customGoogleBtn" onclick="nxlSocial('google')" style="width:100%;margin-bottom:0"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 010-9.4l-7.9-6.1a24 24 0 000 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Continue with Google</button>
+                    </div>
                     <button type="button" class="nxa-soc" onclick="nxlSocial('phone')"><span class="material-symbols-outlined">call</span>Continue with phone</button>
                     <div class="nxa-or"><span>OR</span></div>
                     <form id="nxlEmF" class="nxa-form" novalidate onsubmit="nxlEmail(event)">
@@ -19307,7 +19310,10 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         stage.onkeydown = e => { if (e.key === 'Enter') openBookDetail(nxHero.pool[nxHero.i].id); if (e.key === 'ArrowRight') nxHeroGo(nxHero.i + 1); if (e.key === 'ArrowLeft') nxHeroGo(nxHero.i - 1); };
         nxHeroDrag(stage);
         const f = pool[nxHero.i];
-        stage.innerHTML = pool.map(b => `<div class="nx-slide" data-pos="h">${nxTc(b)}<img data-cid="${b.id}" alt="Cover of ${nxEsc(b.title)} by ${nxEsc(b.author)}"></div>`).join('') +
+        stage.innerHTML = pool.map(b => {
+            const cov = b.cover || (typeof window.bnxCoverArt === 'function' ? window.bnxCoverArt(b) : '');
+            return `<div class="nx-slide" data-pos="h">${nxTc(b)}<img data-cid="${b.id}" src="${cov}" alt="Cover of ${nxEsc(b.title)} by ${nxEsc(b.author)}" class="${cov ? 'ld' : ''}"></div>`;
+        }).join('') +
             `<div class="nx-stage__cap"><span class="nx-stage__tag">Trending on campus</span><b>${nxEsc(f.title)}</b><span class="nx-stage__by">${nxEsc(f.author)} · ${nxStatus(f)[0]}</span><span class="nx-dots">${pool.map((b, k) => `<button type="button" aria-label="Show ${nxEsc(b.title)}" class="${k === nxHero.i ? 'on' : ''}" onclick="event.stopPropagation();nxHeroGo(${k})"></button>`).join('')}</span></div>` +
             `<button type="button" class="nx-hnav nx-hnav--l" aria-label="Previous book" onclick="event.stopPropagation();nxHeroGo(nxHero.i-1)"><span class="material-symbols-outlined">arrow_back</span></button><button type="button" class="nx-hnav nx-hnav--r" aria-label="Next book" onclick="event.stopPropagation();nxHeroGo(nxHero.i+1)"><span class="material-symbols-outlined">arrow_forward</span></button>`;
         nxFillCovers(stage, pool); nxHeroPos();
@@ -19328,7 +19334,11 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         const sig = list.map(b => `${b.id}:${b.availableCopies}:${b.type}`).join('|');
         if (sig === nxShelfSig && el.firstElementChild) return; nxShelfSig = sig;
         const keepLeft = el.scrollLeft;
-        el.innerHTML = list.map(b => { const [s, c] = nxStatus(b); return `<button class="nx-book" onclick="openBookDetail(${b.id})" aria-label="${nxEsc(b.title)} by ${nxEsc(b.author)}"><span class="nx-book__cover">${nxTc(b)}<img data-cid="${b.id}" alt=""></span><span class="nx-book__t">${nxEsc(b.title)}</span><span class="nx-book__a">${nxEsc(b.author)}</span><span class="nx-book__meta">${b.rating ? `<span>★ ${b.rating}</span>` : ''}<span class="nx-badge ${c}">${s}</span></span><span class="nx-book__go">View details →</span></button>`; }).join('') +
+        el.innerHTML = list.map(b => {
+            const [s, c] = nxStatus(b);
+            const cov = b.cover || (typeof window.bnxCoverArt === 'function' ? window.bnxCoverArt(b) : '');
+            return `<button class="nx-book" onclick="openBookDetail(${b.id})" aria-label="${nxEsc(b.title)} by ${nxEsc(b.author)}"><span class="nx-book__cover">${nxTc(b)}<img data-cid="${b.id}" src="${cov}" alt="" class="${cov ? 'ld' : ''}"></span><span class="nx-book__t">${nxEsc(b.title)}</span><span class="nx-book__a">${nxEsc(b.author)}</span><span class="nx-book__meta">${b.rating ? `<span>★ ${b.rating}</span>` : ''}<span class="nx-badge ${c}">${s}</span></span><span class="nx-book__go">View details →</span></button>`;
+        }).join('') +
             `<button type="button" class="nx-more" onclick="nxExploreMore()" aria-label="Explore more books in the catalog"><span>Explore More</span><span class="material-symbols-outlined">arrow_forward</span></button>`;
         el.scrollLeft = keepLeft;
         nxFillCovers(el, list);
@@ -20800,7 +20810,7 @@ ${sub ? `<text x="150" y="${(y0 + L.length * lh + 6).toFixed(1)}" text-anchor="m
 .gx::before { content: ""; position: absolute; left: 50%; bottom: 6px; width: min(78%, 880px); height: 46%; transform: translateX(-50%); background: radial-gradient(closest-side, var(--nx-gold-soft), transparent 72%); opacity: .8; pointer-events: none; }
 .gx-c { position: absolute; left: 50%; top: 22px; width: var(--cw); margin-left: calc(var(--cw) / -2); aspect-ratio: 2 / 3; border-radius: 3px 10px 10px 3px; overflow: hidden; cursor: pointer; background: var(--nx-walnut); opacity: 0; will-change: transform, opacity; box-shadow: 0 30px 40px -24px rgba(0,0,0,.75), 0 0 0 1px rgba(243,233,216,.08); }
 .gx-c:focus-visible { outline: 2px solid var(--nx-gold); outline-offset: 4px; }
-.gx-c img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 0; transition: opacity .7s var(--nx-ease); }
+.gx-c img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 1; transition: opacity .7s var(--nx-ease); }
 .gx-c img.ld { opacity: 1; }
 .gx-cap { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; min-height: 152px; margin-top: 4px; transition: opacity .35s var(--nx-ease), transform .35s var(--nx-ease); }
 .gx-cap.swap { opacity: 0; transform: translateY(6px); }
@@ -21114,7 +21124,10 @@ html:not(.dark) #viewHome .gx-nav { background: rgba(70,40,42,.04); }
         const list = items.map(x => x.b), sig = list.map(b => [b.id, b.availableCopies, b.type, offerLabel(b), offerLines(b).join('~')].join(':')).join('|');
         if (sig === gx.sig && st.firstElementChild) { gx.c.layout(); return; }
         gx.sig = sig; gx.list = list; gx.ready = false;
-        st.innerHTML = list.map(b => `<article class="gx-c" role="button" aria-label="${esc(b.title)} by ${esc(b.author)}" ${fire(b)}>${gxTc(b)}<img data-cid="${b.id}" alt="Cover of ${esc(b.title)} by ${esc(b.author)}">${offerSb(b)}</article>`).join('');
+        st.innerHTML = list.map(b => {
+            const cov = b.cover || (typeof window.bnxCoverArt === 'function' ? window.bnxCoverArt(b) : '');
+            return `<article class="gx-c" role="button" aria-label="${esc(b.title)} by ${esc(b.author)}" ${fire(b)}>${gxTc(b)}<img data-cid="${b.id}" src="${esc(cov)}" alt="Cover of ${esc(b.title)} by ${esc(b.author)}" class="${cov ? 'ld' : ''}">${offerSb(b)}</article>`;
+        }).join('');
         gx.c.pos = Math.min(Math.round(gx.c.pos), list.length - 1); gx.c.idx = -1;
         buildDots($('gxDots'), list.length, 'gx-dot', list.map(b => b.title), i => gx.c.goIdx(i));
         gx.c.layout(); gxCaption(false); gx.ready = true;
