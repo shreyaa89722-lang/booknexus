@@ -4,8 +4,6 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Book NEXUS | Academic Library & Student Rental Sanctuary</title>
-    <!-- Google Identity Services (GSI) -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="preconnect" href="https://covers.openlibrary.org" crossorigin/>
     <link rel="preconnect" href="https://books.google.com"/>
     <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780374533557-L.jpg?default=false" fetchpriority="high"/>
@@ -26485,6 +26483,5 @@ function watch() { const p = document.getElementById('adminPanelAuth'); if (!p |
 { const sat = window.switchAdminTab; window.switchAdminTab = function (k) { const r = sat.apply(this, arguments); if (k === 'auth' && isAdm()) { watch(); mount(); if (C.dbAuto && /^https?:\/\//i.test(C.dbUrl)) doSync(true); } return r; }; }
 })();
 </script>
-    <script src="/js/bridge.js"></script>
 </body>
 </html>
