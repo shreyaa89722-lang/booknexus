@@ -1096,6 +1096,14 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 .nxa-banner.ok{background:rgba(74,107,83,.12);color:#3C5A44;border:1px solid rgba(74,107,83,.3)}.dark .nxa-banner.ok{color:#9AD1A8}
 .nxa-banner.info{background:rgba(212,163,89,.16);color:#6B5320;border:1px solid rgba(212,163,89,.4)}.dark .nxa-banner.info{color:#E6C887}
 .nxa-banner[hidden]{display:none}
+/* Google sign-in: Google's own rendered button is the primary control, so it
+   sits in .nxa-gsi. The branded .nxa-soc button below it is only a fallback for
+   when Google Identity Services cannot render (blocked third-party cookies). */
+.nxa-gwrap{position:relative;width:100%;margin-bottom:14px}
+.nxa-gsi{display:none;justify-content:center;width:100%}
+.nxa-gsi.on{display:flex}
+.nxa-gsi iframe{margin:0 auto!important}
+.nxa-gwrap.gsi-ready #customGoogleBtn{display:none}
 .nxa-soc{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:48px;margin-top:10px;border-radius:999px;border:1.5px solid rgba(70,40,42,.2);background:transparent;color:#46282A;font:800 13.5px 'Manrope';cursor:pointer;transition:background .2s,transform .2s}.nxa-soc:first-child{margin-top:0}.nxa-soc:hover{background:rgba(166,123,125,.12);transform:translateY(-1px)}.dark .nxa-soc{color:#fff;border-color:rgba(255,255,255,.2)}.nxa-soc svg{width:20px;height:20px;flex:none}.nxa-soc .material-symbols-outlined{font-size:20px}
 .nxa-or{display:flex;align-items:center;gap:12px;margin:16px 0 12px;font:800 11px 'Manrope';color:#9a8b8c;letter-spacing:.12em}.nxa-or:before,.nxa-or:after{content:'';flex:1;height:1px;background:rgba(70,40,42,.16)}
 .nxa-chip{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding:10px 14px;border-radius:14px;background:rgba(70,40,42,.06);font:700 13px 'Manrope';color:#46282A;word-break:break-all}.dark .nxa-chip{background:rgba(255,255,255,.06);color:#fff}
@@ -2184,7 +2192,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
         </div>
 
         <h3 class="font-display text-2xl font-bold text-brand-rosewood dark:text-white mb-1">Campus Sign In</h3>
-        <p class="text-xs text-gray-500 mb-5" id="nxaSub">Sign in with your USN. Your details come from college records.</p>
+        <p class="text-xs text-gray-500 mb-5" id="nxaSub">Continue with the Google account on your college record.</p>
         <div class="nxa" id="nxa">
             <div class="nxa-seg" role="group" aria-label="Sign in as">
                 <button type="button" data-r="student" onclick="nxaRole('student')">User</button>
@@ -2195,23 +2203,17 @@ textarea.pf-inp{resize:vertical;min-height:96px}
             <div id="nxaRp" class="nxa-chip" hidden><span id="nxlRpEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
             <div id="nxaUser">
                 <div id="nxaVCh" class="nxa-form" hidden>
-                    <div id="googleSignInContainer" style="width:100%;margin-bottom:12px">
+                    <div id="googleSignInContainer" style="position:relative;width:100%;margin-bottom:12px">
+                        <div id="g_id_signin_overlay" style="position:absolute;inset:0;opacity:0.001;z-index:10;cursor:pointer;overflow:hidden;border-radius:9999px"></div>
                         <button type="button" class="nxa-soc" id="customGoogleBtn" onclick="openGoogleSignIn()" style="width:100%;margin-bottom:0"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 010-9.4l-7.9-6.1a24 24 0 000 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Continue with Google</button>
                     </div>
-                    <button type="button" class="nxa-soc" onclick="nxlSocial('phone')"><span class="material-symbols-outlined">call</span>Continue with phone</button>
                     <div class="nxa-or"><span>OR</span></div>
                     <form id="nxlEmF" class="nxa-form" novalidate onsubmit="nxlEmail(event)">
                         <div class="nxa-f"><label for="nxlEm" class="nxa-l" style="position:absolute;left:-9999px">Email address</label><input id="nxlEm" class="nxa-in pl" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="120" placeholder="Email address"><p class="nxa-err" id="nxlEmE" hidden></p></div>
                         <button class="nxa-go" id="nxlEmGo">Continue</button>
                     </form>
+                    <p class="nxa-err" id="nxlGoogleE" hidden></p>
                 </div>
-                <form id="nxaVPh" class="nxa-form" novalidate hidden onsubmit="nxlPhGo(event)">
-                    <div class="nxa-f" id="nxlPhS1"><label for="nxlPh" class="nxa-l">Mobile number</label><input id="nxlPh" class="nxa-in pl" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="+91 98765 43210"><p class="nxa-hint">With country code. We’ll text you a 6-digit code.</p><p class="nxa-err" id="nxlPhE" hidden></p></div>
-                    <div class="nxa-f" id="nxlPhS2" hidden><label for="nxlCode" class="nxa-l">6-digit code</label><input id="nxlCode" class="nxa-in pl" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter the code"><p class="nxa-err" id="nxlCodeE" hidden></p></div>
-                    <div id="nxlRecaptcha"></div>
-                    <button class="nxa-go" id="nxlPhBtn">Send code</button>
-                    <p class="nxa-sw"><button type="button" class="nxa-link" onclick="nxlBack()">Back</button></p>
-                </form>
                 <form id="nxaVPw" class="nxa-form" novalidate hidden onsubmit="nxlPwGo(event)">
                     <div class="nxa-chip"><span id="nxlPwEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
                     <div class="nxa-f"><label for="nxlPw" class="nxa-l">Password</label><div class="nxa-pw"><input id="nxlPw" class="nxa-in pl" type="password" autocomplete="current-password" maxlength="64" placeholder="Your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="nxlPwE" hidden></p></div>
@@ -2262,19 +2264,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <div class="nxa-f"><label for="suEmail" class="nxa-l">College email</label><input id="suEmail" class="nxa-in pl" type="email" autocomplete="email" maxlength="80" placeholder="name@univ.edu"><p class="nxa-hint">Must be exactly the email saved in college records.</p><p class="nxa-err" id="suEmailE" hidden></p></div>
                     <div class="nxa-f"><label for="suPw" class="nxa-l">Password</label><div class="nxa-pw"><input id="suPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="suPwX"></div><p class="nxa-err" id="suPwE" hidden></p></div>
                     <div class="nxa-f"><label for="suPw2" class="nxa-l">Confirm password</label><div class="nxa-pw"><input id="suPw2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="suPw2E" hidden></p></div>
-                    <p class="nxa-note"><span class="material-symbols-outlined">verified_user</span><span><b>USN</b> and <b>email</b> must be exactly as in college records, with no spaces. <b>Name</b> can be in any case or spacing, but dots must match. Not sure what’s on file? Ask the library desk.</span></p>
                     <button class="nxa-go" id="suGo">Create account</button>
-                    <p class="nxa-sw">Already have an account? <button type="button" class="nxa-link" onclick="nxaView('in')">Sign in</button></p>
-                </form>
-                <form id="nxaVFp" class="nxa-form" novalidate hidden onsubmit="nxaDoFp(event)">
-                    <div class="nxa-banner info">To change your password, please visit the Book NEXUS pickup center.</div><div hidden aria-hidden="true">
-                    <div class="nxa-f"><label for="fpUsn" class="nxa-l">Your USN</label><input id="fpUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042"><p class="nxa-err" id="fpUsnE" hidden></p></div>
-                    <div class="nxa-f"><label for="fpEmail" class="nxa-l">College email</label><input id="fpEmail" class="nxa-in pl" type="email" autocomplete="email" maxlength="80" placeholder="name@univ.edu"><p class="nxa-err" id="fpEmailE" hidden></p></div>
-                    <div class="nxa-f"><label for="fpDob" class="nxa-l">Date of birth (as on college record)</label><input id="fpDob" class="nxa-in pl" type="date"><p class="nxa-err" id="fpDobE" hidden></p></div>
-                    <div class="nxa-f"><label for="fpPw" class="nxa-l">New password</label><div class="nxa-pw"><input id="fpPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a new password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="fpPwX"></div><p class="nxa-err" id="fpPwE" hidden></p></div>
-                    <div class="nxa-f"><label for="fpPw2" class="nxa-l">Confirm new password</label><div class="nxa-pw"><input id="fpPw2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter the new password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="fpPw2E" hidden></p></div>
-                    <button class="nxa-go" id="fpGo" type="button" disabled tabindex="-1">Reset password</button>
-                    </div><p class="nxa-sw"><button type="button" class="nxa-link" onclick="nxaView('in')">Back to sign in</button></p>
                 </form>
             </div>
             <div id="nxaStaff" hidden>
@@ -17665,7 +17655,9 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 
     /* HELPER MODAL LOGIC */
     function openModal(id) { if (id === 'authModal' && typeof nxaReset === 'function') nxaReset(); document.getElementById(id)?.classList.remove('hidden'); }
-    function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+    /* also clears any inline display set when a modal was opened programmatically,
+       otherwise style="display:flex" beats the .hidden class and the modal stays up */
+    function closeModal(id) { const el = document.getElementById(id); if (!el) return; el.classList.add('hidden'); el.style.display = ''; }
 
     /* TOAST NOTIFICATION SYSTEM */
     function showToast(msg, type = 'info') {
@@ -23599,16 +23591,19 @@ window.nvSave = gate(() => {
   const TITLES = { in: ['Campus Sign In', 'Sign in with your USN and password.'], up: ['Create Student Account', 'Sign up with your college details. They’re checked against college records.'], fp: ['Reset Password', 'Confirm your college record details to choose a new password.'] };
   function setHead(t, s) { const h = $('authModal') && $('authModal').querySelector('h3'); if (h) h.textContent = t; const u = $('nxaSub'); if (u) u.textContent = s; }
   window.nxaView = function (v, keepBanner) {
-    view = v; ['in', 'up', 'fp'].forEach(k => { const f = $({ in: 'nxaVIn', up: 'nxaVUp', fp: 'nxaVFp' }[k]); f.hidden = k !== v; clearErrs(f); });
+    /* The student USN+password sign-in, sign-up and password-reset forms were
+       removed when students moved to Google-only sign-in, so these lookups are
+       expected to come back empty. Kept null-safe for the staff views. */
+    view = v; ['in', 'up', 'fp'].forEach(k => { const f = $({ in: 'nxaVIn', up: 'nxaVUp', fp: 'nxaVFp' }[k]); if (!f) return; f.hidden = k !== v; clearErrs(f); });
     if (!keepBanner) banner('');
-    setHead(TITLES[v][0], TITLES[v][1]);
+    if (TITLES[v]) setHead(TITLES[v][0], TITLES[v][1]);
     const f = { in: 'siUsn', up: 'suName', fp: 'fpUsn' }[v]; setTimeout(() => { const el = $(f); if (el && !$('authModal').classList.contains('hidden')) el.focus(); }, 40);
   };
   function wipe() { ['siUsn', 'siPw', 'suName', 'suUsn', 'suEmail', 'suPw', 'suPw2', 'fpUsn', 'fpEmail', 'fpDob', 'fpPw', 'fpPw2', 'stId', 'stPw', 'stNew', 'stNew2'].forEach(id => { const e = $(id); if (e) { e.value = ''; e.dispatchEvent(new Event('input')); } }); resetEyes($('nxa')); clearErrs($('nxa')); }
   window.nxaRole = function (r) {
     staffPending = null; busy = false; document.querySelectorAll('#nxa .nxa-seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.r === r)); window.nxaR = r;
     $('nxaUser').hidden = r !== 'student'; $('nxaStaff').hidden = r === 'student'; banner('');
-    if (r === 'student') { window.nxaView('in'); return; }
+    if (r === 'student') { window.nxaView('ch'); return; }
     $('nxaVSt').hidden = false; $('nxaVSt2').hidden = true; $('stFp').hidden = true; clearErrs($('nxaStaff'));
     const n = r === 'librarian' ? 'Librarian' : 'Admin'; setHead(n + ' Sign In', r === 'librarian' ? 'Open the Librarian desk to record borrows, returns and fines.' : 'Open the Admin desk to manage users, rentals and escrow.');
     $('stGo').textContent = 'Sign in as ' + n; $('stId').placeholder = r === 'librarian' ? 'e.g. LIB-001' : 'e.g. ADMIN-001';
@@ -23744,8 +23739,9 @@ window.nvSave = gate(() => {
   const _inp = window.nxaInput;
   window.nxaInput = function (p) { const r = _inp.apply(this, arguments); const c = $((p || 'nxa') + 'Card'); if (c) { c.hidden = true; c.innerHTML = ''; } return r; };   /* never show a person's phone, birth date or email before they have signed in */
   window.nxaSubmit = function (p) {
-    if (p !== 'pg') return; const u = normUsn(($('pgUsn') || {}).value);
-    openModal('authModal'); window.nxaRole('student'); window.nxaView('in'); if (u) $('siUsn').value = u; banner('Sign in to link your college details.', 'info'); setTimeout(() => ($('siUsn').value ? $('siPw') : $('siUsn')).focus(), 60);
+    if (p !== 'pg') return;
+    openModal('authModal'); window.nxaRole('student'); window.nxaView('ch');
+    banner('Continue with Google to link your college details.', 'info');
   };
   window.nxaStaff = function () { window.nxaRole(window.nxaR || 'librarian'); };   /* the old one-click staff entry is retired */
 
@@ -23815,8 +23811,8 @@ window.nvSave = gate(() => {
 
   window.nxStaffRecords = () => NX_STAFF;
   window.nxAuthKit = { load, save, hashPw, makeCred, same, pwOk, pwProblem, failed, lockLeft, okAttempt, lockMsg, finishStudent, normName, normUsn, mountRules, fieldErr, clearErrs, banner, resetEyes, STORE_ERR, EMAIL_RE, USN_MISSING, findStaff, enterStaff };   /* used by the email-first login (nxLogin) */
-  mountRules('suPw', 'suPwX'); mountRules('fpPw', 'fpPwX'); mountRules('stNew', 'stNewX');
-  window.nxaView('in');
+  mountRules('stNew', 'stNewX');   /* suPw / fpPw belonged to the retired student password forms */
+  window.nxaView('ch');
 })();
 </script>
 <script id="nxAuthority">
@@ -24149,37 +24145,31 @@ window.nxdbTemplate = gate(() => {
 </script>
 <script id="nxLogin">
 /* ============================================================
-   EMAIL-FIRST LOGIN (User tab): "Log in or sign up" comes first.
-   - Email -> if that email already has an account, ask for its password and log in. If not, ask only for name + USN + a new password
-     (no email field: the login email is used, and the college email, phone, department etc. come from the college record).
-   - Next time the same email goes straight to the password box. Creating an account signs the person in at once, and the profile is already synced.
-   - Google and phone sign-in run on Firebase Authentication (no server of your own). Fill in NX_FIREBASE_CONFIG below to switch them on.
-     A Google / phone sign-in proves the email or number, so no password is asked for an existing account. The page must be opened from https or localhost (not a file).
-   - The old USN + password sign-in stays available from the link at the bottom. Librarian / Admin tabs are unchanged.
+   EMAIL-FIRST & GOOGLE LOGIN (User tab): "Log in or sign up" comes first.
+   - Google -> Click "Continue with Google" to select verified college Gmail.
+   - Email -> if that email already has an account, ask for its password and log in. If not, ask for name + USN + DOB + password + reading quiz.
+   - Returning email goes straight to password.
    ============================================================ */
 (function () {
 'use strict';
-/* Paste your Firebase web-app keys here (Firebase console > Project settings > Your apps > Web). Leave blank to keep only email login. */
-const NX_FIREBASE_CONFIG = { apiKey: '', authDomain: '', projectId: '', appId: '' };
 const $ = id => document.getElementById(id), K = () => window.nxAuthKit;
 const MONI = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
 function recIso(s) { const m = /^(\d{1,2})\s+([A-Za-z]{3})[a-z]*\s+(\d{4})$/.exec(String(s || '').trim()); return m && MONI[m[2].toLowerCase()] ? m[3] + '-' + String(MONI[m[2].toLowerCase()]).padStart(2, '0') + '-' + m[1].padStart(2, '0') : ''; }
-const VIEWS = { ch: 'nxaVCh', pw: 'nxaVPw', nw: 'nxaVNew', ph: 'nxaVPh' }, ORIG = ['nxaVIn', 'nxaVUp', 'nxaVFp'];
-const HEAD = { ch: ['Log in or sign up', 'Continue with your email. Your college details are filled in automatically.'], pw: ['Welcome back', 'Enter your password to continue.'], nw: ['Create your account', 'Just your name, USN and a password.'], ph: ['Continue with phone', 'We’ll text you a code to confirm your number.'] };
-let em = '', idLabel = '', verified = false, curUsn = '', busy = false, fbAuth = null, idDone = false;   /* idDone: the person has already continued with Google / phone / email */
+const VIEWS = { ch: 'nxaVCh', pw: 'nxaVPw', nw: 'nxaVNew' }, ORIG = ['nxaVIn', 'nxaVUp', 'nxaVFp'];
+const HEAD = { ch: ['Log in or sign up', 'Continue with your email. Your college details are filled in automatically.'], pw: ['Welcome back', 'Enter your password to continue.'], nw: ['Create your account', 'Just your name, USN and a password.'] };
+let em = '', idLabel = '', verified = false, curUsn = '', busy = false, idDone = false;
 /* Before that first step nothing but the sign-in options shows; the User / Librarian / Admin choice only appears afterwards. */
 { const sty = document.createElement('style'); sty.textContent = '#nxa .nxa-seg{display:none}#nxa.nx-roles .nxa-seg{display:grid}#nxaRp[hidden]{display:none}'; document.head.appendChild(sty); }
 const _view = window.nxaView;
-function setHead(v) { const h = $('authModal') && $('authModal').querySelector('h3'); if (h) h.textContent = HEAD[v][0]; const u = $('nxaSub'); if (u) u.textContent = HEAD[v][1]; }
+function setHead(v) { const h = $('authModal') && $('authModal').querySelector('h3'); if (h && HEAD[v]) h.textContent = HEAD[v][0]; const u = $('nxaSub'); if (u && HEAD[v]) u.textContent = HEAD[v][1]; }
 const blankPw = () => ['nxlPw', 'nxlNp', 'nxlNp2'].forEach(id => { const e = $(id); if (e) { e.value = ''; e.dispatchEvent(new Event('input')); } });
 const roleUi = on => { const n = $('nxa'); if (n) n.classList.toggle('nx-roles', !!on); };
 const hideAll = () => { ORIG.concat(Object.values(VIEWS)).forEach(id => { const f = $(id); if (f) f.hidden = true; }); };
 const unpress = () => document.querySelectorAll('#nxa .nxa-seg button').forEach(b => b.setAttribute('aria-pressed', 'false'));
-function toFirst() {   /* back to the first screen: Google / phone / email only, no role tabs */
+function toFirst() {
   idDone = false; verified = false; roleUi(false); unpress();
   $('nxaUser').hidden = false; $('nxaStaff').hidden = true; $('nxaRp').hidden = true;
 }
-/* after Google / phone / email: only now do the User / Librarian / Admin choices show */
 function afterIdentity() {
   idDone = true; roleUi(true); hideAll(); unpress(); K().banner('');
   $('nxaUser').hidden = true; $('nxaStaff').hidden = true;
@@ -24187,9 +24177,8 @@ function afterIdentity() {
   const h = $('authModal') && $('authModal').querySelector('h3'), u = $('nxaSub');
   if (h) h.textContent = 'Choose your role'; if (u) u.textContent = 'Continue as a user, librarian or admin.';
   blankPw(); K().resetEyes($('nxa'));
-  window.nxaRole('student');   /* go straight to the User form (USN + password) instead of asking for a role first */
+  window.nxaRole('student');
 }
-/* User role: an account already linked to this login -> USN + password. No account yet -> create one. */
 function userStep(keep) {
   const usn = findUsn(em);
   if (usn) { curUsn = usn; hideAll(); _view.call(window, 'in', keep); $('nxlInEm').textContent = idLabel || em; return; }
@@ -24203,21 +24192,18 @@ window.nxaView = function (v, keep) {
     Object.keys(VIEWS).forEach(k => { const f = $(VIEWS[k]); f.hidden = k !== v; K().clearErrs(f); });
     if (!keep) K().banner(''); setHead(v);
     if (v === 'ch') { verified = false; blankPw(); K().resetEyes($('nxa')); }
-    setTimeout(() => { const el = $({ ch: 'nxlEm', pw: 'nxlPw', nw: 'nxlName', ph: 'nxlPh' }[v]); if (el && !$('authModal').classList.contains('hidden')) el.focus(); }, 40);
+    setTimeout(() => { const el = $({ ch: 'nxlEm', pw: 'nxlPw', nw: 'nxlName' }[v]); if (el && !$('authModal').classList.contains('hidden')) el.focus(); }, 40);
     return;
   }
   Object.keys(VIEWS).forEach(k => { const f = $(VIEWS[k]); if (f) f.hidden = true; });
   return _view.apply(this, arguments);
 };
-/* role tabs: ignored until the first step is done; Librarian / Admin only ever ask for their ID and password */
 { const _role = window.nxaRole; window.nxaRole = function (r) {
     if (!idDone) { window.nxaView('ch'); return; }
     roleUi(true); $('nxaRp').hidden = r === 'student';
     return _role.apply(this, arguments);
   };
   const _reset = window.nxaReset; window.nxaReset = function () { em = ''; idLabel = ''; idDone = false; const e = $('nxlEm'); if (e) e.value = ''; return _reset.apply(this, arguments); };
-  /* a login can only open the account linked to it */
-  /* Librarian / Admin: the email from the first step must be the one saved in Authority Access; here only the Staff ID and password are asked */
   const _st = window.nxaDoSt; window.nxaDoSt = function (e) {
     const kit = K(), idv = ($('stId').value || '').trim();
     if (idDone && idv) {
@@ -24236,12 +24222,11 @@ window.nxlBack = function () { window.nxaView('ch'); $('nxlEm').value = /^(tel|u
 
 function findUsn(email) {
   const d = K().load(), l = (d.links || {})[email]; if (l && d.students[l]) return l;
-  if (/^tel:/.test(email)) { const t = email.replace(/\D/g, '').slice(-10); return Object.keys(d.students).find(u => { const r = NX_COLLEGE[u]; return r && t.length === 10 && String(r.phone || '').replace(/\D/g, '').slice(-10) === t; }) || null; }
-  return Object.keys(d.students).find(u => String(d.students[u].email || '').toLowerCase() === email) || null;
+  return Object.keys(d.students || {}).find(u => String(d.students[u].email || '').toLowerCase() === email) || null;
 }
 function enter(usn) {
-  const rec = NX_COLLEGE[usn]; if (!rec) { window.nxaView('ch'); return K().banner('This USN is no longer in college records. Please ask the library desk.', 'bad'); }
-  blankPw(); K().finishStudent(rec);   /* signs in and fills the profile from the record */
+  const rec = (window.NX_COLLEGE && window.NX_COLLEGE[usn]) || { name: usn, usn: usn, email: em };
+  blankPw(); if (typeof K().finishStudent === 'function') K().finishStudent(rec);
 }
 window.nxlEmail = function (e) {
   e.preventDefault(); const f = $('nxlEmF'); K().clearErrs(f); K().banner('');
@@ -24253,7 +24238,7 @@ window.nxlEmail = function (e) {
 window.nxlPwGo = async function (e) {
   e.preventDefault(); if (busy) return; const kit = K(); kit.clearErrs($('nxaVPw')); kit.banner('');
   const pw = $('nxlPw').value; if (!pw) return kit.fieldErr('nxlPw', 'Enter your password.'), $('nxlPw').focus();
-  const d = kit.load(), acc = d.students[curUsn]; if (!acc) return window.nxaView('ch');
+  const d = kit.load(), acc = d.students && d.students[curUsn]; if (!acc) return window.nxaView('ch');
   const k = 's:' + curUsn, left = kit.lockLeft(d, k); if (left) return kit.fieldErr('nxlPw', kit.lockMsg(left)), $('nxlPw').focus();
   busy = true; const b = $('nxlPwBtn'); b.disabled = true; b.textContent = 'Logging in…';
   try {
@@ -24263,23 +24248,25 @@ window.nxlPwGo = async function (e) {
   } catch (err) { kit.banner('Login failed: ' + (err && err.message ? err.message : 'unexpected error') + '. Please try again.', 'bad'); }
   finally { busy = false; b.disabled = false; b.textContent = 'Log in'; }
 };
-/* ---- sign-up step 2: the same three questions as Edit Profile (name, about me, books you like) ---- */
+/* ---- sign-up step 2: name, about me, books you like ---- */
 let nwStep = 1; const SU = { genres: [], answers: {}, cur: {}, mode: 'view', q: 0 };
 const suEsc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 function suReset() { SU.genres = []; SU.answers = {}; SU.cur = {}; SU.mode = 'view'; SU.q = 0; const c = $('nxlBioC'); if (c) c.textContent = '0/300'; suRender(); nwShow(1, true); }
 function suRender(keepFocus) {
-  const box = $('nxlGen'); if (!box) return; const n = NX_QUIZ.length;
+  const box = $('nxlGen'); if (!box) return; const n = (window.NX_QUIZ || []).length;
+  if (!n) return;
   if (SU.mode === 'quiz') {
     const Q = NX_QUIZ[SU.q], sel = SU.cur[SU.q] || [], last = SU.q === n - 1;
     box.innerHTML = `<div class="nxs-qz" id="nxlQz" tabindex="-1"><div class="nxs-qp" role="progressbar" aria-valuemin="1" aria-valuemax="${n}" aria-valuenow="${SU.q + 1}"><i style="width:${(SU.q + 1) / n * 100}%"></i></div><p class="nxa-hint" style="margin:8px 0 0">Question ${SU.q + 1} of ${n}. ${Q.hint}.</p><h5>${suEsc(Q.q)}</h5><div class="nxs-qo">${Q.opts.map(([id, l]) => `<button type="button" data-q="${id}" aria-pressed="${sel.includes(id)}">${suEsc(l)}</button>`).join('')}</div><div class="nxs-qa"><button type="button" class="nxa-link" data-act="skip">Pick genres myself</button><span style="display:flex;gap:8px">${SU.q ? '<button type="button" class="nxs-sm ghost" data-act="back">Back</button>' : ''}<button type="button" class="nxs-sm" data-act="next" ${sel.length ? '' : 'disabled'}>${last ? 'See my genres' : 'Next'}</button></span></div></div>`;
   } else {
     const done = Object.keys(SU.answers).length > 0;
-    box.innerHTML = `<p class="nxa-hint" style="margin:0">${SU.mode === 'result' ? 'Suggested from your answers. Tap to add or remove genres.' : 'Choose the genres you like, or take a one-minute quiz and we’ll suggest some. You can choose as many answers as you like.'}</p><div class="nxs-gp" role="group" aria-label="Favorite genres">${NX_GENRES.map(g => `<button type="button" data-g="${suEsc(g)}" aria-pressed="${SU.genres.includes(g)}">${suEsc(g)}</button>`).join('')}</div><button type="button" class="nxs-qbtn" data-act="start"><span class="material-symbols-outlined" aria-hidden="true">quiz</span>${done ? 'Retake the genre quiz' : 'Take a quiz to find your genres'}</button>`;
+    box.innerHTML = `<p class="nxa-hint" style="margin:0">${SU.mode === 'result' ? 'Suggested from your answers. Tap to add or remove genres.' : 'Choose the genres you like, or take a one-minute quiz and we’ll suggest some. You can choose as many answers as you like.'}</p><div class="nxs-gp" role="group" aria-label="Favorite genres">${(window.NX_GENRES || []).map(g => `<button type="button" data-g="${suEsc(g)}" aria-pressed="${SU.genres.includes(g)}">${suEsc(g)}</button>`).join('')}</div><button type="button" class="nxs-qbtn" data-act="start"><span class="material-symbols-outlined" aria-hidden="true">quiz</span>${done ? 'Retake the genre quiz' : 'Take a quiz to find your genres'}</button>`;
   }
   if (keepFocus) { const b = keepFocus.g ? [...box.querySelectorAll('[data-g]')].find(x => x.dataset.g === keepFocus.g) : keepFocus.q ? box.querySelector('[data-q="' + keepFocus.q + '"]') : null; if (b) b.focus({ preventScroll: true }); }
 }
-function suFinish() {   /* same scoring as the profile quiz: top 5 genres, ties with 5th kept (max 7), minimum score 2 */
-  const sc = profQuizScores(SU.cur), ranked = Object.keys(sc).filter(g => NX_GENRES.includes(g) && sc[g] >= 2).sort((a, b) => sc[b] - sc[a] || NX_GENRES.indexOf(a) - NX_GENRES.indexOf(b));
+function suFinish() {
+  if (typeof profQuizScores !== 'function') return;
+  const sc = profQuizScores(SU.cur), ranked = Object.keys(sc).filter(g => (window.NX_GENRES || []).includes(g) && sc[g] >= 2).sort((a, b) => sc[b] - sc[a] || NX_GENRES.indexOf(a) - NX_GENRES.indexOf(b));
   const cut = ranked.length > 5 ? sc[ranked[4]] : 0;
   SU.genres = ranked.filter((g, i) => i < 5 || sc[g] >= cut).slice(0, 7); SU.answers = JSON.parse(JSON.stringify(SU.cur)); SU.mode = 'result';
 }
@@ -24287,12 +24274,12 @@ document.addEventListener('click', e => {
   const t = e.target.closest && e.target.closest('#nxlGen button'); if (!t) return;
   const err = $('nxlGenE'); if (err) { err.hidden = true; err.textContent = ''; }
   if (t.dataset.g) { const i = SU.genres.indexOf(t.dataset.g); i >= 0 ? SU.genres.splice(i, 1) : SU.genres.push(t.dataset.g); return suRender({ g: t.dataset.g }); }
-  if (t.dataset.q) { const Q = NX_QUIZ[SU.q], a = SU.cur[SU.q] || (SU.cur[SU.q] = []), i = a.indexOf(t.dataset.q); if (i >= 0) a.splice(i, 1); else { a.push(t.dataset.q); if (a.length > Q.max) a.shift(); } return suRender({ q: t.dataset.q }); }
+  if (t.dataset.q) { const Q = (window.NX_QUIZ || [])[SU.q], a = SU.cur[SU.q] || (SU.cur[SU.q] = []), i = a.indexOf(t.dataset.q); if (i >= 0) a.splice(i, 1); else { a.push(t.dataset.q); if (Q && a.length > Q.max) a.shift(); } return suRender({ q: t.dataset.q }); }
   const act = t.dataset.act;
   if (act === 'start') { SU.mode = 'quiz'; SU.q = 0; SU.cur = {}; suRender(); const z = $('nxlQz'); if (z) z.focus({ preventScroll: true }); }
   else if (act === 'skip') { SU.mode = 'view'; suRender(); }
   else if (act === 'back') { SU.q = Math.max(0, SU.q - 1); suRender(); }
-  else if (act === 'next') { if (!(SU.cur[SU.q] || []).length) return; if (SU.q === NX_QUIZ.length - 1) { suFinish(); suRender(); } else { SU.q++; suRender(); } }
+  else if (act === 'next') { if (!(SU.cur[SU.q] || []).length) return; if (SU.q === (window.NX_QUIZ || []).length - 1) { suFinish(); suRender(); } else { SU.q++; suRender(); } }
 });
 document.addEventListener('input', e => { if (e.target && e.target.id === 'nxlBio') { const c = $('nxlBioC'); if (c) c.textContent = e.target.value.length + '/300'; } });
 function nwShow(n, quiet) {
@@ -24305,89 +24292,10 @@ function nwShow(n, quiet) {
   if (!quiet) { const box = $('nxa') && $('nxa').closest('[style*="overflow-y"]'); if (box) box.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => { const el = $(two ? 'nxlNick' : 'nxlName'); if (el) el.focus({ preventScroll: true }); }, 60); }
 }
 window.nxlStep = function (n) { K().clearErrs($('nxaVNew')); K().banner(''); nwShow(n); };
-window.nxlCreate = async function (e) {
-  e.preventDefault(); if (busy) return; const kit = K(), f = $('nxaVNew'); kit.clearErrs(f); kit.banner('');
-  const name = $('nxlName').value.trim().replace(/\s+/g, ' '), rawU = $('nxlUsn').value, dob = $('nxlDob').value, pw = $('nxlNp').value, pw2 = $('nxlNp2').value; let ok = true, rec = null, usn = '';
-  if (!name) ok = kit.fieldErr('nxlName', 'Enter your full name.') && ok; else if (name.length < 2 || !/^[\p{L}][\p{L}\s.'-]*$/u.test(name)) ok = kit.fieldErr('nxlName', 'Use letters only for your name (spaces, dots, hyphens and apostrophes are fine).') && ok;
-  if (!rawU) ok = kit.fieldErr('nxlUsn', 'Enter your USN.') && ok;
-  else if (/\s/.test(rawU)) ok = kit.fieldErr('nxlUsn', 'USN can’t contain spaces. Type it exactly as in college records.') && ok;
-  else { usn = kit.normUsn(rawU); $('nxlUsn').value = usn; const q = nxLookupUSN(usn); if (q.state === 'found') rec = q.rec; else ok = kit.fieldErr('nxlUsn', q.state === 'format' ? 'A USN has only letters, numbers and hyphens.' : kit.USN_MISSING) && ok; }
-  if (!pw) ok = kit.fieldErr('nxlNp', 'Create a password.') && ok; else if (!kit.pwOk(pw)) ok = kit.fieldErr('nxlNp', kit.pwProblem(pw)) && ok;
-  if (!pw2) ok = kit.fieldErr('nxlNp2', 'Confirm your password.') && ok; else if (pw && pw !== pw2) ok = kit.fieldErr('nxlNp2', 'Passwords don’t match.') && ok;
-  if (ok && rec && kit.normName(name) !== kit.normName(rec.name)) ok = kit.fieldErr('nxlName', 'This name doesn’t match college records for ' + usn + '.') && ok;
-  if (!ok && nwStep === 2) nwShow(1, true);
-  if (!ok) { for (const id of ['nxlName', 'nxlUsn', 'nxlDob', 'nxlNp', 'nxlNp2']) { const i = $(id); if (i && i.hasAttribute('aria-invalid')) { i.focus(); break; } } return; }
-  const d = kit.load();
-  if (d.students[usn]) return kit.fieldErr('nxlUsn', 'This USN already has an account. Go back and log in with the email you used before.'), $('nxlUsn').focus();
-  if (recIso(rec.dob)) {   /* the record has a date of birth: it must match (a second proof it's really you); wrong guesses are rate-limited */
-    const k = 'c:' + usn, left = kit.lockLeft(d, k);
-    if (left) return kit.fieldErr('nxlDob', kit.lockMsg(left)), $('nxlDob').focus();
-    if (!dob) return kit.fieldErr('nxlDob', 'Enter your date of birth.'), $('nxlDob').focus();
-    if (dob !== recIso(rec.dob)) { const r = kit.failed(d, k); return kit.fieldErr('nxlDob', 'This date of birth doesn’t match college records for ' + usn + '.' + (r > 0 ? ' ' + r + ' attempt' + (r === 1 ? '' : 's') + ' left before a temporary lock.' : ' ' + kit.lockMsg(60))), $('nxlDob').focus(); }
-    kit.okAttempt(d, k);
-  }
-  if (nwStep === 1) { nwShow(2); return; }   /* details are valid: now ask the three profile questions */
-  const nick = $('nxlNick').value.trim().replace(/\s+/g, ' '), bio = $('nxlBio').value.trim();
-  if (!nick) return kit.fieldErr('nxlNick', 'Tell us what we should call you.'), $('nxlNick').focus();
-  if (!/^[\p{L}\p{N} .'_-]{2,30}$/u.test(nick)) return kit.fieldErr('nxlNick', 'Use 2 to 30 letters, numbers or spaces.'), $('nxlNick').focus();
-  if (!bio) return kit.fieldErr('nxlBio', 'Write a few words about yourself.'), $('nxlBio').focus();
-  if (bio.length > 300) return kit.fieldErr('nxlBio', 'About me must be 300 characters or fewer.'), $('nxlBio').focus();
-  if (SU.mode === 'quiz') { const g = $('nxlGenE'); g.textContent = 'Finish the quiz, or choose “Pick genres myself”.'; g.hidden = false; return $('nxlQz').focus(); }
-  if (!SU.genres.length) { const g = $('nxlGenE'); g.textContent = 'Choose at least one genre, or take the quiz.'; g.hidden = false; const gb = $('nxlGen').querySelector('button'); return gb && gb.focus(); }
-  busy = true; const b = $('nxlNwBtn'); b.disabled = true; b.textContent = 'Creating account…';
-  try {
-    d.students[usn] = Object.assign({ name: rec.name, email: rec.email, loginEmail: em, createdAt: Date.now() }, await kit.makeCred(pw));
-    d.links = d.links || {}; d.links[em] = usn;
-    if (!kit.save(d)) return kit.banner(kit.STORE_ERR, 'bad');
-    window.nxSignupExtras = { usn, fields: { nickname: nick, bio, genres: SU.genres.slice(), quizAnswers: JSON.parse(JSON.stringify(SU.answers)), interests: [], contactMethods: nxDefContact(rec.phone) } };
-    enter(usn);
-  } catch (err) { kit.banner('Couldn’t create the account: ' + (err && err.message ? err.message : 'unexpected error') + '.', 'bad'); }
-  finally { busy = false; b.disabled = false; b.textContent = nwStep === 2 ? 'Create account' : 'Continue'; }
-};
 
-/* ---- Google / phone through Firebase Authentication ---- */
-const fbOn = () => !!(NX_FIREBASE_CONFIG.apiKey && NX_FIREBASE_CONFIG.authDomain && NX_FIREBASE_CONFIG.projectId && NX_FIREBASE_CONFIG.appId);
-const FB = 'https://www.gstatic.com/firebasejs/10.12.2/';
-function loadScript(u) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = u; s.onload = res; s.onerror = () => rej(new Error('Couldn’t reach Firebase. Check your connection.')); document.head.appendChild(s); }); }
-if (fbOn()) loadScript(FB + 'firebase-app-compat.js').then(() => loadScript(FB + 'firebase-auth-compat.js')).then(() => { firebase.initializeApp(NX_FIREBASE_CONFIG); fbAuth = firebase.auth(); }).catch(() => { });
-function fbMsg(err) {
-  const c = err && err.code || '';
-  return ({ 'auth/popup-closed-by-user': 'Sign-in was cancelled.', 'auth/cancelled-popup-request': 'Sign-in was cancelled.', 'auth/popup-blocked': 'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.',
-    'auth/unauthorized-domain': 'This web address isn’t authorised in Firebase yet (Authentication → Settings → Authorized domains).', 'auth/operation-not-allowed': 'This sign-in method isn’t switched on in Firebase yet.',
-    'auth/operation-not-supported-in-this-environment': 'Open the site from a web address (https or localhost), not from a file.', 'auth/invalid-phone-number': 'That phone number doesn’t look right.',
-    'auth/too-many-requests': 'Too many tries. Please wait a few minutes and try again.', 'auth/network-request-failed': 'Network problem. Check your connection and try again.',
-    'auth/invalid-verification-code': 'That code isn’t right. Check it and try again.', 'auth/code-expired': 'That code has expired. Go back and request a new one.' })[c] || ('Sign-in failed' + (err && err.message ? ': ' + err.message : '') + '.');
-}
-function identity(key, label) { em = key; idLabel = label; verified = true; afterIdentity(); }
 window.nxlSocial = function (kind) {
-  const kit = K(); kit.banner('');
-  if (!fbOn()) return kit.banner('Google and phone sign-in aren’t connected yet. Add the Firebase keys at the top of the login script to switch them on. Until then, continue with your email below.', 'info');
-  if (!fbAuth) return kit.banner('Sign-in is still loading, or can’t be reached. Check your connection and try again.', 'info');
-  if (kind === 'phone') { phReset(); return window.nxaView('ph'); }
-  const prov = new firebase.auth.GoogleAuthProvider(); prov.addScope('email');
-  fbAuth.signInWithPopup(prov).then(r => {
-    const u = r.user, mail = String(u.email || '').toLowerCase(); fbAuth.signOut().catch(() => { });
-    if (mail && u.emailVerified === false) return kit.banner('Your Google email isn’t verified. Please use another account.', 'bad');
-    if (mail) identity(mail, mail); else identity('uid:' + u.uid, 'your Google account');
-  }).catch(err => kit.banner(fbMsg(err), 'bad'));
-};
-let phStep = 1, phConf = null, phCap = null;
-function phReset() { phStep = 1; phConf = null; if ($('nxlPh')) { $('nxlPh').value = ''; $('nxlCode').value = ''; $('nxlPhS1').hidden = false; $('nxlPhS2').hidden = true; $('nxlPhBtn').textContent = 'Send code'; } }
-window.nxlPhGo = async function (e) {
-  e.preventDefault(); if (busy || !fbAuth) return; const kit = K(), btn = $('nxlPhBtn'); kit.clearErrs($('nxaVPh')); kit.banner('');
-  if (phStep === 1) {
-    let n = $('nxlPh').value.replace(/[\s()-]/g, ''); if (/^\d{10}$/.test(n)) n = '+91' + n;
-    if (!/^\+\d{8,15}$/.test(n)) return kit.fieldErr('nxlPh', 'Enter your number with the country code, like +91 98765 43210.'), $('nxlPh').focus();
-    busy = true; btn.disabled = true; btn.textContent = 'Sending code…';
-    try { if (!phCap) phCap = new firebase.auth.RecaptchaVerifier('nxlRecaptcha', { size: 'invisible' }); phConf = await fbAuth.signInWithPhoneNumber(n, phCap); phStep = 2; $('nxlPhS1').hidden = true; $('nxlPhS2').hidden = false; btn.textContent = 'Verify code'; $('nxlCode').focus(); }
-    catch (err) { kit.banner(fbMsg(err), 'bad'); try { phCap && phCap.clear(); } catch (x) { } phCap = null; btn.textContent = 'Send code'; }
-    finally { busy = false; btn.disabled = false; }
-  } else {
-    const code = $('nxlCode').value.trim(); if (!/^\d{6}$/.test(code)) return kit.fieldErr('nxlCode', 'Enter the 6-digit code from the text message.'), $('nxlCode').focus();
-    busy = true; btn.disabled = true; btn.textContent = 'Verifying…';
-    try { const r = await phConf.confirm(code), num = r.user.phoneNumber; fbAuth.signOut().catch(() => { }); identity('tel:' + num, num); }
-    catch (err) { kit.fieldErr('nxlCode', fbMsg(err)); $('nxlCode').focus(); }
-    finally { busy = false; btn.disabled = false; btn.textContent = 'Verify code'; }
+  if (kind === 'google') {
+    if (typeof openGoogleSignIn === 'function') openGoogleSignIn();
   }
 };
 

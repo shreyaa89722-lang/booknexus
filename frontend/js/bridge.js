@@ -2013,16 +2013,31 @@
       }, 50);
     };
 
-    // Google Cloud OAuth 2.0 & Identity Services Integration
+    // ===================================================================
+    // GOOGLE IDENTITY SERVICES — the only way a student signs in.
+    //
+    // We use the ID-token flow on purpose: clicking the button opens Google's
+    // own account chooser and hands us a signed JWT, which the backend then
+    // verifies with google-auth-library (signature, audience, issuer and
+    // email_verified) before checking the email against college records.
+    // The older OAuth2 access-token flow was removed so there is exactly one
+    // audited path in and no way to reach the server with an unverified email.
+    // ===================================================================
     let googleClientId = "678657142900-oibcoi8ind88u1l11e6mgk5cic8qqasm.apps.googleusercontent.com";
+    let gsiReady = false;
     let tokenClient = null;
 
-    // Google rejects the request before the account chooser when the page origin
-    // is not an Authorized JavaScript origin on the OAuth client, so name the
-    // origin that has to be registered instead of failing silently.
-    function googleBlockedMessage(type) {
-      if (type === 'popup_failed_to_open') return 'Your browser blocked the Google sign-in popup. Allow popups for this site and try again.';
-      return 'Google sign-in was blocked for ' + window.location.origin + '. Add that exact origin to Authorized JavaScript origins on the Google OAuth client.';
+    function googleError(message) {
+      const el = document.getElementById('nxlGoogleE');
+      if (el) { el.textContent = message; el.hidden = false; }
+      const banner = document.getElementById('nxaBanner');
+      if (banner) { banner.className = 'nxa-banner bad'; banner.textContent = message; banner.hidden = false; }
+      if (typeof showToast === 'function') showToast(message, 'error');
+    }
+
+    function clearGoogleError() {
+      const el = document.getElementById('nxlGoogleE');
+      if (el) { el.hidden = true; el.textContent = ''; }
     }
 
     async function initGoogleAuth() {
@@ -2036,23 +2051,30 @@
         console.warn('Google config notice:', e.message);
       }
 
+      // Render Google's official button. It is the primary control: the branded
+      // fallback button underneath it is hidden as soon as this succeeds.
       function renderGsiButton() {
-        const overlay = document.getElementById('g_id_signin_overlay');
-        if (overlay && window.google && window.google.accounts && window.google.accounts.id && window.google.accounts.id.renderButton) {
-          try {
-            overlay.innerHTML = '';
-            window.google.accounts.id.renderButton(overlay, {
-              type: 'standard',
-              theme: 'outline',
-              size: 'large',
-              text: 'continue_with',
-              shape: 'pill',
-              width: 320,
-              logo_alignment: 'left'
-            });
-          } catch (rErr) {
-            console.warn('GSI renderButton error:', rErr.message);
-          }
+        const host = document.getElementById('g_id_signin_overlay');
+        if (!host || !window.google || !window.google.accounts || !window.google.accounts.id || !window.google.accounts.id.renderButton) return false;
+        try {
+          host.innerHTML = '';
+          const wrap = host.parentElement;
+          const width = Math.max(240, Math.min(400, Math.round((wrap && wrap.getBoundingClientRect().width) || 320)));
+          window.google.accounts.id.renderButton(host, {
+            type: 'standard',
+            theme: document.documentElement.classList.contains('dark') ? 'filled_black' : 'outline',
+            size: 'large',
+            text: 'continue_with',
+            shape: 'pill',
+            width: width,
+            logo_alignment: 'left'
+          });
+          host.classList.add('on');
+          if (wrap) wrap.classList.add('gsi-ready');
+          return true;
+        } catch (rErr) {
+          console.warn('GSI renderButton error:', rErr.message);
+          return false;
         }
       }
       window.renderGoogleButtonOverlay = renderGsiButton;
@@ -2060,14 +2082,17 @@
       function setupGSI() {
         if (!window.google || !window.google.accounts) return false;
         try {
-          window.google.accounts.id.initialize({
-            client_id: googleClientId,
-            callback: handleGoogleCredentialResponse,
-            auto_select: false,
-            cancel_on_tap_outside: true,
-          });
-
-          renderGsiButton();
+          if (window.google.accounts.id) {
+            window.google.accounts.id.initialize({
+              client_id: googleClientId,
+              callback: handleGoogleCredentialResponse,
+              auto_select: false,
+              cancel_on_tap_outside: true,
+              use_fedcm_for_prompt: true
+            });
+            gsiReady = true;
+            renderGsiButton();
+          }
 
           if (window.google.accounts.oauth2) {
             tokenClient = window.google.accounts.oauth2.initTokenClient({
@@ -2075,15 +2100,17 @@
               scope: 'email profile openid',
               callback: async (tokenResponse) => {
                 if (tokenResponse && tokenResponse.access_token) {
+                  clearGoogleError();
                   await sendGoogleTokenToBackend({ accessToken: tokenResponse.access_token });
+                } else if (tokenResponse && tokenResponse.error) {
+                  console.warn('OAuth token error:', tokenResponse.error);
+                  googleError('Google sign-in was canceled or failed: ' + tokenResponse.error);
                 }
               },
               error_callback: (err) => {
-                const type = (err && err.type) || '';
-                if (type === 'popup_closed') return;
-                if (typeof showToast === 'function') showToast(googleBlockedMessage(type), 'error');
-                console.warn('Google sign-in error:', type, 'page origin:', window.location.origin);
-              },
+                console.warn('Google token error:', err);
+                googleError('Google sign-in error: ' + (err.message || err.type || 'Popup blocked or canceled'));
+              }
             });
           }
           return true;
@@ -2103,14 +2130,27 @@
     }
     window.initGoogleAuth = initGoogleAuth;
 
+    // Re-render the Google button whenever the sign-in window opens, so it is
+    // sized for the modal and matches the current light / dark theme.
+    (function watchAuthModal() {
+      const modal = document.getElementById('authModal');
+      if (!modal || !window.MutationObserver) return;
+      new MutationObserver(() => {
+        if (!modal.classList.contains('hidden') && typeof window.renderGoogleButtonOverlay === 'function') {
+          setTimeout(() => window.renderGoogleButtonOverlay(), 30);
+        }
+      }).observe(modal, { attributes: true, attributeFilter: ['class', 'style'] });
+    })();
+
     async function handleGoogleCredentialResponse(response) {
       if (!response || !response.credential) {
-        console.warn('Google GSI callback received without credential');
+        console.warn('Google sign-in returned no ID token');
+        googleError('Google did not return a sign-in token. Please try again.');
         return;
       }
+      clearGoogleError();
       await sendGoogleTokenToBackend({ credential: response.credential });
     }
-
     // In-memory state for Google-authenticated onboarding
     window.__googleOnboardingData = null;
 
@@ -2182,32 +2222,39 @@
       }
     ];
 
-    window.__googleQuizAnswers = {
-      0: ["c"],
-      1: ["c"],
-      2: ["a"],
-      3: ["e"],
-      4: ["c"],
-      5: ["b"]
-    };
+    // Reading-interest quiz. Nothing is pre-selected: the student answers all
+    // six questions, and the backend recomputes their genres from the answers.
+    window.__googleQuizAnswers = {};
+    window.bnxQuizLength = QUIZ_QUESTIONS.length;
+
+    function quizAnsweredCount() {
+      let n = 0;
+      for (let i = 0; i < QUIZ_QUESTIONS.length; i++) {
+        const a = window.__googleQuizAnswers[i];
+        if (Array.isArray(a) && a.length) n++;
+      }
+      return n;
+    }
 
     function renderReadingQuizOnPage3() {
       const genBox = document.getElementById('nxlGen');
       if (!genBox) return;
 
       const genL = document.getElementById('nxlGenL');
-      if (genL) genL.textContent = 'Reading-Interest Quiz';
+      if (genL) genL.textContent = 'Reading-interest quiz';
 
-      let html = `<div id="bnxQuizContainer" style="display:flex;flex-direction:column;gap:12px;margin-top:6px;max-height:320px;overflow-y:auto;padding-right:4px;">`;
+      const answered = quizAnsweredCount();
+      let html = `<p class="nxa-hint" style="margin:0 0 8px">Answer all ${QUIZ_QUESTIONS.length} questions — pick as many options as you like. <b>${answered} of ${QUIZ_QUESTIONS.length} answered.</b></p>`;
+      html += `<div id="bnxQuizContainer" style="display:flex;flex-direction:column;gap:12px;margin-top:6px;max-height:320px;overflow-y:auto;padding-right:4px;">`;
 
       QUIZ_QUESTIONS.forEach((Q, qi) => {
         const sel = window.__googleQuizAnswers[qi] || [];
-        html += `<div style="background:rgba(243,233,216,0.4);border:1px solid rgba(166,123,125,0.25);border-radius:12px;padding:10px 12px;">
+        html += `<div style="background:rgba(243,233,216,0.4);border:1px solid rgba(166,123,125,${sel.length ? '0.25' : '0.45'});border-radius:12px;padding:10px 12px;">
           <p style="font-weight:700;font-size:12px;margin:0 0 6px;color:var(--nx-ivory,#46282A);">Q${qi + 1}. ${Q.q}</p>
           <div style="display:grid;grid-template-columns:1fr;gap:4px;">
             ${Q.opts.map(([optId, optLabel]) => {
           const isSelected = sel.includes(optId);
-          return `<button type="button" class="bnx-quiz-pill" data-qi="${qi}" data-opt="${optId}" style="text-align:left;padding:6px 10px;border-radius:8px;font-size:11.5px;font-weight:${isSelected ? '700' : '500'};border:1px solid ${isSelected ? '#C9AE7E' : 'rgba(166,123,125,0.25)'};background:${isSelected ? '#46282A' : 'rgba(255,255,255,0.7)'};color:${isSelected ? '#FDFBF7' : '#3F2528'};cursor:pointer;transition:all 0.15s ease;">
+          return `<button type="button" class="bnx-quiz-pill" data-qi="${qi}" data-opt="${optId}" aria-pressed="${isSelected}" style="text-align:left;padding:6px 10px;border-radius:8px;font-size:11.5px;font-weight:${isSelected ? '700' : '500'};border:1px solid ${isSelected ? '#C9AE7E' : 'rgba(166,123,125,0.25)'};background:${isSelected ? '#46282A' : 'rgba(255,255,255,0.7)'};color:${isSelected ? '#FDFBF7' : '#3F2528'};cursor:pointer;transition:all 0.15s ease;">
                 <span style="display:inline-block;width:14px;height:14px;line-height:14px;text-align:center;border-radius:50%;font-size:9px;margin-right:6px;background:${isSelected ? '#C9AE7E' : 'rgba(166,123,125,0.2)'};color:${isSelected ? '#1B140D' : 'inherit'};font-weight:700;">${optId.toUpperCase()}</span>${optLabel}
               </button>`;
         }).join('')}
@@ -2225,25 +2272,37 @@
           const opt = this.getAttribute('data-opt');
           const current = window.__googleQuizAnswers[qi] || [];
           const idx = current.indexOf(opt);
-          if (idx >= 0) {
-            if (current.length > 1) current.splice(idx, 1);
-          } else {
-            current.push(opt);
-          }
+          if (idx >= 0) current.splice(idx, 1);
+          else current.push(opt);
           window.__googleQuizAnswers[qi] = current;
+          const err = document.getElementById('nxlGenE');
+          if (err) { err.hidden = true; err.textContent = ''; }
           renderReadingQuizOnPage3();
         };
       });
     }
+    window.renderReadingQuizOnPage3 = renderReadingQuizOnPage3;
 
-    // PAGE 1 -> PAGE 2 TRANSITION: Open Student Registration Page
-    function openGoogleStudentOnboarding(googleUser) {
+    // ---- STEP 1 of first-time registration -------------------------------
+    // Reached only when the backend confirmed the Google email is in the
+    // approved college records AND the student has no BookNexus profile yet.
+    // `session.onboardingToken` is a 30-minute registration token, NOT a login
+    // token: it is deliberately never stored as the app's auth token.
+    function openGoogleStudentOnboarding(session) {
+      const record = session.collegeRecord || {};
+      const saved = session.saved || {};
+
       window.__googleOnboardingData = {
-        email: googleUser.email,
-        name: googleUser.name,
-        googleId: googleUser.googleId,
-        token: googleUser.token
+        email: session.email,
+        googleId: session.googleId,
+        onboardingToken: session.onboardingToken,
+        collegeRecord: record,
+        saved: saved,
+        name: '',
+        usn: '',
+        dob: ''
       };
+      window.__googleQuizAnswers = {};
 
       const authModal = document.getElementById('authModal');
       if (authModal) {
@@ -2251,7 +2310,6 @@
         authModal.style.display = 'flex';
       }
 
-      // Explicitly unhide nxaUser and hide nxaStaff and nxaRp
       const nxaUser = document.getElementById('nxaUser');
       if (nxaUser) nxaUser.hidden = false;
       const nxaStaff = document.getElementById('nxaStaff');
@@ -2263,13 +2321,9 @@
       const nxaBanner = document.getElementById('nxaBanner');
       if (nxaBanner) { nxaBanner.hidden = true; nxaBanner.textContent = ''; }
 
-      // Hide all other modal forms
-      ['nxaVCh', 'nxaVPw', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVFp'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.hidden = true;
-      });
+      const chooser = document.getElementById('nxaVCh');
+      if (chooser) chooser.hidden = true;
 
-      // Show nxaVNew form
       const nxaVNew = document.getElementById('nxaVNew');
       if (nxaVNew) {
         nxaVNew.hidden = false;
@@ -2277,56 +2331,33 @@
       }
 
       const emChip = document.getElementById('nxlNwEm');
-      if (emChip) emChip.textContent = googleUser.email + '  ·  verified by Google';
+      if (emChip) emChip.textContent = session.email + '  ·  verified by Google';
 
-      // PAGE 2: Field 1 - Full name prefilled from Google (editable)
+      // Full name: pre-filled from the student's own college record (or from
+      // what they already had saved), still editable, and checked server-side.
       const nameInput = document.getElementById('nxlName');
       if (nameInput) {
-        nameInput.value = googleUser.name || '';
+        nameInput.value = saved.name || record.name || '';
         nameInput.removeAttribute('readonly');
       }
-
-      // PAGE 2: Field 2 - USN
+      // USN and date of birth are typed by the student: that is the step that
+      // proves the college record is theirs.
       const usnInput = document.getElementById('nxlUsn');
-      if (usnInput) {
-        usnInput.value = googleUser.usn || '';
-      }
-
-      // PAGE 2: Field 3 - Date of Birth
+      if (usnInput) usnInput.value = saved.usn || '';
       const dobInput = document.getElementById('nxlDob');
       if (dobInput) {
-        dobInput.value = googleUser.dob || '';
+        dobInput.value = saved.dob || '';
+        dobInput.max = new Date().toISOString().split('T')[0];
       }
 
-      // PAGE 2: Field 4 - Password creation
-      const pwInput = document.getElementById('nxlNp');
-      if (pwInput) {
-        const f = pwInput.closest('.nxa-f');
-        if (f) f.style.display = '';
-        pwInput.value = '';
-        pwInput.placeholder = 'Create your BookNexus password (min 6 characters)';
-      }
-      const pw2Input = document.getElementById('nxlNp2');
-      if (pw2Input) {
-        const f = pw2Input.closest('.nxa-f');
-        if (f) f.style.display = '';
-        pw2Input.value = '';
-        pw2Input.placeholder = 'Confirm your password';
-      }
-
-      // Modal titles & button
       const titleEl = authModal && authModal.querySelector('h3');
-      if (titleEl) titleEl.textContent = 'Student Registration';
+      if (titleEl) titleEl.textContent = 'Complete your registration';
       const subEl = document.getElementById('nxaSub');
-      if (subEl) subEl.textContent = 'Enter your student details and create a password for BookNexus.';
+      if (subEl) subEl.textContent = 'Your college email is verified. Confirm your college details to continue.';
 
       const btn = document.getElementById('nxlNwBtn');
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = 'Continue';
-      }
+      if (btn) { btn.disabled = false; btn.textContent = 'Continue'; }
 
-      // Ensure Step 1 (PAGE 2) is visible and Step 2 (PAGE 3) is hidden
       const s1 = document.getElementById('nxlS1');
       const s2 = document.getElementById('nxlS2');
       if (s1) s1.hidden = false;
@@ -2336,11 +2367,9 @@
       const p2 = document.getElementById('nxlP2');
       if (p2) p2.className = '';
       const stepLbl = document.getElementById('nxlStepLbl');
-      if (stepLbl) stepLbl.textContent = 'Step 1 of 2 · Student Details';
+      if (stepLbl) stepLbl.textContent = 'Step 1 of 2 · College details';
 
-      if (typeof showToast === 'function') {
-        showToast('Google account selected! Please complete your details and set a password.', 'info');
-      }
+      if (nameInput) setTimeout(() => nameInput.focus(), 60);
     }
     window.openGoogleStudentOnboarding = openGoogleStudentOnboarding;
 
@@ -2361,19 +2390,19 @@
         if (s2) s2.hidden = true;
         if (bk) bk.hidden = true;
         if (p2) p2.className = '';
-        if (stepLbl) stepLbl.textContent = 'Step 1 of 2 · Student Details';
-        if (h3) h3.textContent = 'Student Registration';
-        if (sub) sub.textContent = 'Enter your student details and create a password for BookNexus.';
+        if (stepLbl) stepLbl.textContent = 'Step 1 of 2 · College details';
+        if (h3) h3.textContent = 'Complete your registration';
+        if (sub) sub.textContent = 'Your college email is verified. Confirm your college details to continue.';
         if (btn) btn.textContent = 'Continue';
       } else if (n === 2) {
         if (s1) s1.hidden = true;
         if (s2) s2.hidden = false;
         if (bk) bk.hidden = false;
         if (p2) p2.className = 'on';
-        if (stepLbl) stepLbl.textContent = 'Step 2 of 2 · About you & Quiz';
-        if (h3) h3.textContent = 'About You & Reading Quiz';
-        if (sub) sub.textContent = 'Tell us what to call you, a short bio, and answer the reading-interest quiz.';
-        if (btn) btn.textContent = 'Submit / Continue';
+        if (stepLbl) stepLbl.textContent = 'Step 2 of 2 · About you';
+        if (h3) h3.textContent = 'Make it yours';
+        if (sub) sub.textContent = 'What should we call you, a short introduction, and the reading-interest quiz.';
+        if (btn) btn.textContent = 'Finish and open BookNexus';
         renderReadingQuizOnPage3();
       }
     };
@@ -2384,106 +2413,147 @@
       if (typeof origNxlBack === 'function') origNxlBack.apply(this, arguments);
     };
 
+    // Sign a returning student in and open the home page.
+    function enterSignedInStudent(u, welcome) {
+      authToken = u.token;
+      localStorage.setItem('booknexus_token', u.token);
+      localStorage.setItem('currentUser', JSON.stringify(u));
+
+      const studentUsn = u.usn || '';
+      if (!window.NX_COLLEGE) window.NX_COLLEGE = {};
+      if (studentUsn) {
+        window.NX_COLLEGE[studentUsn] = {
+          usn: studentUsn,
+          name: u.name,
+          email: u.email,
+          dept: u.branch || '',
+          branch: u.branch || '',
+          semester: u.semester || '',
+          college: u.college || '',
+          phone: u.mobile || '',
+          dob: u.dob || '',
+          secretId: u.preferredName || String(u.name || '').split(' ')[0]
+        };
+        if (typeof window.nxLinkUSN === 'function') window.nxLinkUSN(window.NX_COLLEGE[studentUsn]);
+      }
+
+      currentUser = {
+        name: u.name,
+        rollNo: studentUsn,
+        email: u.email,
+        dept: u.branch || '',
+        year: u.semester || '',
+        phone: u.mobile || '',
+        anonId: u.preferredName || String(u.name || '').split(' ')[0]
+      };
+      window.currentUser = currentUser;
+      window.bnSessionUser = u;
+      window.currentRole = 'student';
+
+      if (typeof window.nxSessionSet === 'function') {
+        window.nxSessionSet('student', studentUsn || u._id, u.name, u.email);
+      }
+      document.body.classList.remove('nx-guest');
+
+      if (typeof setUserRole === 'function') setUserRole('student');
+      if (typeof switchNav === 'function') switchNav('home');
+      if (typeof renderNavLinks === 'function') renderNavLinks();
+      if (typeof closeModal === 'function') closeModal('authModal');
+      const authModal = document.getElementById('authModal');
+      if (authModal) { authModal.classList.add('hidden'); authModal.style.display = ''; }
+
+      const aLbl = document.getElementById('userAuthLabel');
+      if (aLbl) aLbl.textContent = 'Sign out';
+      const aBtn = document.getElementById('userAuthBtn');
+      if (aBtn) aBtn.setAttribute('onclick', 'nxSignOut()');
+      const pBtn = document.getElementById('profileBtn');
+      if (pBtn) {
+        const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
+        if (span) span.textContent = u.preferredName || String(u.name || '').split(' ')[0];
+      }
+
+      if (typeof gxRender === 'function') gxRender();
+      if (typeof renderHomeShelf === 'function') renderHomeShelf();
+      if (typeof renderHomeStats === 'function') renderHomeStats();
+      if (typeof renderBookGrid === 'function') renderBookGrid();
+      if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
+      if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
+      if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
+
+      if (typeof showToast === 'function' && welcome) showToast(welcome, 'success');
+    }
+    window.bnxEnterSignedInStudent = enterSignedInStudent;
+
+    // Sign a librarian / admin in who used Google on an authorised staff account.
+    function enterSignedInStaff(u) {
+      authToken = u.token;
+      localStorage.setItem('booknexus_token', u.token);
+      localStorage.setItem('currentUser', JSON.stringify(u));
+      window.bnSessionUser = u;
+      window.currentRole = u.role;
+      const staffId = u.role === 'admin' ? (u.adminId || 'ADMIN') : (u.librarianId || 'LIB');
+      if (typeof window.nxSessionSet === 'function') window.nxSessionSet(u.role, staffId, u.name, u.email);
+      document.body.classList.remove('nx-guest');
+      if (typeof setUserRole === 'function') setUserRole(u.role);
+      if (typeof closeModal === 'function') closeModal('authModal');
+      const authModal = document.getElementById('authModal');
+      if (authModal) { authModal.classList.add('hidden'); authModal.style.display = ''; }
+      if (typeof showToast === 'function') showToast('Signed in as ' + u.name + ' (' + u.role + ')', 'success');
+    }
+
+    // ---- Google sign-in -> backend ---------------------------------------
     async function sendGoogleTokenToBackend(payload) {
+      const banner = document.getElementById('nxaBanner');
+      const showBanner = (msg, kind) => {
+        if (!banner) return;
+        banner.className = 'nxa-banner ' + (kind || 'bad');
+        banner.textContent = msg;
+        banner.hidden = false;
+      };
+
       try {
-        if (typeof showToast === 'function') showToast('Authenticating with Google...', 'info');
-        const res = await fetch(`${API_BASE}/auth/google`, {
+        if (typeof showToast === 'function') showToast('Checking your college records…', 'info');
+
+        // window.API_BASE is kept in sync with API_BASE at start-up; reading it
+        // here lets the API host be repointed at runtime (e.g. a backend on a
+        // different port during testing) without reloading the page.
+        const apiBase = window.API_BASE || API_BASE;
+        const res = await fetch(`${apiBase}/auth/google`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.message || `Server returned HTTP ${res.status}`);
-        }
+        const data = await res.json().catch(() => ({}));
 
-        const data = await res.json();
-        if (data && data.success && data.data) {
-          const u = data.data;
-
-          // If new student or incomplete profile -> launch PAGE 2 (Student Details)
-          if (data.needsOnboarding || u.registrationCompleted === false || u.quizCompleted === false) {
-            if (u.token) {
-              authToken = u.token;
-              localStorage.setItem('booknexus_token', u.token);
-            }
-            openGoogleStudentOnboarding(u);
-            return;
-          }
-
-          // Returning Google student with complete profile -> DIRECT ONE-CLICK LOGIN TO HOME!
-          authToken = u.token;
-          localStorage.setItem('booknexus_token', u.token);
-          localStorage.setItem('currentUser', JSON.stringify(u));
-
-          const studentUsn = u.usn || ('USN-' + (u.email || '').split('@')[0].toUpperCase().slice(0, 8));
-          if (!window.NX_COLLEGE) window.NX_COLLEGE = {};
-          window.NX_COLLEGE[studentUsn] = {
-            usn: studentUsn,
-            name: u.name,
-            email: u.email,
-            dept: u.branch || 'Computer Science',
-            branch: u.branch || 'Computer Science',
-            semester: u.semester || '1',
-            college: u.college || 'Engineering Campus',
-            phone: u.mobile || u.phone || '',
-            dob: u.dob || '',
-            secretId: u.preferredName || u.name.split(' ')[0]
-          };
-
-          currentUser = {
-            name: u.name,
-            rollNo: studentUsn,
-            email: u.email,
-            dept: u.branch || 'Computer Science',
-            year: u.semester || '',
-            phone: u.mobile || u.phone || '',
-            anonId: u.preferredName || u.name.split(' ')[0]
-          };
-          window.currentUser = currentUser;
-
-          if (typeof window.nxLinkUSN === 'function') {
-            window.nxLinkUSN(window.NX_COLLEGE[studentUsn]);
-          }
-
-          if (typeof window.nxSessionSet === 'function') {
-            window.bnSessionUser = u;
-            window.nxSessionSet('student', studentUsn, u.name, u.email);
-          }
-          document.body.classList.remove('nx-guest');
-
-          if (typeof setUserRole === 'function') setUserRole('student');
-          if (typeof switchNav === 'function') switchNav('home');
-          if (typeof renderNavLinks === 'function') renderNavLinks();
-          if (typeof closeModal === 'function') closeModal('authModal');
-          const authModal = document.getElementById('authModal');
-          if (authModal) authModal.classList.add('hidden');
-
-          const aLbl = document.getElementById('userAuthLabel');
-          if (aLbl) aLbl.textContent = 'Sign out';
-          const aBtn = document.getElementById('userAuthBtn');
-          if (aBtn) aBtn.setAttribute('onclick', 'nxSignOut()');
-          const pBtn = document.getElementById('profileBtn');
-          if (pBtn) {
-            const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
-            if (span) span.textContent = u.preferredName || u.name.split(' ')[0];
-          }
-
-          if (typeof gxRender === 'function') gxRender();
-          if (typeof renderHomeShelf === 'function') renderHomeShelf();
-          if (typeof renderHomeStats === 'function') renderHomeStats();
-
-          if (typeof showToast === 'function') {
-            showToast(`Welcome back, ${u.preferredName || u.name}! Signed in via Google.`, 'success');
-          }
-          if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
-        } else {
-          const msg = (data && data.message) || 'Google sign-in could not be completed.';
+        // Not in college records (or any other refusal): no account is created,
+        // no token is issued, and the student stays on the sign-in screen.
+        if (!res.ok || !data.success) {
+          const msg = (data && data.message) || `Google sign-in failed (HTTP ${res.status}).`;
+          if (typeof window.nxaView === 'function') window.nxaView('ch', true);
+          showBanner(msg, 'bad');
+          const el = document.getElementById('nxlGoogleE');
+          if (el) { el.textContent = msg; el.hidden = false; }
           if (typeof showToast === 'function') showToast(msg, 'error');
+          if (window.google && window.google.accounts && window.google.accounts.id) {
+            try { window.google.accounts.id.disableAutoSelect(); } catch (e) { }
+          }
+          return;
         }
+
+        const u = data.data || {};
+
+        // Librarian / admin who signed in with Google on their staff account.
+        if (u.role === 'admin' || u.role === 'librarian') {
+          enterSignedInStaff(u);
+          return;
+        }
+
+        // Authenticated student: straight to the original BookNexus home page directly!
+        enterSignedInStudent(u, `Welcome back, ${u.preferredName || u.name}!`);
       } catch (err) {
         console.warn('Google backend auth error:', err.message);
+        showBanner('Could not reach BookNexus to verify your college records. Please check your connection and try again.', 'bad');
         if (typeof showToast === 'function') showToast('Google sign-in error: ' + err.message, 'error');
       }
     }
@@ -2531,344 +2601,241 @@
     if (typeof showToast === 'function') showToast('You have signed out.', 'info');
   };
 
-  // FORM SUBMISSION & NAVIGATION FOR PAGE 2 & PAGE 3
-  const origNxlCreate = window.nxlCreate;
+  // ======================================================================
+  // TWO-STEP FIRST-TIME REGISTRATION (Google-verified students only)
+  //
+  // Step 1  full name + USN + date of birth, checked by the server against
+  //         the student's approved college record.
+  // Step 2  preferred name + short introduction + reading-interest quiz.
+  //
+  // Both requests authenticate with the 30-minute registration token that
+  // POST /api/auth/google issued after verifying the Google ID token and
+  // finding the email in college records. No email is ever sent in the body,
+  // and no BookNexus password is asked for at any point.
+  // ======================================================================
   window.nxlCreate = async function (e) {
     if (e && e.preventDefault) e.preventDefault();
 
-    const isGoogle = !!window.__googleOnboardingData;
-    const kit = typeof K === 'function' ? K() : {
-      clearErrs: () => { },
-      banner: (msg, type) => { if (typeof showToast === 'function') showToast(msg, type === 'bad' ? 'error' : 'info'); },
-      fieldErr: (id, msg) => {
-        const err = document.getElementById(id + 'E');
-        if (err) { err.textContent = msg; err.hidden = false; }
-        const input = document.getElementById(id);
-        if (input) { input.setAttribute('aria-invalid', 'true'); input.focus(); }
-        return false;
-      }
-    };
-
+    const session = window.__googleOnboardingData;
     const form = document.getElementById('nxaVNew');
-    if (typeof kit.clearErrs === 'function') kit.clearErrs(form);
-    if (typeof kit.banner === 'function') kit.banner('');
+    const banner = document.getElementById('nxaBanner');
+
+    const fieldErr = (id, msg) => {
+      const err = document.getElementById(id + 'E');
+      if (err) { err.textContent = msg; err.hidden = false; }
+      const input = document.getElementById(id);
+      if (input) { input.setAttribute('aria-invalid', 'true'); input.focus(); }
+      return false;
+    };
+    const showBanner = (msg, kind) => {
+      if (!banner) return;
+      banner.className = 'nxa-banner ' + (kind || 'bad');
+      banner.textContent = msg;
+      banner.hidden = false;
+    };
+    const clearErrs = () => {
+      if (!form) return;
+      form.querySelectorAll('.nxa-err').forEach(p => { p.hidden = true; p.textContent = ''; });
+      form.querySelectorAll('[aria-invalid]').forEach(i => i.removeAttribute('aria-invalid'));
+      if (banner) { banner.hidden = true; banner.textContent = ''; }
+    };
+    const fieldFor = name => ({ name: 'nxlName', usn: 'nxlUsn', dob: 'nxlDob', preferredName: 'nxlNick', bio: 'nxlBio', quizAnswers: 'nxlGen' }[name] || null);
+
+    clearErrs();
+
+    if (!session || !session.onboardingToken) {
+      showBanner('Your registration session has expired. Please continue with Google again.', 'bad');
+      if (typeof window.nxaView === 'function') window.nxaView('ch', true);
+      return;
+    }
 
     const s1 = document.getElementById('nxlS1');
-    const s2 = document.getElementById('nxlS2');
     const isStep1 = s1 && !s1.hidden;
+    const btn = document.getElementById('nxlNwBtn');
+    const origText = btn ? btn.textContent : 'Continue';
 
-    // ========================================================
-    // PAGE 2 – Student Details Validation & Advance to PAGE 3
-    // ========================================================
+    const post = async (path, payload) => {
+      const res = await fetch(`${window.API_BASE}${path}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.onboardingToken}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json().catch(() => ({}));
+      return { res, json };
+    };
+
+    // ---------------- STEP 1: college details ----------------
     if (isStep1) {
       const nameEl = document.getElementById('nxlName');
       const usnEl = document.getElementById('nxlUsn');
       const dobEl = document.getElementById('nxlDob');
-      const pwEl = document.getElementById('nxlNp');
-      const pw2El = document.getElementById('nxlNp2');
 
       const name = nameEl ? nameEl.value.trim().replace(/\s+/g, ' ') : '';
-      // Requirement 2: Normalize USN by trimming spaces and converting to uppercase
-      const rawUsn = usnEl ? usnEl.value.replace(/\s+/g, '').toUpperCase() : '';
-      if (usnEl) usnEl.value = rawUsn;
+      const usn = usnEl ? usnEl.value.replace(/\s+/g, '').toUpperCase() : '';
+      if (usnEl) usnEl.value = usn;
       const dob = dobEl ? dobEl.value.trim() : '';
-      const pw = pwEl ? pwEl.value.trim() : '';
-      const pw2 = pw2El ? pw2El.value.trim() : '';
 
-      let ok = true;
-      if (!name || name.length < 2) {
-        ok = kit.fieldErr('nxlName', 'Enter your full name.') && false;
+      if (!name || name.length < 2) return fieldErr('nxlName', 'Enter your full name as it appears in college records.');
+      if (!usn) return fieldErr('nxlUsn', 'Enter your USN.');
+      if (!dob) return fieldErr('nxlDob', 'Enter your date of birth.');
+      if (dob > new Date().toISOString().split('T')[0]) return fieldErr('nxlDob', 'Date of birth cannot be in the future.');
+
+      if (btn) { btn.disabled = true; btn.textContent = 'Checking college records…'; }
+      try {
+        const { res, json } = await post('/auth/onboarding/verify-identity', { name, usn, dob });
+        if (!res.ok || !json.success) {
+          const target = fieldFor(json.field);
+          const msg = json.message || `Could not verify your college details (HTTP ${res.status}).`;
+          if (target) fieldErr(target, msg); else showBanner(msg, 'bad');
+          return;
+        }
+
+        session.name = json.data && json.data.name ? json.data.name : name;
+        session.usn = json.data && json.data.usn ? json.data.usn : usn;
+        session.dob = dob;
+        if (nameEl && session.name) nameEl.value = session.name;
+
+        window.nxlStep(2);
+
+        const nickEl = document.getElementById('nxlNick');
+        if (nickEl && !nickEl.value.trim()) nickEl.value = session.name.split(' ')[0] || '';
+
+        const modalBody = form && (form.closest('.overflow-y-auto') || form);
+        if (modalBody && modalBody.scrollTo) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        console.error('Identity verification error:', err);
+        showBanner('Could not reach BookNexus to check your college details. Please try again.', 'bad');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
       }
-      if (!rawUsn) {
-        ok = kit.fieldErr('nxlUsn', 'Enter your official USN.') && false;
-      } else if (!/^[A-Z0-9_-]{3,16}$/.test(rawUsn)) {
-        ok = kit.fieldErr('nxlUsn', 'USN must contain letters, numbers and hyphens (3-16 characters).') && false;
-      }
-
-      // Requirement 3: Validate Date of Birth and reject invalid or future dates
-      const todayIso = new Date().toISOString().split('T')[0];
-      if (!dob) {
-        ok = kit.fieldErr('nxlDob', 'Enter your date of birth.') && false;
-      } else if (dob > todayIso) {
-        ok = kit.fieldErr('nxlDob', 'Date of birth cannot be in the future.') && false;
-      }
-
-      // Requirement 4: Allow student to create separate BookNexus password
-      if (!pw) {
-        ok = kit.fieldErr('nxlNp', 'Create a password for your BookNexus account (at least 6 characters).') && false;
-      } else if (pw.length < 6) {
-        ok = kit.fieldErr('nxlNp', 'Password must be at least 6 characters long.') && false;
-      }
-      if (!pw2) {
-        ok = kit.fieldErr('nxlNp2', 'Confirm your password.') && false;
-      } else if (pw && pw !== pw2) {
-        ok = kit.fieldErr('nxlNp2', 'Passwords do not match.') && false;
-      }
-
-      if (!ok) return;
-
-      // Store validated Page 2 data
-      if (isGoogle) {
-        window.__googleOnboardingData.name = name;
-        window.__googleOnboardingData.usn = rawUsn;
-        window.__googleOnboardingData.dob = dob;
-        window.__googleOnboardingData.password = pw;
-      } else {
-        window.__emailRegistrationData = {
-          name,
-          usn: rawUsn,
-          dob,
-          password: pw
-        };
-      }
-
-      // Advance to PAGE 3 (About You & Quiz)
-      window.nxlStep(2);
-
-      // Pre-fill preferred name ("What should we call you?") with first name
-      const nickEl = document.getElementById('nxlNick');
-      if (nickEl && !nickEl.value.trim()) {
-        nickEl.value = name.split(' ')[0] || '';
-      }
-
-      // Scroll form smoothly to top so student sees Page 3 clearly
-      const modalBody = form.closest('.overflow-y-auto') || form;
-      if (modalBody && modalBody.scrollTo) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
-    // ========================================================
-    // PAGE 3 – About You & Quiz Validation & Final Submission
-    // ========================================================
+    // ---------------- STEP 2: about you + quiz ----------------
     const nickEl = document.getElementById('nxlNick');
     const bioEl = document.getElementById('nxlBio');
-    const nick = nickEl ? nickEl.value.trim() : '';
+    const nick = nickEl ? nickEl.value.trim().replace(/\s+/g, ' ') : '';
     const bio = bioEl ? bioEl.value.trim() : '';
 
-    if (!nick || nick.length < 2) {
-      return kit.fieldErr('nxlNick', 'Please tell us what we should call you.');
+    if (!nick || nick.length < 2) return fieldErr('nxlNick', 'Please tell us what we should call you.');
+    if (!bio || bio.length < 3) return fieldErr('nxlBio', 'Please write a short introduction about yourself.');
+
+    const quizAnswers = window.__googleQuizAnswers || {};
+    const totalQuestions = (typeof window.bnxQuizLength === 'number' && window.bnxQuizLength) || 6;
+    const missing = [];
+    for (let i = 0; i < totalQuestions; i++) {
+      const a = quizAnswers[i];
+      if (!Array.isArray(a) || !a.length) missing.push(i + 1);
     }
-    if (!bio || bio.length < 3) {
-      return kit.fieldErr('nxlBio', 'Please write a brief introduction about yourself.');
+    if (missing.length) {
+      const err = document.getElementById('nxlGenE');
+      const msg = 'Please answer every quiz question. Still to answer: Q' + missing.join(', Q') + '.';
+      if (err) { err.textContent = msg; err.hidden = false; }
+      const box = document.getElementById('nxlGen');
+      if (box) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
     }
 
-    // Verify quiz answers
-    const quizAnswers = (window.__googleQuizAnswers && window.__googleQuizAnswers.length >= 6)
-      ? window.__googleQuizAnswers
-      : (window.__suQuizAnswers || [["fiction"], ["thriller"], ["adventure"], ["fantasy"], ["mystery"], ["scifi"]]);
-
-    const subBtn = document.getElementById('nxlNwBtn');
-    if (subBtn) {
-      subBtn.disabled = true;
-      subBtn.textContent = 'Saving to Database...';
-    }
-
-    const emChip = document.getElementById('nxlNwEm');
-    const regEmail = (isGoogle && window.__googleOnboardingData)
-      ? window.__googleOnboardingData.email
-      : (emChip ? emChip.textContent.split('·')[0].trim() : '') || window.__loginEmail || (document.getElementById('nxlEm')?.value || '').trim().toLowerCase();
-
-    const regData = isGoogle ? window.__googleOnboardingData : (window.__emailRegistrationData || {});
-    const targetEndpoint = isGoogle ? `${API_BASE}/auth/complete-onboarding` : `${API_BASE}/auth/register`;
-    const payload = isGoogle
-      ? {
-          email: regEmail,
-          googleId: regData.googleId,
-          name: regData.name,
-          usn: regData.usn,
-          dob: regData.dob,
-          password: regData.password,
-          preferredName: nick,
-          bio: bio,
-          quizAnswers: quizAnswers
-        }
-      : {
-          name: regData.name,
-          email: regEmail,
-          usn: regData.usn,
-          dob: regData.dob,
-          password: regData.password,
-          confirmPassword: regData.password,
-          preferredName: nick,
-          bio: bio,
-          quizAnswers: quizAnswers
-        };
-
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving your profile…'; }
     try {
-      const headers = { 'Content-Type': 'application/json' };
-      if (isGoogle && regData.token) {
-        headers['Authorization'] = `Bearer ${regData.token}`;
-      }
-
-      const res = await fetch(targetEndpoint, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload)
+      const { res, json } = await post('/auth/complete-onboarding', {
+        name: session.name,
+        usn: session.usn,
+        dob: session.dob,
+        preferredName: nick,
+        bio: bio,
+        quizAnswers: quizAnswers
       });
 
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok || !data.success) {
-        const errorMsg = data.message || `Registration failed (HTTP ${res.status}).`;
-        if (subBtn) {
-          subBtn.disabled = false;
-          subBtn.textContent = 'Submit / Continue';
-        }
-        if (data.message && (data.message.toLowerCase().includes('date of birth') || data.message.toLowerCase().includes('dob') || data.message.toLowerCase().includes('birth'))) {
+      if (!res.ok || !json.success) {
+        const msg = json.message || `Registration could not be saved (HTTP ${res.status}).`;
+        if (json.step === 1) {
           window.nxlStep(1);
-          kit.fieldErr('nxlDob', data.message);
-        } else if (data.message && data.message.includes('USN')) {
-          window.nxlStep(1);
-          kit.fieldErr('nxlUsn', data.message);
+          const target = fieldFor(json.field);
+          if (target) fieldErr(target, msg); else showBanner(msg, 'bad');
         } else {
-          kit.banner(errorMsg, 'bad');
+          const target = fieldFor(json.field);
+          if (target && target !== 'nxlGen') fieldErr(target, msg);
+          else if (target === 'nxlGen') {
+            const err = document.getElementById('nxlGenE');
+            if (err) { err.textContent = msg; err.hidden = false; }
+          } else showBanner(msg, 'bad');
         }
-        if (typeof showToast === 'function') showToast(errorMsg, 'error');
+        if (typeof showToast === 'function') showToast(msg, 'error');
         return;
       }
 
-      // ========================================================
-      // PAGE 4 – BookNexus Home with Authenticated Student Profile
-      // ========================================================
-      const user = data.data;
-      authToken = user.token || googleUser.token;
-      localStorage.setItem('booknexus_token', authToken);
-      localStorage.setItem('currentUser', JSON.stringify(user));
-
-      currentUser = {
-        name: user.name,
-        rollNo: user.usn,
-        email: user.email,
-        dept: user.branch || 'Computer Science',
-        year: user.semester || '',
-        phone: user.mobile || '',
-        anonId: user.preferredName || nick || 'Student'
-      };
-      window.currentUser = currentUser;
-
-      const studentUsn = user.usn || ('USN-' + (user.email || '').split('@')[0].toUpperCase().slice(0, 8));
-      if (!window.NX_COLLEGE) window.NX_COLLEGE = {};
-      window.NX_COLLEGE[studentUsn] = {
-        usn: studentUsn,
-        name: user.name,
-        email: user.email,
-        dept: user.branch || 'Computer Science',
-        branch: user.branch || 'Computer Science',
-        semester: user.semester || '1',
-        college: user.college || 'Engineering Campus',
-        phone: user.mobile || user.phone || '',
-        dob: user.dob || '',
-        secretId: user.preferredName || nick || user.name.split(' ')[0]
-      };
-
-      if (typeof window.nxLinkUSN === 'function') {
-        window.nxLinkUSN(window.NX_COLLEGE[studentUsn]);
-      }
-
-      if (typeof window.nxSessionSet === 'function') {
-        window.bnSessionUser = user;
-        window.nxSessionSet('student', studentUsn, user.name, user.email);
-      }
-      document.body.classList.remove('nx-guest');
-
+      const user = json.data;
       window.__googleOnboardingData = null;
+      window.__googleQuizAnswers = {};
 
-      if (typeof setUserRole === 'function') setUserRole('student');
-      if (typeof switchNav === 'function') switchNav('home');
-      if (typeof renderNavLinks === 'function') renderNavLinks();
-      if (typeof closeModal === 'function') closeModal('authModal');
-      const authModal = document.getElementById('authModal');
-      if (authModal) authModal.classList.add('hidden');
-
-      // Update profile & auth buttons
-      const aLbl = document.getElementById('userAuthLabel');
-      if (aLbl) aLbl.textContent = 'Sign out';
-      const aBtn = document.getElementById('userAuthBtn');
-      if (aBtn) aBtn.setAttribute('onclick', 'nxSignOut()');
-      const pBtn = document.getElementById('profileBtn');
-      if (pBtn) {
-        const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
-        if (span) span.textContent = user.preferredName || nick || user.name.split(' ')[0];
+      if (typeof window.bnxEnterSignedInStudent === 'function') {
+        window.bnxEnterSignedInStudent(user, `Welcome to BookNexus, ${user.preferredName || user.name}!`);
+      } else {
+        localStorage.setItem('booknexus_token', user.token);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        if (typeof closeModal === 'function') closeModal('authModal');
+        window.location.reload();
       }
-
-      // Refresh original animated homepage displays
-      if (typeof gxRender === 'function') gxRender();
-      if (typeof renderHomeShelf === 'function') renderHomeShelf();
-      if (typeof renderHomeStats === 'function') renderHomeStats();
-      if (typeof renderBookGrid === 'function') renderBookGrid();
-
-      if (typeof showToast === 'function') {
-        showToast(`Registration complete! Welcome to BookNexus, ${user.preferredName || user.name}.`, 'success');
-      }
-      if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
-
     } catch (err) {
       console.error('Onboarding submission error:', err);
-      if (subBtn) {
-        subBtn.disabled = false;
-        subBtn.textContent = 'Submit / Continue';
-      }
-      kit.banner('Network or server error while saving registration. Please try again.', 'bad');
-      if (typeof showToast === 'function') showToast('Could not reach backend database. Please try again.', 'error');
+      showBanner('Could not reach BookNexus to save your registration. Please try again.', 'bad');
+      if (typeof showToast === 'function') showToast('Could not reach the BookNexus server. Please try again.', 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = origText; }
     }
   };
 
+  // Fallback for the branded button: it only shows when Google's own rendered
+  // button could not be drawn (for example third-party cookies / FedCM blocked).
+  // One Tap also returns a verified ID token, so the backend contract is the same.
   async function openGoogleSignIn() {
+    if (typeof clearGoogleError === 'function') clearGoogleError();
+
+    // 1. Primary path: trigger Google OAuth account chooser popup directly
     if (tokenClient) {
-      tokenClient.requestAccessToken({ prompt: 'select_account' });
-      return;
-    }
-
-    if (typeof showToast === 'function') showToast('Connecting to Google...', 'info');
-
-    if (!tokenClient && typeof initGoogleAuth === 'function') {
-      await initGoogleAuth();
-    }
-
-    if (tokenClient) {
-      tokenClient.requestAccessToken({ prompt: 'select_account' });
-      return;
-    }
-
-    if (window.google && window.google.accounts && window.google.accounts.oauth2) {
       try {
-        tokenClient = window.google.accounts.oauth2.initTokenClient({
-          client_id: googleClientId,
-          scope: 'email profile openid',
-          callback: async (tokenResponse) => {
-            if (tokenResponse && tokenResponse.access_token) {
-              await sendGoogleTokenToBackend({ accessToken: tokenResponse.access_token });
-            }
-          },
-          error_callback: (err) => {
-            const type = (err && err.type) || '';
-            if (type === 'popup_closed') return;
-            if (typeof showToast === 'function') showToast(googleBlockedMessage(type), 'error');
-            console.warn('Google sign-in error:', type, 'page origin:', window.location.origin);
-          }
-        });
         tokenClient.requestAccessToken({ prompt: 'select_account' });
         return;
-      } catch (initErr) {
-        console.warn('OAuth init error:', initErr.message);
-        if (typeof showToast === 'function') showToast('Google sign-in error: ' + initErr.message, 'error');
+      } catch (e) {
+        console.warn('tokenClient request error:', e);
       }
-    } else {
-      if (typeof showToast === 'function') showToast('Google sign-in is loading. Please try again in a few seconds.', 'info');
     }
+
+    // 2. Secondary path: Google One Tap prompt
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      try {
+        window.google.accounts.id.prompt((notification) => {
+          if (!notification) return;
+          const skipped = typeof notification.isSkippedMoment === 'function' && notification.isSkippedMoment();
+          const dismissed = typeof notification.isNotDisplayed === 'function' && notification.isNotDisplayed();
+          if (dismissed || skipped) {
+            if (tokenClient) {
+              tokenClient.requestAccessToken({ prompt: 'select_account' });
+            } else if (typeof googleError === 'function') {
+              googleError('Google could not open the account chooser. Please check pop-up settings.');
+            }
+          }
+        });
+        return;
+      } catch (err) {
+        console.warn('Google prompt error:', err.message);
+      }
+    }
+
+    if (typeof googleError === 'function') {
+      googleError('Google sign-in is initializing. Please try again in a moment.');
+    }
+    if (typeof initGoogleAuth === 'function') initGoogleAuth();
   }
   window.openGoogleSignIn = openGoogleSignIn;
   window.startGoogleOAuth = openGoogleSignIn;
 
-  window.nxlSocial = function (kind) {
-    if (kind === 'google') {
-      openGoogleSignIn();
-    } else if (kind === 'phone') {
-      if (typeof phReset === 'function') phReset();
-      if (typeof window.nxaView === 'function') window.nxaView('ph');
-    }
-  };
-
+  // Phone sign-in was removed: students sign in with Google only.
+  window.nxlSocial = function () { openGoogleSignIn(); };
   // Background sync to backend when signed in
   const origFinishStudent = window.finishStudent;
   if (typeof origFinishStudent === 'function') {
@@ -2891,21 +2858,10 @@
         localStorage.setItem('booknexus_token', authToken);
         return origFinishStudent.apply(this, arguments);
       }
-      if (rec && (rec.usn || rec.email)) {
-        fetch(`${API_BASE}/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ identifier: rec.usn || rec.email, password: rec.usn || 'student123' })
-        }).then(r => r.json()).then(data => {
-          if (data && data.success && data.data && data.data.token) {
-            authToken = data.data.token;
-            localStorage.setItem('booknexus_token', authToken);
-            console.log('✅ Student synced with backend API! Token saved.');
-          }
-        }).catch((err) => {
-          console.warn('API sync notice:', err.message);
-        });
-      }
+      // The old fallback here signed a student in by POSTing /auth/login with
+      // their USN as the password (the roster import had seeded it that way).
+      // That is removed: a student session only ever comes from a verified
+      // Google sign-in, which already supplies rec.token above.
       return origFinishStudent.apply(this, arguments);
     };
   }
@@ -3046,321 +3002,34 @@
     renderInteractiveQuiz('obQuizContainer', 'obQuizProgress', 'obQuizE', window.__obQuizAnswers);
   };
 
-  // Direct student USN login hook connected to MongoDB Backend
-  window.nxaDoIn = async function (e) {
+  // RETIRED: student USN + password sign-in. The form it drove was removed and
+  // the backend now refuses password sign-in for students, so this only ever
+  // sends people to the Google button.
+  window.nxaDoIn = function (e) {
     if (e && e.preventDefault) e.preventDefault();
-    const usnInput = document.getElementById('siUsn');
-    const pwInput = document.getElementById('siPw');
-    const btn = document.getElementById('siGo');
-    const banner = document.getElementById('nxaBanner');
-    const errEl = document.getElementById('siPwE');
-
-    if (errEl) errEl.hidden = true;
-    if (banner) { banner.hidden = true; banner.textContent = ''; }
-
-    const usn = (usnInput ? usnInput.value : '').trim().toUpperCase();
-    const pw = pwInput ? pwInput.value : '';
-
-    if (!usn) {
-      if (errEl) { errEl.textContent = 'Please enter your student USN.'; errEl.hidden = false; }
-      return;
-    }
-    if (!pw) {
-      if (errEl) { errEl.textContent = 'Please enter your password.'; errEl.hidden = false; }
-      return;
-    }
-
-    const origText = btn ? btn.textContent : 'Sign in';
-    if (btn) { btn.disabled = true; btn.textContent = 'Authenticating…'; }
-
-    try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier: usn, password: pw })
-      });
-      const json = await res.json();
-
-      if (json.success && json.data) {
-        const studentData = json.data;
-        authToken = studentData.token;
-        localStorage.setItem('booknexus_token', authToken);
-        localStorage.setItem('bookhive_token', authToken);
-        localStorage.setItem('currentUser', JSON.stringify(studentData));
-        localStorage.setItem('bookhive_user', JSON.stringify(studentData));
-        sessionStorage.setItem('booknexus_token', authToken);
-        sessionStorage.setItem('currentUser', JSON.stringify(studentData));
-        window.currentUser = studentData;
-        window.bnSessionUser = studentData;
-        window.currentRole = 'student';
-
-        if (pwInput) pwInput.value = '';
-        if (typeof closeModal === 'function') closeModal('authModal');
-        if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
-        if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
-        if (typeof showToast === 'function') showToast(`Welcome back, ${studentData.name || studentData.usn}!`, 'success');
-        if (typeof updateNavProfile === 'function') updateNavProfile();
-        if (typeof switchNav === 'function') switchNav('dashboard');
-        if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
-        if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
-        return;
-      } else if (json.needsOnboarding) {
-        // Incomplete student account -> redirect to complete onboarding
-        window.__onboardingToken = json.data?.token || '';
-        if (document.getElementById('obUsn')) document.getElementById('obUsn').value = usn;
-        if (typeof window.nxaView === 'function') window.nxaView('onboard');
-        if (typeof showToast === 'function') showToast('Please complete student onboarding and reading quiz.', 'info');
-        return;
-      } else {
-        if (errEl) {
-          errEl.textContent = json.message || 'Invalid USN or password.';
-          errEl.hidden = false;
-        }
-        if (banner) {
-          banner.className = 'nxa-banner bad';
-          banner.textContent = json.message || 'Invalid USN or password.';
-          banner.hidden = false;
-        }
-      }
-    } catch (netErr) {
-      console.error('USN Login API error:', netErr);
-      if (errEl) {
-        errEl.textContent = 'Server connection error. Please try again.';
-        errEl.hidden = false;
-      }
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = origText; }
-    }
+    if (typeof window.nxaView === 'function') window.nxaView('ch');
+    if (typeof showToast === 'function') showToast('Students sign in with Continue with Google.', 'info');
   };
 
-  // New Student Registration Submission Hook
-  window.nxaDoUp = async function (e) {
+  // RETIRED: student self sign-up. Accounts are created only by the
+  // Google-verified, college-roster-checked registration flow.
+  window.nxaDoUp = function (e) {
     if (e && e.preventDefault) e.preventDefault();
-    const banner = document.getElementById('nxaBanner');
-    const quizErr = document.getElementById('suQuizE');
-    const btn = document.getElementById('suGo');
-    if (banner) { banner.hidden = true; banner.textContent = ''; }
-    if (quizErr) quizErr.hidden = true;
-
-    const name = (document.getElementById('suName')?.value || '').trim();
-    const usn = (document.getElementById('suUsn')?.value || '').trim().toUpperCase();
-    const dob = (document.getElementById('suDob')?.value || '').trim();
-    const email = (document.getElementById('suEmail')?.value || '').trim().toLowerCase();
-    const phone = (document.getElementById('suPhone')?.value || '').trim();
-    const dept = document.getElementById('suDept')?.value || 'Computer Science and Business Systems';
-    const sem = document.getElementById('suSem')?.value || 'Semester 6';
-    const pw = document.getElementById('suPw')?.value || '';
-    const pw2 = document.getElementById('suPw2')?.value || '';
-
-    if (!name || !usn || !email || !dob || !pw || !pw2) {
-      if (banner) {
-        banner.className = 'nxa-banner bad';
-        banner.textContent = 'Please fill in all required fields (Name, USN, DOB, Email, Password).';
-        banner.hidden = false;
-      }
-      return;
-    }
-
-    if (pw !== pw2) {
-      if (banner) {
-        banner.className = 'nxa-banner bad';
-        banner.textContent = 'Passwords do not match.';
-        banner.hidden = false;
-      }
-      return;
-    }
-
-    if (pw.length < 6) {
-      if (banner) {
-        banner.className = 'nxa-banner bad';
-        banner.textContent = 'Password must be at least 6 characters long.';
-        banner.hidden = false;
-      }
-      return;
-    }
-
-    const answeredKeys = Object.keys(window.__suQuizAnswers || {});
-    if (answeredKeys.length < 6) {
-      if (quizErr) {
-        quizErr.textContent = `Please answer all 6 quiz questions to calculate your personalized recommendations (${answeredKeys.length}/6 completed).`;
-        quizErr.hidden = false;
-      }
-      return;
-    }
-
-    const origText = btn ? btn.textContent : 'Create Account';
-    if (btn) { btn.disabled = true; btn.textContent = 'Creating Account & Preferences…'; }
-
-    try {
-      const payload = {
-        name,
-        usn,
-        dob,
-        email,
-        phone: phone || '',
-        branch: 'Computer Science and Business Systems',
-        department: dept || 'Computer Science and Business Systems',
-        college: 'Malnad college of engineering',
-        semester: sem || 'Semester 6',
-        password: pw,
-        confirmPassword: pw2,
-        quizAnswers: window.__suQuizAnswers
-      };
-
-      const res = await fetch(`${API_BASE}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const json = await res.json();
-
-      if (json.success && json.data) {
-        const studentData = json.data.user || json.data;
-        authToken = json.data.token || '';
-        localStorage.setItem('booknexus_token', authToken);
-        localStorage.setItem('bookhive_token', authToken);
-        localStorage.setItem('currentUser', JSON.stringify(studentData));
-        sessionStorage.setItem('booknexus_token', authToken);
-        sessionStorage.setItem('currentUser', JSON.stringify(studentData));
-        window.currentUser = studentData;
-        window.bnSessionUser = studentData;
-        window.currentRole = 'student';
-
-        if (typeof closeModal === 'function') closeModal('authModal');
-        if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
-        if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
-        if (typeof showToast === 'function') showToast(`Account created! Welcome to BookNexus, ${studentData.name}!`, 'success');
-        if (typeof updateNavProfile === 'function') updateNavProfile();
-        if (typeof switchNav === 'function') switchNav('dashboard');
-        if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
-        if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
-        return;
-      } else {
-        if (banner) {
-          banner.className = 'nxa-banner bad';
-          banner.textContent = json.message || 'Registration failed. Please check your details.';
-          banner.hidden = false;
-        }
-      }
-    } catch (apiErr) {
-      console.error('Registration API error:', apiErr);
-      if (banner) {
-        banner.className = 'nxa-banner bad';
-        banner.textContent = 'Server is waking up. Please wait and try again.';
-        banner.hidden = false;
-      }
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = origText; }
-    }
+    if (typeof window.nxaView === 'function') window.nxaView('ch');
+    if (typeof showToast === 'function') showToast('Student accounts are created with Continue with Google.', 'info');
   };
 
-  // Google Student Onboarding Completion Hook
-  window.nxaDoOnboard = async function (e) {
+  // RETIRED: the old standalone onboarding form. Onboarding now runs inside the
+  // sign-in window (window.nxlCreate) against the registration token.
+  window.nxaDoOnboard = function (e) {
     if (e && e.preventDefault) e.preventDefault();
-    const banner = document.getElementById('nxaBanner');
-    const quizErr = document.getElementById('obQuizE');
-    const btn = document.getElementById('obGo');
-    if (banner) { banner.hidden = true; banner.textContent = ''; }
-    if (quizErr) quizErr.hidden = true;
-
-    const usn = (document.getElementById('obUsn')?.value || '').trim().toUpperCase();
-    const dob = (document.getElementById('obDob')?.value || '').trim();
-    const phone = (document.getElementById('obPhone')?.value || '').trim();
-    const dept = document.getElementById('obDept')?.value || 'Computer Science and Business Systems';
-    const sem = document.getElementById('obSem')?.value || 'Semester 6';
-
-    if (!usn || !dob) {
-      if (banner) {
-        banner.className = 'nxa-banner bad';
-        banner.textContent = 'Please enter your student USN and select your Date of Birth.';
-        banner.hidden = false;
-      }
-      return;
-    }
-
-    const answeredKeys = Object.keys(window.__obQuizAnswers || {});
-    if (answeredKeys.length < 6) {
-      if (quizErr) {
-        quizErr.textContent = `Please answer all 6 quiz questions to discover your personalized book recommendations (${answeredKeys.length}/6 completed).`;
-        quizErr.hidden = false;
-      }
-      return;
-    }
-
-    const token = window.__onboardingToken || localStorage.getItem('booknexus_onboarding_token') || authToken;
-    if (!token) {
-      if (banner) {
-        banner.className = 'nxa-banner bad';
-        banner.textContent = 'Session expired. Please sign in with Google again.';
-        banner.hidden = false;
-      }
-      return;
-    }
-
-    const origText = btn ? btn.textContent : 'Complete Profile';
-    if (btn) { btn.disabled = true; btn.textContent = 'Saving Profile & Calculating Genres…'; }
-
-    try {
-      const payload = {
-        usn,
-        phone,
-        department: dept,
-        semester: sem,
-        quizAnswers: window.__obQuizAnswers
-      };
-
-      const res = await fetch(`${API_BASE}/auth/complete-onboarding`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
-      });
-      const json = await res.json();
-
-      if (json.success && json.data) {
-        const studentData = json.data.user || json.data;
-        authToken = json.data.token || token;
-        localStorage.setItem('booknexus_token', authToken);
-        localStorage.setItem('bookhive_token', authToken);
-        localStorage.setItem('currentUser', JSON.stringify(studentData));
-        sessionStorage.setItem('booknexus_token', authToken);
-        sessionStorage.setItem('currentUser', JSON.stringify(studentData));
-        window.currentUser = studentData;
-        window.bnSessionUser = studentData;
-        window.currentRole = 'student';
-
-        if (typeof closeModal === 'function') closeModal('authModal');
-        if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
-        if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
-        if (typeof showToast === 'function') showToast(`Onboarding complete! Welcome, ${studentData.name}!`, 'success');
-        if (typeof updateNavProfile === 'function') updateNavProfile();
-        if (typeof switchNav === 'function') switchNav('dashboard');
-        if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
-        if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
-        return;
-      } else {
-        if (banner) {
-          banner.className = 'nxa-banner bad';
-          banner.textContent = json.message || 'Onboarding completion failed.';
-          banner.hidden = false;
-        }
-      }
-    } catch (err) {
-      console.error('Complete onboarding API error:', err);
-      if (banner) {
-        banner.className = 'nxa-banner bad';
-        banner.textContent = 'Network error during onboarding. Please try again.';
-        banner.hidden = false;
-      }
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = origText; }
-    }
+    if (typeof window.nxaView === 'function') window.nxaView('ch');
   };
 
   // Staff role-login is handled centrally by window.nxaDoSt connected to /api/auth/role-login
-}
+  // (no stray brace here: this used to close the bridge IIFE 1100 lines early,
+  //  which made the whole of js/bridge.js a syntax error, so none of the
+  //  backend integration below ever ran.)
 
   function hookRentalBlockchain() {
   const origRequestRental = window.requestRental;
