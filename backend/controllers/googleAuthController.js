@@ -106,9 +106,11 @@ const googleLogin = asyncHandler(async (req, res) => {
 
         // Case A: Completely New Google User -> Create provisional account needing onboarding
         if (!user) {
+            const provisionalPassword = "GAuth#" + Math.random().toString(36).slice(-8) + "Aa1!";
             user = await User.create({
                 name: userName || cleanEmail.split("@")[0],
                 email: cleanEmail,
+                password: provisionalPassword,
                 googleId: userGoogleId || ("g-" + Date.now()),
                 role: "student",
                 registrationCompleted: false,
@@ -180,6 +182,8 @@ const googleLogin = asyncHandler(async (req, res) => {
         }
     } catch (dbErr) {
         console.warn("DB operation notice during Google sign-in:", dbErr.message);
+        res.status(500);
+        throw new Error("Database error during Google sign-in: " + dbErr.message);
     }
 
     // Case D: Returning Google User with complete registration -> Direct Login!

@@ -1845,6 +1845,10 @@
         }
       });
 
+      if (typeof renderHomeHero === 'function') renderHomeHero();
+      if (typeof renderHomeShelf === 'function') renderHomeShelf();
+      if (typeof gxRender === 'function') gxRender();
+
       syncBackendBooks();
     } catch (err) {
       console.warn('⚠️ setupRealData notice:', err.message);
@@ -1858,12 +1862,15 @@
       const data = await res.json();
       if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
         console.log(`✅ Synced ${data.data.length} books from MongoDB backend.`);
+        let nextNumericId = 10000;
         data.data.forEach(bb => {
           const exists = booksData.some(b => b.title.toLowerCase() === bb.title.toLowerCase());
           if (!exists) {
+            nextNumericId++;
             booksData.unshift({
-              id: bb._id,
+              id: nextNumericId,
               backendId: bb._id,
+              mongoId: bb._id,
               title: bb.title,
               author: bb.author,
               genre: bb.genre ? bb.genre.toLowerCase().replace(/\s+/g, '-') : 'cs',
@@ -1877,12 +1884,16 @@
               description: bb.description || 'University academic textbook.',
               location: 'Main Campus Central Library Desk',
               condition: bb.condition || 'good',
+              demand: 15,
               cover: bb.coverUrl || 'data:image/svg+xml;utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 300 450\'%3E%3Crect width=\'300\' height=\'450\' fill=\'%2346282A\'/ %3E%3Ctext x=\'150\' y=\'225\' text-anchor=\'middle\' fill=\'%23FBF1E6\' font-size=\'18\'%3E' + encodeURIComponent(bb.title) + '%3C/text%3E%3C/svg%3E'
             });
           }
         });
         if (typeof renderBookGrid === 'function') renderBookGrid();
         if (typeof renderHomeStats === 'function') renderHomeStats();
+        if (typeof renderHomeHero === 'function') renderHomeHero();
+        if (typeof renderHomeShelf === 'function') renderHomeShelf();
+        if (typeof gxRender === 'function') gxRender();
       }
     } catch (err) {
       console.warn('Backend books sync unavailable, using cached catalog:', err.message);
@@ -2063,6 +2074,129 @@
     // In-memory state for Google-authenticated onboarding
     window.__googleOnboardingData = null;
 
+    const QUIZ_QUESTIONS = [
+      {
+        q: "What pulls you into a book?",
+        opts: [
+          ["a", "A story to get lost in (Fiction & Literature)"],
+          ["b", "Something real that happened (Non-fiction & History)"],
+          ["c", "How things work (Science & Engineering)"],
+          ["d", "Ideas that change how I think (Philosophy)"],
+          ["e", "Ways to improve my life (Self-help)"],
+          ["f", "Clear explanations for my course (Academic/Textbook)"]
+        ]
+      },
+      {
+        q: "It's midnight and the library is yours. Where do you wander?",
+        opts: [
+          ["a", "Fantasy, novels and classics"],
+          ["b", "Old maps and dusty archives"],
+          ["c", "Circuit boards and lab manuals"],
+          ["d", "A quiet corner with big questions"],
+          ["e", "A study desk piled with notes"],
+          ["f", "The self-growth shelf"]
+        ]
+      },
+      {
+        q: "Which subjects do you enjoy most?",
+        opts: [
+          ["a", "Numbers and logic (Mathematics & CS)"],
+          ["b", "Machines and building things (Engineering)"],
+          ["c", "The past and its people (History)"],
+          ["d", "Life and the universe (Science)"],
+          ["e", "Language and storytelling (Literature)"],
+          ["f", "The mind and habits (Self-help)"]
+        ]
+      },
+      {
+        q: "Who would you invite to dinner?",
+        opts: [
+          ["a", "A scientist who just made a discovery"],
+          ["b", "A historian with wild stories"],
+          ["c", "A philosopher who loves to argue"],
+          ["d", "A founder who built something big"],
+          ["e", "An inventor with a toolbox"],
+          ["f", "A novelist with a plot twist"]
+        ]
+      },
+      {
+        q: "A free rainy afternoon. What are you doing?",
+        opts: [
+          ["a", "Curled up with a gripping novel"],
+          ["b", "Watching a documentary, then researching it"],
+          ["c", "Solving puzzles or writing code"],
+          ["d", "Journaling and planning goals"],
+          ["e", "Taking something apart to see how it works"],
+          ["f", "Reading someone's inspiring life story"]
+        ]
+      },
+      {
+        q: "What do you usually read for?",
+        opts: [
+          ["a", "Exams and coursework"],
+          ["b", "Skills for my career"],
+          ["c", "Personal growth & reflection"],
+          ["d", "Escape and relaxation"],
+          ["e", "Pure curiosity about the world"]
+        ]
+      }
+    ];
+
+    window.__googleQuizAnswers = {
+      0: ["c"],
+      1: ["c"],
+      2: ["a"],
+      3: ["e"],
+      4: ["c"],
+      5: ["b"]
+    };
+
+    function renderReadingQuizOnPage3() {
+      const genBox = document.getElementById('nxlGen');
+      if (!genBox) return;
+
+      const genL = document.getElementById('nxlGenL');
+      if (genL) genL.textContent = 'Reading-Interest Quiz';
+
+      let html = `<div id="bnxQuizContainer" style="display:flex;flex-direction:column;gap:12px;margin-top:6px;max-height:320px;overflow-y:auto;padding-right:4px;">`;
+
+      QUIZ_QUESTIONS.forEach((Q, qi) => {
+        const sel = window.__googleQuizAnswers[qi] || [];
+        html += `<div style="background:rgba(243,233,216,0.4);border:1px solid rgba(166,123,125,0.25);border-radius:12px;padding:10px 12px;">
+          <p style="font-weight:700;font-size:12px;margin:0 0 6px;color:var(--nx-ivory,#46282A);">Q${qi + 1}. ${Q.q}</p>
+          <div style="display:grid;grid-template-columns:1fr;gap:4px;">
+            ${Q.opts.map(([optId, optLabel]) => {
+              const isSelected = sel.includes(optId);
+              return `<button type="button" class="bnx-quiz-pill" data-qi="${qi}" data-opt="${optId}" style="text-align:left;padding:6px 10px;border-radius:8px;font-size:11.5px;font-weight:${isSelected ? '700' : '500'};border:1px solid ${isSelected ? '#C9AE7E' : 'rgba(166,123,125,0.25)'};background:${isSelected ? '#46282A' : 'rgba(255,255,255,0.7)'};color:${isSelected ? '#FDFBF7' : '#3F2528'};cursor:pointer;transition:all 0.15s ease;">
+                <span style="display:inline-block;width:14px;height:14px;line-height:14px;text-align:center;border-radius:50%;font-size:9px;margin-right:6px;background:${isSelected ? '#C9AE7E' : 'rgba(166,123,125,0.2)'};color:${isSelected ? '#1B140D' : 'inherit'};font-weight:700;">${optId.toUpperCase()}</span>${optLabel}
+              </button>`;
+            }).join('')}
+          </div>
+        </div>`;
+      });
+
+      html += `</div>`;
+      genBox.innerHTML = html;
+
+      genBox.querySelectorAll('.bnx-quiz-pill').forEach(btn => {
+        btn.onclick = function (e) {
+          e.preventDefault();
+          const qi = parseInt(this.getAttribute('data-qi'), 10);
+          const opt = this.getAttribute('data-opt');
+          const current = window.__googleQuizAnswers[qi] || [];
+          const idx = current.indexOf(opt);
+          if (idx >= 0) {
+            if (current.length > 1) current.splice(idx, 1);
+          } else {
+            current.push(opt);
+          }
+          window.__googleQuizAnswers[qi] = current;
+          renderReadingQuizOnPage3();
+        };
+      });
+    }
+
+    // PAGE 1 -> PAGE 2 TRANSITION: Open Student Registration Page
     function openGoogleStudentOnboarding(googleUser) {
       window.__googleOnboardingData = {
         email: googleUser.email,
@@ -2071,79 +2205,118 @@
         token: googleUser.token
       };
 
-      // Ensure auth modal is displayed
       const authModal = document.getElementById('authModal');
       if (authModal) {
         authModal.classList.remove('hidden');
         authModal.style.display = '';
       }
 
-      // Switch to registration view (nxaVNew)
       if (typeof window.nxaView === 'function') {
         window.nxaView('nw');
       }
 
-      // Pre-fill verified Google email chip
       const emChip = document.getElementById('nxlNwEm');
       if (emChip) emChip.textContent = googleUser.email;
 
-      // Pre-fill Full Name (editable by student)
+      // PAGE 2: Field 1 - Full name prefilled from Google (editable)
       const nameInput = document.getElementById('nxlName');
       if (nameInput) {
         nameInput.value = googleUser.name || '';
         nameInput.removeAttribute('readonly');
       }
 
-      // Pre-fill USN and DOB if present
+      // PAGE 2: Field 2 - USN
       const usnInput = document.getElementById('nxlUsn');
-      if (usnInput && googleUser.usn) usnInput.value = googleUser.usn;
-      const dobInput = document.getElementById('nxlDob');
-      if (dobInput && googleUser.dob) dobInput.value = googleUser.dob;
+      if (usnInput) {
+        usnInput.value = googleUser.usn || '';
+      }
 
-      // Hide password fields for Google OAuth
-      // "Password only if the student chooses separate email/password registration. Never retrieve, display, or store the Google password."
+      // PAGE 2: Field 3 - Date of Birth
+      const dobInput = document.getElementById('nxlDob');
+      if (dobInput) {
+        dobInput.value = googleUser.dob || '';
+      }
+
+      // PAGE 2: Field 4 - Password creation
       const pwInput = document.getElementById('nxlNp');
       if (pwInput) {
         const f = pwInput.closest('.nxa-f');
-        if (f) f.style.display = 'none';
+        if (f) f.style.display = '';
+        pwInput.value = '';
+        pwInput.placeholder = 'Create your BookNexus password (min 6 characters)';
       }
       const pw2Input = document.getElementById('nxlNp2');
       if (pw2Input) {
         const f = pw2Input.closest('.nxa-f');
-        if (f) f.style.display = 'none';
+        if (f) f.style.display = '';
+        pw2Input.value = '';
+        pw2Input.placeholder = 'Confirm your password';
       }
 
-      // Update modal header & instructions
+      // Modal titles & button
       const titleEl = authModal && authModal.querySelector('h3');
-      if (titleEl) titleEl.textContent = 'Student Registration & Profile';
+      if (titleEl) titleEl.textContent = 'Student Registration';
       const subEl = document.getElementById('nxaSub');
-      if (subEl) subEl.textContent = 'Welcome! Enter your USN and date of birth to link your verified Google account.';
+      if (subEl) subEl.textContent = 'Enter your student details and create a password for BookNexus.';
 
-      // Start at Step 1 (Student details)
-      if (typeof window.nxlStep === 'function') {
-        window.nxlStep(1);
-      }
+      const btn = document.getElementById('nxlNwBtn');
+      if (btn) btn.textContent = 'Continue';
+
+      // Ensure Step 1 (PAGE 2) is visible and Step 2 (PAGE 3) is hidden
+      const s1 = document.getElementById('nxlS1');
+      const s2 = document.getElementById('nxlS2');
+      if (s1) s1.hidden = false;
+      if (s2) s2.hidden = true;
+      const bk = document.getElementById('nxlBk');
+      if (bk) bk.hidden = true;
+      const p2 = document.getElementById('nxlP2');
+      if (p2) p2.className = '';
+      const stepLbl = document.getElementById('nxlStepLbl');
+      if (stepLbl) stepLbl.textContent = 'Step 1 of 2 · Student Details';
 
       if (typeof showToast === 'function') {
-        showToast('Google account verified! Please enter your USN and Date of Birth.', 'info');
+        showToast('Google account selected! Please complete your details and set a password.', 'info');
       }
     }
     window.openGoogleStudentOnboarding = openGoogleStudentOnboarding;
 
-    // Restore password fields if student chooses email/password registration instead
+    // Step switching helper
+    window.nxlStep = function (n) {
+      const s1 = document.getElementById('nxlS1');
+      const s2 = document.getElementById('nxlS2');
+      const bk = document.getElementById('nxlBk');
+      const p2 = document.getElementById('nxlP2');
+      const stepLbl = document.getElementById('nxlStepLbl');
+      const authModal = document.getElementById('authModal');
+      const h3 = authModal && authModal.querySelector('h3');
+      const sub = document.getElementById('nxaSub');
+      const btn = document.getElementById('nxlNwBtn');
+
+      if (n === 1) {
+        if (s1) s1.hidden = false;
+        if (s2) s2.hidden = true;
+        if (bk) bk.hidden = true;
+        if (p2) p2.className = '';
+        if (stepLbl) stepLbl.textContent = 'Step 1 of 2 · Student Details';
+        if (h3) h3.textContent = 'Student Registration';
+        if (sub) sub.textContent = 'Enter your student details and create a password for BookNexus.';
+        if (btn) btn.textContent = 'Continue';
+      } else if (n === 2) {
+        if (s1) s1.hidden = true;
+        if (s2) s2.hidden = false;
+        if (bk) bk.hidden = false;
+        if (p2) p2.className = 'on';
+        if (stepLbl) stepLbl.textContent = 'Step 2 of 2 · About you & Quiz';
+        if (h3) h3.textContent = 'About You & Reading Quiz';
+        if (sub) sub.textContent = 'Tell us what to call you, a short bio, and answer the reading-interest quiz.';
+        if (btn) btn.textContent = 'Submit / Continue';
+        renderReadingQuizOnPage3();
+      }
+    };
+
     const origNxlBack = window.nxlBack;
     window.nxlBack = function () {
       window.__googleOnboardingData = null;
-      const pwInput = document.getElementById('nxlNp');
-      if (pwInput) {
-        const f = pwInput.closest('.nxa-f');
-        if (f) f.style.display = '';
-      }
-      const pw2Input = document.getElementById('nxlNp2');
-      if (pw2Input) {
-        const f = pw2Input.closest('.nxa-f');
-        if (f) f.style.display = '';
-      }
       if (typeof origNxlBack === 'function') origNxlBack.apply(this, arguments);
     };
 
@@ -2165,7 +2338,7 @@
         if (data && data.success && data.data) {
           const u = data.data;
 
-          // If new student or incomplete profile -> launch Student Details & Onboarding Flow
+          // If new student or incomplete profile -> launch PAGE 2 (Student Details)
           if (data.needsOnboarding || u.registrationCompleted === false) {
             if (u.token) {
               authToken = u.token;
@@ -2175,7 +2348,7 @@
             return;
           }
 
-          // Returning Google student with complete profile -> DIRECT LOGIN!
+          // Returning Google student with complete profile -> DIRECT LOGIN TO HOME!
           authToken = u.token;
           localStorage.setItem('booknexus_token', u.token);
           localStorage.setItem('currentUser', JSON.stringify(u));
@@ -2186,9 +2359,15 @@
             email: u.email,
             dept: u.branch || 'Computer Science',
             year: u.semester || '',
-            phone: u.phone || '',
-            anonId: u.preferredName || 'Google Scholar'
+            phone: u.mobile || u.phone || '',
+            anonId: u.preferredName || u.name.split(' ')[0]
           };
+          window.currentUser = currentUser;
+
+          if (typeof window.nxSessionSet === 'function') {
+            window.nxSessionSet('student', u._id, u.name, u.email);
+          }
+          document.body.classList.remove('nx-guest');
 
           if (typeof setUserRole === 'function') setUserRole('student');
           if (typeof switchNav === 'function') switchNav('home');
@@ -2197,8 +2376,22 @@
           const authModal = document.getElementById('authModal');
           if (authModal) authModal.classList.add('hidden');
 
+          const aLbl = document.getElementById('userAuthLabel');
+          if (aLbl) aLbl.textContent = 'Sign out';
+          const aBtn = document.getElementById('userAuthBtn');
+          if (aBtn) aBtn.setAttribute('onclick', 'nxSignOut()');
+          const pBtn = document.getElementById('profileBtn');
+          if (pBtn) {
+            const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
+            if (span) span.textContent = u.preferredName || u.name.split(' ')[0];
+          }
+
+          if (typeof gxRender === 'function') gxRender();
+          if (typeof renderHomeShelf === 'function') renderHomeShelf();
+          if (typeof renderHomeStats === 'function') renderHomeStats();
+
           if (typeof showToast === 'function') {
-            showToast(`Welcome back, ${u.name}! Signed in via Google.`, 'success');
+            showToast(`Welcome back, ${u.preferredName || u.name}! Signed in via Google.`, 'success');
           }
           if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
         } else {
@@ -2211,7 +2404,44 @@
       }
     }
 
-    // Hook nxlCreate to handle complete registration flow with backend MongoDB persistence
+    // SIGN-OUT BEHAVIOUR
+    window.nxSignOut = function () {
+      authToken = null;
+      window.__googleOnboardingData = null;
+      localStorage.removeItem('booknexus_token');
+      localStorage.removeItem('currentUser');
+      sessionStorage.clear();
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        try { window.google.accounts.id.disableAutoSelect(); } catch (e) {}
+      }
+      document.body.classList.add('nx-guest');
+      currentUser = {
+        name: "Guest Student",
+        rollNo: "",
+        email: "",
+        dept: "",
+        year: "",
+        phone: "",
+        anonId: "Guest"
+      };
+      window.currentUser = currentUser;
+
+      const aLbl = document.getElementById('userAuthLabel');
+      if (aLbl) aLbl.textContent = 'Sign In';
+      const aBtn = document.getElementById('userAuthBtn');
+      if (aBtn) aBtn.setAttribute('onclick', "openModal('authModal')");
+      const pBtn = document.getElementById('profileBtn');
+      if (pBtn) {
+        const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
+        if (span) span.textContent = 'Profile';
+      }
+
+      if (typeof setUserRole === 'function') setUserRole('student');
+      if (typeof switchNav === 'function') switchNav('home');
+      if (typeof showToast === 'function') showToast('You have signed out.', 'info');
+    };
+
+    // FORM SUBMISSION & NAVIGATION FOR PAGE 2 & PAGE 3
     const origNxlCreate = window.nxlCreate;
     window.nxlCreate = async function (e) {
       if (e && e.preventDefault) e.preventDefault();
@@ -2222,7 +2452,6 @@
         return;
       }
 
-      // --- GOOGLE STUDENT ONBOARDING FLOW ---
       const kit = typeof K === 'function' ? K() : {
         clearErrs: () => {},
         banner: (msg, type) => { if (typeof showToast === 'function') showToast(msg, type === 'bad' ? 'error' : 'info'); },
@@ -2239,59 +2468,75 @@
       if (typeof kit.clearErrs === 'function') kit.clearErrs(form);
       if (typeof kit.banner === 'function') kit.banner('');
 
-      const nameEl = document.getElementById('nxlName');
-      const usnEl = document.getElementById('nxlUsn');
-      const dobEl = document.getElementById('nxlDob');
-      const name = nameEl ? nameEl.value.trim().replace(/\s+/g, ' ') : '';
-      const rawUsn = usnEl ? usnEl.value.trim().toUpperCase() : '';
-      const dob = dobEl ? dobEl.value.trim() : '';
-
-      let ok = true;
-      if (!name || name.length < 2) {
-        ok = kit.fieldErr('nxlName', 'Enter your full name.') && false;
-      }
-      if (!rawUsn) {
-        ok = kit.fieldErr('nxlUsn', 'Enter your official USN.') && false;
-      } else if (!/^[A-Z0-9_-]{4,16}$/.test(rawUsn)) {
-        ok = kit.fieldErr('nxlUsn', 'USN must contain only letters, numbers and hyphens (4-16 characters).') && false;
-      }
-      if (!dob) {
-        ok = kit.fieldErr('nxlDob', 'Enter your date of birth.') && false;
-      }
-
-      if (!ok) return;
-
-      // STEP 1 VALIDATED: IF ON STEP 1, PROCEED TO STEP 2 (ABOUT THE STUDENT & QUIZ)
       const s1 = document.getElementById('nxlS1');
       const s2 = document.getElementById('nxlS2');
       const isStep1 = s1 && !s1.hidden;
 
+      // ========================================================
+      // PAGE 2 – Student Details Validation & Advance to PAGE 3
+      // ========================================================
       if (isStep1) {
-        // Advance to Step 2
-        if (typeof window.nxlStep === 'function') {
-          window.nxlStep(2);
-        } else {
-          if (s1) s1.hidden = true;
-          if (s2) s2.hidden = false;
+        const nameEl = document.getElementById('nxlName');
+        const usnEl = document.getElementById('nxlUsn');
+        const dobEl = document.getElementById('nxlDob');
+        const pwEl = document.getElementById('nxlNp');
+        const pw2El = document.getElementById('nxlNp2');
+
+        const name = nameEl ? nameEl.value.trim().replace(/\s+/g, ' ') : '';
+        const rawUsn = usnEl ? usnEl.value.trim().toUpperCase() : '';
+        const dob = dobEl ? dobEl.value.trim() : '';
+        const pw = pwEl ? pwEl.value.trim() : '';
+        const pw2 = pw2El ? pw2El.value.trim() : '';
+
+        let ok = true;
+        if (!name || name.length < 2) {
+          ok = kit.fieldErr('nxlName', 'Enter your full name.') && false;
+        }
+        if (!rawUsn) {
+          ok = kit.fieldErr('nxlUsn', 'Enter your official USN.') && false;
+        } else if (!/^[A-Z0-9_-]{4,16}$/.test(rawUsn)) {
+          ok = kit.fieldErr('nxlUsn', 'USN must contain only letters, numbers and hyphens (4-16 characters).') && false;
+        }
+        if (!dob) {
+          ok = kit.fieldErr('nxlDob', 'Enter your date of birth.') && false;
+        }
+        if (!pw) {
+          ok = kit.fieldErr('nxlNp', 'Create a password for your BookNexus account (at least 6 characters).') && false;
+        } else if (pw.length < 6) {
+          ok = kit.fieldErr('nxlNp', 'Password must be at least 6 characters long.') && false;
+        }
+        if (!pw2) {
+          ok = kit.fieldErr('nxlNp2', 'Confirm your password.') && false;
+        } else if (pw && pw !== pw2) {
+          ok = kit.fieldErr('nxlNp2', 'Passwords do not match.') && false;
         }
 
-        // Pre-fill preferred name ("What should we call you?") with first name if empty
+        if (!ok) return;
+
+        // Store validated Page 2 data
+        window.__googleOnboardingData.name = name;
+        window.__googleOnboardingData.usn = rawUsn;
+        window.__googleOnboardingData.dob = dob;
+        window.__googleOnboardingData.password = pw;
+
+        // Advance to PAGE 3 (About You & Quiz)
+        window.nxlStep(2);
+
+        // Pre-fill preferred name ("What should we call you?") with first name
         const nickEl = document.getElementById('nxlNick');
         if (nickEl && !nickEl.value.trim()) {
-          const firstName = name.split(' ')[0] || '';
-          nickEl.value = firstName;
+          nickEl.value = name.split(' ')[0] || '';
         }
 
-        const p2 = document.getElementById('nxlP2');
-        if (p2) p2.className = 'on';
-        const stepLbl = document.getElementById('nxlStepLbl');
-        if (stepLbl) stepLbl.textContent = 'Step 2 of 2 · About you & Quiz';
-        const btn = document.getElementById('nxlNwBtn');
-        if (btn) btn.textContent = 'Submit & Complete Registration';
+        // Scroll form smoothly to top so student sees Page 3 clearly
+        const modalBody = form.closest('.overflow-y-auto') || form;
+        if (modalBody && modalBody.scrollTo) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
 
-      // STEP 2: ABOUT THE STUDENT & QUIZ VALIDATION
+      // ========================================================
+      // PAGE 3 – About You & Quiz Validation & Final Submission
+      // ========================================================
       const nickEl = document.getElementById('nxlNick');
       const bioEl = document.getElementById('nxlBio');
       const nick = nickEl ? nickEl.value.trim() : '';
@@ -2304,34 +2549,17 @@
         return kit.fieldErr('nxlBio', 'Please write a brief introduction about yourself.');
       }
 
-      // Ensure quiz answers exist
-      let quizAns = (typeof SU !== 'undefined' && SU.cur) ? SU.cur : null;
-      if (!quizAns || Object.keys(quizAns).length === 0) {
-        if (typeof SU !== 'undefined' && SU.answers) quizAns = SU.answers;
-      }
-
-      // Validate that all questions or at least genre preferences are answered
-      if (typeof SU !== 'undefined' && SU.mode === 'quiz' && SU.q < (typeof NX_QUIZ !== 'undefined' ? NX_QUIZ.length - 1 : 5)) {
-        const gErr = document.getElementById('nxlGenE');
-        if (gErr) {
-          gErr.textContent = 'Please complete all questions in the reading quiz.';
-          gErr.hidden = false;
+      // Verify all 6 quiz questions have selections
+      for (let i = 0; i < 6; i++) {
+        if (!window.__googleQuizAnswers[i] || !window.__googleQuizAnswers[i].length) {
+          const gErr = document.getElementById('nxlGenE');
+          if (gErr) {
+            gErr.textContent = `Please answer Question ${i + 1} in the reading quiz.`;
+            gErr.hidden = false;
+          }
+          if (typeof showToast === 'function') showToast(`Please answer Question ${i + 1} in the reading quiz.`, 'info');
+          return;
         }
-        if (typeof showToast === 'function') showToast('Please answer the quiz questions below.', 'info');
-        return;
-      }
-
-      // Format quiz answers for backend
-      const formattedQuiz = {};
-      if (Array.isArray(quizAns)) {
-        quizAns.forEach((opts, i) => {
-          formattedQuiz[i] = Array.isArray(opts) ? opts : [opts];
-        });
-      } else if (quizAns && typeof quizAns === 'object') {
-        Object.assign(formattedQuiz, quizAns);
-      } else {
-        formattedQuiz[0] = ['c']; formattedQuiz[1] = ['c']; formattedQuiz[2] = ['a'];
-        formattedQuiz[3] = ['e']; formattedQuiz[4] = ['c']; formattedQuiz[5] = ['b'];
       }
 
       const subBtn = document.getElementById('nxlNwBtn');
@@ -2344,12 +2572,13 @@
       const payload = {
         email: googleUser.email,
         googleId: googleUser.googleId,
-        name: name,
-        usn: rawUsn,
-        dob: dob,
+        name: googleUser.name,
+        usn: googleUser.usn,
+        dob: googleUser.dob,
+        password: googleUser.password,
         preferredName: nick,
         bio: bio,
-        quizAnswers: formattedQuiz
+        quizAnswers: window.__googleQuizAnswers
       };
 
       try {
@@ -2368,11 +2597,11 @@
           const errorMsg = data.message || `Registration failed (HTTP ${res.status}).`;
           if (subBtn) {
             subBtn.disabled = false;
-            subBtn.textContent = 'Submit & Complete Registration';
+            subBtn.textContent = 'Submit / Continue';
           }
           if (data.message && data.message.includes('USN')) {
             kit.fieldErr('nxlUsn', data.message);
-            if (typeof window.nxlStep === 'function') window.nxlStep(1);
+            window.nxlStep(1);
           } else {
             kit.banner(errorMsg, 'bad');
           }
@@ -2380,21 +2609,29 @@
           return;
         }
 
-        // SUCCESSFUL COMPLETION & DATABASE PERSISTENCE
+        // ========================================================
+        // PAGE 4 – BookNexus Home with Authenticated Student Profile
+        // ========================================================
         const user = data.data;
         authToken = user.token || googleUser.token;
         localStorage.setItem('booknexus_token', authToken);
         localStorage.setItem('currentUser', JSON.stringify(user));
 
         currentUser = {
-          name: user.name || name,
-          rollNo: user.usn || rawUsn,
+          name: user.name,
+          rollNo: user.usn,
           email: user.email,
           dept: user.branch || 'Computer Science',
           year: user.semester || '',
           phone: user.mobile || '',
           anonId: user.preferredName || nick || 'Student'
         };
+        window.currentUser = currentUser;
+
+        if (typeof window.nxSessionSet === 'function') {
+          window.nxSessionSet('student', user._id, user.name, user.email);
+        }
+        document.body.classList.remove('nx-guest');
 
         window.__googleOnboardingData = null;
 
@@ -2405,8 +2642,25 @@
         const authModal = document.getElementById('authModal');
         if (authModal) authModal.classList.add('hidden');
 
+        // Update profile & auth buttons
+        const aLbl = document.getElementById('userAuthLabel');
+        if (aLbl) aLbl.textContent = 'Sign out';
+        const aBtn = document.getElementById('userAuthBtn');
+        if (aBtn) aBtn.setAttribute('onclick', 'nxSignOut()');
+        const pBtn = document.getElementById('profileBtn');
+        if (pBtn) {
+          const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
+          if (span) span.textContent = user.preferredName || nick || user.name.split(' ')[0];
+        }
+
+        // Refresh original animated homepage displays
+        if (typeof gxRender === 'function') gxRender();
+        if (typeof renderHomeShelf === 'function') renderHomeShelf();
+        if (typeof renderHomeStats === 'function') renderHomeStats();
+        if (typeof renderBookGrid === 'function') renderBookGrid();
+
         if (typeof showToast === 'function') {
-          showToast(`Registration complete! Welcome to BookNexus, ${user.name || name}.`, 'success');
+          showToast(`Registration complete! Welcome to BookNexus, ${user.preferredName || user.name}.`, 'success');
         }
         if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
 
@@ -2414,7 +2668,7 @@
         console.error('Onboarding submission error:', err);
         if (subBtn) {
           subBtn.disabled = false;
-          subBtn.textContent = 'Submit & Complete Registration';
+          subBtn.textContent = 'Submit / Continue';
         }
         kit.banner('Network or server error while saving registration. Please try again.', 'bad');
         if (typeof showToast === 'function') showToast('Could not reach backend database. Please try again.', 'error');
@@ -3915,8 +4169,11 @@
       hookRentalBlockchain();
       hookEmailNotifications();
       initCampusPaymentSystem();
-      initGoogleAuth();
+      if (typeof window.initGoogleAuth === 'function') window.initGoogleAuth();
       if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
+      if (typeof renderHomeHero === 'function') renderHomeHero();
+      if (typeof renderHomeShelf === 'function') renderHomeShelf();
+      if (typeof gxRender === 'function') gxRender();
     });
   } else {
     setupRealData();
@@ -3924,7 +4181,10 @@
     hookRentalBlockchain();
     hookEmailNotifications();
     initCampusPaymentSystem();
-    initGoogleAuth();
+    if (typeof window.initGoogleAuth === 'function') window.initGoogleAuth();
     if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
+    if (typeof renderHomeHero === 'function') renderHomeHero();
+    if (typeof renderHomeShelf === 'function') renderHomeShelf();
+    if (typeof gxRender === 'function') gxRender();
   }
 })();

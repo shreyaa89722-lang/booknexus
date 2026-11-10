@@ -210,20 +210,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @desc   Complete student onboarding & genre quiz (for Google users or incomplete accounts)
 // @route  POST /api/auth/complete-onboarding
 const completeOnboarding = asyncHandler(async (req, res) => {
-    // Determine target user from protect middleware or token/email in body
-    let user = req.user;
-    if (!user && req.body.email) {
-        user = await User.findOne({ email: req.body.email.toLowerCase().trim() });
-    } else if (!user && req.body.googleId) {
-        user = await User.findOne({ googleId: req.body.googleId });
-    }
-
-    if (!user) {
-        res.status(401);
-        throw new Error("User account not found or not authenticated");
-    }
-
-    const { name, usn, dob, mobile, branch, department, college, semester, preferredName, bio, quizAnswers } = req.body;
+    const { name, usn, dob, password, mobile, branch, department, college, semester, preferredName, bio, quizAnswers } = req.body;
 
     if (!usn || !usn.trim()) {
         res.status(400);
@@ -232,11 +219,42 @@ const completeOnboarding = asyncHandler(async (req, res) => {
 
     const cleanUsn = usn.toUpperCase().trim();
 
+    // Determine target user from protect middleware or token/email in body
+    let user = req.user;
+    if (!user && req.body.email) {
+        user = await User.findOne({ email: req.body.email.toLowerCase().trim() });
+    } else if (!user && req.body.googleId) {
+        user = await User.findOne({ googleId: req.body.googleId });
+    }
+
     // Verify USN is unique among other users
-    const existingUsn = await User.findOne({ usn: cleanUsn, _id: { $ne: user._id } });
-    if (existingUsn) {
+    const existingUsn = await User.findOne({ usn: cleanUsn });
+    if (existingUsn && (!user || existingUsn._id.toString() !== user._id.toString())) {
         res.status(400);
         throw new Error(`USN '${cleanUsn}' is already registered to another account.`);
+    }
+
+    if (!user) {
+        const email = (req.body.email || "").toLowerCase().trim();
+        if (!email) {
+            res.status(401);
+            throw new Error("User account not found or not authenticated");
+        }
+        const userPassword = (password && typeof password === "string" && password.trim().length >= 6)
+            ? password.trim()
+            : (Math.random().toString(36).slice(-10) + "A1!Aa");
+
+        user = await User.create({
+            name: req.body.name || email.split("@")[0],
+            email: email,
+            password: userPassword,
+            googleId: req.body.googleId || null,
+            role: "student",
+            registrationCompleted: false,
+            quizCompleted: false,
+            onboardingStep: "details",
+            preferences: { genres: [], authors: [], subjects: [] },
+        });
     }
 
     // Evaluate required quiz
@@ -261,6 +279,9 @@ const completeOnboarding = asyncHandler(async (req, res) => {
     }
     user.usn = cleanUsn;
     if (dob) user.dob = String(dob).trim();
+    if (password && typeof password === "string" && password.trim().length >= 6) {
+        user.password = password.trim();
+    }
     if (preferredName) user.preferredName = String(preferredName).trim();
     if (bio) user.bio = String(bio).trim();
     if (mobile) user.mobile = String(mobile).trim();
@@ -299,6 +320,8 @@ const completeOnboarding = asyncHandler(async (req, res) => {
             semester: user.semester,
             registrationCompleted: user.registrationCompleted,
             quizCompleted: user.quizCompleted,
+            preferredName: user.preferredName,
+            bio: user.bio,
             preferences: user.preferences,
             token: generateToken(user._id),
         },

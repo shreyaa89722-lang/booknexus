@@ -19356,7 +19356,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
     function nxFillCovers(root, list) {
         list.forEach(b => nxCoverUrl(b).then(u => {
             if (!u) return;
-            root.querySelectorAll(`img[data-cid="${b.id}"]`).forEach(im => { im.onload = () => im.classList.add('ld'); im.src = u; });
+            root.querySelectorAll(`img[data-cid="${b.id}"]`).forEach(im => { im.onload = () => im.classList.add('ld'); im.src = u; if (im.complete) im.classList.add('ld'); });
         }));
     }
     const nxTc = b => `<span class="nx-tc"><b>${nxEsc(b.title)}</b><i>${nxEsc(b.author)}</i></span>`;
@@ -20837,8 +20837,8 @@ ${sub ? `<text x="150" y="${(y0 + L.length * lh + 6).toFixed(1)}" text-anchor="m
     if (typeof nxFillCovers === 'function') nxFillCovers = function (root, list) {
         list.forEach(b => {
             const q = `img[data-cid="${b.id}"]`, a = art(b);
-            root.querySelectorAll(q).forEach(im => { if (!im.getAttribute('src')) { im.onload = () => im.classList.add('ld'); im.src = a; } });
-            nxCoverUrl(b).then(u => { if (!u) return; root.querySelectorAll(q).forEach(im => { im.onload = () => im.classList.add('ld'); if (im.getAttribute('src') !== u) im.src = u; }); });
+            root.querySelectorAll(q).forEach(im => { if (!im.getAttribute('src')) { im.onload = () => im.classList.add('ld'); im.src = a; if (im.complete) im.classList.add('ld'); } });
+            nxCoverUrl(b).then(u => { if (!u) return; root.querySelectorAll(q).forEach(im => { im.onload = () => im.classList.add('ld'); if (im.getAttribute('src') !== u) im.src = u; if (im.complete) im.classList.add('ld'); }); });
         });
     };
     window.bnxCover = cover;
