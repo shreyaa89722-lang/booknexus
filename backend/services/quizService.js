@@ -111,7 +111,7 @@ function evaluateQuizSubmission(answers) {
 
     // Check that all 6 questions have at least one chosen option
     for (let i = 0; i < NX_QUIZ.length; i++) {
-        let qAnswers = answers[i] !== undefined ? answers[i] : answers[String(i)];
+        let qAnswers = answers[i] !== undefined ? answers[i] : (answers[String(i)] !== undefined ? answers[String(i)] : answers[`q${i}`]);
         if (typeof qAnswers === "string") {
             qAnswers = [qAnswers];
         }

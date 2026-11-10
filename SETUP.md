@@ -4,6 +4,29 @@ Complete configuration and deployment guide for the BookNexus platform, includin
 
 ---
 
+## Approved college student roster
+
+Only students on the approved college roster can sign in. The roster lives in
+its own MongoDB collection (`collegestudents`), separate from `users`, because
+`users` also holds librarian, admin and legacy test accounts.
+
+Seed or refresh it from the college export (idempotent upsert, never deletes,
+never touches `users`):
+
+```bash
+node backend/scripts/seedCollegeRoster.js
+node backend/scripts/seedCollegeRoster.js "C:/path/to/students.xlsx"
+```
+
+With no argument it reads `backend/students_export.json`. The script reports any
+address that cannot receive a Google sign-in (for example a mistyped domain) so
+the librarian can correct the college record.
+
+To add or remove a student later, re-run the script with the updated export, or
+set `active: false` on their roster row to withdraw access without deleting
+their rental history.
+
+
 ## 1. Prerequisites
 
 - **Node.js**: v18.0.0 or higher (v20+ recommended)

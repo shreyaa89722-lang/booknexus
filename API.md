@@ -6,6 +6,88 @@ Documentation of all REST endpoints related to authentication, circulation, emai
 
 ## 1. Authentication & Preferences
 
+Students sign in **only** with Google, and only when their verified Google email
+is on the approved college roster (`collegestudents`). There is no student
+password anywhere in the flow. Librarian and admin accounts keep their own
+password sign-in.
+
+### `POST /api/auth/google`
+- **Description**: The one entry point for student sign-in. Verifies a Google ID
+  token with `google-auth-library` (signature, audience, issuer, `email_verified`),
+  takes the email **only** from the verified payload, and checks it against the
+  approved college records.
+- **Authorization**: none
+- **Request Body**:
+```json
+{ "credential": "<Google ID token from the account chooser>" }
+```
+- **Responses**:
+  - `403` — the email is not in college records. No account is created, no token
+    is issued, no profile is created.
+    ```json
+    { "success": false, "message": "This Google account is not registered in college records. Please use your registered college email or contact the librarian." }
+    ```
+  - `403` — the college email is already linked to a different Google account, or
+    the Google account is already linked to a different college email.
+  - `401` — the ID token could not be verified, or the Google email is unverified.
+  - `400` — no `credential` was sent. An `email` in the body is never trusted.
+  - `200` with `needsOnboarding: true` — approved student without a finished
+    BookNexus profile. Returns a **registration token** (`data.onboardingToken`),
+    not a login token, plus the student's own college record for pre-filling.
+  - `200` with `needsOnboarding: false` — returning student (or an authorised
+    librarian/admin using Google): returns `data.token` and the saved profile.
+    Nothing saved is overwritten.
+
+### `POST /api/auth/onboarding/verify-identity`
+- **Description**: Step 1 of first-time registration. Checks full name, USN and
+  date of birth against the student's approved college record.
+- **Authorization**: `Bearer <onboardingToken>` (30 minutes, purpose-scoped —
+  it cannot authorise any other route)
+- **Request Body**:
+```json
+{ "name": "Full Name", "usn": "4MC23CB001", "dob": "2004-05-17" }
+```
+- **Response**: `200` with the verified name/USN, or `400`/`409` with a `field`
+  (`name`, `usn`, `dob`) and a message safe to show inline. Refusals never reveal
+  another student's name or date of birth.
+
+### `POST /api/auth/complete-onboarding`
+- **Description**: Step 2. Re-runs every step-1 check server-side, then saves the
+  profile and quiz and finishes onboarding.
+- **Authorization**: `Bearer <onboardingToken>`
+- **Request Body**:
+```json
+{
+  "name": "Full Name",
+  "usn": "4MC23CB001",
+  "dob": "2004-05-17",
+  "preferredName": "Nandi",
+  "bio": "A short introduction.",
+  "quizAnswers": { "0": ["a"], "1": ["b"], "2": ["c"], "3": ["a"], "4": ["e"], "5": ["b"] }
+}
+```
+- **Response**: `200` with the saved profile and a login token. A date of birth
+  already on record is never overwritten; neither is a saved USN, name or quiz.
+
+### `POST /api/auth/login`
+- **Description**: Password sign-in for **librarian, admin and owner accounts only**.
+- **Response**: `403` for any account whose role is `student`.
+
+### `POST /api/auth/role-login`
+- **Description**: Email + role + staff ID + password sign-in for librarians and
+  admins. Unchanged, except that `role: "student"` is now refused.
+
+### `POST /api/auth/register`
+- **Description**: Retired. Always `403`. Student accounts exist only through the
+  Google + college-roster flow above.
+
+### `POST /api/auth/verify-role-eligibility`
+- **Description**: Librarian/admin role check. `role: "student"` is refused — it
+  used to tell any unauthenticated caller whether an email had an account, and
+  that account's name and USN.
+
+### Preferences
+
 ### `GET /api/auth/email-preferences`
 - **Description**: Returns the authenticated user's current email notification preferences.
 - **Authorization**: Bearer JWT (`protect`)

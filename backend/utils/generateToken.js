@@ -18,7 +18,8 @@ const generateToken = (id, role) => {
     ...(userRole ? { role: userRole } : {}),
   };
 
-  return jwt.sign(payload, process.env.JWT_SECRET, {
+  const secret = process.env.JWT_SECRET || "booknexus_jwt_production_secret_key_2026_secured";
+  return jwt.sign(payload, secret, {
     expiresIn: process.env.JWT_EXPIRES_IN || "7d",
   });
 };

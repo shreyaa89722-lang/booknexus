@@ -10,7 +10,9 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        // Override with BOOKNEXUS_API_PROXY to point the dev server at a
+        // backend on another port (e.g. when 5000 is already in use).
+        target: process.env.BOOKNEXUS_API_PROXY || 'http://localhost:5000',
         changeOrigin: true,
       },
     },

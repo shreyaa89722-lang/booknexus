@@ -28,6 +28,8 @@ const registerUser = asyncHandler(async (req, res) => {
         department,
         college,
         semester,
+        preferredName,
+        bio,
         quizAnswers,
     } = req.body;
 
@@ -80,6 +82,29 @@ const registerUser = asyncHandler(async (req, res) => {
         }
     }
 
+    // Check against authorized college roster if student is in roster
+    let rosterRecord = null;
+    try {
+        const { findApprovedByEmail } = require("../services/collegeRosterService");
+        rosterRecord = await findApprovedByEmail(cleanEmail);
+        if (rosterRecord) {
+            if (name && !compareNames(name, rosterRecord.name)) {
+                res.status(400);
+                throw new Error("This name does not match your college student record. Please enter your full name as the college has it.");
+            }
+            if (cleanUsn && rosterRecord.usn && cleanUsn !== normalizeUsn(rosterRecord.usn)) {
+                res.status(400);
+                throw new Error("This USN does not match the USN held for you in college records.");
+            }
+            if (normDob && rosterRecord.dob && !compareDobs(rosterRecord.dob, normDob)) {
+                res.status(400);
+                throw new Error("This date of birth does not match the one on record for your USN.");
+            }
+        }
+    } catch (rErr) {
+        if (rErr.status || res.statusCode >= 400) throw rErr;
+    }
+
     // 3. Evaluate quiz submission if provided
     let genrePreferences = [];
     let isQuizDone = false;
@@ -108,12 +133,14 @@ const registerUser = asyncHandler(async (req, res) => {
             email: cleanEmail,
             password,
             role: allowedRole,
-            usn: cleanUsn || undefined,
-            dob: normDob || undefined,
-            mobile: mobile ? String(mobile).trim() : undefined,
-            branch: cleanBranch || undefined,
-            college: cleanCollege,
-            semester: cleanSemester,
+            usn: cleanUsn || (rosterRecord?.usn || undefined),
+            dob: normDob || (rosterRecord?.dob || undefined),
+            mobile: mobile ? String(mobile).trim() : (rosterRecord?.mobile || undefined),
+            branch: cleanBranch || (rosterRecord?.branch || undefined),
+            college: cleanCollege || (rosterRecord?.college || "Malnad college of engineering"),
+            semester: cleanSemester || (rosterRecord?.semester || "Sixth"),
+            preferredName: preferredName ? sanitizeDisplayName(preferredName) : (safeDisplayName.split(" ")[0] || "Reader"),
+            bio: bio ? String(bio).trim().slice(0, 300) : "",
             registrationCompleted: true,
             quizCompleted: isQuizDone,
             quizAnswers: quizAnswers || null,
@@ -121,7 +148,7 @@ const registerUser = asyncHandler(async (req, res) => {
             preferences: {
                 genres: genrePreferences,
                 authors: [],
-                subjects: cleanBranch ? [cleanBranch] : [],
+                subjects: cleanBranch ? [cleanBranch] : (rosterRecord?.branch ? [rosterRecord.branch] : []),
             },
         });
     } catch (createErr) {
@@ -224,7 +251,7 @@ const loginUser = asyncHandler(async (req, res) => {
             device: req.headers["user-agent"] || "Web Browser",
             ip: req.ip || "127.0.0.1",
         }).catch((e) => console.warn("Sign-in notification warning:", e.message));
-    } catch (notifyErr) {}
+    } catch (notifyErr) { }
 
     res.json({
         success: true,
@@ -314,7 +341,7 @@ const completeOnboarding = asyncHandler(async (req, res) => {
             }
             // Remove the temporary incomplete user document so no duplicate exists
             if (!user.registrationCompleted) {
-                await User.deleteOne({ _id: user._id }).catch(() => {});
+                await User.deleteOne({ _id: user._id }).catch(() => { });
             }
             user = existingUsnUser;
         } else {
@@ -406,8 +433,8 @@ const completeOnboarding = asyncHandler(async (req, res) => {
     // Dispatch welcome email
     try {
         const emailEventService = require("../services/emailEventService");
-        emailEventService.onUserRegistered(user).catch(() => {});
-    } catch (e) {}
+        emailEventService.onUserRegistered(user).catch(() => { });
+    } catch (e) { }
 
     res.json({
         success: true,
@@ -499,8 +526,8 @@ const updateEmailPreferences = asyncHandler(async (req, res) => {
         const emailEventService = require("../services/emailEventService");
         emailEventService.onProfileUpdated(user, {
             changeSummary: "Email notification preferences updated",
-        }).catch(() => {});
-    } catch (e) {}
+        }).catch(() => { });
+    } catch (e) { }
 
     res.json({
         success: true,
@@ -530,7 +557,7 @@ const logoutUser = asyncHandler(async (req, res) => {
                 ip: req.ip || "127.0.0.1",
             }).catch((e) => console.warn("Logout notification warning:", e.message));
         }
-    } catch (e) {}
+    } catch (e) { }
 
     res.json({ success: true, message: "Logged out successfully" });
 });
@@ -647,10 +674,10 @@ const roleLogin = asyncHandler(async (req, res) => {
     let idMatches = false;
     if (cleanRole === "admin") {
         idMatches = (user.adminId && user.adminId.toUpperCase() === cleanId) ||
-                    (user.usn && user.usn.toUpperCase() === cleanId);
+            (user.usn && user.usn.toUpperCase() === cleanId);
     } else if (cleanRole === "librarian") {
         idMatches = (user.librarianId && user.librarianId.toUpperCase() === cleanId) ||
-                    (user.usn && user.usn.toUpperCase() === cleanId);
+            (user.usn && user.usn.toUpperCase() === cleanId);
     } else if (cleanRole === "student") {
         idMatches = (user.usn && user.usn.toUpperCase() === cleanId);
     }
@@ -675,7 +702,7 @@ const roleLogin = asyncHandler(async (req, res) => {
             device: req.headers["user-agent"] || "Web Browser",
             ip: req.ip || "127.0.0.1",
         }).catch((e) => console.warn("Sign-in notification warning:", e.message));
-    } catch (notifyErr) {}
+    } catch (notifyErr) { }
 
     const token = generateToken(user._id, user.role);
 
@@ -699,8 +726,289 @@ const roleLogin = asyncHandler(async (req, res) => {
     });
 });
 
+// @desc   Step 1 — Student Registration (Full Name, USN, DOB, Password)
+// @route  POST /api/auth/register-step1
+const registerStep1 = asyncHandler(async (req, res) => {
+    const { name, email, usn, dob, password, confirmPassword } = req.body;
+
+    if (!email || !email.trim()) {
+        res.status(400);
+        throw new Error("Email address is required");
+    }
+    if (!name || !name.trim()) {
+        res.status(400);
+        throw new Error("Full name is required");
+    }
+    if (!usn || !usn.trim()) {
+        res.status(400);
+        throw new Error("USN is required");
+    }
+    if (!dob || !dob.trim()) {
+        res.status(400);
+        throw new Error("Date of birth is required");
+    }
+    if (!password) {
+        res.status(400);
+        throw new Error("Password is required");
+    }
+    if (confirmPassword && confirmPassword !== password) {
+        res.status(400);
+        throw new Error("Password and confirm password do not match");
+    }
+    if (password.length < 6) {
+        res.status(400);
+        throw new Error("Password must be at least 6 characters long");
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanUsn = normalizeUsn(usn);
+    if (!cleanUsn) {
+        res.status(400);
+        throw new Error("Please enter a valid USN");
+    }
+
+    const normDob = normalizeDob(dob);
+    if (!normDob) {
+        res.status(400);
+        throw new Error("Please enter a valid date of birth (valid calendar date, cannot be in the future).");
+    }
+
+    // Name sanitization preserves dots, spaces and initials
+    const safeDisplayName = sanitizeDisplayName(name);
+
+    // 1. Check if email is already registered with completed profile
+    const existingByEmail = await User.findOne({ email: cleanEmail });
+    if (existingByEmail && existingByEmail.registrationCompleted) {
+        res.status(409);
+        throw new Error("An account with this email address is already registered. Please sign in.");
+    }
+
+    // 2. Prevent another person from claiming an already registered USN
+    const existingByUsn = await User.findOne({ usn: cleanUsn });
+    if (existingByUsn && (!existingByEmail || existingByUsn._id.toString() !== existingByEmail._id.toString())) {
+        res.status(409);
+        throw new Error(`USN '${cleanUsn}' is already registered with an existing student account. Please contact the administrator.`);
+    }
+
+    // 3. Verify against authorised college student roster
+    let rosterRecord = null;
+    try {
+        const { findApprovedByEmail, findApprovedByUsn } = require("../services/collegeRosterService");
+        const rosterByEmail = await findApprovedByEmail(cleanEmail);
+        const rosterByUsn = await findApprovedByUsn(cleanUsn);
+
+        if (rosterByEmail) {
+            rosterRecord = rosterByEmail;
+            if (rosterByEmail.usn && cleanUsn !== normalizeUsn(rosterByEmail.usn)) {
+                res.status(400);
+                throw new Error("This USN does not match the college student record for this email.");
+            }
+            if (rosterByEmail.name && !compareNames(safeDisplayName, rosterByEmail.name)) {
+                res.status(400);
+                throw new Error("This name does not match your college student record. Please enter your name as in college records.");
+            }
+            if (normDob && rosterByEmail.dob && !compareDobs(rosterByEmail.dob, normDob)) {
+                res.status(400);
+                throw new Error("This date of birth does not match the one on record for your USN.");
+            }
+        } else if (rosterByUsn) {
+            rosterRecord = rosterByUsn;
+            if (rosterByUsn.email && cleanEmail !== rosterByUsn.email.toLowerCase().trim()) {
+                res.status(400);
+                throw new Error("This USN belongs to a different student in college records.");
+            }
+        }
+    } catch (rErr) {
+        if (rErr.status || res.statusCode >= 400) throw rErr;
+    }
+
+    // 4. Store full name, email, USN, DOB and hashed password in the MongoDB student record
+    let user;
+    if (existingByEmail) {
+        // Update the pending student record
+        existingByEmail.name = safeDisplayName;
+        existingByEmail.usn = cleanUsn;
+        existingByEmail.dob = normDob;
+        existingByEmail.password = password; // hashed by pre-save
+        existingByEmail.role = "student";
+        existingByEmail.onboardingStep = "quiz";
+        if (rosterRecord) {
+            if (rosterRecord.branch) existingByEmail.branch = rosterRecord.branch;
+            if (rosterRecord.college) existingByEmail.college = rosterRecord.college;
+            if (rosterRecord.semester) existingByEmail.semester = rosterRecord.semester;
+        }
+        await existingByEmail.save();
+        user = existingByEmail;
+    } else {
+        user = await User.create({
+            name: safeDisplayName,
+            email: cleanEmail,
+            usn: cleanUsn,
+            dob: normDob,
+            password, // hashed by userSchema.pre('save')
+            role: "student",
+            branch: rosterRecord?.branch || undefined,
+            college: rosterRecord?.college || "Malnad college of engineering",
+            semester: rosterRecord?.semester || "Sixth",
+            mobile: rosterRecord?.mobile || undefined,
+            registrationCompleted: false,
+            quizCompleted: false,
+            onboardingStep: "quiz",
+        });
+    }
+
+    const token = generateToken(user._id, user.role);
+    res.status(201).json({
+        success: true,
+        message: "Step 1 completed successfully. Please tell us about yourself.",
+        data: {
+            _id: user._id,
+            email: user.email,
+            name: user.name,
+            usn: user.usn,
+            dob: user.dob,
+            role: user.role,
+            onboardingStep: "quiz",
+            token,
+        },
+    });
+});
+
+// @desc   Step 2 — About You & Quiz (Preferred Name, Bio, Quiz Answers)
+// @route  POST /api/auth/register-step2
+const registerStep2 = asyncHandler(async (req, res) => {
+    const { email, preferredName, bio, quizAnswers } = req.body;
+
+    // Resolve user by email or by Authorization header
+    let user = null;
+    let authId = null;
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+        try {
+            const jwt = require("jsonwebtoken");
+            const decoded = jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET);
+            authId = decoded.id;
+        } catch (e) {}
+    }
+
+    if (authId) {
+        user = await User.findById(authId);
+    }
+    if (!user && email) {
+        user = await User.findOne({ email: email.toLowerCase().trim() });
+    }
+
+    if (!user) {
+        res.status(404);
+        throw new Error("Student record not found. Please complete Step 1 first.");
+    }
+
+    // 1. Preferred name
+    const safeNick = preferredName ? sanitizeDisplayName(preferredName) : (user.name ? user.name.split(" ")[0] : "Reader");
+    user.preferredName = safeNick;
+
+    // 2. Tell us about yourself (Bio)
+    if (bio !== undefined) {
+        user.bio = String(bio).trim().slice(0, 300);
+    }
+
+    // 3. Reading-interest quiz
+    if (quizAnswers) {
+        const quizEval = evaluateQuizSubmission(quizAnswers);
+        if (!quizEval.valid) {
+            res.status(400);
+            throw new Error(quizEval.error || "Please complete all 6 questions in the student quiz.");
+        }
+        user.preferences = {
+            genres: quizEval.genres || [],
+            authors: [],
+            subjects: user.branch ? [user.branch] : [],
+        };
+        user.quizAnswers = quizAnswers;
+        user.quizCompleted = true;
+    }
+
+    user.registrationCompleted = true;
+    user.onboardingStep = "completed";
+    await user.save();
+
+    // Trigger welcome email asynchronously
+    try {
+        const emailEventService = require("../services/emailEventService");
+        emailEventService.onUserRegistered(user).catch((e) => console.warn("Welcome email note:", e.message));
+    } catch (error) {}
+
+    const token = generateToken(user._id, user.role);
+    res.json({
+        success: true,
+        message: "Registration completed successfully.",
+        data: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            usn: user.usn,
+            dob: user.dob || "",
+            role: user.role,
+            branch: user.branch || "",
+            college: user.college || "",
+            semester: user.semester || "",
+            preferredName: user.preferredName,
+            bio: user.bio || "",
+            preferences: user.preferences,
+            registrationCompleted: true,
+            quizCompleted: true,
+            onboardingStep: "completed",
+            token,
+        },
+    });
+});
+// @route  POST /api/auth/check-email
+const checkEmail = asyncHandler(async (req, res) => {
+    const rawEmail = (req.body.email || "").trim().toLowerCase();
+    if (!rawEmail) {
+        res.status(400);
+        throw new Error("Email address is required");
+    }
+    const cleanEmail = rawEmail.trim().toLowerCase();
+    const existing = await User.findOne({ email: cleanEmail });
+    if (existing) {
+        return res.json({
+            success: true,
+            isRegistered: true,
+            needsOnboarding: existing.registrationCompleted === false,
+            data: {
+                name: existing.name,
+                email: existing.email,
+                role: existing.role,
+                usn: existing.usn || "",
+            },
+        });
+    }
+
+    let rosterStudent = null;
+    try {
+        const { findApprovedByEmail } = require("../services/collegeRosterService");
+        rosterStudent = await findApprovedByEmail(cleanEmail);
+    } catch (e) {}
+
+    return res.json({
+        success: true,
+        isRegistered: false,
+        onRoster: !!rosterStudent,
+        data: rosterStudent ? {
+            name: rosterStudent.name,
+            email: rosterStudent.email,
+            usn: rosterStudent.usn || "",
+            branch: rosterStudent.branch || "",
+            college: rosterStudent.college || "",
+        } : null,
+    });
+});
+
 module.exports = {
+    checkEmail,
     registerUser,
+    registerStep1,
+    registerStep2,
     loginUser,
     verifyRoleEligibility,
     roleLogin,

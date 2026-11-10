@@ -1,4 +1,6 @@
 require("./config/linuxCaseResolver");
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -110,6 +112,20 @@ const authLimiter = rateLimit({
 });
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/register", authLimiter);
+
+// Google sign-in and student onboarding: a little more generous than password
+// login (a student may legitimately retry the account chooser) but still capped
+// so a stolen client id cannot be used to probe the college roster.
+const googleAuthLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: process.env.NODE_ENV === "production" ? 40 : 2000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: "Too many sign-in attempts, please try again in a few minutes." },
+});
+app.use("/api/auth/google", googleAuthLimiter);
+app.use("/api/auth/onboarding", googleAuthLimiter);
+app.use("/api/auth/complete-onboarding", googleAuthLimiter);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);

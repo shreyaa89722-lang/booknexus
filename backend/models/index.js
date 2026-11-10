@@ -1,4 +1,5 @@
 const User = require("./user");
+const CollegeStudent = require("./collegeStudent");
 const Book = require("./book");
 const Rental = require("./rental");
 const Transaction = require("./transaction");
@@ -10,6 +11,8 @@ const ChatLog = require("./chatlog");
 module.exports = {
     User,
     user: User,
+    CollegeStudent,
+    collegeStudent: CollegeStudent,
     Book,
     book: Book,
     Rental,

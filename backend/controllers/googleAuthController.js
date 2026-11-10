@@ -13,7 +13,7 @@ const client = isValidClientId ? new OAuth2Client(configuredClientId) : new OAut
 const VALID_ISSUERS = ["accounts.google.com", "https://accounts.google.com"];
 
 const UNREGISTERED_GOOGLE_MESSAGE =
-    "This Google account is not registered with your college. Please use your registered college Gmail or contact your college administrator.";
+    "This Gmail is not registered. Please contact the administrator.";
 
 /** Trim + lowercase an email so comparison is whitespace- and case-insensitive. */
 function normalizeEmail(email) {

@@ -17,6 +17,19 @@ const protect = asyncHandler(async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // A registration (onboarding) token proves only that a Google email was
+        // verified and is on the college roster. It is not a login token and
+        // must never authorise a protected route.
+        if (decoded && decoded.purpose === "onboarding") {
+            res.status(401);
+            throw new Error("Please finish registering, then sign in with Google.");
+        }
+        if (!decoded || !decoded.id) {
+            res.status(401);
+            throw new Error("Not authorized, malformed token");
+        }
+
         req.user = await User.findById(decoded.id).select("-password");
         if (!req.user) {
             res.status(401);
