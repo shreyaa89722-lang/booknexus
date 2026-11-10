@@ -2785,27 +2785,48 @@
       }
     };
 
-    function openGoogleSignIn() {
-      if (typeof window.renderGoogleButtonOverlay === 'function') {
-        window.renderGoogleButtonOverlay();
-      }
-      if (window.google && window.google.accounts && window.google.accounts.id) {
-        try {
-          window.google.accounts.id.prompt((notification) => {
-            if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
-              if (tokenClient) tokenClient.requestAccessToken({ prompt: 'select_account' });
-            }
-          });
-          return;
-        } catch (pe) {
-          console.warn('GSI prompt notice:', pe.message);
-        }
-      }
+    async function openGoogleSignIn() {
       if (tokenClient) {
         tokenClient.requestAccessToken({ prompt: 'select_account' });
+        return;
+      }
+
+      if (typeof showToast === 'function') showToast('Connecting to Google...', 'info');
+
+      if (!tokenClient && typeof initGoogleAuth === 'function') {
+        await initGoogleAuth();
+      }
+
+      if (tokenClient) {
+        tokenClient.requestAccessToken({ prompt: 'select_account' });
+        return;
+      }
+
+      if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+        try {
+          tokenClient = window.google.accounts.oauth2.initTokenClient({
+            client_id: googleClientId,
+            scope: 'email profile openid',
+            callback: async (tokenResponse) => {
+              if (tokenResponse && tokenResponse.access_token) {
+                await sendGoogleTokenToBackend({ accessToken: tokenResponse.access_token });
+              }
+            },
+            error_callback: (err) => {
+              const type = (err && err.type) || '';
+              if (type === 'popup_closed') return;
+              if (typeof showToast === 'function') showToast(googleBlockedMessage(type), 'error');
+              console.warn('Google sign-in error:', type, 'page origin:', window.location.origin);
+            }
+          });
+          tokenClient.requestAccessToken({ prompt: 'select_account' });
+          return;
+        } catch (initErr) {
+          console.warn('OAuth init error:', initErr.message);
+          if (typeof showToast === 'function') showToast('Google sign-in error: ' + initErr.message, 'error');
+        }
       } else {
-        initGoogleAuth();
-        if (typeof showToast === 'function') showToast('Connecting to Google Cloud...', 'info');
+        if (typeof showToast === 'function') showToast('Google sign-in is loading. Please try again in a few seconds.', 'info');
       }
     }
     window.openGoogleSignIn = openGoogleSignIn;
