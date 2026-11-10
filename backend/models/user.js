@@ -46,6 +46,8 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+const { normalizeUsn, normalizeDob, sanitizeDisplayName } = require("../utils/authIdentityUtils");
+
 // Indexes
 userSchema.index({ usn: 1 }, { unique: true, sparse: true });
 
@@ -55,7 +57,16 @@ userSchema.pre("save", async function (next) {
         this.usn = undefined;
     }
     if (this.usn) {
-        this.usn = this.usn.toUpperCase().trim();
+        this.usn = normalizeUsn(this.usn);
+    }
+    if (this.name) {
+        this.name = sanitizeDisplayName(this.name);
+    }
+    if (this.dob && this.isModified("dob")) {
+        const norm = normalizeDob(this.dob);
+        if (norm) {
+            this.dob = norm;
+        }
     }
     if (!this.password || !this.isModified("password")) return next();
     const salt = await bcrypt.genSalt(10);

@@ -3,6 +3,14 @@ const User = require("../models/user");
 const generateToken = require("../utils/generateToken");
 const { sendSignInNotification } = require("../services/emailService");
 const { evaluateQuizSubmission } = require("../services/quizService");
+const {
+    normalizeNameForComparison,
+    compareNames,
+    sanitizeDisplayName,
+    normalizeUsn,
+    normalizeDob,
+    compareDobs,
+} = require("../utils/authIdentityUtils");
 
 // @desc   Register a new user
 // @route  POST /api/auth/register
@@ -39,10 +47,17 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     const cleanEmail = email.toLowerCase().trim();
-    const cleanUsn = usn ? usn.toUpperCase().trim() : undefined;
+    const cleanUsn = normalizeUsn(usn);
+    const normDob = dob ? normalizeDob(dob) : undefined;
+    if (dob && !normDob) {
+        res.status(400);
+        throw new Error("Please enter a valid date of birth (valid calendar date, cannot be in the future).");
+    }
+
     const cleanBranch = (branch || department || "").trim();
     const cleanCollege = (college || "Malnad college of engineering").trim();
     const cleanSemester = (semester || "Sixth").trim();
+    const safeDisplayName = sanitizeDisplayName(name) || (cleanUsn || cleanEmail.split("@")[0]);
 
     // 1. Check email uniqueness
     const existingEmail = await User.findOne({ email: cleanEmail });
@@ -51,12 +66,17 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error("An account with this email address already exists. Please sign in instead.");
     }
 
-    // 2. Check USN uniqueness if provided
+    // 2. Check USN uniqueness & DOB identity verification if provided
     if (cleanUsn) {
         const existingUsn = await User.findOne({ usn: cleanUsn });
         if (existingUsn) {
+            // Secure DOB verification without leaking another student's private DOB
+            if (existingUsn.dob && normDob && !compareDobs(existingUsn.dob, normDob)) {
+                res.status(403);
+                throw new Error(`USN '${cleanUsn}' is already registered. The date of birth provided does not match our records.`);
+            }
             res.status(400);
-            throw new Error(`USN '${cleanUsn}' is already registered with an existing student account.`);
+            throw new Error(`USN '${cleanUsn}' is already registered with an existing student account. Please sign in.`);
         }
     }
 
@@ -80,28 +100,43 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const allowedRole = "student";
 
-    // 4. Create new student user
-    const user = await User.create({
-        name: name || (cleanUsn || cleanEmail.split("@")[0]),
-        email: cleanEmail,
-        password,
-        role: allowedRole,
-        usn: cleanUsn || undefined,
-        dob: dob ? String(dob).trim() : undefined,
-        mobile: mobile ? String(mobile).trim() : undefined,
-        branch: cleanBranch || undefined,
-        college: cleanCollege,
-        semester: cleanSemester,
-        registrationCompleted: true,
-        quizCompleted: isQuizDone,
-        quizAnswers: quizAnswers || null,
-        onboardingStep: "completed",
-        preferences: {
-            genres: genrePreferences,
-            authors: [],
-            subjects: cleanBranch ? [cleanBranch] : [],
-        },
-    });
+    // 4. Create new student user with race-condition handling
+    let user;
+    try {
+        user = await User.create({
+            name: safeDisplayName,
+            email: cleanEmail,
+            password,
+            role: allowedRole,
+            usn: cleanUsn || undefined,
+            dob: normDob || undefined,
+            mobile: mobile ? String(mobile).trim() : undefined,
+            branch: cleanBranch || undefined,
+            college: cleanCollege,
+            semester: cleanSemester,
+            registrationCompleted: true,
+            quizCompleted: isQuizDone,
+            quizAnswers: quizAnswers || null,
+            onboardingStep: "completed",
+            preferences: {
+                genres: genrePreferences,
+                authors: [],
+                subjects: cleanBranch ? [cleanBranch] : [],
+            },
+        });
+    } catch (createErr) {
+        if (createErr.code === 11000) {
+            if (createErr.keyPattern && createErr.keyPattern.usn) {
+                res.status(409);
+                throw new Error(`USN '${cleanUsn}' was just registered by another request. Please sign in.`);
+            }
+            if (createErr.keyPattern && createErr.keyPattern.email) {
+                res.status(409);
+                throw new Error("An account with this email address was just registered. Please sign in.");
+            }
+        }
+        throw createErr;
+    }
 
     // 5. Trigger welcome email asynchronously
     try {
@@ -118,6 +153,7 @@ const registerUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             usn: user.usn,
+            dob: user.dob || "",
             role: user.role,
             branch: user.branch,
             college: user.college,
@@ -172,6 +208,7 @@ const loginUser = asyncHandler(async (req, res) => {
                 name: user.name,
                 email: user.email,
                 usn: user.usn,
+                dob: user.dob || "",
                 role: user.role,
                 onboardingStep: user.onboardingStep || "details",
                 token: generateToken(user._id),
@@ -196,6 +233,7 @@ const loginUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             usn: user.usn,
+            dob: user.dob || "",
             role: user.role,
             branch: user.branch,
             college: user.college,
@@ -214,16 +252,31 @@ const loginUser = asyncHandler(async (req, res) => {
 // @desc   Complete student onboarding & genre quiz (for Google users or incomplete accounts)
 // @route  POST /api/auth/complete-onboarding
 const completeOnboarding = asyncHandler(async (req, res) => {
-    const { name, usn, dob, password, mobile, branch, department, college, semester, preferredName, bio, quizAnswers } = req.body;
+    const { name, usn, dob, password, confirmPassword, mobile, branch, department, college, semester, preferredName, bio, quizAnswers } = req.body;
 
-    if (!usn || !usn.trim()) {
+    if (!usn || !String(usn).trim()) {
         res.status(400);
         throw new Error("USN is required to complete student registration");
     }
 
-    const cleanUsn = usn.toUpperCase().trim();
+    const cleanUsn = normalizeUsn(usn);
+    if (!cleanUsn) {
+        res.status(400);
+        throw new Error("A valid USN is required to complete student registration");
+    }
 
-    // Determine target user from protect middleware or token/email in body
+    const normDob = dob ? normalizeDob(dob) : null;
+    if (!normDob) {
+        res.status(400);
+        throw new Error("A valid date of birth is required to verify and protect your USN.");
+    }
+
+    if (password && confirmPassword && password !== confirmPassword) {
+        res.status(400);
+        throw new Error("Password and confirm password do not match");
+    }
+
+    // Determine target user from protect middleware or token/email/googleId in body
     let user = req.user;
     if (!user && req.body.email) {
         user = await User.findOne({ email: req.body.email.toLowerCase().trim() });
@@ -231,11 +284,42 @@ const completeOnboarding = asyncHandler(async (req, res) => {
         user = await User.findOne({ googleId: req.body.googleId });
     }
 
-    // Verify USN is unique among other users
-    const existingUsn = await User.findOne({ usn: cleanUsn });
-    if (existingUsn && (!user || existingUsn._id.toString() !== user._id.toString())) {
-        res.status(400);
-        throw new Error(`USN '${cleanUsn}' is already registered to another account.`);
+    // Check if USN is already claimed by an existing account
+    const existingUsnUser = await User.findOne({ usn: cleanUsn });
+    if (existingUsnUser && (!user || existingUsnUser._id.toString() !== user._id.toString())) {
+        // A different account is attempting to claim this USN!
+        // Requirement 3: If a student attempts to claim an already-registered USN,
+        // compare the submitted DOB against the existing record through a secure verification process.
+        // If DOB does not match, reject the claim.
+        // Do not reveal another student's private DOB in error messages or API responses.
+        // Do not allow a new Google account to bypass existing USN ownership.
+
+        if (!existingUsnUser.dob) {
+            // Legacy record without DOB: cannot claim without existing account authentication
+            res.status(403);
+            throw new Error(`USN '${cleanUsn}' is already registered to another account. Please sign in to your existing account.`);
+        }
+
+        const existingDobNorm = normalizeDob(existingUsnUser.dob);
+        if (!compareDobs(existingDobNorm, normDob)) {
+            res.status(403);
+            throw new Error(`USN '${cleanUsn}' is already registered. The date of birth provided does not match our records.`);
+        }
+
+        // DOB MATCHES! The student has proven ownership of the USN via verified DOB.
+        // Link the Google account to the existing student record
+        if (user && user._id.toString() !== existingUsnUser._id.toString()) {
+            if (user.googleId && !existingUsnUser.googleId) {
+                existingUsnUser.googleId = user.googleId;
+            }
+            // Remove the temporary incomplete user document so no duplicate exists
+            if (!user.registrationCompleted) {
+                await User.deleteOne({ _id: user._id }).catch(() => {});
+            }
+            user = existingUsnUser;
+        } else {
+            user = existingUsnUser;
+        }
     }
 
     if (!user) {
@@ -249,7 +333,7 @@ const completeOnboarding = asyncHandler(async (req, res) => {
             : (Math.random().toString(36).slice(-10) + "A1!Aa");
 
         user = await User.create({
-            name: req.body.name || email.split("@")[0],
+            name: sanitizeDisplayName(req.body.name) || (cleanUsn || email.split("@")[0]),
             email: email,
             password: userPassword,
             googleId: req.body.googleId || null,
@@ -279,10 +363,16 @@ const completeOnboarding = asyncHandler(async (req, res) => {
 
     // Update profile
     if (name && name.trim() && name.trim().length >= 2) {
-        user.name = name.trim();
+        user.name = sanitizeDisplayName(name);
     }
     user.usn = cleanUsn;
-    if (dob) user.dob = String(dob).trim();
+
+    // Critical Requirement 3: Never overwrite an existing verified DOB during subsequent login or profile updates.
+    if (!user.dob && normDob) {
+        user.dob = normDob;
+    }
+
+    // Separate BookNexus password creation
     if (password && typeof password === "string" && password.trim().length >= 6) {
         user.password = password.trim();
     }
@@ -302,7 +392,16 @@ const completeOnboarding = asyncHandler(async (req, res) => {
     user.registrationCompleted = true;
     user.onboardingStep = "completed";
 
-    await user.save();
+    // Handle simultaneous duplicate USN registration gracefully
+    try {
+        await user.save();
+    } catch (saveErr) {
+        if (saveErr.code === 11000) {
+            res.status(409);
+            throw new Error(`USN '${cleanUsn}' was just claimed by another registration request. Please sign in.`);
+        }
+        throw saveErr;
+    }
 
     // Dispatch welcome email
     try {
@@ -318,6 +417,7 @@ const completeOnboarding = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             usn: user.usn,
+            dob: user.dob || "",
             role: user.role,
             branch: user.branch,
             college: user.college,
