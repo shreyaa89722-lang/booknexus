@@ -2717,8 +2717,7 @@
       const defaultQuizAnswers = [["a"], ["a"], ["a"], ["a"], ["a"], ["a"]];
       const quizAnswers = (window.__googleQuizAnswers && (Array.isArray(window.__googleQuizAnswers) ? window.__googleQuizAnswers.length : Object.keys(window.__googleQuizAnswers).length) >= 6)
         ? window.__googleQuizAnswers
-        : (window.__suQuizAnswers || [["fiction"], ["thriller"], ["adventure"], ["fantasy"], ["mystery"], ["scifi"]]);
-            : (window.__suQuizAnswers || (typeof SU !== 'undefined' && SU.answers && Object.keys(SU.answers).length >= 6 ? SU.answers : defaultQuizAnswers));
+        : (window.__suQuizAnswers || (typeof SU !== 'undefined' && SU.answers && Object.keys(SU.answers).length >= 6 ? SU.answers : defaultQuizAnswers));
 
       const subBtn = document.getElementById('nxlNwBtn');
       if (subBtn) {
