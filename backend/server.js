@@ -1,5 +1,6 @@
 require("./config/linuxCaseResolver");
 const path = require("path");
+const fs = require("fs");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 require("dotenv").config();
 const express = require("express");
@@ -90,7 +91,15 @@ const healthHandler = (req, res) => {
 
 app.get("/api/health", healthHandler);
 app.get("/health", healthHandler);
-app.get("/", healthHandler);
+
+// Serve static frontend assets from frontend/dist or frontend
+const frontendDist = path.join(__dirname, "../frontend/dist");
+const frontendRoot = path.join(__dirname, "../frontend");
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+} else if (fs.existsSync(frontendRoot)) {
+  app.use(express.static(frontendRoot));
+}
 
 // General rate limiter — applies to all API routes
 const generalLimiter = rateLimit({
@@ -136,6 +145,18 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/admin/emails", adminEmailRoutes);
 app.post("/api/webhooks/resend", handleResendWebhook);
+
+// SPA fallback for all frontend page navigation
+app.get("*", (req, res, next) => {
+  if (req.path.startsWith("/api")) return next();
+  const indexPath = fs.existsSync(frontendDist)
+    ? path.join(frontendDist, "index.html")
+    : path.join(frontendRoot, "index.html");
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  next();
+});
 
 app.use(notFound);
 app.use(errorHandler);

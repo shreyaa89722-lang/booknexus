@@ -3,10 +3,13 @@
  * Connects Frontend UI to Express API (port 5000), MongoDB Database, and Hardhat Blockchain
  */
 (function () {
+  if (window.__bridgeLoaded) return;
+  window.__bridgeLoaded = true;
   console.log('🚀 Initializing BookNexus Full-Stack Bridge...');
 
-  const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  const API_BASE = window.API_BASE || (isLocal ? (window.location.port === "3000" ? "/api" : "http://localhost:5000/api") : "/api");
+  const isFile = window.location.protocol === "file:";
+  const isLocal = isFile || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  const API_BASE = window.API_BASE || (isFile ? "http://localhost:5000/api" : (isLocal ? (window.location.port === "3000" ? "/api" : (window.location.port === "5000" ? "/api" : "http://localhost:5000/api")) : "/api"));
   let authToken = localStorage.getItem("booknexus_token") || "";
 
   // All 68 Real Sixth-Semester Students
@@ -2512,1217 +2515,1227 @@
       }
     }
 
-        // SIGN-OUT BEHAVIOUR
-        window.nxSignOut = function () {
-          authToken = null;
-          window.__googleOnboardingData = null;
-          localStorage.removeItem('booknexus_token');
-          localStorage.removeItem('currentUser');
-          sessionStorage.clear();
-          if (window.google && window.google.accounts && window.google.accounts.id) {
-            try { window.google.accounts.id.disableAutoSelect(); } catch (e) { }
-          }
-          document.body.classList.add('nx-guest');
-          currentUser = {
-            name: "Guest Student",
-            rollNo: "",
-            email: "",
-            dept: "",
-            year: "",
-            phone: "",
-            anonId: "Guest"
-          };
-          window.currentUser = currentUser;
+    // SIGN-OUT BEHAVIOUR
+    window.nxSignOut = function () {
+      authToken = null;
+      window.__googleOnboardingData = null;
+      localStorage.removeItem('booknexus_token');
+      localStorage.removeItem('currentUser');
+      sessionStorage.clear();
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        try { window.google.accounts.id.disableAutoSelect(); } catch (e) { }
+      }
+      document.body.classList.add('nx-guest');
+      currentUser = {
+        name: "Guest Student",
+        rollNo: "",
+        email: "",
+        dept: "",
+        year: "",
+        phone: "",
+        anonId: "Guest"
+      };
+      window.currentUser = currentUser;
 
-          const aLbl = document.getElementById('userAuthLabel');
-          if (aLbl) aLbl.textContent = 'Sign In';
-          const aBtn = document.getElementById('userAuthBtn');
-          if (aBtn) aBtn.setAttribute('onclick', "openModal('authModal')");
-          const pBtn = document.getElementById('profileBtn');
-          if (pBtn) {
-            const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
-            if (span) span.textContent = 'Profile';
-          }
+      const aLbl = document.getElementById('userAuthLabel');
+      if (aLbl) aLbl.textContent = 'Sign In';
+      const aBtn = document.getElementById('userAuthBtn');
+      if (aBtn) aBtn.setAttribute('onclick', "openModal('authModal')");
+      const pBtn = document.getElementById('profileBtn');
+      if (pBtn) {
+        const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
+        if (span) span.textContent = 'Profile';
+      }
 
-          liveRentals = [];
-          liveTransactions = [];
-          window.transactionsList = [];
-          clearDashboardUi();
+      liveRentals = [];
+      liveTransactions = [];
+      window.transactionsList = [];
+      clearDashboardUi();
 
-          if (typeof setUserRole === 'function') setUserRole('student');
-          if (typeof switchNav === 'function') switchNav('home');
-          if (typeof showToast === 'function') showToast('You have signed out.', 'info');
-        };
+      if (typeof setUserRole === 'function') setUserRole('student');
+      if (typeof switchNav === 'function') switchNav('home');
+      if (typeof showToast === 'function') showToast('You have signed out.', 'info');
+    };
 
-        // FORM SUBMISSION & NAVIGATION FOR PAGE 2 & PAGE 3
-        const origNxlCreate = window.nxlCreate;
-        window.nxlCreate = async function (e) {
-          if (e && e.preventDefault) e.preventDefault();
+    // FORM SUBMISSION & NAVIGATION FOR PAGE 2 & PAGE 3
+    const origNxlCreate = window.nxlCreate;
+    window.nxlCreate = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
 
-          const isGoogle = !!window.__googleOnboardingData;
-          const kit = typeof K === 'function' ? K() : {
-            clearErrs: () => { },
-            banner: (msg, type) => { if (typeof showToast === 'function') showToast(msg, type === 'bad' ? 'error' : 'info'); },
-            fieldErr: (id, msg) => {
-              const err = document.getElementById(id + 'E');
-              if (err) { err.textContent = msg; err.hidden = false; }
-              const input = document.getElementById(id);
-              if (input) { input.setAttribute('aria-invalid', 'true'); input.focus(); }
-              return false;
-            }
-          };
+      const isGoogle = !!window.__googleOnboardingData;
+      const kit = typeof K === 'function' ? K() : {
+        clearErrs: () => { },
+        banner: (msg, type) => { if (typeof showToast === 'function') showToast(msg, type === 'bad' ? 'error' : 'info'); },
+        fieldErr: (id, msg) => {
+          const err = document.getElementById(id + 'E');
+          if (err) { err.textContent = msg; err.hidden = false; }
+          const input = document.getElementById(id);
+          if (input) { input.setAttribute('aria-invalid', 'true'); input.focus(); }
+          return false;
+        }
+      };
 
-          const form = document.getElementById('nxaVNew');
-          if (typeof kit.clearErrs === 'function') kit.clearErrs(form);
-          if (typeof kit.banner === 'function') kit.banner('');
+      const form = document.getElementById('nxaVNew');
+      if (typeof kit.clearErrs === 'function') kit.clearErrs(form);
+      if (typeof kit.banner === 'function') kit.banner('');
 
-          const s1 = document.getElementById('nxlS1');
-          const s2 = document.getElementById('nxlS2');
-          const isStep1 = s1 && !s1.hidden;
+      const s1 = document.getElementById('nxlS1');
+      const s2 = document.getElementById('nxlS2');
+      const isStep1 = s1 && !s1.hidden;
 
-          // ========================================================
-          // PAGE 2 – Student Details Validation & Advance to PAGE 3
-          // ========================================================
-          if (isStep1) {
-            const nameEl = document.getElementById('nxlName');
-            const usnEl = document.getElementById('nxlUsn');
-            const dobEl = document.getElementById('nxlDob');
-            const pwEl = document.getElementById('nxlNp');
-            const pw2El = document.getElementById('nxlNp2');
+      // ========================================================
+      // PAGE 2 – Student Details Validation & Advance to PAGE 3
+      // ========================================================
+      if (isStep1) {
+        const nameEl = document.getElementById('nxlName');
+        const usnEl = document.getElementById('nxlUsn');
+        const dobEl = document.getElementById('nxlDob');
+        const pwEl = document.getElementById('nxlNp');
+        const pw2El = document.getElementById('nxlNp2');
 
-            const name = nameEl ? nameEl.value.trim().replace(/\s+/g, ' ') : '';
-            // Requirement 2: Normalize USN by trimming spaces and converting to uppercase
-            const rawUsn = usnEl ? usnEl.value.replace(/\s+/g, '').toUpperCase() : '';
-            if (usnEl) usnEl.value = rawUsn;
-            const dob = dobEl ? dobEl.value.trim() : '';
-            const pw = pwEl ? pwEl.value.trim() : '';
-            const pw2 = pw2El ? pw2El.value.trim() : '';
+        const name = nameEl ? nameEl.value.trim().replace(/\s+/g, ' ') : '';
+        // Requirement 2: Normalize USN by trimming spaces and converting to uppercase
+        const rawUsn = usnEl ? usnEl.value.replace(/\s+/g, '').toUpperCase() : '';
+        if (usnEl) usnEl.value = rawUsn;
+        const dob = dobEl ? dobEl.value.trim() : '';
+        const pw = pwEl ? pwEl.value.trim() : '';
+        const pw2 = pw2El ? pw2El.value.trim() : '';
 
-            let ok = true;
-            if (!name || name.length < 2) {
-              ok = kit.fieldErr('nxlName', 'Enter your full name.') && false;
-            }
-            if (!rawUsn) {
-              ok = kit.fieldErr('nxlUsn', 'Enter your official USN.') && false;
-            } else if (!/^[A-Z0-9_-]{3,16}$/.test(rawUsn)) {
-              ok = kit.fieldErr('nxlUsn', 'USN must contain letters, numbers and hyphens (3-16 characters).') && false;
-            }
+        let ok = true;
+        if (!name || name.length < 2) {
+          ok = kit.fieldErr('nxlName', 'Enter your full name.') && false;
+        }
+        if (!rawUsn) {
+          ok = kit.fieldErr('nxlUsn', 'Enter your official USN.') && false;
+        } else if (!/^[A-Z0-9_-]{3,16}$/.test(rawUsn)) {
+          ok = kit.fieldErr('nxlUsn', 'USN must contain letters, numbers and hyphens (3-16 characters).') && false;
+        }
 
-            // Requirement 3: Validate Date of Birth and reject invalid or future dates
-            const todayIso = new Date().toISOString().split('T')[0];
-            if (!dob) {
-              ok = kit.fieldErr('nxlDob', 'Enter your date of birth.') && false;
-            } else if (dob > todayIso) {
-              ok = kit.fieldErr('nxlDob', 'Date of birth cannot be in the future.') && false;
-            }
+        // Requirement 3: Validate Date of Birth and reject invalid or future dates
+        const todayIso = new Date().toISOString().split('T')[0];
+        if (!dob) {
+          ok = kit.fieldErr('nxlDob', 'Enter your date of birth.') && false;
+        } else if (dob > todayIso) {
+          ok = kit.fieldErr('nxlDob', 'Date of birth cannot be in the future.') && false;
+        }
 
-            // Requirement 4: Allow student to create separate BookNexus password
-            if (!pw) {
-              ok = kit.fieldErr('nxlNp', 'Create a password for your BookNexus account (at least 6 characters).') && false;
-            } else if (pw.length < 6) {
-              ok = kit.fieldErr('nxlNp', 'Password must be at least 6 characters long.') && false;
-            }
-            if (!pw2) {
-              ok = kit.fieldErr('nxlNp2', 'Confirm your password.') && false;
-            } else if (pw && pw !== pw2) {
-              ok = kit.fieldErr('nxlNp2', 'Passwords do not match.') && false;
-            }
+        // Requirement 4: Allow student to create separate BookNexus password
+        if (!pw) {
+          ok = kit.fieldErr('nxlNp', 'Create a password for your BookNexus account (at least 6 characters).') && false;
+        } else if (pw.length < 6) {
+          ok = kit.fieldErr('nxlNp', 'Password must be at least 6 characters long.') && false;
+        }
+        if (!pw2) {
+          ok = kit.fieldErr('nxlNp2', 'Confirm your password.') && false;
+        } else if (pw && pw !== pw2) {
+          ok = kit.fieldErr('nxlNp2', 'Passwords do not match.') && false;
+        }
 
-            if (!ok) return;
+        if (!ok) return;
 
-            // Requirement: Check USN against college roster and store Step 1 in MongoDB
-            const btn = document.getElementById('nxlNwBtn');
-            const origText = btn ? btn.textContent : 'Continue';
-            if (btn) { btn.disabled = true; btn.textContent = 'Verifying college records…'; }
+        // Requirement: Check USN against college roster and store Step 1 in MongoDB
+        const btn = document.getElementById('nxlNwBtn');
+        const origText = btn ? btn.textContent : 'Continue';
+        if (btn) { btn.disabled = true; btn.textContent = 'Verifying college records…'; }
 
-            try {
-              const regEmail = (isGoogle && window.__googleOnboardingData)
-                ? window.__googleOnboardingData.email
-                : (document.getElementById('nxlNwEm')?.textContent.split('·')[0].trim() || window.__currentAuthEmail || (document.getElementById('nxlEm')?.value || '').trim().toLowerCase());
-
-              const res = await fetch(`${API_BASE}/auth/register-step1`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  email: regEmail,
-                  name,
-                  usn: rawUsn,
-                  dob,
-                  password: pw,
-                  confirmPassword: pw2
-                })
-              });
-              const json = await res.json().catch(() => ({}));
-              if (!res.ok || !json.success) {
-                const msg = json.message || 'Verification failed. Please check your details.';
-                if (msg.toLowerCase().includes('usn')) {
-                  kit.fieldErr('nxlUsn', msg);
-                } else if (msg.toLowerCase().includes('name')) {
-                  kit.fieldErr('nxlName', msg);
-                } else if (msg.toLowerCase().includes('birth') || msg.toLowerCase().includes('dob')) {
-                  kit.fieldErr('nxlDob', msg);
-                } else if (msg.toLowerCase().includes('password')) {
-                  kit.fieldErr('nxlNp', msg);
-                } else {
-                  kit.banner(msg, 'bad');
-                }
-                return;
-              }
-
-              // Save registration state
-              window.__emailRegistrationData = {
-                email: regEmail,
-                name: json.data?.name || name,
-                usn: json.data?.usn || rawUsn,
-                dob: json.data?.dob || dob,
-                token: json.data?.token
-              };
-
-              // Advance to Step 2 – About You
-              window.nxlStep(2);
-              const nickEl = document.getElementById('nxlNick');
-              if (nickEl && !nickEl.value.trim()) {
-                nickEl.value = (json.data?.name || name).split(' ')[0] || '';
-              }
-              const modalBody = form.closest('.overflow-y-auto') || form;
-              if (modalBody && modalBody.scrollTo) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
-            } catch (err) {
-              console.error('Step 1 error:', err);
-              kit.banner('Could not reach BookNexus server. Please check your connection and try again.', 'bad');
-            } finally {
-              if (btn) { btn.disabled = false; btn.textContent = origText; }
-            }
-            return;
-          }
-
-          // ========================================================
-          // PAGE 3 – About You & Quiz Validation & Final Submission
-          // ========================================================
-          const nickEl = document.getElementById('nxlNick');
-          const bioEl = document.getElementById('nxlBio');
-          const nick = nickEl ? nickEl.value.trim() : '';
-          const bio = bioEl ? bioEl.value.trim() : '';
-
-          if (!nick || nick.length < 2) {
-            return kit.fieldErr('nxlNick', 'Please tell us what we should call you.');
-          }
-          if (!bio || bio.length < 3) {
-            return kit.fieldErr('nxlBio', 'Please write a brief introduction about yourself.');
-          }
-
-          // Verify quiz answers
-          const defaultQuizAnswers = [["a"], ["a"], ["a"], ["a"], ["a"], ["a"]];
-          const quizAnswers = (window.__googleQuizAnswers && (Array.isArray(window.__googleQuizAnswers) ? window.__googleQuizAnswers.length : Object.keys(window.__googleQuizAnswers).length) >= 6)
-            ? window.__googleQuizAnswers
-            : (window.__suQuizAnswers || (typeof SU !== 'undefined' && SU.answers && Object.keys(SU.answers).length >= 6 ? SU.answers : defaultQuizAnswers));
-
-          const subBtn = document.getElementById('nxlNwBtn');
-          if (subBtn) {
-            subBtn.disabled = true;
-            subBtn.textContent = 'Saving to Database...';
-          }
-
-          const emChip = document.getElementById('nxlNwEm');
+        try {
           const regEmail = (isGoogle && window.__googleOnboardingData)
             ? window.__googleOnboardingData.email
-            : (emChip ? emChip.textContent.split('·')[0].trim() : '') || window.__loginEmail || (document.getElementById('nxlEm')?.value || '').trim().toLowerCase();
+            : (document.getElementById('nxlNwEm')?.textContent.split('·')[0].trim() || window.__currentAuthEmail || (document.getElementById('nxlEm')?.value || '').trim().toLowerCase());
 
-          const regData = isGoogle ? window.__googleOnboardingData : (window.__emailRegistrationData || {});
-          const targetEndpoint = isGoogle ? `${API_BASE}/auth/complete-onboarding` : `${API_BASE}/auth/register-step2`;
-          const payload = isGoogle
-            ? {
-              email: regEmail,
-              googleId: regData.googleId,
-              name: regData.name,
-              usn: regData.usn,
-              dob: regData.dob,
-              password: regData.password,
-              preferredName: nick,
-              bio: bio,
-              quizAnswers: quizAnswers
-            }
-            : {
-              email: regEmail,
-              name: regData.name,
-              usn: regData.usn,
-              dob: regData.dob,
-              password: regData.password,
-              confirmPassword: regData.password,
-              preferredName: nick,
-              bio: bio,
-              quizAnswers: quizAnswers
-            };
-
-          try {
-            const headers = { 'Content-Type': 'application/json' };
-            if (regData.token) {
-              headers['Authorization'] = `Bearer ${regData.token}`;
-            }
-
-            let res = await fetch(targetEndpoint, {
-              method: 'POST',
-              headers,
-              body: JSON.stringify(payload)
-            });
-
-            let data = await res.json().catch(() => ({}));
-            if (!res.ok && !isGoogle) {
-              res = await fetch(`${API_BASE}/auth/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-              });
-              data = await res.json().catch(() => ({}));
-            }
-
-            if (!res.ok || !data.success) {
-              const errorMsg = data.message || `Registration failed (HTTP ${res.status}).`;
-              if (subBtn) {
-                subBtn.disabled = false;
-                subBtn.textContent = 'Submit / Continue';
-              }
-              if (data.message && (data.message.toLowerCase().includes('date of birth') || data.message.toLowerCase().includes('dob') || data.message.toLowerCase().includes('birth'))) {
-                window.nxlStep(1);
-                kit.fieldErr('nxlDob', data.message);
-              } else if (data.message && data.message.includes('USN')) {
-                window.nxlStep(1);
-                kit.fieldErr('nxlUsn', data.message);
-              } else {
-                kit.banner(errorMsg, 'bad');
-              }
-              if (typeof showToast === 'function') showToast(errorMsg, 'error');
-              return;
-            }
-
-            // ========================================================
-            // PAGE 4 – BookNexus Home with Authenticated Student Profile
-            // ========================================================
-            const user = data.data;
-            authToken = user.token || (window.__googleOnboardingData && window.__googleOnboardingData.token) || '';
-            localStorage.setItem('booknexus_token', authToken);
-            localStorage.setItem('currentUser', JSON.stringify(user));
-
-            currentUser = {
-              name: user.name,
-              rollNo: user.usn,
-              email: user.email,
-              dept: user.branch || 'Computer Science',
-              year: user.semester || '',
-              phone: user.mobile || '',
-              anonId: user.preferredName || nick || 'Student'
-            };
-            window.currentUser = currentUser;
-
-            const studentUsn = user.usn || ('USN-' + (user.email || '').split('@')[0].toUpperCase().slice(0, 8));
-            if (!window.NX_COLLEGE) window.NX_COLLEGE = {};
-            window.NX_COLLEGE[studentUsn] = {
-              usn: studentUsn,
-              name: user.name,
-              email: user.email,
-              dept: user.branch || 'Computer Science',
-              branch: user.branch || 'Computer Science',
-              semester: user.semester || '1',
-              college: user.college || 'Engineering Campus',
-              phone: user.mobile || user.phone || '',
-              dob: user.dob || '',
-              secretId: user.preferredName || nick || user.name.split(' ')[0]
-            };
-
-            if (typeof window.nxLinkUSN === 'function') {
-              window.nxLinkUSN(window.NX_COLLEGE[studentUsn]);
-            }
-
-            if (typeof window.nxSessionSet === 'function') {
-              window.bnSessionUser = user;
-              window.nxSessionSet('student', studentUsn, user.name, user.email);
-            }
-            document.body.classList.remove('nx-guest');
-
-            window.__googleOnboardingData = null;
-
-            if (typeof setUserRole === 'function') setUserRole('student');
-            if (typeof switchNav === 'function') switchNav('home');
-            if (typeof renderNavLinks === 'function') renderNavLinks();
-            if (typeof closeModal === 'function') closeModal('authModal');
-            const authModal = document.getElementById('authModal');
-            if (authModal) authModal.classList.add('hidden');
-
-            // Update profile & auth buttons
-            const aLbl = document.getElementById('userAuthLabel');
-            if (aLbl) aLbl.textContent = 'Sign out';
-            const aBtn = document.getElementById('userAuthBtn');
-            if (aBtn) aBtn.setAttribute('onclick', 'nxSignOut()');
-            const pBtn = document.getElementById('profileBtn');
-            if (pBtn) {
-              const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
-              if (span) span.textContent = user.preferredName || nick || user.name.split(' ')[0];
-            }
-
-            // Refresh original animated homepage displays
-            if (typeof gxRender === 'function') gxRender();
-            if (typeof renderHomeShelf === 'function') renderHomeShelf();
-            if (typeof renderHomeStats === 'function') renderHomeStats();
-            if (typeof renderBookGrid === 'function') renderBookGrid();
-
-            if (typeof showToast === 'function') {
-              showToast(`Registration complete! Welcome to BookNexus, ${user.preferredName || user.name}.`, 'success');
-            }
-            if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
-
-          } catch (err) {
-            console.error('Onboarding submission error:', err);
-            if (subBtn) {
-              subBtn.disabled = false;
-              subBtn.textContent = 'Submit / Continue';
-            }
-            kit.banner('Network or server error while saving registration. Please try again.', 'bad');
-            if (typeof showToast === 'function') showToast('Could not reach backend database. Please try again.', 'error');
-          }
-        };
-
-        async function openGoogleSignIn() {
-          if (typeof clearGoogleError === 'function') clearGoogleError();
-
-          // 1. Primary path: trigger Google OAuth account chooser popup directly
-          if (tokenClient) {
-            try {
-              tokenClient.requestAccessToken({ prompt: 'select_account' });
-              return;
-            } catch (e) {
-              console.warn('tokenClient request error:', e);
-            }
-          }
-
-          // 2. Secondary path: Google One Tap prompt
-          if (window.google && window.google.accounts && window.google.accounts.id) {
-            try {
-              window.google.accounts.id.prompt((notification) => {
-                if (!notification) return;
-                const skipped = typeof notification.isSkippedMoment === 'function' && notification.isSkippedMoment();
-                const dismissed = typeof notification.isNotDisplayed === 'function' && notification.isNotDisplayed();
-                if (dismissed || skipped) {
-                  if (tokenClient) {
-                    tokenClient.requestAccessToken({ prompt: 'select_account' });
-                  } else if (typeof googleError === 'function') {
-                    googleError('Google could not open the account chooser. Please check pop-up settings.');
-                  }
-                }
-              });
-              return;
-            } catch (err) {
-              console.warn('Google prompt error:', err.message);
-            }
-          }
-
-          if (typeof googleError === 'function') {
-            googleError('Google sign-in is initializing. Please try again in a moment.');
-          }
-          if (typeof initGoogleAuth === 'function') initGoogleAuth();
-        }
-        window.openGoogleSignIn = openGoogleSignIn;
-        window.startGoogleOAuth = openGoogleSignIn;
-
-        window.nxlSocial = function (kind) {
-          if (kind === 'google') {
-            openGoogleSignIn();
-          }
-        };
-
-        window.nxlEmail = async function (e) {
-          if (e && e.preventDefault) e.preventDefault();
-          const emInput = document.getElementById('nxlEm');
-          const errEl = document.getElementById('nxlEmE');
-          const banner = document.getElementById('nxaBanner');
-          const showErr = msg => {
-            if (errEl) { errEl.textContent = msg; errEl.hidden = false; }
-            if (emInput) { emInput.setAttribute('aria-invalid', 'true'); emInput.focus(); }
-          };
-          if (errEl) { errEl.textContent = ''; errEl.hidden = true; }
-          if (banner) { banner.textContent = ''; banner.hidden = true; }
-
-          const raw = emInput ? emInput.value.trim().toLowerCase() : '';
-          if (!raw) return showErr('Enter your email address.');
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) return showErr('Enter a valid email address.');
-
-          const btn = document.getElementById('nxlEmGo');
-          const origText = btn ? btn.textContent : 'Continue';
-          if (btn) { btn.disabled = true; btn.textContent = 'Checking...'; }
-
-          function openStep1Registration(sData) {
-            window.__currentAuthEmail = raw;
-            const nxaUser = document.getElementById('nxaUser');
-            if (nxaUser) { nxaUser.hidden = false; nxaUser.style.display = 'block'; }
-            const nxaStaff = document.getElementById('nxaStaff');
-            if (nxaStaff) nxaStaff.hidden = true;
-            const nxaRp = document.getElementById('nxaRp');
-            if (nxaRp) nxaRp.hidden = true;
-            ['nxaVCh', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVFp', 'nxaVPw'].forEach(id => {
-              const el = document.getElementById(id);
-              if (el) el.hidden = true;
-            });
-            const nForm = document.getElementById('nxaVNew');
-            if (nForm) {
-              nForm.hidden = false;
-              nForm.style.display = 'block';
-            }
-            if (typeof window.nxaView === 'function') {
-              try { window.nxaView('nw'); } catch (err) { }
-            }
-            if (nForm) {
-              nForm.hidden = false;
-              nForm.style.display = 'block';
-            }
-            const nwChip = document.getElementById('nxlNwEm');
-            if (nwChip) nwChip.textContent = raw;
-            const s = sData || {};
-            const nameInput = document.getElementById('nxlName');
-            if (nameInput) nameInput.value = s.name || '';
-            const usnInput = document.getElementById('nxlUsn');
-            if (usnInput) usnInput.value = s.usn || '';
-            const dobInput = document.getElementById('nxlDob');
-            if (dobInput) dobInput.value = '';
-            const npInput = document.getElementById('nxlNp');
-            if (npInput) npInput.value = '';
-            const np2Input = document.getElementById('nxlNp2');
-            if (np2Input) np2Input.value = '';
-            if (typeof window.nxlStep === 'function') window.nxlStep(1);
-            const h3 = document.querySelector('#authModal h3');
-            if (h3) h3.textContent = 'Create your account';
-            const sub = document.getElementById('nxaSub');
-            if (sub) sub.textContent = 'Just your name, USN and a password.';
-            setTimeout(() => {
-              if (nameInput) nameInput.focus();
-            }, 60);
-          }
-
-          try {
-            const apiBase = window.API_BASE || API_BASE;
-            const res = await fetch(`${apiBase}/auth/check-email`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: raw })
-            });
-            const data = await res.json().catch(() => ({}));
-
-            window.__currentAuthEmail = raw;
-
-            if (res.ok && data && data.success && data.isRegistered) {
-              // Existing registered user: show password screen
-              const nxaUser = document.getElementById('nxaUser');
-              if (nxaUser) nxaUser.hidden = false;
-              const nxaStaff = document.getElementById('nxaStaff');
-              if (nxaStaff) nxaStaff.hidden = true;
-              const nxaRp = document.getElementById('nxaRp');
-              if (nxaRp) nxaRp.hidden = true;
-              ['nxaVCh', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVFp', 'nxaVNew'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.hidden = true;
-              });
-              const pwForm = document.getElementById('nxaVPw');
-              if (pwForm) { pwForm.hidden = false; pwForm.style.display = 'block'; }
-              if (typeof window.nxaView === 'function') {
-                try { window.nxaView('pw'); } catch (err) { }
-              }
-              if (pwForm) { pwForm.hidden = false; pwForm.style.display = 'block'; }
-              const pwChip = document.getElementById('nxlPwEm');
-              if (pwChip) pwChip.textContent = raw;
-              const h3 = document.querySelector('#authModal h3');
-              if (h3) h3.textContent = 'Welcome back';
-              const sub = document.getElementById('nxaSub');
-              if (sub) sub.textContent = 'Enter your password to continue.';
-              const pwInput = document.getElementById('nxlPw');
-              if (pwInput) { pwInput.value = ''; setTimeout(() => pwInput.focus(), 60); }
-            } else {
-              // New student: open Step 1 College Details
-              const sData = (data && data.data) || {};
-              openStep1Registration(sData);
-            }
-          } catch (netErr) {
-            console.warn('Check email network notice, proceeding to Step 1 registration:', netErr);
-            openStep1Registration({});
-          } finally {
-            if (btn) { btn.disabled = false; btn.textContent = origText; }
-          }
-        };
-
-        window.nxlPwGo = async function (e) {
-          if (e && e.preventDefault) e.preventDefault();
-          const pwInput = document.getElementById('nxlPw');
-          const errEl = document.getElementById('nxlPwE');
-          const banner = document.getElementById('nxaBanner');
-          const email = window.__currentAuthEmail || (document.getElementById('nxlPwEm')?.textContent || '').trim();
-
-          if (!pwInput || !pwInput.value) {
-            if (errEl) { errEl.textContent = 'Enter your password.'; errEl.hidden = false; }
-            if (pwInput) pwInput.focus();
-            return;
-          }
-
-          const btn = document.getElementById('nxlPwBtn');
-          const origText = btn ? btn.textContent : 'Log in';
-          if (btn) { btn.disabled = true; btn.textContent = 'Logging in…'; }
-
-          try {
-            const apiBase = window.API_BASE || API_BASE;
-            const res = await fetch(`${apiBase}/auth/login`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                identifier: email,
-                password: pwInput.value
-              })
-            });
-            const data = await res.json().catch(() => ({}));
-
-            if (!res.ok || !data.success) {
-              if (errEl) {
-                errEl.textContent = (data && data.message) || 'Incorrect email or password.';
-                errEl.hidden = false;
-              }
-              if (pwInput) { pwInput.focus(); pwInput.select(); }
-              return;
-            }
-
-            const u = data.data;
-            if (u.role === 'librarian' || u.role === 'admin') {
-              enterSignedInStaff(u);
-            } else {
-              enterSignedInStudent(u, `Welcome back, ${u.preferredName || u.name}!`);
-            }
-          } catch (err) {
-            console.error('Login error:', err);
-            if (banner) {
-              banner.className = 'nxa-banner bad';
-              banner.textContent = 'Could not reach server. Please try again.';
-              banner.hidden = false;
-            }
-          } finally {
-            if (btn) { btn.disabled = false; btn.textContent = origText; }
-          }
-        };
-
-        // Background sync to backend when signed in
-        const origFinishStudent = window.finishStudent;
-        if (typeof origFinishStudent === 'function') {
-          window.finishStudent = function (rec) {
-            if (rec) {
-              try {
-                currentUser = {
-                  name: rec.name,
-                  rollNo: rec.usn,
-                  email: rec.email,
-                  dept: rec.dept || '',
-                  year: rec.year || '',
-                  phone: rec.phone || '',
-                  anonId: rec.secretId || ('ID-' + (rec.usn || '').slice(-3))
-                };
-              } catch (e) { }
-            }
-            if (rec && rec.token) {
-              authToken = rec.token;
-              localStorage.setItem('booknexus_token', authToken);
-              return origFinishStudent.apply(this, arguments);
-            }
-            if (rec && (rec.usn || rec.email)) {
-              fetch(`${API_BASE}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ identifier: rec.usn || rec.email, password: rec.usn || 'student123' })
-              }).then(r => r.json()).then(data => {
-                if (data && data.success && data.data && data.data.token) {
-                  authToken = data.data.token;
-                  localStorage.setItem('booknexus_token', authToken);
-                  console.log('✅ Student synced with backend API! Token saved.');
-                }
-              }).catch((err) => {
-                console.warn('API sync notice:', err.message);
-              });
-            }
-            return origFinishStudent.apply(this, arguments);
-          };
-        }
-
-        // -------------------------------------------------------------
-        // BookNexus Complete Auth & Interactive Onboarding Quiz System
-        // -------------------------------------------------------------
-        const NX_QUIZ_QUESTIONS = [
-          {
-            id: 0,
-            q: "What pulls you into a book?",
-            opts: [
-              { key: "a", text: "A story to get lost in" },
-              { key: "b", text: "Something real that happened" },
-              { key: "c", text: "How things work & tech logic" },
-              { key: "d", text: "Ideas that change how I think" },
-              { key: "e", text: "Ways to improve my life & habits" },
-              { key: "f", text: "Clear explanations for my course" }
-            ]
-          },
-          {
-            id: 1,
-            q: "It's midnight and the library is yours. Where do you wander?",
-            opts: [
-              { key: "a", text: "Fantasy, novels and classics" },
-              { key: "b", text: "Old maps, history & dusty archives" },
-              { key: "c", text: "Circuit boards and lab manuals" },
-              { key: "d", text: "A quiet corner with big questions" },
-              { key: "e", text: "A study desk piled with course notes" },
-              { key: "f", text: "The self-growth & mindset shelf" }
-            ]
-          },
-          {
-            id: 2,
-            q: "Which subjects do you enjoy most?",
-            opts: [
-              { key: "a", text: "Numbers, algorithms and logic" },
-              { key: "b", text: "Machines and building physical things" },
-              { key: "c", text: "The past, biographies & its people" },
-              { key: "d", text: "Life, consciousness & the universe" },
-              { key: "e", text: "Language, fiction & storytelling" },
-              { key: "f", text: "The human mind & productivity" }
-            ]
-          },
-          {
-            id: 3,
-            q: "Who would you invite to dinner?",
-            opts: [
-              { key: "a", text: "A scientist who just made a breakthrough" },
-              { key: "b", text: "A historian with captivating stories" },
-              { key: "c", text: "A philosopher who loves rigorous debate" },
-              { key: "d", text: "A visionary founder who built an empire" },
-              { key: "e", text: "An engineer with a toolbox of inventions" },
-              { key: "f", text: "A novelist with an unexpected plot twist" }
-            ]
-          },
-          {
-            id: 4,
-            q: "A free rainy afternoon. What are you doing?",
-            opts: [
-              { key: "a", text: "Curled up with an immersive fiction novel" },
-              { key: "b", text: "Exploring a deep documentary and researching" },
-              { key: "c", text: "Writing code or solving logic puzzles" },
-              { key: "d", text: "Reflecting, journaling and strategic planning" },
-              { key: "e", text: "Taking something apart to see how it works" },
-              { key: "f", text: "Reading a biography of someone inspirational" }
-            ]
-          },
-          {
-            id: 5,
-            q: "What do you usually read for?",
-            opts: [
-              { key: "a", text: "College exams and core textbooks" },
-              { key: "b", text: "Practical engineering & tech skills" },
-              { key: "c", text: "Personal growth & career leadership" },
-              { key: "d", text: "Escape, recreation & imagination" },
-              { key: "e", text: "Curiosity across science and humanity" }
-            ]
-          }
-        ];
-
-        window.__suQuizAnswers = {};
-        window.__obQuizAnswers = {};
-
-        function renderInteractiveQuiz(containerId, progressId, errorId, answerStore) {
-          const container = document.getElementById(containerId);
-          if (!container) return;
-          container.innerHTML = '';
-
-          NX_QUIZ_QUESTIONS.forEach((qItem, idx) => {
-            const qBox = document.createElement('div');
-            qBox.className = 'p-3 bg-brand-ivory/90 dark:bg-brand-darkSurface/90 rounded-2xl border border-brand-rosewood/15 text-left';
-
-            const qTitle = document.createElement('div');
-            qTitle.className = 'text-xs font-bold text-brand-rosewood dark:text-white mb-2 flex items-center justify-between';
-            qTitle.innerHTML = `<span><strong class="text-brand-gold">Q${idx + 1}.</strong> ${qItem.q}</span><span id="${containerId}_check_${idx}" class="text-[10px] text-gray-400">${answerStore[idx] ? '✓ Selected' : 'Required'}</span>`;
-            qBox.appendChild(qTitle);
-
-            const grid = document.createElement('div');
-            grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
-
-            qItem.opts.forEach(opt => {
-              const btn = document.createElement('button');
-              btn.type = 'button';
-              const isSelected = answerStore[idx] === opt.key;
-              btn.className = `p-2 rounded-xl text-xs text-left transition-all border flex items-center gap-2 ${isSelected
-                ? 'border-brand-rosewood bg-brand-rosewood/15 text-brand-rosewood font-bold shadow-sm'
-                : 'border-brand-rosewood/10 hover:border-brand-rosewood/30 bg-white/70 text-gray-700'
-                }`;
-              btn.innerHTML = `<span class="w-4 h-4 rounded-full border border-current flex items-center justify-center text-[10px] shrink-0 ${isSelected ? 'bg-brand-rosewood text-white' : ''}">${opt.key.toUpperCase()}</span><span class="truncate">${opt.text}</span>`;
-              btn.onclick = () => {
-                answerStore[idx] = opt.key;
-                const errEl = document.getElementById(errorId);
-                if (errEl) errEl.hidden = true;
-                renderInteractiveQuiz(containerId, progressId, errorId, answerStore);
-              };
-              grid.appendChild(btn);
-            });
-
-            qBox.appendChild(grid);
-            container.appendChild(qBox);
-          });
-
-          // Update progress
-          const answeredCount = Object.keys(answerStore).length;
-          const progEl = document.getElementById(progressId);
-          if (progEl) {
-            progEl.textContent = answeredCount === 6 ? '6/6 answered ✓' : `${answeredCount}/6 answered`;
-            progEl.className = answeredCount === 6 ? 'text-[11px] font-bold text-green-700' : 'text-[11px] font-medium text-brand-rosewood/80';
-          }
-        }
-
-        window.ensureSuQuizRendered = function () {
-          renderInteractiveQuiz('suQuizContainer', 'suQuizProgress', 'suQuizE', window.__suQuizAnswers);
-        };
-
-        window.ensureObQuizRendered = function () {
-          renderInteractiveQuiz('obQuizContainer', 'obQuizProgress', 'obQuizE', window.__obQuizAnswers);
-        };
-
-        // Direct student USN login hook connected to MongoDB Backend
-        window.nxaDoIn = async function (e) {
-          if (e && e.preventDefault) e.preventDefault();
-          const usnInput = document.getElementById('siUsn');
-          const pwInput = document.getElementById('siPw');
-          const btn = document.getElementById('siGo');
-          const banner = document.getElementById('nxaBanner');
-          const errEl = document.getElementById('siPwE');
-
-          if (errEl) errEl.hidden = true;
-          if (banner) { banner.hidden = true; banner.textContent = ''; }
-
-          const usn = (usnInput ? usnInput.value : '').trim().toUpperCase();
-          const pw = pwInput ? pwInput.value : '';
-
-          if (!usn) {
-            if (errEl) { errEl.textContent = 'Please enter your student USN.'; errEl.hidden = false; }
-            return;
-          }
-          if (!pw) {
-            if (errEl) { errEl.textContent = 'Please enter your password.'; errEl.hidden = false; }
-            return;
-          }
-
-          const origText = btn ? btn.textContent : 'Sign in';
-          if (btn) { btn.disabled = true; btn.textContent = 'Authenticating…'; }
-
-          try {
-            const res = await fetch(`${API_BASE}/auth/login`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ identifier: usn, password: pw })
-            });
-            const json = await res.json();
-
-            if (json.success && json.data) {
-              const studentData = json.data;
-              authToken = studentData.token;
-              localStorage.setItem('booknexus_token', authToken);
-              localStorage.setItem('bookhive_token', authToken);
-              localStorage.setItem('currentUser', JSON.stringify(studentData));
-              localStorage.setItem('bookhive_user', JSON.stringify(studentData));
-              sessionStorage.setItem('booknexus_token', authToken);
-              sessionStorage.setItem('currentUser', JSON.stringify(studentData));
-              window.currentUser = studentData;
-              window.bnSessionUser = studentData;
-              window.currentRole = 'student';
-
-              if (pwInput) pwInput.value = '';
-              if (typeof closeModal === 'function') closeModal('authModal');
-              if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
-              if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
-              if (typeof showToast === 'function') showToast(`Welcome back, ${studentData.name || studentData.usn}!`, 'success');
-              if (typeof updateNavProfile === 'function') updateNavProfile();
-              if (typeof switchNav === 'function') switchNav('dashboard');
-              if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
-              if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
-              return;
-            } else if (json.needsOnboarding) {
-              // Incomplete student account -> redirect to complete onboarding
-              window.__onboardingToken = json.data?.token || '';
-              if (document.getElementById('obUsn')) document.getElementById('obUsn').value = usn;
-              if (typeof window.nxaView === 'function') window.nxaView('onboard');
-              if (typeof showToast === 'function') showToast('Please complete student onboarding and reading quiz.', 'info');
-              return;
-            } else {
-              if (errEl) {
-                errEl.textContent = json.message || 'Invalid USN or password.';
-                errEl.hidden = false;
-              }
-              if (banner) {
-                banner.className = 'nxa-banner bad';
-                banner.textContent = json.message || 'Invalid USN or password.';
-                banner.hidden = false;
-              }
-            }
-          } catch (netErr) {
-            console.error('USN Login API error:', netErr);
-            if (errEl) {
-              errEl.textContent = 'Server connection error. Please try again.';
-              errEl.hidden = false;
-            }
-          } finally {
-            if (btn) { btn.disabled = false; btn.textContent = origText; }
-          }
-        };
-
-        // New Student Registration Submission Hook
-        window.nxaDoUp = async function (e) {
-          if (e && e.preventDefault) e.preventDefault();
-          const banner = document.getElementById('nxaBanner');
-          const quizErr = document.getElementById('suQuizE');
-          const btn = document.getElementById('suGo');
-          if (banner) { banner.hidden = true; banner.textContent = ''; }
-          if (quizErr) quizErr.hidden = true;
-
-          const name = (document.getElementById('suName')?.value || '').trim();
-          const usn = (document.getElementById('suUsn')?.value || '').trim().toUpperCase();
-          const dob = (document.getElementById('suDob')?.value || '').trim();
-          const email = (document.getElementById('suEmail')?.value || '').trim().toLowerCase();
-          const phone = (document.getElementById('suPhone')?.value || '').trim();
-          const dept = document.getElementById('suDept')?.value || 'Computer Science and Business Systems';
-          const sem = document.getElementById('suSem')?.value || 'Semester 6';
-          const pw = document.getElementById('suPw')?.value || '';
-          const pw2 = document.getElementById('suPw2')?.value || '';
-
-          if (!name || !usn || !email || !dob || !pw || !pw2) {
-            if (banner) {
-              banner.className = 'nxa-banner bad';
-              banner.textContent = 'Please fill in all required fields (Name, USN, DOB, Email, Password).';
-              banner.hidden = false;
-            }
-            return;
-          }
-
-          if (pw !== pw2) {
-            if (banner) {
-              banner.className = 'nxa-banner bad';
-              banner.textContent = 'Passwords do not match.';
-              banner.hidden = false;
-            }
-            return;
-          }
-
-          if (pw.length < 6) {
-            if (banner) {
-              banner.className = 'nxa-banner bad';
-              banner.textContent = 'Password must be at least 6 characters long.';
-              banner.hidden = false;
-            }
-            return;
-          }
-
-          const answeredKeys = Object.keys(window.__suQuizAnswers || {});
-          if (answeredKeys.length < 6) {
-            if (quizErr) {
-              quizErr.textContent = `Please answer all 6 quiz questions to calculate your personalized recommendations (${answeredKeys.length}/6 completed).`;
-              quizErr.hidden = false;
-            }
-            return;
-          }
-
-          const origText = btn ? btn.textContent : 'Create Account';
-          if (btn) { btn.disabled = true; btn.textContent = 'Creating Account & Preferences…'; }
-
-          try {
-            const payload = {
-              name,
-              usn,
-              dob,
-              email,
-              phone: phone || '',
-              branch: 'Computer Science and Business Systems',
-              department: dept || 'Computer Science and Business Systems',
-              college: 'Malnad college of engineering',
-              semester: sem || 'Semester 6',
-              password: pw,
-              confirmPassword: pw2,
-              quizAnswers: window.__suQuizAnswers
-            };
-
-            const res = await fetch(`${API_BASE}/auth/register`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
-            });
-            const json = await res.json();
-
-            if (json.success && json.data) {
-              const studentData = json.data.user || json.data;
-              authToken = json.data.token || '';
-              localStorage.setItem('booknexus_token', authToken);
-              localStorage.setItem('bookhive_token', authToken);
-              localStorage.setItem('currentUser', JSON.stringify(studentData));
-              sessionStorage.setItem('booknexus_token', authToken);
-              sessionStorage.setItem('currentUser', JSON.stringify(studentData));
-              window.currentUser = studentData;
-              window.bnSessionUser = studentData;
-              window.currentRole = 'student';
-
-              if (typeof closeModal === 'function') closeModal('authModal');
-              if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
-              if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
-              if (typeof showToast === 'function') showToast(`Account created! Welcome to BookNexus, ${studentData.name}!`, 'success');
-              if (typeof updateNavProfile === 'function') updateNavProfile();
-              if (typeof switchNav === 'function') switchNav('dashboard');
-              if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
-              if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
-              return;
-            } else {
-              if (banner) {
-                banner.className = 'nxa-banner bad';
-                banner.textContent = json.message || 'Registration failed. Please check your details.';
-                banner.hidden = false;
-              }
-            }
-          } catch (apiErr) {
-            console.error('Registration API error:', apiErr);
-            if (banner) {
-              banner.className = 'nxa-banner bad';
-              banner.textContent = 'Server is waking up. Please wait and try again.';
-              banner.hidden = false;
-            }
-          } finally {
-            if (btn) { btn.disabled = false; btn.textContent = origText; }
-          }
-        };
-
-        // Google Student Onboarding Completion Hook
-        window.nxaDoOnboard = async function (e) {
-          if (e && e.preventDefault) e.preventDefault();
-          const banner = document.getElementById('nxaBanner');
-          const quizErr = document.getElementById('obQuizE');
-          const btn = document.getElementById('obGo');
-          if (banner) { banner.hidden = true; banner.textContent = ''; }
-          if (quizErr) quizErr.hidden = true;
-
-          const usn = (document.getElementById('obUsn')?.value || '').trim().toUpperCase();
-          const dob = (document.getElementById('obDob')?.value || '').trim();
-          const phone = (document.getElementById('obPhone')?.value || '').trim();
-          const dept = document.getElementById('obDept')?.value || 'Computer Science and Business Systems';
-          const sem = document.getElementById('obSem')?.value || 'Semester 6';
-
-          if (!usn || !dob) {
-            if (banner) {
-              banner.className = 'nxa-banner bad';
-              banner.textContent = 'Please enter your student USN and select your Date of Birth.';
-              banner.hidden = false;
-            }
-            return;
-          }
-
-          const answeredKeys = Object.keys(window.__obQuizAnswers || {});
-          if (answeredKeys.length < 6) {
-            if (quizErr) {
-              quizErr.textContent = `Please answer all 6 quiz questions to discover your personalized book recommendations (${answeredKeys.length}/6 completed).`;
-              quizErr.hidden = false;
-            }
-            return;
-          }
-
-          const token = window.__onboardingToken || localStorage.getItem('booknexus_onboarding_token') || authToken;
-          if (!token) {
-            if (banner) {
-              banner.className = 'nxa-banner bad';
-              banner.textContent = 'Session expired. Please sign in with Google again.';
-              banner.hidden = false;
-            }
-            return;
-          }
-
-          const origText = btn ? btn.textContent : 'Complete Profile';
-          if (btn) { btn.disabled = true; btn.textContent = 'Saving Profile & Calculating Genres…'; }
-
-          try {
-            const payload = {
-              usn,
-              phone,
-              department: dept,
-              semester: sem,
-              quizAnswers: window.__obQuizAnswers
-            };
-
-            const res = await fetch(`${API_BASE}/auth/complete-onboarding`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify(payload)
-            });
-            const json = await res.json();
-
-            if (json.success && json.data) {
-              const studentData = json.data.user || json.data;
-              authToken = json.data.token || token;
-              localStorage.setItem('booknexus_token', authToken);
-              localStorage.setItem('bookhive_token', authToken);
-              localStorage.setItem('currentUser', JSON.stringify(studentData));
-              sessionStorage.setItem('booknexus_token', authToken);
-              sessionStorage.setItem('currentUser', JSON.stringify(studentData));
-              window.currentUser = studentData;
-              window.bnSessionUser = studentData;
-              window.currentRole = 'student';
-
-              if (typeof closeModal === 'function') closeModal('authModal');
-              if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
-              if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
-              if (typeof showToast === 'function') showToast(`Onboarding complete! Welcome, ${studentData.name}!`, 'success');
-              if (typeof updateNavProfile === 'function') updateNavProfile();
-              if (typeof switchNav === 'function') switchNav('dashboard');
-              if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
-              if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
-              return;
-            } else {
-              if (banner) {
-                banner.className = 'nxa-banner bad';
-                banner.textContent = json.message || 'Onboarding completion failed.';
-                banner.hidden = false;
-              }
-            }
-          } catch (err) {
-            console.error('Complete onboarding API error:', err);
-            if (banner) {
-              banner.className = 'nxa-banner bad';
-              banner.textContent = 'Network error during onboarding. Please try again.';
-              banner.hidden = false;
-            }
-          } finally {
-            if (btn) { btn.disabled = false; btn.textContent = origText; }
-          }
-        };
-
-        // Staff role-login is handled centrally by window.nxaDoSt connected to /api/auth/role-login
-      }
-
-  function hookRentalBlockchain() {
-        const origRequestRental = window.requestRental;
-        window.requestRental = async function (bookId) {
-          if (origRequestRental) origRequestRental.call(this, bookId);
-
-          try {
-            const book = booksData.find(b => b.id === bookId);
-            const bookMongoId = (book && book.backendId) ? book.backendId : '6ad83761ebf9a8210e0f276b';
-            if (authToken) {
-              const res = await fetch(`${API_BASE}/rentals`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': 'Bearer ' + authToken
-                },
-                body: JSON.stringify({ bookId: bookMongoId })
-              });
-              const rentData = await res.json();
-              if (rentData.success && rentData.data) {
-                console.log('✅ Rental saved to MongoDB backend. Rental ID:', rentData.data._id);
-                if (typeof showToast === 'function') showToast('Rental request recorded on database and blockchain!', 'success');
-              }
-            }
-          } catch (err) {
-            console.warn('Backend rental record note:', err.message);
-          }
-        };
-      }
-
-      let cachedNotifications = [];
-
-      window.closeEmailPreview = function () {
-        const modal = document.getElementById('emailPreviewModal');
-        if (modal) {
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
-        }
-      };
-
-      window.openEmailPreview = function (index) {
-        const notif = cachedNotifications[index];
-        if (!notif) return;
-        const modal = document.getElementById('emailPreviewModal');
-        const subjEl = document.getElementById('emailPreviewSubject');
-        const recipEl = document.getElementById('emailPreviewRecipient');
-        const dateEl = document.getElementById('emailPreviewDate');
-        const bodyEl = document.getElementById('emailPreviewBody');
-
-        if (subjEl) subjEl.textContent = notif.subject || notif.title || 'Email Notification';
-        if (recipEl) recipEl.textContent = 'To: ' + (notif.userEmail || (currentUser && currentUser.email) || 'scholar@univ.edu');
-        if (dateEl) dateEl.textContent = notif.createdAt ? new Date(notif.createdAt).toLocaleString() : 'Just now';
-        if (bodyEl) {
-          bodyEl.innerHTML = notif.html || `<p>${notif.preview || notif.title}</p>`;
-        }
-        if (modal) {
-          modal.classList.remove('hidden');
-          modal.classList.add('flex');
-        }
-      };
-
-      window.testAllEmailNotifications = async function () {
-        const targetEmail = (currentUser && currentUser.email) ? currentUser.email : '';
-        if (!targetEmail) {
-          if (typeof showToast === 'function') showToast('Please sign in to send email notifications.', 'warning');
-          return;
-        }
-        const targetName = (currentUser && currentUser.name) ? currentUser.name : targetEmail.split('@')[0];
-        if (typeof showToast === 'function') showToast(`Triggering lifecycle emails for ${targetEmail}...`, 'info');
-
-        try {
-          const res = await fetch(`${API_BASE}/notifications/test-all`, {
+          const res = await fetch(`${API_BASE}/auth/register-step1`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: targetEmail, name: targetName })
+            body: JSON.stringify({
+              email: regEmail,
+              name,
+              usn: rawUsn,
+              dob,
+              password: pw,
+              confirmPassword: pw2
+            })
           });
-          const data = await res.json();
-          if (data && data.success) {
-            if (typeof showToast === 'function') {
-              showToast(`✅ All 8 lifecycle emails sent to ${targetEmail}!`, 'success');
+          const json = await res.json().catch(() => ({}));
+          if (!res.ok || !json.success) {
+            const msg = json.message || 'Verification failed. Please check your details.';
+            if (msg.toLowerCase().includes('usn')) {
+              kit.fieldErr('nxlUsn', msg);
+            } else if (msg.toLowerCase().includes('name')) {
+              kit.fieldErr('nxlName', msg);
+            } else if (msg.toLowerCase().includes('birth') || msg.toLowerCase().includes('dob')) {
+              kit.fieldErr('nxlDob', msg);
+            } else if (msg.toLowerCase().includes('password')) {
+              kit.fieldErr('nxlNp', msg);
+            } else {
+              kit.banner(msg, 'bad');
             }
-            await fetchLiveNotifications();
+            return;
           }
+
+          // Save registration state
+          window.__emailRegistrationData = {
+            email: regEmail,
+            name: json.data?.name || name,
+            usn: json.data?.usn || rawUsn,
+            dob: json.data?.dob || dob,
+            token: json.data?.token
+          };
+
+          // Advance to Step 2 – About You
+          window.nxlStep(2);
+          const nickEl = document.getElementById('nxlNick');
+          if (nickEl && !nickEl.value.trim()) {
+            nickEl.value = (json.data?.name || name).split(' ')[0] || '';
+          }
+          const modalBody = form.closest('.overflow-y-auto') || form;
+          if (modalBody && modalBody.scrollTo) modalBody.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err) {
-          console.warn('Test all notifications warning:', err.message);
+          console.error('Step 1 error:', err);
+          kit.banner('Could not reach BookNexus server. Please check your connection and try again.', 'bad');
+        } finally {
+          if (btn) { btn.disabled = false; btn.textContent = origText; }
         }
-      };
+        return;
+      }
 
-      async function fetchLiveNotifications() {
+      // ========================================================
+      // PAGE 3 – About You & Quiz Validation & Final Submission
+      // ========================================================
+      const nickEl = document.getElementById('nxlNick');
+      const bioEl = document.getElementById('nxlBio');
+      const nick = nickEl ? nickEl.value.trim() : '';
+      const bio = bioEl ? bioEl.value.trim() : '';
+
+      if (!nick || nick.length < 2) {
+        return kit.fieldErr('nxlNick', 'Please tell us what we should call you.');
+      }
+      if (!bio || bio.length < 3) {
+        return kit.fieldErr('nxlBio', 'Please write a brief introduction about yourself.');
+      }
+
+      // Verify quiz answers
+      const defaultQuizAnswers = [["a"], ["a"], ["a"], ["a"], ["a"], ["a"]];
+      const quizAnswers = (window.__googleQuizAnswers && (Array.isArray(window.__googleQuizAnswers) ? window.__googleQuizAnswers.length : Object.keys(window.__googleQuizAnswers).length) >= 6)
+        ? window.__googleQuizAnswers
+        : (window.__suQuizAnswers || [["fiction"], ["thriller"], ["adventure"], ["fantasy"], ["mystery"], ["scifi"]]);
+            : (window.__suQuizAnswers || (typeof SU !== 'undefined' && SU.answers && Object.keys(SU.answers).length >= 6 ? SU.answers : defaultQuizAnswers));
+
+      const subBtn = document.getElementById('nxlNwBtn');
+      if (subBtn) {
+        subBtn.disabled = true;
+        subBtn.textContent = 'Saving to Database...';
+      }
+
+      const emChip = document.getElementById('nxlNwEm');
+      const regEmail = (isGoogle && window.__googleOnboardingData)
+        ? window.__googleOnboardingData.email
+        : (emChip ? emChip.textContent.split('·')[0].trim() : '') || window.__loginEmail || (document.getElementById('nxlEm')?.value || '').trim().toLowerCase();
+
+      const regData = isGoogle ? window.__googleOnboardingData : (window.__emailRegistrationData || {});
+      const targetEndpoint = isGoogle ? `${API_BASE}/auth/complete-onboarding` : `${API_BASE}/auth/register-step2`;
+      const payload = isGoogle
+        ? {
+          email: regEmail,
+          googleId: regData.googleId,
+          name: regData.name,
+          usn: regData.usn,
+          dob: regData.dob,
+          password: regData.password,
+          preferredName: nick,
+          bio: bio,
+          quizAnswers: quizAnswers
+        }
+        : {
+          email: regEmail,
+          name: regData.name,
+          usn: regData.usn,
+          dob: regData.dob,
+          password: regData.password,
+          confirmPassword: regData.password,
+          preferredName: nick,
+          bio: bio,
+          quizAnswers: quizAnswers
+        };
+
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (regData.token) {
+          headers['Authorization'] = `Bearer ${regData.token}`;
+        }
+
+        let res = await fetch(targetEndpoint, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload)
+        });
+
+        let data = await res.json().catch(() => ({}));
+        if (!res.ok && !isGoogle) {
+          res = await fetch(`${API_BASE}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          data = await res.json().catch(() => ({}));
+        }
+
+        if (!res.ok || !data.success) {
+          const errorMsg = data.message || `Registration failed (HTTP ${res.status}).`;
+          if (subBtn) {
+            subBtn.disabled = false;
+            subBtn.textContent = 'Submit / Continue';
+          }
+          if (data.message && (data.message.toLowerCase().includes('date of birth') || data.message.toLowerCase().includes('dob') || data.message.toLowerCase().includes('birth'))) {
+            window.nxlStep(1);
+            kit.fieldErr('nxlDob', data.message);
+          } else if (data.message && data.message.includes('USN')) {
+            window.nxlStep(1);
+            kit.fieldErr('nxlUsn', data.message);
+          } else {
+            kit.banner(errorMsg, 'bad');
+          }
+          if (typeof showToast === 'function') showToast(errorMsg, 'error');
+          return;
+        }
+
+        // ========================================================
+        // PAGE 4 – BookNexus Home with Authenticated Student Profile
+        // ========================================================
+        const user = data.data;
+        authToken = user.token || (window.__googleOnboardingData && window.__googleOnboardingData.token) || '';
+        localStorage.setItem('booknexus_token', authToken);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+
+        currentUser = {
+          name: user.name,
+          rollNo: user.usn,
+          email: user.email,
+          dept: user.branch || 'Computer Science',
+          year: user.semester || '',
+          phone: user.mobile || '',
+          anonId: user.preferredName || nick || 'Student'
+        };
+        window.currentUser = currentUser;
+
+        const studentUsn = user.usn || ('USN-' + (user.email || '').split('@')[0].toUpperCase().slice(0, 8));
+        if (!window.NX_COLLEGE) window.NX_COLLEGE = {};
+        window.NX_COLLEGE[studentUsn] = {
+          usn: studentUsn,
+          name: user.name,
+          email: user.email,
+          dept: user.branch || 'Computer Science',
+          branch: user.branch || 'Computer Science',
+          semester: user.semester || '1',
+          college: user.college || 'Engineering Campus',
+          phone: user.mobile || user.phone || '',
+          dob: user.dob || '',
+          secretId: user.preferredName || nick || user.name.split(' ')[0]
+        };
+
+        if (typeof window.nxLinkUSN === 'function') {
+          window.nxLinkUSN(window.NX_COLLEGE[studentUsn]);
+        }
+
+        if (typeof window.nxSessionSet === 'function') {
+          window.bnSessionUser = user;
+          window.nxSessionSet('student', studentUsn, user.name, user.email);
+        }
+        document.body.classList.remove('nx-guest');
+
+        window.__googleOnboardingData = null;
+
+        if (typeof setUserRole === 'function') setUserRole('student');
+        if (typeof switchNav === 'function') switchNav('home');
+        if (typeof renderNavLinks === 'function') renderNavLinks();
+        if (typeof closeModal === 'function') closeModal('authModal');
+        const authModal = document.getElementById('authModal');
+        if (authModal) authModal.classList.add('hidden');
+
+        // Update profile & auth buttons
+        const aLbl = document.getElementById('userAuthLabel');
+        if (aLbl) aLbl.textContent = 'Sign out';
+        const aBtn = document.getElementById('userAuthBtn');
+        if (aBtn) aBtn.setAttribute('onclick', 'nxSignOut()');
+        const pBtn = document.getElementById('profileBtn');
+        if (pBtn) {
+          const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
+          if (span) span.textContent = user.preferredName || nick || user.name.split(' ')[0];
+        }
+
+        // Refresh original animated homepage displays
+        if (typeof gxRender === 'function') gxRender();
+        if (typeof renderHomeShelf === 'function') renderHomeShelf();
+        if (typeof renderHomeStats === 'function') renderHomeStats();
+        if (typeof renderBookGrid === 'function') renderBookGrid();
+
+        if (typeof showToast === 'function') {
+          showToast(`Registration complete! Welcome to BookNexus, ${user.preferredName || user.name}.`, 'success');
+        }
+        if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
+
+      } catch (err) {
+        console.error('Onboarding submission error:', err);
+        if (subBtn) {
+          subBtn.disabled = false;
+          subBtn.textContent = 'Submit / Continue';
+        }
+        kit.banner('Network or server error while saving registration. Please try again.', 'bad');
+        if (typeof showToast === 'function') showToast('Could not reach backend database. Please try again.', 'error');
+      }
+    };
+
+    async function openGoogleSignIn() {
+      if (typeof clearGoogleError === 'function') clearGoogleError();
+
+      if (window.location.protocol === 'file:') {
+        if (typeof googleError === 'function') {
+          googleError('Google Sign-In requires an HTTP server origin. Please open BookNexus on http://localhost:5000 or https://booknexus-lemon.vercel.app');
+        } else if (typeof showToast === 'function') {
+          showToast('Please open on http://localhost:5000 or Vercel (Google OAuth requires an HTTP origin, not file://)', 'error');
+        }
+        return;
+      }
+
+      // 1. Primary path: trigger Google OAuth account chooser popup directly
+      if (tokenClient) {
         try {
-          const email = (currentUser && currentUser.email) ? currentUser.email : '';
-          const res = await fetch(`${API_BASE}/notifications${email ? '?email=' + encodeURIComponent(email) : ''}`);
-          const json = await res.json();
-          if (json && json.success && Array.isArray(json.data)) {
-            cachedNotifications = json.data;
-            const c = document.getElementById('notificationsList');
-            const badge = document.getElementById('notifBadge');
-            const cnt = document.getElementById('notifCountText');
+          tokenClient.requestAccessToken({ prompt: 'select_account' });
+          return;
+        } catch (e) {
+          console.warn('tokenClient request error:', e);
+        }
+      }
 
-            if (cnt) cnt.innerText = `${json.data.length} Notifications`;
-            if (badge) {
-              badge.innerText = json.data.length;
-              badge.style.display = json.data.length > 0 ? 'flex' : 'none';
+      // 2. Secondary path: Google One Tap prompt
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        try {
+          window.google.accounts.id.prompt((notification) => {
+            if (!notification) return;
+            const skipped = typeof notification.isSkippedMoment === 'function' && notification.isSkippedMoment();
+            const dismissed = typeof notification.isNotDisplayed === 'function' && notification.isNotDisplayed();
+            if (dismissed || skipped) {
+              if (tokenClient) {
+                tokenClient.requestAccessToken({ prompt: 'select_account' });
+              } else if (typeof googleError === 'function') {
+                googleError('Google could not open the account chooser. Please check pop-up settings.');
+              }
             }
+          });
+          return;
+        } catch (err) {
+          console.warn('Google prompt error:', err.message);
+        }
+      }
 
-            if (json.data.length === 0) {
-              if (c) {
-                c.innerHTML = `
+      if (typeof googleError === 'function') {
+        googleError('Google sign-in is initializing. Please try again in a moment.');
+      }
+      if (typeof initGoogleAuth === 'function') initGoogleAuth();
+    }
+    window.openGoogleSignIn = openGoogleSignIn;
+    window.startGoogleOAuth = openGoogleSignIn;
+
+    window.nxlSocial = function (kind) {
+      if (kind === 'google') {
+        openGoogleSignIn();
+      }
+    };
+
+    window.nxlEmail = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const emInput = document.getElementById('nxlEm');
+      const errEl = document.getElementById('nxlEmE');
+      const banner = document.getElementById('nxaBanner');
+      const showErr = msg => {
+        if (errEl) { errEl.textContent = msg; errEl.hidden = false; }
+        if (emInput) { emInput.setAttribute('aria-invalid', 'true'); emInput.focus(); }
+      };
+      if (errEl) { errEl.textContent = ''; errEl.hidden = true; }
+      if (banner) { banner.textContent = ''; banner.hidden = true; }
+
+      const raw = emInput ? emInput.value.trim().toLowerCase() : '';
+      if (!raw) return showErr('Enter your email address.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) return showErr('Enter a valid email address.');
+
+      const btn = document.getElementById('nxlEmGo');
+      const origText = btn ? btn.textContent : 'Continue';
+      if (btn) { btn.disabled = true; btn.textContent = 'Checking...'; }
+
+      function openStep1Registration(sData) {
+        window.__currentAuthEmail = raw;
+        const nxaUser = document.getElementById('nxaUser');
+        if (nxaUser) { nxaUser.hidden = false; nxaUser.style.display = 'block'; }
+        const nxaStaff = document.getElementById('nxaStaff');
+        if (nxaStaff) nxaStaff.hidden = true;
+        const nxaRp = document.getElementById('nxaRp');
+        if (nxaRp) nxaRp.hidden = true;
+        ['nxaVCh', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVFp', 'nxaVPw'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.hidden = true;
+        });
+        const nForm = document.getElementById('nxaVNew');
+        if (nForm) {
+          nForm.hidden = false;
+          nForm.style.display = 'block';
+        }
+        if (typeof window.nxaView === 'function') {
+          try { window.nxaView('nw'); } catch (err) { }
+        }
+        if (nForm) {
+          nForm.hidden = false;
+          nForm.style.display = 'block';
+        }
+        const nwChip = document.getElementById('nxlNwEm');
+        if (nwChip) nwChip.textContent = raw;
+        const s = sData || {};
+        const nameInput = document.getElementById('nxlName');
+        if (nameInput) nameInput.value = s.name || '';
+        const usnInput = document.getElementById('nxlUsn');
+        if (usnInput) usnInput.value = s.usn || '';
+        const dobInput = document.getElementById('nxlDob');
+        if (dobInput) dobInput.value = '';
+        const npInput = document.getElementById('nxlNp');
+        if (npInput) npInput.value = '';
+        const np2Input = document.getElementById('nxlNp2');
+        if (np2Input) np2Input.value = '';
+        if (typeof window.nxlStep === 'function') window.nxlStep(1);
+        const h3 = document.querySelector('#authModal h3');
+        if (h3) h3.textContent = 'Create your account';
+        const sub = document.getElementById('nxaSub');
+        if (sub) sub.textContent = 'Just your name, USN and a password.';
+        setTimeout(() => {
+          if (nameInput) nameInput.focus();
+        }, 60);
+      }
+
+      try {
+        const apiBase = window.API_BASE || API_BASE;
+        const res = await fetch(`${apiBase}/auth/check-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: raw })
+        });
+        const data = await res.json().catch(() => ({}));
+
+        window.__currentAuthEmail = raw;
+
+        if (res.ok && data && data.success && data.isRegistered) {
+          // Existing registered user: show password screen
+          const nxaUser = document.getElementById('nxaUser');
+          if (nxaUser) nxaUser.hidden = false;
+          const nxaStaff = document.getElementById('nxaStaff');
+          if (nxaStaff) nxaStaff.hidden = true;
+          const nxaRp = document.getElementById('nxaRp');
+          if (nxaRp) nxaRp.hidden = true;
+          ['nxaVCh', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVFp', 'nxaVNew'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.hidden = true;
+          });
+          const pwForm = document.getElementById('nxaVPw');
+          if (pwForm) { pwForm.hidden = false; pwForm.style.display = 'block'; }
+          if (typeof window.nxaView === 'function') {
+            try { window.nxaView('pw'); } catch (err) { }
+          }
+          if (pwForm) { pwForm.hidden = false; pwForm.style.display = 'block'; }
+          const pwChip = document.getElementById('nxlPwEm');
+          if (pwChip) pwChip.textContent = raw;
+          const h3 = document.querySelector('#authModal h3');
+          if (h3) h3.textContent = 'Welcome back';
+          const sub = document.getElementById('nxaSub');
+          if (sub) sub.textContent = 'Enter your password to continue.';
+          const pwInput = document.getElementById('nxlPw');
+          if (pwInput) { pwInput.value = ''; setTimeout(() => pwInput.focus(), 60); }
+        } else {
+          // New student: open Step 1 College Details
+          const sData = (data && data.data) || {};
+          openStep1Registration(sData);
+        }
+      } catch (netErr) {
+        console.warn('Check email network notice, proceeding to Step 1 registration:', netErr);
+        openStep1Registration({});
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    window.nxlPwGo = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const pwInput = document.getElementById('nxlPw');
+      const errEl = document.getElementById('nxlPwE');
+      const banner = document.getElementById('nxaBanner');
+      const email = window.__currentAuthEmail || (document.getElementById('nxlPwEm')?.textContent || '').trim();
+
+      if (!pwInput || !pwInput.value) {
+        if (errEl) { errEl.textContent = 'Enter your password.'; errEl.hidden = false; }
+        if (pwInput) pwInput.focus();
+        return;
+      }
+
+      const btn = document.getElementById('nxlPwBtn');
+      const origText = btn ? btn.textContent : 'Log in';
+      if (btn) { btn.disabled = true; btn.textContent = 'Logging in…'; }
+
+      try {
+        const apiBase = window.API_BASE || API_BASE;
+        const res = await fetch(`${apiBase}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            identifier: email,
+            password: pwInput.value
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok || !data.success) {
+          if (errEl) {
+            errEl.textContent = (data && data.message) || 'Incorrect email or password.';
+            errEl.hidden = false;
+          }
+          if (pwInput) { pwInput.focus(); pwInput.select(); }
+          return;
+        }
+
+        const u = data.data;
+        if (u.role === 'librarian' || u.role === 'admin') {
+          enterSignedInStaff(u);
+        } else {
+          enterSignedInStudent(u, `Welcome back, ${u.preferredName || u.name}!`);
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Could not reach server. Please try again.';
+          banner.hidden = false;
+        }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    // Background sync to backend when signed in
+    const origFinishStudent = window.finishStudent;
+    if (typeof origFinishStudent === 'function') {
+      window.finishStudent = function (rec) {
+        if (rec) {
+          try {
+            currentUser = {
+              name: rec.name,
+              rollNo: rec.usn,
+              email: rec.email,
+              dept: rec.dept || '',
+              year: rec.year || '',
+              phone: rec.phone || '',
+              anonId: rec.secretId || ('ID-' + (rec.usn || '').slice(-3))
+            };
+          } catch (e) { }
+        }
+        if (rec && rec.token) {
+          authToken = rec.token;
+          localStorage.setItem('booknexus_token', authToken);
+          return origFinishStudent.apply(this, arguments);
+        }
+        if (rec && (rec.usn || rec.email)) {
+          fetch(`${API_BASE}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identifier: rec.usn || rec.email, password: rec.usn || 'student123' })
+          }).then(r => r.json()).then(data => {
+            if (data && data.success && data.data && data.data.token) {
+              authToken = data.data.token;
+              localStorage.setItem('booknexus_token', authToken);
+              console.log('✅ Student synced with backend API! Token saved.');
+            }
+          }).catch((err) => {
+            console.warn('API sync notice:', err.message);
+          });
+        }
+        return origFinishStudent.apply(this, arguments);
+      };
+    }
+
+    // -------------------------------------------------------------
+    // BookNexus Complete Auth & Interactive Onboarding Quiz System
+    // -------------------------------------------------------------
+    const NX_QUIZ_QUESTIONS = [
+      {
+        id: 0,
+        q: "What pulls you into a book?",
+        opts: [
+          { key: "a", text: "A story to get lost in" },
+          { key: "b", text: "Something real that happened" },
+          { key: "c", text: "How things work & tech logic" },
+          { key: "d", text: "Ideas that change how I think" },
+          { key: "e", text: "Ways to improve my life & habits" },
+          { key: "f", text: "Clear explanations for my course" }
+        ]
+      },
+      {
+        id: 1,
+        q: "It's midnight and the library is yours. Where do you wander?",
+        opts: [
+          { key: "a", text: "Fantasy, novels and classics" },
+          { key: "b", text: "Old maps, history & dusty archives" },
+          { key: "c", text: "Circuit boards and lab manuals" },
+          { key: "d", text: "A quiet corner with big questions" },
+          { key: "e", text: "A study desk piled with course notes" },
+          { key: "f", text: "The self-growth & mindset shelf" }
+        ]
+      },
+      {
+        id: 2,
+        q: "Which subjects do you enjoy most?",
+        opts: [
+          { key: "a", text: "Numbers, algorithms and logic" },
+          { key: "b", text: "Machines and building physical things" },
+          { key: "c", text: "The past, biographies & its people" },
+          { key: "d", text: "Life, consciousness & the universe" },
+          { key: "e", text: "Language, fiction & storytelling" },
+          { key: "f", text: "The human mind & productivity" }
+        ]
+      },
+      {
+        id: 3,
+        q: "Who would you invite to dinner?",
+        opts: [
+          { key: "a", text: "A scientist who just made a breakthrough" },
+          { key: "b", text: "A historian with captivating stories" },
+          { key: "c", text: "A philosopher who loves rigorous debate" },
+          { key: "d", text: "A visionary founder who built an empire" },
+          { key: "e", text: "An engineer with a toolbox of inventions" },
+          { key: "f", text: "A novelist with an unexpected plot twist" }
+        ]
+      },
+      {
+        id: 4,
+        q: "A free rainy afternoon. What are you doing?",
+        opts: [
+          { key: "a", text: "Curled up with an immersive fiction novel" },
+          { key: "b", text: "Exploring a deep documentary and researching" },
+          { key: "c", text: "Writing code or solving logic puzzles" },
+          { key: "d", text: "Reflecting, journaling and strategic planning" },
+          { key: "e", text: "Taking something apart to see how it works" },
+          { key: "f", text: "Reading a biography of someone inspirational" }
+        ]
+      },
+      {
+        id: 5,
+        q: "What do you usually read for?",
+        opts: [
+          { key: "a", text: "College exams and core textbooks" },
+          { key: "b", text: "Practical engineering & tech skills" },
+          { key: "c", text: "Personal growth & career leadership" },
+          { key: "d", text: "Escape, recreation & imagination" },
+          { key: "e", text: "Curiosity across science and humanity" }
+        ]
+      }
+    ];
+
+    window.__suQuizAnswers = {};
+    window.__obQuizAnswers = {};
+
+    function renderInteractiveQuiz(containerId, progressId, errorId, answerStore) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      NX_QUIZ_QUESTIONS.forEach((qItem, idx) => {
+        const qBox = document.createElement('div');
+        qBox.className = 'p-3 bg-brand-ivory/90 dark:bg-brand-darkSurface/90 rounded-2xl border border-brand-rosewood/15 text-left';
+
+        const qTitle = document.createElement('div');
+        qTitle.className = 'text-xs font-bold text-brand-rosewood dark:text-white mb-2 flex items-center justify-between';
+        qTitle.innerHTML = `<span><strong class="text-brand-gold">Q${idx + 1}.</strong> ${qItem.q}</span><span id="${containerId}_check_${idx}" class="text-[10px] text-gray-400">${answerStore[idx] ? '✓ Selected' : 'Required'}</span>`;
+        qBox.appendChild(qTitle);
+
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
+
+        qItem.opts.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          const isSelected = answerStore[idx] === opt.key;
+          btn.className = `p-2 rounded-xl text-xs text-left transition-all border flex items-center gap-2 ${isSelected
+            ? 'border-brand-rosewood bg-brand-rosewood/15 text-brand-rosewood font-bold shadow-sm'
+            : 'border-brand-rosewood/10 hover:border-brand-rosewood/30 bg-white/70 text-gray-700'
+            }`;
+          btn.innerHTML = `<span class="w-4 h-4 rounded-full border border-current flex items-center justify-center text-[10px] shrink-0 ${isSelected ? 'bg-brand-rosewood text-white' : ''}">${opt.key.toUpperCase()}</span><span class="truncate">${opt.text}</span>`;
+          btn.onclick = () => {
+            answerStore[idx] = opt.key;
+            const errEl = document.getElementById(errorId);
+            if (errEl) errEl.hidden = true;
+            renderInteractiveQuiz(containerId, progressId, errorId, answerStore);
+          };
+          grid.appendChild(btn);
+        });
+
+        qBox.appendChild(grid);
+        container.appendChild(qBox);
+      });
+
+      // Update progress
+      const answeredCount = Object.keys(answerStore).length;
+      const progEl = document.getElementById(progressId);
+      if (progEl) {
+        progEl.textContent = answeredCount === 6 ? '6/6 answered ✓' : `${answeredCount}/6 answered`;
+        progEl.className = answeredCount === 6 ? 'text-[11px] font-bold text-green-700' : 'text-[11px] font-medium text-brand-rosewood/80';
+      }
+    }
+
+    window.ensureSuQuizRendered = function () {
+      renderInteractiveQuiz('suQuizContainer', 'suQuizProgress', 'suQuizE', window.__suQuizAnswers);
+    };
+
+    window.ensureObQuizRendered = function () {
+      renderInteractiveQuiz('obQuizContainer', 'obQuizProgress', 'obQuizE', window.__obQuizAnswers);
+    };
+
+    // Direct student USN login hook connected to MongoDB Backend
+    window.nxaDoIn = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const usnInput = document.getElementById('siUsn');
+      const pwInput = document.getElementById('siPw');
+      const btn = document.getElementById('siGo');
+      const banner = document.getElementById('nxaBanner');
+      const errEl = document.getElementById('siPwE');
+
+      if (errEl) errEl.hidden = true;
+      if (banner) { banner.hidden = true; banner.textContent = ''; }
+
+      const usn = (usnInput ? usnInput.value : '').trim().toUpperCase();
+      const pw = pwInput ? pwInput.value : '';
+
+      if (!usn) {
+        if (errEl) { errEl.textContent = 'Please enter your student USN.'; errEl.hidden = false; }
+        return;
+      }
+      if (!pw) {
+        if (errEl) { errEl.textContent = 'Please enter your password.'; errEl.hidden = false; }
+        return;
+      }
+
+      const origText = btn ? btn.textContent : 'Sign in';
+      if (btn) { btn.disabled = true; btn.textContent = 'Authenticating…'; }
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: usn, password: pw })
+        });
+        const json = await res.json();
+
+        if (json.success && json.data) {
+          const studentData = json.data;
+          authToken = studentData.token;
+          localStorage.setItem('booknexus_token', authToken);
+          localStorage.setItem('bookhive_token', authToken);
+          localStorage.setItem('currentUser', JSON.stringify(studentData));
+          localStorage.setItem('bookhive_user', JSON.stringify(studentData));
+          sessionStorage.setItem('booknexus_token', authToken);
+          sessionStorage.setItem('currentUser', JSON.stringify(studentData));
+          window.currentUser = studentData;
+          window.bnSessionUser = studentData;
+          window.currentRole = 'student';
+
+          if (pwInput) pwInput.value = '';
+          if (typeof closeModal === 'function') closeModal('authModal');
+          if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
+          if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
+          if (typeof showToast === 'function') showToast(`Welcome back, ${studentData.name || studentData.usn}!`, 'success');
+          if (typeof updateNavProfile === 'function') updateNavProfile();
+          if (typeof switchNav === 'function') switchNav('dashboard');
+          if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
+          if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
+          return;
+        } else if (json.needsOnboarding) {
+          // Incomplete student account -> redirect to complete onboarding
+          window.__onboardingToken = json.data?.token || '';
+          if (document.getElementById('obUsn')) document.getElementById('obUsn').value = usn;
+          if (typeof window.nxaView === 'function') window.nxaView('onboard');
+          if (typeof showToast === 'function') showToast('Please complete student onboarding and reading quiz.', 'info');
+          return;
+        } else {
+          if (errEl) {
+            errEl.textContent = json.message || 'Invalid USN or password.';
+            errEl.hidden = false;
+          }
+          if (banner) {
+            banner.className = 'nxa-banner bad';
+            banner.textContent = json.message || 'Invalid USN or password.';
+            banner.hidden = false;
+          }
+        }
+      } catch (netErr) {
+        console.error('USN Login API error:', netErr);
+        if (errEl) {
+          errEl.textContent = 'Server connection error. Please try again.';
+          errEl.hidden = false;
+        }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    // New Student Registration Submission Hook
+    window.nxaDoUp = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const banner = document.getElementById('nxaBanner');
+      const quizErr = document.getElementById('suQuizE');
+      const btn = document.getElementById('suGo');
+      if (banner) { banner.hidden = true; banner.textContent = ''; }
+      if (quizErr) quizErr.hidden = true;
+
+      const name = (document.getElementById('suName')?.value || '').trim();
+      const usn = (document.getElementById('suUsn')?.value || '').trim().toUpperCase();
+      const dob = (document.getElementById('suDob')?.value || '').trim();
+      const email = (document.getElementById('suEmail')?.value || '').trim().toLowerCase();
+      const phone = (document.getElementById('suPhone')?.value || '').trim();
+      const dept = document.getElementById('suDept')?.value || 'Computer Science and Business Systems';
+      const sem = document.getElementById('suSem')?.value || 'Semester 6';
+      const pw = document.getElementById('suPw')?.value || '';
+      const pw2 = document.getElementById('suPw2')?.value || '';
+
+      if (!name || !usn || !email || !dob || !pw || !pw2) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Please fill in all required fields (Name, USN, DOB, Email, Password).';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      if (pw !== pw2) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Passwords do not match.';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      if (pw.length < 6) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Password must be at least 6 characters long.';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      const answeredKeys = Object.keys(window.__suQuizAnswers || {});
+      if (answeredKeys.length < 6) {
+        if (quizErr) {
+          quizErr.textContent = `Please answer all 6 quiz questions to calculate your personalized recommendations (${answeredKeys.length}/6 completed).`;
+          quizErr.hidden = false;
+        }
+        return;
+      }
+
+      const origText = btn ? btn.textContent : 'Create Account';
+      if (btn) { btn.disabled = true; btn.textContent = 'Creating Account & Preferences…'; }
+
+      try {
+        const payload = {
+          name,
+          usn,
+          dob,
+          email,
+          phone: phone || '',
+          branch: 'Computer Science and Business Systems',
+          department: dept || 'Computer Science and Business Systems',
+          college: 'Malnad college of engineering',
+          semester: sem || 'Semester 6',
+          password: pw,
+          confirmPassword: pw2,
+          quizAnswers: window.__suQuizAnswers
+        };
+
+        const res = await fetch(`${API_BASE}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.success && json.data) {
+          const studentData = json.data.user || json.data;
+          authToken = json.data.token || '';
+          localStorage.setItem('booknexus_token', authToken);
+          localStorage.setItem('bookhive_token', authToken);
+          localStorage.setItem('currentUser', JSON.stringify(studentData));
+          sessionStorage.setItem('booknexus_token', authToken);
+          sessionStorage.setItem('currentUser', JSON.stringify(studentData));
+          window.currentUser = studentData;
+          window.bnSessionUser = studentData;
+          window.currentRole = 'student';
+
+          if (typeof closeModal === 'function') closeModal('authModal');
+          if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
+          if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
+          if (typeof showToast === 'function') showToast(`Account created! Welcome to BookNexus, ${studentData.name}!`, 'success');
+          if (typeof updateNavProfile === 'function') updateNavProfile();
+          if (typeof switchNav === 'function') switchNav('dashboard');
+          if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
+          if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
+          return;
+        } else {
+          if (banner) {
+            banner.className = 'nxa-banner bad';
+            banner.textContent = json.message || 'Registration failed. Please check your details.';
+            banner.hidden = false;
+          }
+        }
+      } catch (apiErr) {
+        console.error('Registration API error:', apiErr);
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Server is waking up. Please wait and try again.';
+          banner.hidden = false;
+        }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    // Google Student Onboarding Completion Hook
+    window.nxaDoOnboard = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const banner = document.getElementById('nxaBanner');
+      const quizErr = document.getElementById('obQuizE');
+      const btn = document.getElementById('obGo');
+      if (banner) { banner.hidden = true; banner.textContent = ''; }
+      if (quizErr) quizErr.hidden = true;
+
+      const usn = (document.getElementById('obUsn')?.value || '').trim().toUpperCase();
+      const dob = (document.getElementById('obDob')?.value || '').trim();
+      const phone = (document.getElementById('obPhone')?.value || '').trim();
+      const dept = document.getElementById('obDept')?.value || 'Computer Science and Business Systems';
+      const sem = document.getElementById('obSem')?.value || 'Semester 6';
+
+      if (!usn || !dob) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Please enter your student USN and select your Date of Birth.';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      const answeredKeys = Object.keys(window.__obQuizAnswers || {});
+      if (answeredKeys.length < 6) {
+        if (quizErr) {
+          quizErr.textContent = `Please answer all 6 quiz questions to discover your personalized book recommendations (${answeredKeys.length}/6 completed).`;
+          quizErr.hidden = false;
+        }
+        return;
+      }
+
+      const token = window.__onboardingToken || localStorage.getItem('booknexus_onboarding_token') || authToken;
+      if (!token) {
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Session expired. Please sign in with Google again.';
+          banner.hidden = false;
+        }
+        return;
+      }
+
+      const origText = btn ? btn.textContent : 'Complete Profile';
+      if (btn) { btn.disabled = true; btn.textContent = 'Saving Profile & Calculating Genres…'; }
+
+      try {
+        const payload = {
+          usn,
+          phone,
+          department: dept,
+          semester: sem,
+          quizAnswers: window.__obQuizAnswers
+        };
+
+        const res = await fetch(`${API_BASE}/auth/complete-onboarding`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.success && json.data) {
+          const studentData = json.data.user || json.data;
+          authToken = json.data.token || token;
+          localStorage.setItem('booknexus_token', authToken);
+          localStorage.setItem('bookhive_token', authToken);
+          localStorage.setItem('currentUser', JSON.stringify(studentData));
+          sessionStorage.setItem('booknexus_token', authToken);
+          sessionStorage.setItem('currentUser', JSON.stringify(studentData));
+          window.currentUser = studentData;
+          window.bnSessionUser = studentData;
+          window.currentRole = 'student';
+
+          if (typeof closeModal === 'function') closeModal('authModal');
+          if (typeof origFinishStudent === 'function') origFinishStudent(studentData);
+          if (typeof window.nxSessionSet === 'function') window.nxSessionSet('student', studentData.usn || studentData._id, studentData.name, studentData.email);
+          if (typeof showToast === 'function') showToast(`Onboarding complete! Welcome, ${studentData.name}!`, 'success');
+          if (typeof updateNavProfile === 'function') updateNavProfile();
+          if (typeof switchNav === 'function') switchNav('dashboard');
+          if (typeof window.fetchLiveRentalsAndSync === 'function') window.fetchLiveRentalsAndSync();
+          if (typeof window.fetchLiveTransactions === 'function') window.fetchLiveTransactions();
+          return;
+        } else {
+          if (banner) {
+            banner.className = 'nxa-banner bad';
+            banner.textContent = json.message || 'Onboarding completion failed.';
+            banner.hidden = false;
+          }
+        }
+      } catch (err) {
+        console.error('Complete onboarding API error:', err);
+        if (banner) {
+          banner.className = 'nxa-banner bad';
+          banner.textContent = 'Network error during onboarding. Please try again.';
+          banner.hidden = false;
+        }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    // Staff role-login is handled centrally by window.nxaDoSt connected to /api/auth/role-login
+  }
+
+  function hookRentalBlockchain() {
+    const origRequestRental = window.requestRental;
+    window.requestRental = async function (bookId) {
+      if (origRequestRental) origRequestRental.call(this, bookId);
+
+      try {
+        const book = booksData.find(b => b.id === bookId);
+        const bookMongoId = (book && book.backendId) ? book.backendId : '6ad83761ebf9a8210e0f276b';
+        if (authToken) {
+          const res = await fetch(`${API_BASE}/rentals`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + authToken
+            },
+            body: JSON.stringify({ bookId: bookMongoId })
+          });
+          const rentData = await res.json();
+          if (rentData.success && rentData.data) {
+            console.log('✅ Rental saved to MongoDB backend. Rental ID:', rentData.data._id);
+            if (typeof showToast === 'function') showToast('Rental request recorded on database and blockchain!', 'success');
+          }
+        }
+      } catch (err) {
+        console.warn('Backend rental record note:', err.message);
+      }
+    };
+  }
+
+  let cachedNotifications = [];
+
+  window.closeEmailPreview = function () {
+    const modal = document.getElementById('emailPreviewModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  };
+
+  window.openEmailPreview = function (index) {
+    const notif = cachedNotifications[index];
+    if (!notif) return;
+    const modal = document.getElementById('emailPreviewModal');
+    const subjEl = document.getElementById('emailPreviewSubject');
+    const recipEl = document.getElementById('emailPreviewRecipient');
+    const dateEl = document.getElementById('emailPreviewDate');
+    const bodyEl = document.getElementById('emailPreviewBody');
+
+    if (subjEl) subjEl.textContent = notif.subject || notif.title || 'Email Notification';
+    if (recipEl) recipEl.textContent = 'To: ' + (notif.userEmail || (currentUser && currentUser.email) || 'scholar@univ.edu');
+    if (dateEl) dateEl.textContent = notif.createdAt ? new Date(notif.createdAt).toLocaleString() : 'Just now';
+    if (bodyEl) {
+      bodyEl.innerHTML = notif.html || `<p>${notif.preview || notif.title}</p>`;
+    }
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+  };
+
+  window.testAllEmailNotifications = async function () {
+    const targetEmail = (currentUser && currentUser.email) ? currentUser.email : '';
+    if (!targetEmail) {
+      if (typeof showToast === 'function') showToast('Please sign in to send email notifications.', 'warning');
+      return;
+    }
+    const targetName = (currentUser && currentUser.name) ? currentUser.name : targetEmail.split('@')[0];
+    if (typeof showToast === 'function') showToast(`Triggering lifecycle emails for ${targetEmail}...`, 'info');
+
+    try {
+      const res = await fetch(`${API_BASE}/notifications/test-all`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: targetEmail, name: targetName })
+      });
+      const data = await res.json();
+      if (data && data.success) {
+        if (typeof showToast === 'function') {
+          showToast(`✅ All 8 lifecycle emails sent to ${targetEmail}!`, 'success');
+        }
+        await fetchLiveNotifications();
+      }
+    } catch (err) {
+      console.warn('Test all notifications warning:', err.message);
+    }
+  };
+
+  async function fetchLiveNotifications() {
+    try {
+      const email = (currentUser && currentUser.email) ? currentUser.email : '';
+      const res = await fetch(`${API_BASE}/notifications${email ? '?email=' + encodeURIComponent(email) : ''}`);
+      const json = await res.json();
+      if (json && json.success && Array.isArray(json.data)) {
+        cachedNotifications = json.data;
+        const c = document.getElementById('notificationsList');
+        const badge = document.getElementById('notifBadge');
+        const cnt = document.getElementById('notifCountText');
+
+        if (cnt) cnt.innerText = `${json.data.length} Notifications`;
+        if (badge) {
+          badge.innerText = json.data.length;
+          badge.style.display = json.data.length > 0 ? 'flex' : 'none';
+        }
+
+        if (json.data.length === 0) {
+          if (c) {
+            c.innerHTML = `
               <div class="py-12 px-4 text-center">
                 <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">notifications_none</span>
                 <p class="text-sm font-bold text-brand-rosewood dark:text-gray-200">No notifications yet</p>
                 <p class="text-xs text-gray-500 mt-1">When you borrow, rent, or return books, activity alerts will appear here.</p>
               </div>`;
-              }
-              return;
-            }
+          }
+          return;
+        }
 
-            if (c) {
-              const typeIcons = {
-                sign_in: { icon: 'lock', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', label: 'Sign-In Alert' },
-                book_buying: { icon: 'shopping_bag', color: 'text-amber-800 bg-amber-50 border-amber-200', label: 'Order Placed' },
-                pending: { icon: 'hourglass_empty', color: 'text-amber-600 bg-amber-50 border-amber-200', label: 'Pending Status' },
-                accepted: { icon: 'check_circle', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', label: 'Book Accepted' },
-                otp: { icon: 'key', color: 'text-amber-700 bg-amber-50 border-amber-200', label: 'Pickup OTP' },
-                successfully_received: { icon: 'menu_book', color: 'text-blue-700 bg-blue-50 border-blue-200', label: 'Book Received' },
-                penalty: { icon: 'warning', color: 'text-rose-700 bg-rose-50 border-rose-200', label: 'Late Penalty' },
-                completed: { icon: 'verified', color: 'text-emerald-800 bg-emerald-50 border-emerald-200', label: 'Completed' },
-              };
+        if (c) {
+          const typeIcons = {
+            sign_in: { icon: 'lock', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', label: 'Sign-In Alert' },
+            book_buying: { icon: 'shopping_bag', color: 'text-amber-800 bg-amber-50 border-amber-200', label: 'Order Placed' },
+            pending: { icon: 'hourglass_empty', color: 'text-amber-600 bg-amber-50 border-amber-200', label: 'Pending Status' },
+            accepted: { icon: 'check_circle', color: 'text-emerald-700 bg-emerald-50 border-emerald-200', label: 'Book Accepted' },
+            otp: { icon: 'key', color: 'text-amber-700 bg-amber-50 border-amber-200', label: 'Pickup OTP' },
+            successfully_received: { icon: 'menu_book', color: 'text-blue-700 bg-blue-50 border-blue-200', label: 'Book Received' },
+            penalty: { icon: 'warning', color: 'text-rose-700 bg-rose-50 border-rose-200', label: 'Late Penalty' },
+            completed: { icon: 'verified', color: 'text-emerald-800 bg-emerald-50 border-emerald-200', label: 'Completed' },
+          };
 
-              const testBtnHtml = `
+          const testBtnHtml = `
             <div class="p-3 mb-3 bg-gradient-to-r from-amber-500/15 via-brand-rosewood/15 to-amber-500/15 rounded-xl border border-amber-500/30 text-center shadow-sm">
               <div class="text-[11px] font-bold text-brand-rosewood dark:text-white mb-1">📧 Email Notification Simulator</div>
               <p class="text-[10px] text-gray-500 dark:text-gray-300 mb-2">Simulate real student notifications for your active account.</p>
@@ -3733,10 +3746,10 @@
             </div>
           `;
 
-              const itemsHtml = json.data.map((n, idx) => {
-                const conf = typeIcons[n.type] || { icon: 'mail', color: 'text-gray-700 bg-gray-50 border-gray-200', label: 'Notification' };
-                const timeStr = n.createdAt ? new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent';
-                return `
+          const itemsHtml = json.data.map((n, idx) => {
+            const conf = typeIcons[n.type] || { icon: 'mail', color: 'text-gray-700 bg-gray-50 border-gray-200', label: 'Notification' };
+            const timeStr = n.createdAt ? new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent';
+            return `
               <div onclick="window.openEmailPreview(${idx})" class="p-3 rounded-xl bg-white dark:bg-brand-darkCard border border-brand-rosewood/15 hover:border-brand-rosewood/40 shadow-sm cursor-pointer transition-all hover:-translate-y-0.5 space-y-1.5">
                 <div class="flex items-center justify-between gap-1">
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${conf.color}">
@@ -3753,42 +3766,42 @@
                 </div>
               </div>
             `;
-              }).join('');
+          }).join('');
 
-              c.innerHTML = testBtnHtml + itemsHtml;
-            }
-          }
-        } catch (err) {
-          console.warn('Live notifications fetch notice:', err.message);
+          c.innerHTML = testBtnHtml + itemsHtml;
         }
       }
+    } catch (err) {
+      console.warn('Live notifications fetch notice:', err.message);
+    }
+  }
 
-      function hookEmailNotifications() {
-        const origToggle = window.toggleNotificationDrawer;
-        window.toggleNotificationDrawer = function () {
-          if (typeof origToggle === 'function') origToggle.apply(this, arguments);
-          fetchLiveNotifications();
-        };
+  function hookEmailNotifications() {
+    const origToggle = window.toggleNotificationDrawer;
+    window.toggleNotificationDrawer = function () {
+      if (typeof origToggle === 'function') origToggle.apply(this, arguments);
+      fetchLiveNotifications();
+    };
 
-        setTimeout(fetchLiveNotifications, 1500);
-      }
+    setTimeout(fetchLiveNotifications, 1500);
+  }
 
-      /* ==========================================================================
-         CAMPUS UPI PAYMENT, STUDENT DASHBOARD TRACKING & LIBRARIAN VERIFICATION
-         ========================================================================== */
+  /* ==========================================================================
+     CAMPUS UPI PAYMENT, STUDENT DASHBOARD TRACKING & LIBRARIAN VERIFICATION
+     ========================================================================== */
 
-      function getAuthToken() {
-        return authToken || localStorage.getItem('booknexus_token') || localStorage.getItem('bookhive_token') || '';
-      }
+  function getAuthToken() {
+    return authToken || localStorage.getItem('booknexus_token') || localStorage.getItem('bookhive_token') || '';
+  }
 
-      let liveTransactions = [];
-      let liveRentals = [];
-      let currentPaymentTxn = null;
+  let liveTransactions = [];
+  let liveRentals = [];
+  let currentPaymentTxn = null;
 
-      function ensureCampusUpiModal() {
-        if (document.getElementById('campusUpiModal')) return;
+  function ensureCampusUpiModal() {
+    if (document.getElementById('campusUpiModal')) return;
 
-        const modalHtml = `
+    const modalHtml = `
     <div id="campusUpiModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
       <div class="bg-brand-ivory dark:bg-brand-darkSurface rounded-3xl max-w-lg w-full p-6 sm:p-7 relative border border-brand-rosewood/20 shadow-2xl space-y-5">
         <button type="button" onclick="window.closeCampusUpiModal()" class="absolute top-5 right-5 text-gray-400 hover:text-brand-rosewood dark:hover:text-white p-1 rounded-full">
@@ -3878,279 +3891,279 @@
     </div>
     `;
 
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+  }
+
+  window.closeCampusUpiModal = function () {
+    const modal = document.getElementById('campusUpiModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  };
+
+  window.copyCampusUpiId = function () {
+    const vpa = document.getElementById('upiModalPayeeVpa')?.textContent || '';
+    if (vpa && navigator.clipboard) {
+      navigator.clipboard.writeText(vpa);
+      if (typeof showToast === 'function') showToast('Campus UPI ID copied: ' + vpa, 'success');
+    }
+  };
+
+  window.openCampusUpiPayModal = async function (opts = {}) {
+    ensureCampusUpiModal();
+    const token = getAuthToken();
+    const modal = document.getElementById('campusUpiModal');
+
+    const {
+      rentalId = null,
+      bookId = null,
+      title = 'Library Materials',
+      amount = 50,
+      type = 'fine_payment',
+      note = ''
+    } = opts;
+
+    if (typeof showToast === 'function') showToast('Initiating campus payment session...', 'info');
+
+    try {
+      const res = await fetch(`${API_BASE}/payments/initiate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          rentalId,
+          bookId,
+          type,
+          amount: Number(amount),
+          note: note || `Payment for ${title}`
+        })
+      });
+
+      const json = await res.json();
+      if (!json || !json.success) {
+        if (typeof showToast === 'function') showToast(json.message || 'Could not initiate payment', 'error');
+        return;
       }
 
-      window.closeCampusUpiModal = function () {
-        const modal = document.getElementById('campusUpiModal');
-        if (modal) {
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
+      currentPaymentTxn = json.data;
+
+      document.getElementById('upiModalPurpose').textContent = (type || 'fine_payment').replace(/_/g, ' ').toUpperCase();
+      document.getElementById('upiModalBookTitle').textContent = title;
+      document.getElementById('upiModalTxnRef').textContent = currentPaymentTxn.transactionRef;
+      document.getElementById('upiModalAmount').textContent = '₹' + Number(currentPaymentTxn.amount).toFixed(2);
+      const utrEl = document.getElementById('campusUpiUtrInput');
+      if (utrEl) utrEl.value = '';
+
+      const upiContainer = document.getElementById('upiConfiguredContainer');
+      const unconfigContainer = document.getElementById('upiUnconfiguredContainer');
+
+      if (json.isUpiConfigured && json.upiUri) {
+        if (upiContainer) upiContainer.classList.remove('hidden');
+        if (unconfigContainer) unconfigContainer.classList.add('hidden');
+        const vpaEl = document.getElementById('upiModalPayeeVpa');
+        if (vpaEl) vpaEl.textContent = json.campusUpiId;
+        const linkEl = document.getElementById('upiModalDeepLink');
+        if (linkEl) linkEl.href = json.upiUri;
+
+        const qrImg = document.getElementById('upiQrCodeImg');
+        if (qrImg) {
+          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(json.upiUri)}`;
         }
-      };
-
-      window.copyCampusUpiId = function () {
-        const vpa = document.getElementById('upiModalPayeeVpa')?.textContent || '';
-        if (vpa && navigator.clipboard) {
-          navigator.clipboard.writeText(vpa);
-          if (typeof showToast === 'function') showToast('Campus UPI ID copied: ' + vpa, 'success');
-        }
-      };
-
-      window.openCampusUpiPayModal = async function (opts = {}) {
-        ensureCampusUpiModal();
-        const token = getAuthToken();
-        const modal = document.getElementById('campusUpiModal');
-
-        const {
-          rentalId = null,
-          bookId = null,
-          title = 'Library Materials',
-          amount = 50,
-          type = 'fine_payment',
-          note = ''
-        } = opts;
-
-        if (typeof showToast === 'function') showToast('Initiating campus payment session...', 'info');
-
-        try {
-          const res = await fetch(`${API_BASE}/payments/initiate`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({
-              rentalId,
-              bookId,
-              type,
-              amount: Number(amount),
-              note: note || `Payment for ${title}`
-            })
-          });
-
-          const json = await res.json();
-          if (!json || !json.success) {
-            if (typeof showToast === 'function') showToast(json.message || 'Could not initiate payment', 'error');
-            return;
-          }
-
-          currentPaymentTxn = json.data;
-
-          document.getElementById('upiModalPurpose').textContent = (type || 'fine_payment').replace(/_/g, ' ').toUpperCase();
-          document.getElementById('upiModalBookTitle').textContent = title;
-          document.getElementById('upiModalTxnRef').textContent = currentPaymentTxn.transactionRef;
-          document.getElementById('upiModalAmount').textContent = '₹' + Number(currentPaymentTxn.amount).toFixed(2);
-          const utrEl = document.getElementById('campusUpiUtrInput');
-          if (utrEl) utrEl.value = '';
-
-          const upiContainer = document.getElementById('upiConfiguredContainer');
-          const unconfigContainer = document.getElementById('upiUnconfiguredContainer');
-
-          if (json.isUpiConfigured && json.upiUri) {
-            if (upiContainer) upiContainer.classList.remove('hidden');
-            if (unconfigContainer) unconfigContainer.classList.add('hidden');
-            const vpaEl = document.getElementById('upiModalPayeeVpa');
-            if (vpaEl) vpaEl.textContent = json.campusUpiId;
-            const linkEl = document.getElementById('upiModalDeepLink');
-            if (linkEl) linkEl.href = json.upiUri;
-
-            const qrImg = document.getElementById('upiQrCodeImg');
-            if (qrImg) {
-              qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(json.upiUri)}`;
-            }
-          } else {
-            if (upiContainer) upiContainer.classList.add('hidden');
-            if (unconfigContainer) unconfigContainer.classList.remove('hidden');
-          }
-
-          if (modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-          }
-        } catch (err) {
-          console.error('Initiate payment error:', err);
-          if (typeof showToast === 'function') showToast('Server error: ' + err.message, 'error');
-        }
-      };
-
-      window.submitCampusUpiUtr = async function () {
-        if (!currentPaymentTxn) {
-          if (typeof showToast === 'function') showToast('No active transaction found.', 'error');
-          return;
-        }
-
-        const utrInput = document.getElementById('campusUpiUtrInput');
-        const utrVal = (utrInput ? utrInput.value : '').trim();
-
-        if (!utrVal || utrVal.length < 6) {
-          if (typeof showToast === 'function') showToast('Please enter a valid 12-digit UPI Reference / UTR Number.', 'warning');
-          if (utrInput) utrInput.focus();
-          return;
-        }
-
-        const token = getAuthToken();
-        const btn = document.getElementById('btnSubmitUpiUtr');
-        if (btn) btn.disabled = true;
-
-        try {
-          const res = await fetch(`${API_BASE}/payments/submit-utr`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({
-              transactionRef: currentPaymentTxn.transactionRef,
-              utrNumber: utrVal
-            })
-          });
-
-          const json = await res.json();
-          if (json && json.success) {
-            if (typeof showToast === 'function') {
-              showToast('✅ Payment submitted! Status: Pending Verification by Librarian.', 'success');
-            }
-            window.closeCampusUpiModal();
-            await fetchLiveTransactions();
-            await fetchLiveRentalsAndSync();
-          } else {
-            if (typeof showToast === 'function') showToast(json.message || 'Submission failed', 'error');
-          }
-        } catch (err) {
-          console.error('Submit UTR error:', err);
-          if (typeof showToast === 'function') showToast('Connection error: ' + err.message, 'error');
-        } finally {
-          if (btn) btn.disabled = false;
-        }
-      };
-
-      window.librarianVerifyPayment = async function (transactionRef, amount) {
-        if (!confirm(`Verify payment ${transactionRef} for ₹${amount}?\n\nThis confirms the funds have cleared on the campus bank terminal, resets student overdue penalties, and dispatches the official receipt email.`)) {
-          return;
-        }
-
-        const token = getAuthToken();
-        try {
-          const res = await fetch(`${API_BASE}/payments/verify`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({
-              transactionRef,
-              note: 'Manually verified by Librarian on campus bank terminal'
-            })
-          });
-
-          const json = await res.json();
-          if (json && json.success) {
-            if (typeof showToast === 'function') {
-              showToast(`✅ Payment ${transactionRef} verified! Receipt emailed to student.`, 'success');
-            }
-            await fetchLiveTransactions();
-            await fetchLiveRentalsAndSync();
-          } else {
-            if (typeof showToast === 'function') showToast(json.message || 'Verification failed', 'error');
-          }
-        } catch (err) {
-          console.error('Librarian verify error:', err);
-          if (typeof showToast === 'function') showToast('Verification error: ' + err.message, 'error');
-        }
-      };
-
-      window.librarianRejectPayment = async function (transactionRef) {
-        const reason = prompt(`Enter reason for rejecting payment ${transactionRef}:`, 'UTR reference could not be located on campus bank statement.');
-        if (reason === null) return;
-
-        const token = getAuthToken();
-        try {
-          const res = await fetch(`${API_BASE}/payments/reject`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({
-              transactionRef,
-              reason: reason || 'Invalid or unverified UPI reference.'
-            })
-          });
-
-          const json = await res.json();
-          if (json && json.success) {
-            if (typeof showToast === 'function') {
-              showToast(`❌ Payment ${transactionRef} rejected. Student notified.`, 'info');
-            }
-            await fetchLiveTransactions();
-          } else {
-            if (typeof showToast === 'function') showToast(json.message || 'Rejection failed', 'error');
-          }
-        } catch (err) {
-          console.error('Librarian reject error:', err);
-          if (typeof showToast === 'function') showToast('Rejection error: ' + err.message, 'error');
-        }
-      };
-
-      function getStatusBadge(status, utr) {
-        switch (status) {
-          case 'initiated':
-            return `<span class="inline-flex items-center gap-1 bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-300">Initiated</span>`;
-          case 'pending':
-            return `<span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300" title="UTR: ${utr || ''}">⏳ Pending Verification</span>`;
-          case 'successful':
-            return `<span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300">✓ Successful</span>`;
-          case 'rejected':
-            return `<span class="inline-flex items-center gap-1 bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-rose-300">✗ Rejected</span>`;
-          case 'refunded':
-            return `<span class="inline-flex items-center gap-1 bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-purple-300">↺ Refunded</span>`;
-          default:
-            return `<span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded">${status}</span>`;
-        }
+      } else {
+        if (upiContainer) upiContainer.classList.add('hidden');
+        if (unconfigContainer) unconfigContainer.classList.remove('hidden');
       }
 
-      async function fetchLiveTransactions() {
-        const token = getAuthToken();
-        if (!token) return;
-
-        try {
-          const res = await fetch(`${API_BASE}/payments`, {
-            headers: { 'Authorization': 'Bearer ' + token }
-          });
-          const json = await res.json();
-          if (json && json.success && Array.isArray(json.data)) {
-            liveTransactions = json.data;
-
-            window.transactionsList = liveTransactions.map(t => ({
-              id: t.transactionRef,
-              title: (t.book && t.book.title) ? t.book.title : (t.type ? t.type.replace(/_/g, ' ') : 'Library Material'),
-              type: t.type ? t.type.replace(/_/g, ' ').toUpperCase() : 'PAYMENT',
-              date: new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-              amount: '₹' + Number(t.amount).toFixed(2),
-              status: t.status === 'initiated' ? 'Initiated' :
-                t.status === 'pending' ? 'Pending Verification' :
-                  t.status === 'successful' ? 'Successful' :
-                    t.status === 'rejected' ? 'Rejected' :
-                      t.status === 'refunded' ? 'Refunded' : 'Completed',
-              raw: t
-            }));
-
-            renderLiveStudentTransactions();
-            renderLiveAdminLedger();
-            renderLibrarianVerificationDesk();
-          }
-        } catch (err) {
-          console.warn('Fetch live transactions notice:', err.message);
-        }
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
       }
+    } catch (err) {
+      console.error('Initiate payment error:', err);
+      if (typeof showToast === 'function') showToast('Server error: ' + err.message, 'error');
+    }
+  };
 
-      function renderLiveStudentTransactions() {
-        const tbody = document.getElementById('studentTransactionsTableBody');
-        if (!tbody) return;
+  window.submitCampusUpiUtr = async function () {
+    if (!currentPaymentTxn) {
+      if (typeof showToast === 'function') showToast('No active transaction found.', 'error');
+      return;
+    }
 
-        if (!liveTransactions || !liveTransactions.length) {
-          tbody.innerHTML = `
+    const utrInput = document.getElementById('campusUpiUtrInput');
+    const utrVal = (utrInput ? utrInput.value : '').trim();
+
+    if (!utrVal || utrVal.length < 6) {
+      if (typeof showToast === 'function') showToast('Please enter a valid 12-digit UPI Reference / UTR Number.', 'warning');
+      if (utrInput) utrInput.focus();
+      return;
+    }
+
+    const token = getAuthToken();
+    const btn = document.getElementById('btnSubmitUpiUtr');
+    if (btn) btn.disabled = true;
+
+    try {
+      const res = await fetch(`${API_BASE}/payments/submit-utr`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          transactionRef: currentPaymentTxn.transactionRef,
+          utrNumber: utrVal
+        })
+      });
+
+      const json = await res.json();
+      if (json && json.success) {
+        if (typeof showToast === 'function') {
+          showToast('✅ Payment submitted! Status: Pending Verification by Librarian.', 'success');
+        }
+        window.closeCampusUpiModal();
+        await fetchLiveTransactions();
+        await fetchLiveRentalsAndSync();
+      } else {
+        if (typeof showToast === 'function') showToast(json.message || 'Submission failed', 'error');
+      }
+    } catch (err) {
+      console.error('Submit UTR error:', err);
+      if (typeof showToast === 'function') showToast('Connection error: ' + err.message, 'error');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  };
+
+  window.librarianVerifyPayment = async function (transactionRef, amount) {
+    if (!confirm(`Verify payment ${transactionRef} for ₹${amount}?\n\nThis confirms the funds have cleared on the campus bank terminal, resets student overdue penalties, and dispatches the official receipt email.`)) {
+      return;
+    }
+
+    const token = getAuthToken();
+    try {
+      const res = await fetch(`${API_BASE}/payments/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          transactionRef,
+          note: 'Manually verified by Librarian on campus bank terminal'
+        })
+      });
+
+      const json = await res.json();
+      if (json && json.success) {
+        if (typeof showToast === 'function') {
+          showToast(`✅ Payment ${transactionRef} verified! Receipt emailed to student.`, 'success');
+        }
+        await fetchLiveTransactions();
+        await fetchLiveRentalsAndSync();
+      } else {
+        if (typeof showToast === 'function') showToast(json.message || 'Verification failed', 'error');
+      }
+    } catch (err) {
+      console.error('Librarian verify error:', err);
+      if (typeof showToast === 'function') showToast('Verification error: ' + err.message, 'error');
+    }
+  };
+
+  window.librarianRejectPayment = async function (transactionRef) {
+    const reason = prompt(`Enter reason for rejecting payment ${transactionRef}:`, 'UTR reference could not be located on campus bank statement.');
+    if (reason === null) return;
+
+    const token = getAuthToken();
+    try {
+      const res = await fetch(`${API_BASE}/payments/reject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          transactionRef,
+          reason: reason || 'Invalid or unverified UPI reference.'
+        })
+      });
+
+      const json = await res.json();
+      if (json && json.success) {
+        if (typeof showToast === 'function') {
+          showToast(`❌ Payment ${transactionRef} rejected. Student notified.`, 'info');
+        }
+        await fetchLiveTransactions();
+      } else {
+        if (typeof showToast === 'function') showToast(json.message || 'Rejection failed', 'error');
+      }
+    } catch (err) {
+      console.error('Librarian reject error:', err);
+      if (typeof showToast === 'function') showToast('Rejection error: ' + err.message, 'error');
+    }
+  };
+
+  function getStatusBadge(status, utr) {
+    switch (status) {
+      case 'initiated':
+        return `<span class="inline-flex items-center gap-1 bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-300">Initiated</span>`;
+      case 'pending':
+        return `<span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300" title="UTR: ${utr || ''}">⏳ Pending Verification</span>`;
+      case 'successful':
+        return `<span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300">✓ Successful</span>`;
+      case 'rejected':
+        return `<span class="inline-flex items-center gap-1 bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-rose-300">✗ Rejected</span>`;
+      case 'refunded':
+        return `<span class="inline-flex items-center gap-1 bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-purple-300">↺ Refunded</span>`;
+      default:
+        return `<span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded">${status}</span>`;
+    }
+  }
+
+  async function fetchLiveTransactions() {
+    const token = getAuthToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/payments`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const json = await res.json();
+      if (json && json.success && Array.isArray(json.data)) {
+        liveTransactions = json.data;
+
+        window.transactionsList = liveTransactions.map(t => ({
+          id: t.transactionRef,
+          title: (t.book && t.book.title) ? t.book.title : (t.type ? t.type.replace(/_/g, ' ') : 'Library Material'),
+          type: t.type ? t.type.replace(/_/g, ' ').toUpperCase() : 'PAYMENT',
+          date: new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+          amount: '₹' + Number(t.amount).toFixed(2),
+          status: t.status === 'initiated' ? 'Initiated' :
+            t.status === 'pending' ? 'Pending Verification' :
+              t.status === 'successful' ? 'Successful' :
+                t.status === 'rejected' ? 'Rejected' :
+                  t.status === 'refunded' ? 'Refunded' : 'Completed',
+          raw: t
+        }));
+
+        renderLiveStudentTransactions();
+        renderLiveAdminLedger();
+        renderLibrarianVerificationDesk();
+      }
+    } catch (err) {
+      console.warn('Fetch live transactions notice:', err.message);
+    }
+  }
+
+  function renderLiveStudentTransactions() {
+    const tbody = document.getElementById('studentTransactionsTableBody');
+    if (!tbody) return;
+
+    if (!liveTransactions || !liveTransactions.length) {
+      tbody.innerHTML = `
         <tr>
           <td colspan="7" class="py-10 text-center text-xs font-semibold text-gray-500">
             <span class="material-symbols-outlined text-3xl text-gray-400 block mb-1">receipt_long</span>
@@ -4158,13 +4171,13 @@
           </td>
         </tr>
       `;
-          return;
-        }
+      return;
+    }
 
-        tbody.innerHTML = liveTransactions.map(t => {
-          const bTitle = t.book?.title || t.type?.replace(/_/g, ' ') || 'Library Material';
-          const dateStr = new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-          return `
+    tbody.innerHTML = liveTransactions.map(t => {
+      const bTitle = t.book?.title || t.type?.replace(/_/g, ' ') || 'Library Material';
+      const dateStr = new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      return `
         <tr class="hover:bg-brand-parchment/50">
           <td class="py-3 px-4 font-mono font-bold">${t.transactionRef}</td>
           <td class="py-3 px-4 font-bold">${bTitle}</td>
@@ -4177,15 +4190,15 @@
           </td>
         </tr>
       `;
-        }).join('');
-      }
+    }).join('');
+  }
 
-      function renderLiveAdminLedger() {
-        const tbody = document.getElementById('adminLedgerTableBody');
-        if (!tbody) return;
+  function renderLiveAdminLedger() {
+    const tbody = document.getElementById('adminLedgerTableBody');
+    if (!tbody) return;
 
-        if (!liveTransactions || !liveTransactions.length) {
-          tbody.innerHTML = `
+    if (!liveTransactions || !liveTransactions.length) {
+      tbody.innerHTML = `
         <tr>
           <td colspan="7" class="py-10 text-center text-xs font-semibold text-gray-500">
             <span class="material-symbols-outlined text-3xl text-gray-400 block mb-1">account_balance_wallet</span>
@@ -4193,14 +4206,14 @@
           </td>
         </tr>
       `;
-          return;
-        }
+      return;
+    }
 
-        tbody.innerHTML = liveTransactions.map(t => {
-          const bTitle = t.book?.title || t.type?.replace(/_/g, ' ') || 'Library Material';
-          const dateStr = new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-          const isPending = t.status === 'pending';
-          return `
+    tbody.innerHTML = liveTransactions.map(t => {
+      const bTitle = t.book?.title || t.type?.replace(/_/g, ' ') || 'Library Material';
+      const dateStr = new Date(t.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      const isPending = t.status === 'pending';
+      return `
         <tr class="hover:bg-brand-parchment/50">
           <td class="py-3 px-4 font-mono font-bold">${t.transactionRef}</td>
           <td class="py-3 px-4 font-bold">${bTitle}<br><span class="text-[10px] text-gray-500 font-normal">Student: ${t.user?.name || 'Student'} (${t.user?.usn || ''})</span></td>
@@ -4221,24 +4234,24 @@
           </td>
         </tr>
       `;
-        }).join('');
-      }
+    }).join('');
+  }
 
-      function renderLibrarianVerificationDesk() {
-        const host = document.getElementById('adminPanelLedger');
-        if (!host) return;
+  function renderLibrarianVerificationDesk() {
+    const host = document.getElementById('adminPanelLedger');
+    if (!host) return;
 
-        let deskEl = document.getElementById('campusUpiAdminDeskHost');
-        if (!deskEl) {
-          deskEl = document.createElement('div');
-          deskEl.id = 'campusUpiAdminDeskHost';
-          deskEl.className = 'my-4 space-y-4';
-          host.insertBefore(deskEl, host.firstChild);
-        }
+    let deskEl = document.getElementById('campusUpiAdminDeskHost');
+    if (!deskEl) {
+      deskEl = document.createElement('div');
+      deskEl.id = 'campusUpiAdminDeskHost';
+      deskEl.className = 'my-4 space-y-4';
+      host.insertBefore(deskEl, host.firstChild);
+    }
 
-        const pendingTxns = liveTransactions.filter(t => t.status === 'pending');
+    const pendingTxns = liveTransactions.filter(t => t.status === 'pending');
 
-        deskEl.innerHTML = `
+    deskEl.innerHTML = `
       <div class="p-5 bg-gradient-to-r from-amber-500/10 via-brand-rosewood/10 to-amber-500/10 rounded-2xl border border-amber-500/30 space-y-4 shadow-sm">
         <div class="flex flex-wrap justify-between items-center gap-2">
           <div class="flex items-center gap-2.5">
@@ -4303,46 +4316,46 @@
         `}
       </div>
     `;
+  }
+
+  // Keeps the rental list other panels read from, then defers every dashboard
+  // number to the one authoritative /analytics/user-dashboard response.
+  async function fetchLiveRentalsAndSync() {
+    const token = getAuthToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/rentals`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const json = await res.json();
+      if (json && json.success && Array.isArray(json.data)) {
+        liveRentals = json.data;
       }
+    } catch (err) {
+      console.warn('Live rentals fetch notice:', err.message);
+    }
 
-      // Keeps the rental list other panels read from, then defers every dashboard
-      // number to the one authoritative /analytics/user-dashboard response.
-      async function fetchLiveRentalsAndSync() {
-        const token = getAuthToken();
-        if (!token) return;
+    await bnLoadDashboard(true);
+  }
 
-        try {
-          const res = await fetch(`${API_BASE}/rentals`, {
-            headers: { 'Authorization': 'Bearer ' + token }
-          });
-          const json = await res.json();
-          if (json && json.success && Array.isArray(json.data)) {
-            liveRentals = json.data;
-          }
-        } catch (err) {
-          console.warn('Live rentals fetch notice:', err.message);
-        }
+  function renderStudentDashboardTracker(stats = {}) {
+    const host = document.getElementById('dashboardHost');
+    if (!host) return;
 
-        await bnLoadDashboard(true);
-      }
+    const trackerId = 'campusLifecycleTrackerHost';
+    let trackerEl = document.getElementById(trackerId);
+    if (!trackerEl) {
+      trackerEl = document.createElement('div');
+      trackerEl.id = trackerId;
+      trackerEl.className = 'my-6';
+    }
+    // Mounted as a sibling of #dashboardHost: the dashboard rewrites its own
+    // innerHTML on every filter change, which used to delete this panel.
+    const mount = host.parentNode || host;
+    if (trackerEl.parentNode !== mount) mount.insertBefore(trackerEl, host);
 
-      function renderStudentDashboardTracker(stats = {}) {
-        const host = document.getElementById('dashboardHost');
-        if (!host) return;
-
-        const trackerId = 'campusLifecycleTrackerHost';
-        let trackerEl = document.getElementById(trackerId);
-        if (!trackerEl) {
-          trackerEl = document.createElement('div');
-          trackerEl.id = trackerId;
-          trackerEl.className = 'my-6';
-        }
-        // Mounted as a sibling of #dashboardHost: the dashboard rewrites its own
-        // innerHTML on every filter change, which used to delete this panel.
-        const mount = host.parentNode || host;
-        if (trackerEl.parentNode !== mount) mount.insertBefore(trackerEl, host);
-
-        trackerEl.innerHTML = `
+    trackerEl.innerHTML = `
       <div class="p-6 bg-gradient-to-br from-brand-parchment via-brand-cream to-brand-parchment dark:from-brand-darkSurface dark:to-brand-darkCard rounded-3xl border border-brand-rosewood/20 shadow-md space-y-5">
         <div class="flex flex-wrap justify-between items-center gap-2 border-b border-brand-rosewood/15 pb-4">
           <div>
@@ -4436,322 +4449,322 @@
         ` : ''}
       </div>
     `;
+  }
+
+  function hookPayFineButtons() {
+    const origRenderLibTabs = window.renderStudentLibraryTabs;
+    if (typeof origLibTabsHooked === 'undefined') {
+      window.origLibTabsHooked = true;
+      if (typeof origRenderLibTabs === 'function') {
+        window.renderStudentLibraryTabs = function () {
+          origRenderLibTabs.apply(this, arguments);
+          injectPayFineButtonsIntoTables();
+        };
       }
+    }
 
-      function hookPayFineButtons() {
-        const origRenderLibTabs = window.renderStudentLibraryTabs;
-        if (typeof origLibTabsHooked === 'undefined') {
-          window.origLibTabsHooked = true;
-          if (typeof origRenderLibTabs === 'function') {
-            window.renderStudentLibraryTabs = function () {
-              origRenderLibTabs.apply(this, arguments);
-              injectPayFineButtonsIntoTables();
-            };
-          }
-        }
-
-        const origRenderRentals = window.renderMyRentals;
-        if (typeof origRentalsHooked === 'undefined') {
-          window.origRentalsHooked = true;
-          if (typeof origRenderRentals === 'function') {
-            window.renderMyRentals = function () {
-              origRenderRentals.apply(this, arguments);
-              injectPayFineButtonsIntoTables();
-            };
-          }
-        }
+    const origRenderRentals = window.renderMyRentals;
+    if (typeof origRentalsHooked === 'undefined') {
+      window.origRentalsHooked = true;
+      if (typeof origRenderRentals === 'function') {
+        window.renderMyRentals = function () {
+          origRenderRentals.apply(this, arguments);
+          injectPayFineButtonsIntoTables();
+        };
       }
+    }
+  }
 
-      function injectPayFineButtonsIntoTables() {
-        // 1. Check Library Borrowed Books Table for unpaid late fines
-        const libTable = document.querySelector('#viewStudentLibrary table tbody');
-        if (libTable) {
-          libTable.querySelectorAll('tr').forEach(tr => {
-            const text = tr.innerText || '';
-            if (text.includes('₹') && (text.includes('Late') || text.includes('Overdue') || text.includes('Fine Pending') || text.includes('Fine Unpaid'))) {
-              if (!tr.querySelector('.pay-fine-injected-btn')) {
-                const bTitle = tr.querySelector('td:first-child')?.innerText?.trim() || 'Overdue Library Book';
-                const fineMatch = text.match(/₹\s*(\d+)/);
-                const fineAmt = fineMatch ? parseInt(fineMatch[1], 10) : 50;
+  function injectPayFineButtonsIntoTables() {
+    // 1. Check Library Borrowed Books Table for unpaid late fines
+    const libTable = document.querySelector('#viewStudentLibrary table tbody');
+    if (libTable) {
+      libTable.querySelectorAll('tr').forEach(tr => {
+        const text = tr.innerText || '';
+        if (text.includes('₹') && (text.includes('Late') || text.includes('Overdue') || text.includes('Fine Pending') || text.includes('Fine Unpaid'))) {
+          if (!tr.querySelector('.pay-fine-injected-btn')) {
+            const bTitle = tr.querySelector('td:first-child')?.innerText?.trim() || 'Overdue Library Book';
+            const fineMatch = text.match(/₹\s*(\d+)/);
+            const fineAmt = fineMatch ? parseInt(fineMatch[1], 10) : 50;
 
-                const fineCell = tr.querySelector('td:last-child');
-                if (fineCell && fineAmt > 0) {
-                  const payBtn = document.createElement('div');
-                  payBtn.className = 'mt-1 pay-fine-injected-btn';
-                  payBtn.innerHTML = `
+            const fineCell = tr.querySelector('td:last-child');
+            if (fineCell && fineAmt > 0) {
+              const payBtn = document.createElement('div');
+              payBtn.className = 'mt-1 pay-fine-injected-btn';
+              payBtn.innerHTML = `
                 <button type="button" onclick="window.openCampusUpiPayModal({ title: '${bTitle.replace(/'/g, "\\'")}', amount: ${fineAmt}, type: 'fine_payment' })" class="px-2 py-1 bg-brand-rosewood hover:bg-brand-rosewoodHover text-white rounded text-[10px] font-bold flex items-center gap-1 shadow-sm">
                   <span class="material-symbols-outlined text-xs">payments</span> Pay Fine (UPI)
                 </button>
               `;
-                  fineCell.appendChild(payBtn);
-                }
-              }
+              fineCell.appendChild(payBtn);
             }
-          });
-        }
-      }
-
-      const origPreviewReceipt = window.previewReceipt;
-      window.previewReceipt = function (txnId) {
-        const t = (window.transactionsList || []).find(x => x.id === txnId);
-        if (t && t.raw) {
-          const raw = t.raw;
-          const recId = document.getElementById('recTxnId');
-          const recName = document.getElementById('recStudentName');
-          const recRoll = document.getElementById('recStudentRoll');
-          const recType = document.getElementById('recTxnType');
-          const recTitle = document.getElementById('recBookTitle');
-          const recDate = document.getElementById('recTxnDate');
-          const recAmt = document.getElementById('recAmount');
-
-          if (recId) recId.innerText = raw.transactionRef;
-          if (recName) recName.innerText = raw.user?.name || (window.currentUser && window.currentUser.name) || 'Student';
-          if (recRoll) recRoll.innerText = raw.user?.usn || (window.currentUser && window.currentUser.rollNo) || 'CS2026';
-          if (recType) recType.innerText = raw.type ? raw.type.replace(/_/g, ' ').toUpperCase() : 'PAYMENT';
-          if (recTitle) recTitle.innerText = raw.book?.title || raw.type?.replace(/_/g, ' ') || 'Library Materials';
-          if (recDate) recDate.innerText = new Date(raw.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-          if (recAmt) recAmt.innerText = '₹' + Number(raw.amount).toFixed(2);
-
-          if (typeof openModal === 'function') openModal('receiptPreviewModal');
-          return;
-        }
-        if (typeof origPreviewReceipt === 'function') origPreviewReceipt.call(this, txnId);
-      };
-
-      window.fetchLiveTransactions = fetchLiveTransactions;
-      window.fetchLiveRentalsAndSync = fetchLiveRentalsAndSync;
-
-
-      /* ==========================================================================
-         STUDENT DASHBOARD DATA
-         Every figure on the dashboard comes from the signed-in student's own
-         MongoDB records, fetched once from GET /api/analytics/user-dashboard and
-         handed to the dashboard renderer. Nothing is derived from sample data, and
-         no number is painted until the request has actually resolved.
-         ========================================================================== */
-
-      const DASH_DAY = 86400000;
-      let dashboardRequest = null;
-      let dashboardData = null;
-
-      const dAgo = v => (v ? (Date.now() - new Date(v).getTime()) / DASH_DAY : null);
-      const dAhead = v => (v ? (new Date(v).getTime() - Date.now()) / DASH_DAY : null);
-      const d1 = n => Math.round(n * 10) / 10;
-
-      function borrowStage(rec) {
-        switch (rec.group) {
-          case 'pending': return ['Requested', 'Awaiting owner approval'];
-          case 'cancelled': return ['Cancelled', 'Request declined'];
-          case 'approved': return rec.pickedUp
-            ? ['Return Due', 'Book is with you']
-            : ['Ready for Pickup', 'Collect within the pickup window'];
-          case 'active': return ['Return Due', 'Book is with you'];
-          case 'returned': return ['Returned', rec.depositState === 'pend' ? 'Returned · deposit release pending' : 'Returned'];
-          case 'completed': return ['Completed', 'Returned'];
-          default: return ['In progress', ''];
-        }
-      }
-
-      function lendStage(rec) {
-        switch (rec.group) {
-          case 'pending': return ['Request Received', '—', '—'];
-          case 'cancelled': return ['Cancelled', 'Declined', '—'];
-          case 'approved': return rec.pickedUp
-            ? ['Dropped Off', 'Dropped off', 'Awaiting borrower pickup']
-            : ['Awaiting Drop-off', 'You must drop off the book', 'Not yet rented'];
-          case 'active': return ['Rented', 'Dropped off', 'With the borrower'];
-          case 'returned': return ['Return Pending', 'Dropped off', 'Return verification pending'];
-          case 'completed': return ['Completed', 'Dropped off', 'Returned'];
-          default: return ['In progress', '—', '—'];
-        }
-      }
-
-      function toDashRental(rec) {
-        const out = {
-          id: rec.id, role: rec.role, t: rec.title, a: rec.author, d: rec.dept, w: rec.counterparty,
-          rent: rec.rentalFee || 0, dep: rec.depositAmount || 0, g: rec.group,
-          s: Math.max(0, d1(dAgo(rec.requestDate) || 0)),
-          ds: rec.depositState || 'none',
-          pay: rec.paid ? 1 : 0
-        };
-        if (rec.returnDate) out.e = Math.max(0, d1(dAgo(rec.returnDate)));
-        if (rec.depositRetained) { out.ret = rec.depositRetained; out.why = 'Late return · fine kept from the deposit'; }
-        if (rec.finePaid) out.fine = rec.finePaid;
-        if (rec.fineOutstanding) out.out = rec.fineOutstanding;
-
-        if (rec.role === 'B') {
-          const st = borrowStage(rec);
-          out.stage = st[0]; out.rt = st[1];
-          if (rec.pickedUp) out.pick = 1;
-          if (rec.dueDate && !rec.returnDate) {
-            out.due = d1(dAhead(rec.dueDate));
-            out.rt = out.due >= 0
-              ? 'Return due in ' + Math.max(0, Math.round(out.due)) + ' day(s)'
-              : 'Overdue by ' + Math.round(-out.due) + ' day(s)';
           }
-          if (out.stage === 'Ready for Pickup') out.win = Math.max(0.1, d1(3 - (dAgo(rec.approvedDate) || 0)));
-        } else {
-          const st = lendStage(rec);
-          out.stage = st[0]; out.dr = st[1]; out.rt = st[2];
-          out.earn = rec.earned ? 1 : 0;
-          if (out.stage === 'Awaiting Drop-off') out.dl = Math.max(0.1, d1(2 - (dAgo(rec.approvedDate || rec.requestDate) || 0)));
-          if (out.stage === 'Dropped Off') out.win = Math.max(0.1, d1(3 - (dAgo(rec.approvedDate) || 0)));
-          if (rec.dueDate && !rec.returnDate) out.due = d1(dAhead(rec.dueDate));
         }
-        return out;
+      });
+    }
+  }
+
+  const origPreviewReceipt = window.previewReceipt;
+  window.previewReceipt = function (txnId) {
+    const t = (window.transactionsList || []).find(x => x.id === txnId);
+    if (t && t.raw) {
+      const raw = t.raw;
+      const recId = document.getElementById('recTxnId');
+      const recName = document.getElementById('recStudentName');
+      const recRoll = document.getElementById('recStudentRoll');
+      const recType = document.getElementById('recTxnType');
+      const recTitle = document.getElementById('recBookTitle');
+      const recDate = document.getElementById('recTxnDate');
+      const recAmt = document.getElementById('recAmount');
+
+      if (recId) recId.innerText = raw.transactionRef;
+      if (recName) recName.innerText = raw.user?.name || (window.currentUser && window.currentUser.name) || 'Student';
+      if (recRoll) recRoll.innerText = raw.user?.usn || (window.currentUser && window.currentUser.rollNo) || 'CS2026';
+      if (recType) recType.innerText = raw.type ? raw.type.replace(/_/g, ' ').toUpperCase() : 'PAYMENT';
+      if (recTitle) recTitle.innerText = raw.book?.title || raw.type?.replace(/_/g, ' ') || 'Library Materials';
+      if (recDate) recDate.innerText = new Date(raw.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      if (recAmt) recAmt.innerText = '₹' + Number(raw.amount).toFixed(2);
+
+      if (typeof openModal === 'function') openModal('receiptPreviewModal');
+      return;
+    }
+    if (typeof origPreviewReceipt === 'function') origPreviewReceipt.call(this, txnId);
+  };
+
+  window.fetchLiveTransactions = fetchLiveTransactions;
+  window.fetchLiveRentalsAndSync = fetchLiveRentalsAndSync;
+
+
+  /* ==========================================================================
+     STUDENT DASHBOARD DATA
+     Every figure on the dashboard comes from the signed-in student's own
+     MongoDB records, fetched once from GET /api/analytics/user-dashboard and
+     handed to the dashboard renderer. Nothing is derived from sample data, and
+     no number is painted until the request has actually resolved.
+     ========================================================================== */
+
+  const DASH_DAY = 86400000;
+  let dashboardRequest = null;
+  let dashboardData = null;
+
+  const dAgo = v => (v ? (Date.now() - new Date(v).getTime()) / DASH_DAY : null);
+  const dAhead = v => (v ? (new Date(v).getTime() - Date.now()) / DASH_DAY : null);
+  const d1 = n => Math.round(n * 10) / 10;
+
+  function borrowStage(rec) {
+    switch (rec.group) {
+      case 'pending': return ['Requested', 'Awaiting owner approval'];
+      case 'cancelled': return ['Cancelled', 'Request declined'];
+      case 'approved': return rec.pickedUp
+        ? ['Return Due', 'Book is with you']
+        : ['Ready for Pickup', 'Collect within the pickup window'];
+      case 'active': return ['Return Due', 'Book is with you'];
+      case 'returned': return ['Returned', rec.depositState === 'pend' ? 'Returned · deposit release pending' : 'Returned'];
+      case 'completed': return ['Completed', 'Returned'];
+      default: return ['In progress', ''];
+    }
+  }
+
+  function lendStage(rec) {
+    switch (rec.group) {
+      case 'pending': return ['Request Received', '—', '—'];
+      case 'cancelled': return ['Cancelled', 'Declined', '—'];
+      case 'approved': return rec.pickedUp
+        ? ['Dropped Off', 'Dropped off', 'Awaiting borrower pickup']
+        : ['Awaiting Drop-off', 'You must drop off the book', 'Not yet rented'];
+      case 'active': return ['Rented', 'Dropped off', 'With the borrower'];
+      case 'returned': return ['Return Pending', 'Dropped off', 'Return verification pending'];
+      case 'completed': return ['Completed', 'Dropped off', 'Returned'];
+      default: return ['In progress', '—', '—'];
+    }
+  }
+
+  function toDashRental(rec) {
+    const out = {
+      id: rec.id, role: rec.role, t: rec.title, a: rec.author, d: rec.dept, w: rec.counterparty,
+      rent: rec.rentalFee || 0, dep: rec.depositAmount || 0, g: rec.group,
+      s: Math.max(0, d1(dAgo(rec.requestDate) || 0)),
+      ds: rec.depositState || 'none',
+      pay: rec.paid ? 1 : 0
+    };
+    if (rec.returnDate) out.e = Math.max(0, d1(dAgo(rec.returnDate)));
+    if (rec.depositRetained) { out.ret = rec.depositRetained; out.why = 'Late return · fine kept from the deposit'; }
+    if (rec.finePaid) out.fine = rec.finePaid;
+    if (rec.fineOutstanding) out.out = rec.fineOutstanding;
+
+    if (rec.role === 'B') {
+      const st = borrowStage(rec);
+      out.stage = st[0]; out.rt = st[1];
+      if (rec.pickedUp) out.pick = 1;
+      if (rec.dueDate && !rec.returnDate) {
+        out.due = d1(dAhead(rec.dueDate));
+        out.rt = out.due >= 0
+          ? 'Return due in ' + Math.max(0, Math.round(out.due)) + ' day(s)'
+          : 'Overdue by ' + Math.round(-out.due) + ' day(s)';
       }
+      if (out.stage === 'Ready for Pickup') out.win = Math.max(0.1, d1(3 - (dAgo(rec.approvedDate) || 0)));
+    } else {
+      const st = lendStage(rec);
+      out.stage = st[0]; out.dr = st[1]; out.rt = st[2];
+      out.earn = rec.earned ? 1 : 0;
+      if (out.stage === 'Awaiting Drop-off') out.dl = Math.max(0.1, d1(2 - (dAgo(rec.approvedDate || rec.requestDate) || 0)));
+      if (out.stage === 'Dropped Off') out.win = Math.max(0.1, d1(3 - (dAgo(rec.approvedDate) || 0)));
+      if (rec.dueDate && !rec.returnDate) out.due = d1(dAhead(rec.dueDate));
+    }
+    return out;
+  }
 
-      function toDashLibrary(rec) {
-        const out = {
-          id: rec.id, t: rec.title, a: rec.author, d: rec.dept,
-          s: Math.max(0, d1(dAgo(rec.borrowedDate) || 0))
-        };
-        if (rec.dueDate) out.due = d1(dAgo(rec.dueDate));
-        if (rec.returnDate) out.e = Math.max(0, d1(dAgo(rec.returnDate)));
-        if (rec.finePaid) out.fine = rec.finePaid;
-        if (rec.fineOutstanding) out.out = rec.fineOutstanding;
-        return out;
-      }
+  function toDashLibrary(rec) {
+    const out = {
+      id: rec.id, t: rec.title, a: rec.author, d: rec.dept,
+      s: Math.max(0, d1(dAgo(rec.borrowedDate) || 0))
+    };
+    if (rec.dueDate) out.due = d1(dAgo(rec.dueDate));
+    if (rec.returnDate) out.e = Math.max(0, d1(dAgo(rec.returnDate)));
+    if (rec.finePaid) out.fine = rec.finePaid;
+    if (rec.fineOutstanding) out.out = rec.fineOutstanding;
+    return out;
+  }
 
-      function buildTrackerStats(data) {
-        const s = data.summary || {};
-        const borrowed = (data.rentals && data.rentals.borrowed) || [];
-        const lent = (data.rentals && data.rentals.lent) || [];
-        const txns = data.transactions || [];
-        const has = st => r => st.includes(r.status);
+  function buildTrackerStats(data) {
+    const s = data.summary || {};
+    const borrowed = (data.rentals && data.rentals.borrowed) || [];
+    const lent = (data.rentals && data.rentals.lent) || [];
+    const txns = data.transactions || [];
+    const has = st => r => st.includes(r.status);
 
-        const activeList = borrowed.filter(has(['active', 'received', 'approved', 'overdue']));
-        const latest = activeList[0];
-        const overdue = borrowed.filter(r => r.status === 'overdue' || (r.dueDate && !r.returnDate && new Date(r.dueDate) < new Date()));
-        const overdueDays = overdue.reduce((max, r) => {
-          if (!r.dueDate) return max;
-          const d = Math.floor((Date.now() - new Date(r.dueDate).getTime()) / DASH_DAY);
-          return d > max ? d : max;
-        }, 0);
+    const activeList = borrowed.filter(has(['active', 'received', 'approved', 'overdue']));
+    const latest = activeList[0];
+    const overdue = borrowed.filter(r => r.status === 'overdue' || (r.dueDate && !r.returnDate && new Date(r.dueDate) < new Date()));
+    const overdueDays = overdue.reduce((max, r) => {
+      if (!r.dueDate) return max;
+      const d = Math.floor((Date.now() - new Date(r.dueDate).getTime()) / DASH_DAY);
+      return d > max ? d : max;
+    }, 0);
 
-        return {
-          borrowTotal: borrowed.length,
-          borrowPending: borrowed.filter(has(['requested', 'pending'])).length,
-          borrowApproved: borrowed.filter(has(['approved', 'active', 'received', 'overdue', 'returned', 'completed'])).length,
-          borrowRejected: borrowed.filter(has(['rejected'])).length,
-          activeRentalsCount: activeList.length,
-          latestActiveBook: (latest && latest.book && latest.book.title) || '',
-          latestDueDate: latest && latest.dueDate ? new Date(latest.dueDate).toLocaleDateString('en-IN') : '',
-          returnsTotal: borrowed.filter(has(['returned', 'completed'])).length + lent.filter(has(['returned', 'completed'])).length,
-          returnsRequested: borrowed.filter(has(['returned'])).length,
-          returnsApproved: lent.filter(has(['returned'])).length,
-          returnsCompleted: borrowed.filter(has(['completed'])).length + lent.filter(has(['completed'])).length,
-          overdueDays: Math.max(0, overdueDays),
-          totalPenaltyAmount: s.outstandingFines || 0,
-          overdueBookTitle: (overdue[0] && overdue[0].book && overdue[0].book.title) || 'Library Book',
-          paymentsTotal: txns.length,
-          payInitiated: txns.filter(t => t.status === 'initiated').length,
-          payPending: txns.filter(t => t.status === 'pending').length,
-          paySuccessful: txns.filter(t => t.status === 'successful').length,
-          ledgerTotal: txns.length,
-          hasActivity: data.hasActivity === true
-        };
-      }
+    return {
+      borrowTotal: borrowed.length,
+      borrowPending: borrowed.filter(has(['requested', 'pending'])).length,
+      borrowApproved: borrowed.filter(has(['approved', 'active', 'received', 'overdue', 'returned', 'completed'])).length,
+      borrowRejected: borrowed.filter(has(['rejected'])).length,
+      activeRentalsCount: activeList.length,
+      latestActiveBook: (latest && latest.book && latest.book.title) || '',
+      latestDueDate: latest && latest.dueDate ? new Date(latest.dueDate).toLocaleDateString('en-IN') : '',
+      returnsTotal: borrowed.filter(has(['returned', 'completed'])).length + lent.filter(has(['returned', 'completed'])).length,
+      returnsRequested: borrowed.filter(has(['returned'])).length,
+      returnsApproved: lent.filter(has(['returned'])).length,
+      returnsCompleted: borrowed.filter(has(['completed'])).length + lent.filter(has(['completed'])).length,
+      overdueDays: Math.max(0, overdueDays),
+      totalPenaltyAmount: s.outstandingFines || 0,
+      overdueBookTitle: (overdue[0] && overdue[0].book && overdue[0].book.title) || 'Library Book',
+      paymentsTotal: txns.length,
+      payInitiated: txns.filter(t => t.status === 'initiated').length,
+      payPending: txns.filter(t => t.status === 'pending').length,
+      paySuccessful: txns.filter(t => t.status === 'successful').length,
+      ledgerTotal: txns.length,
+      hasActivity: data.hasActivity === true
+    };
+  }
 
-      function clearDashboardUi() {
-        dashboardData = null;
-        window.bnDashboardData = null;
-        window.bnSessionUser = null;
-        const el = document.getElementById('campusLifecycleTrackerHost');
-        if (el && el.parentNode) el.parentNode.removeChild(el);
-        if (window.NDX && typeof window.NDX.setState === 'function') window.NDX.setState('signedout');
-      }
+  function clearDashboardUi() {
+    dashboardData = null;
+    window.bnDashboardData = null;
+    window.bnSessionUser = null;
+    const el = document.getElementById('campusLifecycleTrackerHost');
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+    if (window.NDX && typeof window.NDX.setState === 'function') window.NDX.setState('signedout');
+  }
 
-      async function bnLoadDashboard(force) {
-        const token = getAuthToken();
-        if (!token) { clearDashboardUi(); return null; }
-        if (dashboardRequest && !force) return dashboardRequest;
+  async function bnLoadDashboard(force) {
+    const token = getAuthToken();
+    if (!token) { clearDashboardUi(); return null; }
+    if (dashboardRequest && !force) return dashboardRequest;
 
-        if (window.NDX && typeof window.NDX.setState === 'function' && (force || !dashboardData)) {
-          window.NDX.setState('loading');
-        }
+    if (window.NDX && typeof window.NDX.setState === 'function' && (force || !dashboardData)) {
+      window.NDX.setState('loading');
+    }
 
-        dashboardRequest = (async () => {
-          try {
-            const res = await fetch(`${API_BASE}/analytics/user-dashboard`, {
-              headers: { 'Authorization': 'Bearer ' + token }
-            });
-            if (res.status === 401) throw new Error('Your session has expired. Please sign in again.');
-            let json = null;
-            try { json = await res.json(); } catch (e) { json = null; }
-            if (!res.ok || !json || !json.success || !json.data) {
-              throw new Error((json && json.message) || ('The dashboard service replied with HTTP ' + res.status + '.'));
-            }
-
-            const data = json.data;
-            dashboardData = data;
-            window.bnDashboardData = data;
-
-            const recs = data.records || { rentals: [], library: [] };
-            if (window.NDX && typeof window.NDX.setData === 'function') {
-              window.NDX.setData((recs.rentals || []).map(toDashRental), (recs.library || []).map(toDashLibrary));
-            }
-            renderStudentDashboardTracker(buildTrackerStats(data));
-            return data;
-          } catch (err) {
-            console.warn('Dashboard load failed:', err.message);
-            if (window.NDX && typeof window.NDX.setState === 'function') window.NDX.setState('error', err.message);
-            return null;
-          } finally {
-            dashboardRequest = null;
-          }
-        })();
-
-        return dashboardRequest;
-      }
-
-      window.bnLoadDashboard = bnLoadDashboard;
-      window.bnClearDashboard = clearDashboardUi;
-
-      function hookDashboardNav() {
-        const orig = window.switchNav;
-        if (typeof orig !== 'function' || window.__bnDashNavHooked) return;
-        window.__bnDashNavHooked = true;
-        window.switchNav = function (key) {
-          const out = orig.apply(this, arguments);
-          if (key === 'dashboard') bnLoadDashboard(true);
-          return out;
-        };
-      }
-
-      function initCampusPaymentSystem() {
-        ensureCampusUpiModal();
-        hookPayFineButtons();
-        hookDashboardNav();
-        setTimeout(async () => {
-          await fetchLiveTransactions();
-          await fetchLiveRentalsAndSync();
-        }, 600);
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-          setupRealData();
-          hookAuth();
-          hookRentalBlockchain();
-          hookEmailNotifications();
-          initCampusPaymentSystem();
-          if (typeof window.initGoogleAuth === 'function') window.initGoogleAuth();
-          if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
-          if (typeof renderHomeHero === 'function') renderHomeHero();
-          if (typeof renderHomeShelf === 'function') renderHomeShelf();
-          if (typeof gxRender === 'function') gxRender();
+    dashboardRequest = (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/analytics/user-dashboard`, {
+          headers: { 'Authorization': 'Bearer ' + token }
         });
-      } else {
-        setupRealData();
-        hookAuth();
-        hookRentalBlockchain();
-        hookEmailNotifications();
-        initCampusPaymentSystem();
-        if (typeof window.initGoogleAuth === 'function') window.initGoogleAuth();
-        if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
-        if (typeof renderHomeHero === 'function') renderHomeHero();
-        if (typeof renderHomeShelf === 'function') renderHomeShelf();
-        if (typeof gxRender === 'function') gxRender();
+        if (res.status === 401) throw new Error('Your session has expired. Please sign in again.');
+        let json = null;
+        try { json = await res.json(); } catch (e) { json = null; }
+        if (!res.ok || !json || !json.success || !json.data) {
+          throw new Error((json && json.message) || ('The dashboard service replied with HTTP ' + res.status + '.'));
+        }
+
+        const data = json.data;
+        dashboardData = data;
+        window.bnDashboardData = data;
+
+        const recs = data.records || { rentals: [], library: [] };
+        if (window.NDX && typeof window.NDX.setData === 'function') {
+          window.NDX.setData((recs.rentals || []).map(toDashRental), (recs.library || []).map(toDashLibrary));
+        }
+        renderStudentDashboardTracker(buildTrackerStats(data));
+        return data;
+      } catch (err) {
+        console.warn('Dashboard load failed:', err.message);
+        if (window.NDX && typeof window.NDX.setState === 'function') window.NDX.setState('error', err.message);
+        return null;
+      } finally {
+        dashboardRequest = null;
       }
-    }) ();
+    })();
+
+    return dashboardRequest;
+  }
+
+  window.bnLoadDashboard = bnLoadDashboard;
+  window.bnClearDashboard = clearDashboardUi;
+
+  function hookDashboardNav() {
+    const orig = window.switchNav;
+    if (typeof orig !== 'function' || window.__bnDashNavHooked) return;
+    window.__bnDashNavHooked = true;
+    window.switchNav = function (key) {
+      const out = orig.apply(this, arguments);
+      if (key === 'dashboard') bnLoadDashboard(true);
+      return out;
+    };
+  }
+
+  function initCampusPaymentSystem() {
+    ensureCampusUpiModal();
+    hookPayFineButtons();
+    hookDashboardNav();
+    setTimeout(async () => {
+      await fetchLiveTransactions();
+      await fetchLiveRentalsAndSync();
+    }, 600);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setupRealData();
+      hookAuth();
+      hookRentalBlockchain();
+      hookEmailNotifications();
+      initCampusPaymentSystem();
+      if (typeof window.initGoogleAuth === 'function') window.initGoogleAuth();
+      if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
+      if (typeof renderHomeHero === 'function') renderHomeHero();
+      if (typeof renderHomeShelf === 'function') renderHomeShelf();
+      if (typeof gxRender === 'function') gxRender();
+    });
+  } else {
+    setupRealData();
+    hookAuth();
+    hookRentalBlockchain();
+    hookEmailNotifications();
+    initCampusPaymentSystem();
+    if (typeof window.initGoogleAuth === 'function') window.initGoogleAuth();
+    if (typeof window.updateNavProfile === 'function') window.updateNavProfile();
+    if (typeof renderHomeHero === 'function') renderHomeHero();
+    if (typeof renderHomeShelf === 'function') renderHomeShelf();
+    if (typeof gxRender === 'function') gxRender();
+  }
+})();

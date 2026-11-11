@@ -26381,7 +26381,14 @@ function watch() { const p = document.getElementById('adminPanelAuth'); if (!p |
 </script>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="js/bridge.js"></script>
-<script src="/js/bridge.js"></script>
+<script>
+  (function() {
+    if (!window.__bridgeLoaded) {
+      var s = document.createElement('script');
+      s.src = (window.location.protocol === 'file:' ? 'js/bridge.js' : '/js/bridge.js');
+      document.head.appendChild(s);
+    }
+  })();
+</script>
 </body>
 </html>
