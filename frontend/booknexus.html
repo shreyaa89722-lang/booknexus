@@ -4,22 +4,11 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Book NEXUS | Academic Library & Student Rental Sanctuary</title>
-    <link rel="preconnect" href="https://covers.openlibrary.org" crossorigin/>
-    <link rel="preconnect" href="https://books.google.com"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780374533557-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780073398204-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780807014271-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780078028229-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9781501111112-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780073529578-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9781501197277-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780073398273-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780143127741-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780133489798-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9781400062751-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9781118412930-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780441172719-L.jpg?default=false" fetchpriority="high"/>
-    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780062315007-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com"/>
+    <link rel="dns-prefetch" href="https://covers.openlibrary.org"/>
+    <link rel="dns-prefetch" href="https://books.google.com"/>
     <meta name="description" content="Book NEXUS - University Library Borrowing & Secure Student Textbook Rentals."/>
 
     <!-- Google Fonts & Icons -->
@@ -2194,6 +2183,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
             <div id="nxaUser">
                 <div id="nxaVCh" class="nxa-form" hidden>
                     <button type="button" class="nxa-soc" id="nxaGoogleBtn" onclick="nxlSocial('google')"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 010-9.4l-7.9-6.1a24 24 0 000 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Continue with Google</button>
+                    <button type="button" class="nxa-soc" id="nxaPhoneBtn" onclick="nxlSocial('phone')"><span class="material-symbols-outlined" style="font-size:20px;margin-right:8px;vertical-align:middle;color:currentColor;">call</span>Continue with phone</button>
                     <div class="nxa-or"><span>OR</span></div>
                     <form id="nxlEmF" class="nxa-form" novalidate onsubmit="nxlEmail(event)">
                         <div class="nxa-f"><label for="nxlEm" class="nxa-l" style="position:absolute;left:-9999px">Email address</label><input id="nxlEm" class="nxa-in pl" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="120" placeholder="Email address"><p class="nxa-err" id="nxlEmE" hidden></p></div>
@@ -2215,7 +2205,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                 </form>
                 <form id="nxaVNew" class="nxa-form" novalidate hidden onsubmit="nxlCreate(event)">
                     <div class="nxa-chip"><span id="nxlNwEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
-                    <div class="nxs-prog" aria-hidden="true"><i class="on"></i><i id="nxlP2"></i><span id="nxlStepLbl">Step 1 of 2</span></div>
+                    <div class="nxs-prog" aria-hidden="true"><i class="on"></i><i id="nxlP2"></i><span id="nxlStepLbl">STEP 1 OF 2 · COLLEGE DETAILS</span></div>
                     <div id="nxlS1">
                     <p class="nxa-note"><span class="material-symbols-outlined">verified_user</span><span>No account for this email yet. Enter your <b>name</b> and <b>USN</b> exactly as in college records. Your email, phone, department and other details are filled in automatically.</span></p>
                     <div class="nxa-f"><label for="nxlName" class="nxa-l">Full name</label><input id="nxlName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="As in college records"><p class="nxa-hint">Capitals and spaces don’t matter. Dots do.</p><p class="nxa-err" id="nxlNameE" hidden></p></div>
@@ -24298,7 +24288,7 @@ document.addEventListener('input', e => { if (e.target && e.target.id === 'nxlBi
 function nwShow(n, quiet) {
   nwStep = n; const two = n === 2;
   $('nxlS1').hidden = two; $('nxlS2').hidden = !two; $('nxlBk').hidden = !two; $('nxlP2').className = two ? 'on' : '';
-  $('nxlStepLbl').textContent = two ? 'Step 2 of 2 · About you' : 'Step 1 of 2 · College details';
+  $('nxlStepLbl').textContent = two ? 'STEP 2 OF 2 · ABOUT YOU' : 'STEP 1 OF 2 · COLLEGE DETAILS';
   $('nxlNwBtn').textContent = two ? 'Create account' : 'Continue';
   const h = $('authModal') && $('authModal').querySelector('h3'), u = $('nxaSub');
   if (h) h.textContent = two ? 'Make it yours' : HEAD.nw[0]; if (u) u.textContent = two ? 'Three quick questions so fellow readers know you. All required, and you can change them anytime from your profile.' : HEAD.nw[1];

@@ -95,10 +95,20 @@ app.get("/health", healthHandler);
 // Serve static frontend assets from frontend/dist or frontend
 const frontendDist = path.join(__dirname, "../frontend/dist");
 const frontendRoot = path.join(__dirname, "../frontend");
+const staticOptions = {
+  maxAge: '1d',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+    } else if (filePath.match(/\.(js|css|png|jpg|jpeg|gif|ico|svg|woff2?)$/)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }
+};
 if (fs.existsSync(frontendDist)) {
-  app.use(express.static(frontendDist));
+  app.use(express.static(frontendDist, staticOptions));
 } else if (fs.existsSync(frontendRoot)) {
-  app.use(express.static(frontendRoot));
+  app.use(express.static(frontendRoot, staticOptions));
 }
 
 // General rate limiter — applies to all API routes

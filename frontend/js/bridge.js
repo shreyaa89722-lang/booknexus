@@ -2407,7 +2407,25 @@
     const origNxlBack = window.nxlBack;
     window.nxlBack = function () {
       window.__googleOnboardingData = null;
-      if (typeof origNxlBack === 'function') origNxlBack.apply(this, arguments);
+      const nxa = document.getElementById('nxa');
+      if (nxa) nxa.classList.remove('nx-roles');
+      if (typeof origNxlBack === 'function') {
+        try { origNxlBack.apply(this, arguments); } catch (e) {}
+      }
+      const chForm = document.getElementById('nxaVCh');
+      if (chForm) { chForm.hidden = false; chForm.style.display = 'block'; }
+      const nwForm = document.getElementById('nxaVNew');
+      if (nwForm) { nwForm.hidden = true; nwForm.style.display = 'none'; }
+      const pwForm = document.getElementById('nxaVPw');
+      if (pwForm) { pwForm.hidden = true; pwForm.style.display = 'none'; }
+      const phForm = document.getElementById('nxaVPh');
+      if (phForm) { phForm.hidden = true; phForm.style.display = 'none'; }
+      const h3 = document.querySelector('#authModal h3');
+      if (h3) h3.textContent = 'Log in or sign up';
+      const sub = document.getElementById('nxaSub');
+      if (sub) sub.textContent = 'Continue with your email. Your college details are filled in automatically.';
+      const emInput = document.getElementById('nxlEm');
+      if (emInput && window.__currentAuthEmail) emInput.value = window.__currentAuthEmail;
     };
 
     async function sendGoogleTokenToBackend(payload) {
@@ -2937,6 +2955,18 @@
     window.nxlSocial = function (kind) {
       if (kind === 'google') {
         openGoogleSignIn();
+      } else if (kind === 'phone') {
+        if (typeof window.nxaView === 'function') {
+          window.nxaView('ph');
+        } else {
+          const phForm = document.getElementById('nxaVPh');
+          if (phForm) {
+            const ch = document.getElementById('nxaVCh');
+            if (ch) ch.hidden = true;
+            phForm.hidden = false;
+            phForm.style.display = 'block';
+          }
+        }
       }
     };
 
@@ -2962,6 +2992,11 @@
 
       function openStep1Registration(sData) {
         window.__currentAuthEmail = raw;
+        const nxa = document.getElementById('nxa');
+        if (nxa) nxa.classList.add('nx-roles');
+        document.querySelectorAll('#nxa .nxa-seg button').forEach(b => {
+          b.setAttribute('aria-pressed', b.dataset.r === 'student' ? 'true' : 'false');
+        });
         const nxaUser = document.getElementById('nxaUser');
         if (nxaUser) { nxaUser.hidden = false; nxaUser.style.display = 'block'; }
         const nxaStaff = document.getElementById('nxaStaff');
@@ -2984,6 +3019,19 @@
           nForm.hidden = false;
           nForm.style.display = 'block';
         }
+        const s1 = document.getElementById('nxlS1');
+        if (s1) s1.hidden = false;
+        const s2 = document.getElementById('nxlS2');
+        if (s2) s2.hidden = true;
+        const bk = document.getElementById('nxlBk');
+        if (bk) bk.hidden = true;
+        const p2 = document.getElementById('nxlP2');
+        if (p2) p2.className = '';
+        const stepLbl = document.getElementById('nxlStepLbl');
+        if (stepLbl) stepLbl.textContent = 'STEP 1 OF 2 · COLLEGE DETAILS';
+        const nwBtn = document.getElementById('nxlNwBtn');
+        if (nwBtn) nwBtn.textContent = 'Continue';
+
         const nwChip = document.getElementById('nxlNwEm');
         if (nwChip) nwChip.textContent = raw;
         const s = sData || {};
@@ -3002,6 +3050,9 @@
         if (h3) h3.textContent = 'Create your account';
         const sub = document.getElementById('nxaSub');
         if (sub) sub.textContent = 'Just your name, USN and a password.';
+        if (typeof window.nxAuthKit === 'object' && window.nxAuthKit.mountRules) {
+          window.nxAuthKit.mountRules('nxlNp', 'nxlNpX');
+        }
         setTimeout(() => {
           if (nameInput) nameInput.focus();
         }, 60);
