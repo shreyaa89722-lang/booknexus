@@ -4,11 +4,22 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Book NEXUS | Academic Library & Student Rental Sanctuary</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com"/>
-    <link rel="dns-prefetch" href="https://covers.openlibrary.org"/>
-    <link rel="dns-prefetch" href="https://books.google.com"/>
+    <link rel="preconnect" href="https://covers.openlibrary.org" crossorigin/>
+    <link rel="preconnect" href="https://books.google.com"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780374533557-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780073398204-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780807014271-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780078028229-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9781501111112-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780073529578-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9781501197277-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780073398273-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780143127741-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780133489798-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9781400062751-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9781118412930-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780441172719-L.jpg?default=false" fetchpriority="high"/>
+    <link rel="preload" as="image" href="https://covers.openlibrary.org/b/isbn/9780062315007-L.jpg?default=false" fetchpriority="high"/>
     <meta name="description" content="Book NEXUS - University Library Borrowing & Secure Student Textbook Rentals."/>
 
     <!-- Google Fonts & Icons -->
@@ -286,7 +297,7 @@
         .nx-book__cover { display: block; width: 100%; }
         .nx-book__t, .nx-book__a, .nx-book__go { display: block; }
         .nx-book__meta { display: flex; justify-content: flex-start; }
-        .nx-book__t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .nx-book__t { display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .nx-book__a { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .nx-book__meta { flex-wrap: wrap; }
         /* how Book NEXUS works: two differentiated panels */
@@ -575,7 +586,7 @@ html.dark .pl-foot button{background:#B99A68;color:#1E1715}
         .cx-save .material-symbols-outlined{font-size:18px}
         .cx-body{display:flex;flex-direction:column;flex:1;padding:12px 4px 4px;gap:0}
         .cx-genre{font-size:11.5px;font-weight:700;color:var(--cx-rose);margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .cx-title{font:700 16px/1.25 'Bodoni Moda',serif;color:var(--cx-ink);margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.5em}
+        .cx-title{font:700 16px/1.25 'Bodoni Moda',serif;color:var(--cx-ink);margin:0;display:-webkit-box;-webkit-line-clamp: 2; line-clamp: 2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.5em}
         .cx-author{font-size:12.5px;font-weight:500;color:var(--cx-mute);margin:4px 0 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .cx-status{display:flex;flex-direction:column;gap:2px;margin-bottom:12px;padding-top:12px;border-top:1px solid var(--cx-line);min-height:50px}
         .cx-st{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:800;color:var(--cx-sage)}
@@ -1078,6 +1089,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
 .nxa-eye .material-symbols-outlined{font-size:22px}
 .nxa-err{margin:6px 2px 0;font:600 12px 'Manrope';color:#DC2626;line-height:1.4}.dark .nxa-err{color:#F87171}
 .nxa-err[hidden],.nxa-msg[hidden]{display:none}
+.nxa-form[hidden],#nxa .nxa-form[hidden],[hidden]{display:none!important}
 .nxa-banner{margin:0 0 12px;padding:10px 12px;border-radius:14px;font:600 12px/1.45 'Manrope'}
 .nxa-banner.bad{background:rgba(220,38,38,.09);color:#B91C1C;border:1px solid rgba(220,38,38,.25)}.dark .nxa-banner.bad{color:#FCA5A5}
 .nxa-banner.ok{background:rgba(74,107,83,.12);color:#3C5A44;border:1px solid rgba(74,107,83,.3)}.dark .nxa-banner.ok{color:#9AD1A8}
@@ -2182,12 +2194,12 @@ textarea.pf-inp{resize:vertical;min-height:96px}
             <div id="nxaRp" class="nxa-chip" hidden><span id="nxlRpEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
             <div id="nxaUser">
                 <div id="nxaVCh" class="nxa-form" hidden>
-                    <button type="button" class="nxa-soc" id="nxaGoogleBtn" onclick="nxlSocial('google')"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 010-9.4l-7.9-6.1a24 24 0 000 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Continue with Google</button>
-                    <button type="button" class="nxa-soc" id="nxaPhoneBtn" onclick="nxlSocial('phone')"><span class="material-symbols-outlined" style="font-size:20px;margin-right:8px;vertical-align:middle;color:currentColor;">call</span>Continue with phone</button>
+                    <button type="button" class="nxa-soc" onclick="nxlSocial('google')"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 010-9.4l-7.9-6.1a24 24 0 000 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Continue with Google</button>
+                    <button type="button" class="nxa-soc" onclick="nxlSocial('phone')"><span class="material-symbols-outlined">call</span>Continue with phone</button>
                     <div class="nxa-or"><span>OR</span></div>
                     <form id="nxlEmF" class="nxa-form" novalidate onsubmit="nxlEmail(event)">
                         <div class="nxa-f"><label for="nxlEm" class="nxa-l" style="position:absolute;left:-9999px">Email address</label><input id="nxlEm" class="nxa-in pl" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="120" placeholder="Email address"><p class="nxa-err" id="nxlEmE" hidden></p></div>
-                        <button type="button" class="nxa-go" id="nxlEmGo" onclick="nxlEmail(event)">Continue</button>
+                        <button class="nxa-go" id="nxlEmGo">Continue</button>
                     </form>
                 </div>
                 <form id="nxaVPh" class="nxa-form" novalidate hidden onsubmit="nxlPhGo(event)">
@@ -2198,14 +2210,29 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <p class="nxa-sw"><button type="button" class="nxa-link" onclick="nxlBack()">Back</button></p>
                 </form>
                 <form id="nxaVPw" class="nxa-form" novalidate hidden onsubmit="nxlPwGo(event)">
-                    <div class="nxa-chip"><span id="nxlPwEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
+                    <div class="nxa-chip" style="align-items:flex-start;">
+                        <div style="display:flex;flex-direction:column;gap:5px;min-width:0;flex:1;">
+                            <div style="display:flex;align-items:baseline;gap:6px;word-break:break-all;">
+                                <span style="font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--cx-mute,#8E7B73);flex-shrink:0;">Email:</span>
+                                <span id="nxlPwEm" style="font-weight:700;font-size:13px;color:var(--cx-ink,#2A1E17);"></span>
+                            </div>
+                            <div id="nxlPwUsnRow" style="display:flex;align-items:baseline;gap:6px;">
+                                <span style="font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--cx-mute,#8E7B73);flex-shrink:0;">USN:</span>
+                                <span id="nxlPwUsn" style="font-weight:800;font-size:12.5px;letter-spacing:0.06em;font-family:monospace;color:var(--cx-ink,#2A1E17);"></span>
+                            </div>
+                            <div id="nxlPwUsnMissing" style="display:none;font-size:11.5px;font-weight:600;color:#c2410c;background:rgba(234,88,12,0.08);padding:4px 8px;border-radius:6px;margin-top:2px;">
+                                ⚠️ USN not found. Please contact the administrator.
+                            </div>
+                        </div>
+                        <button type="button" class="nxa-link" onclick="nxlBack()" style="margin-top:1px;">Change</button>
+                    </div>
                     <div class="nxa-f"><label for="nxlPw" class="nxa-l">Password</label><div class="nxa-pw"><input id="nxlPw" class="nxa-in pl" type="password" autocomplete="current-password" maxlength="64" placeholder="Your password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="nxlPwE" hidden></p></div>
                     <div class="nxa-row"><button type="button" class="nxa-link" onclick="nxaView('fp')">Forgot password?</button></div>
                     <button class="nxa-go" id="nxlPwBtn">Log in</button>
                 </form>
                 <form id="nxaVNew" class="nxa-form" novalidate hidden onsubmit="nxlCreate(event)">
                     <div class="nxa-chip"><span id="nxlNwEm"></span><button type="button" class="nxa-link" onclick="nxlBack()">Change</button></div>
-                    <div class="nxs-prog" aria-hidden="true"><i class="on"></i><i id="nxlP2"></i><span id="nxlStepLbl">STEP 1 OF 2 · COLLEGE DETAILS</span></div>
+                    <div class="nxs-prog" aria-hidden="true"><i class="on"></i><i id="nxlP2"></i><span id="nxlStepLbl">Step 1 of 2</span></div>
                     <div id="nxlS1">
                     <p class="nxa-note"><span class="material-symbols-outlined">verified_user</span><span>No account for this email yet. Enter your <b>name</b> and <b>USN</b> exactly as in college records. Your email, phone, department and other details are filled in automatically.</span></p>
                     <div class="nxa-f"><label for="nxlName" class="nxa-l">Full name</label><input id="nxlName" class="nxa-in pl" type="text" autocomplete="name" maxlength="60" placeholder="As in college records"><p class="nxa-hint">Capitals and spaces don’t matter. Dots do.</p><p class="nxa-err" id="nxlNameE" hidden></p></div>
@@ -2231,7 +2258,7 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                             <p class="nxa-err" id="nxlGenE" hidden></p>
                         </div>
                     </div>
-                    <button type="button" class="nxa-go" id="nxlNwBtn" onclick="nxlCreate(event)">Continue</button>
+                    <button class="nxa-go" id="nxlNwBtn">Continue</button>
                     <p class="nxa-sw" id="nxlBk" hidden><button type="button" class="nxa-link" onclick="nxlStep(1)">Back to college details</button></p>
                 </form>
                 <form id="nxaVIn" class="nxa-form" novalidate onsubmit="nxaDoIn(event)">
@@ -2251,15 +2278,71 @@ textarea.pf-inp{resize:vertical;min-height:96px}
                     <button class="nxa-go" id="suGo">Create account</button>
                     <p class="nxa-sw">Already have an account? <button type="button" class="nxa-link" onclick="nxaView('in')">Sign in</button></p>
                 </form>
-                <form id="nxaVFp" class="nxa-form" novalidate hidden onsubmit="nxaDoFp(event)">
-                    <div class="nxa-banner info">To change your password, please visit the Book NEXUS pickup center.</div><div hidden aria-hidden="true">
-                    <div class="nxa-f"><label for="fpUsn" class="nxa-l">Your USN</label><input id="fpUsn" class="nxa-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="e.g. CS2026-042"><p class="nxa-err" id="fpUsnE" hidden></p></div>
-                    <div class="nxa-f"><label for="fpEmail" class="nxa-l">College email</label><input id="fpEmail" class="nxa-in pl" type="email" autocomplete="email" maxlength="80" placeholder="name@univ.edu"><p class="nxa-err" id="fpEmailE" hidden></p></div>
-                    <div class="nxa-f"><label for="fpDob" class="nxa-l">Date of birth (as on college record)</label><input id="fpDob" class="nxa-in pl" type="date"><p class="nxa-err" id="fpDobE" hidden></p></div>
-                    <div class="nxa-f"><label for="fpPw" class="nxa-l">New password</label><div class="nxa-pw"><input id="fpPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a new password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><div id="fpPwX"></div><p class="nxa-err" id="fpPwE" hidden></p></div>
-                    <div class="nxa-f"><label for="fpPw2" class="nxa-l">Confirm new password</label><div class="nxa-pw"><input id="fpPw2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter the new password"><button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button></div><p class="nxa-err" id="fpPw2E" hidden></p></div>
-                    <button class="nxa-go" id="fpGo" type="button" disabled tabindex="-1">Reset password</button>
-                    </div><p class="nxa-sw"><button type="button" class="nxa-link" onclick="nxaView('in')">Back to sign in</button></p>
+                <form id="nxaVFp" class="nxa-form" novalidate hidden onsubmit="event.preventDefault()">
+                    <!-- Step 1: Email Input -->
+                    <div id="fpS1">
+                        <div class="nxa-f">
+                            <label for="fpEmail" class="nxa-l">Registered email</label>
+                            <input id="fpEmail" class="nxa-in pl" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="120" placeholder="Your registered BookNexus email">
+                            <p class="nxa-hint">We’ll send a secure 6-digit verification code to this email.</p>
+                            <p class="nxa-err" id="fpEmailE" hidden></p>
+                        </div>
+                        <button type="button" class="nxa-go" id="fpSendBtn" onclick="nxaFpSendOtp(event)">Send verification code</button>
+                    </div>
+
+                    <!-- Step 2: 6-Digit OTP Input -->
+                    <div id="fpS2" hidden>
+                        <div class="nxa-chip">
+                            <span id="fpChipEm"></span>
+                            <button type="button" class="nxa-link" onclick="nxaFpChangeEmail()">Change</button>
+                        </div>
+                        <div class="nxa-f">
+                            <label for="fpOtp" class="nxa-l">6-digit verification code</label>
+                            <input id="fpOtp" class="nxa-in pl" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" style="letter-spacing:0.25em;text-align:center;font-weight:800;font-size:20px;font-family:monospace">
+                            <p class="nxa-hint" style="text-align:center">Valid for 10 minutes. Never share this code.</p>
+                            <p class="nxa-err" id="fpOtpE" hidden></p>
+                        </div>
+                        <div style="display:flex;justify-content:center;align-items:center;margin-bottom:12px;gap:6px">
+                            <button type="button" class="nxa-link" id="fpResendBtn" onclick="nxaFpResendOtp(event)">Resend code</button>
+                            <span id="fpCooldown" style="display:none;font-size:12px;color:#888"></span>
+                        </div>
+                        <button type="button" class="nxa-go" id="fpVerifyBtn" onclick="nxaFpVerifyOtp(event)">Verify code</button>
+                    </div>
+
+                    <!-- Step 3: New Password & Confirm Password (Reset Password Screen) -->
+                    <div id="fpS3" hidden>
+                        <div class="nxa-chip" style="align-items:flex-start;">
+                            <div style="display:flex;flex-direction:column;gap:5px;min-width:0;flex:1;">
+                                <div style="display:flex;align-items:baseline;gap:6px;word-break:break-all;">
+                                    <span style="font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--cx-mute,#8E7B73);flex-shrink:0;">Email:</span>
+                                    <span id="fpResetEm" style="font-weight:700;font-size:13px;color:var(--cx-ink,#2A1E17);"></span>
+                                </div>
+                                <div id="fpResetUsnRow" style="display:flex;align-items:baseline;gap:6px;">
+                                    <span style="font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--cx-mute,#8E7B73);flex-shrink:0;">USN:</span>
+                                    <span id="fpResetUsn" style="font-weight:800;font-size:12.5px;letter-spacing:0.06em;font-family:monospace;color:var(--cx-ink,#2A1E17);"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nxa-f">
+                            <label for="fpPw" class="nxa-l">New password</label>
+                            <div class="nxa-pw">
+                                <input id="fpPw" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a new password">
+                                <button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button>
+                            </div>
+                            <div id="fpPwX"></div>
+                            <p class="nxa-err" id="fpPwE" hidden></p>
+                        </div>
+                        <div class="nxa-f">
+                            <label for="fpPw2" class="nxa-l">Confirm new password</label>
+                            <div class="nxa-pw">
+                                <input id="fpPw2" class="nxa-in pl" type="password" autocomplete="new-password" maxlength="64" placeholder="Re-enter the new password">
+                                <button type="button" class="nxa-eye" aria-label="Show password" aria-pressed="false" onclick="nxaEye(this)"><span class="material-symbols-outlined">visibility</span></button>
+                            </div>
+                            <p class="nxa-err" id="fpPw2E" hidden></p>
+                        </div>
+                        <button type="button" class="nxa-go" id="fpResetBtn" onclick="nxaFpResetPassword(event)">Reset password</button>
+                        <p class="nxa-sw"><button type="button" class="nxa-link" onclick="nxlBack()">Back to sign in</button></p>
+                    </div>
                 </form>
             </div>
             <div id="nxaStaff" hidden>
@@ -20792,7 +20875,7 @@ ${sub ? `<text x="150" y="${(y0 + L.length * lh + 6).toFixed(1)}" text-anchor="m
 .gx-cap { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; min-height: 152px; margin-top: 4px; transition: opacity .35s var(--nx-ease), transform .35s var(--nx-ease); }
 .gx-cap.swap { opacity: 0; transform: translateY(6px); }
 .gx-meta { font: 600 11px/1.3 var(--nx-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--nx-gold); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gx-t { font: 500 clamp(1.5rem, 2.6vw, 2.2rem)/1.1 var(--nx-serif); color: var(--nx-ivory); max-width: 28ch; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.gx-t { font: 500 clamp(1.5rem, 2.6vw, 2.2rem)/1.1 var(--nx-serif); color: var(--nx-ivory); max-width: 28ch; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .gx-a { font: 400 13px/1.3 var(--nx-sans); color: var(--nx-muted); }
 .gx-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 14px; margin-top: 2px; }
 .gx-pill { font: 600 9.5px/1 var(--nx-sans); letter-spacing: .08em; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; border: 1px solid var(--nx-line); color: var(--nx-cream); }
@@ -20837,13 +20920,11 @@ html:not(.dark) #viewHome .gx-nav { background: rgba(70,40,42,.04); }
 .fyb-link { display: inline-flex; align-items: center; gap: 6px; font: 700 12px/1 'Manrope', sans-serif; color: var(--fy-gold); background: none; border: 0; padding: 10px 2px; cursor: pointer; white-space: nowrap; }
 .fyb-link[hidden] { display: none; }
 .fyb-link .material-symbols-outlined { font-size: 16px; }
-    transform-origin: 50% 70%; transform: perspective(900px) translateY(calc(var(--a, 0) * 8px)) rotateY(calc(var(--r, 0) * -7deg)) scale(calc(1.05 - var(--a, 0) * .035));
-    transition: transform .8s var(--nx-ease, ease), box-shadow .8s var(--nx-ease, ease); }
 .fyb-ty { position: absolute; left: 6px; bottom: 6px; padding: 3px 7px; border-radius: 999px; font: 800 9.5px/1 'Manrope', sans-serif; letter-spacing: .03em; color: #fff; background: #4A6B53; }
 .fyb-ty.is-rent { background: #8F6466; }
 .fyb-tx { padding: 12px 2px 0; min-width: 0; }
 .fyb-g { font: 700 10.5px/1.2 'Manrope', sans-serif; letter-spacing: .03em; color: var(--cx-rose); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.fyb-t { margin: 4px 0 0; font: 700 14px/1.25 'Bodoni Moda', serif; color: var(--cx-ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.5em; }
+.fyb-t { margin: 4px 0 0; font: 700 14px/1.25 'Bodoni Moda', serif; color: var(--cx-ink); display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.5em; }
 .fyb-a { margin: 3px 0 8px; font: 500 12px/1.3 'Manrope', sans-serif; color: var(--cx-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fyb-p { display: block; font: 800 13.5px/1.2 'Manrope', sans-serif; color: var(--cx-ink); }
 .fyb-p small { font-size: 11px; font-weight: 600; color: var(--cx-mute); }
@@ -21259,7 +21340,7 @@ html:not(.dark) #viewHome .gx-nav { background: rgba(70,40,42,.04); }
 .bs-card{display:flex;gap:16px;padding:16px;border-radius:20px;background:var(--cd);border:1px solid var(--l);box-shadow:0 1px 2px rgba(70,40,42,.05);transition:transform .25s,box-shadow .25s,border-color .25s;min-width:0}
 .bs-card:hover{transform:translateY(-3px);box-shadow:0 16px 30px -18px rgba(70,40,42,.45);border-color:var(--ac)}
 .bs-cov{flex:none;width:92px;aspect-ratio:2/3;border-radius:4px 10px 10px 4px;overflow:hidden;box-shadow:0 14px 20px -12px rgba(0,0,0,.55),inset 3px 0 0 rgba(255,255,255,.18);background:var(--so)} .bs-cov img{width:100%;height:100%;object-fit:cover;display:block}
-.bs-info{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1} .bs-info h4{margin:0;font:700 15px/1.25 'Bodoni Moda',serif;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden} .bs-info p{margin:0;font:500 12px/1.3 'Manrope',sans-serif;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bs-info{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1} .bs-info h4{margin:0;font:700 15px/1.25 'Bodoni Moda',serif;color:var(--ink);display:-webkit-box;-webkit-line-clamp: 2; line-clamp: 2;-webkit-box-orient:vertical;overflow:hidden} .bs-info p{margin:0;font:500 12px/1.3 'Manrope',sans-serif;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bs-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px} .bs-act{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:10px}
 /* Alerts */
 .al-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding:16px 18px;border:1px solid var(--l);border-radius:18px;background:var(--cd)}
@@ -24172,16 +24253,22 @@ function userStep(keep) {
 }
 window.nxaView = function (v, keep) {
   if (v === 'in' || v === 'up') { if (idDone) return userStep(keep); v = 'ch'; }
+  if (v === 'fp') {
+    if (typeof window.nxaFpStart === 'function') {
+      window.nxaFpStart();
+      return;
+    }
+  }
   if (VIEWS[v]) {
     if (v === 'ch') toFirst();
-    ORIG.forEach(id => { const f = $(id); if (f) f.hidden = true; });
-    Object.keys(VIEWS).forEach(k => { const f = $(VIEWS[k]); f.hidden = k !== v; K().clearErrs(f); });
+    ORIG.forEach(id => { const f = $(id); if (f) { f.hidden = true; f.style.display = 'none'; } });
+    Object.keys(VIEWS).forEach(k => { const f = $(VIEWS[k]); if (f) { f.hidden = k !== v; f.style.display = k === v ? 'block' : 'none'; K().clearErrs(f); } });
     if (!keep) K().banner(''); setHead(v);
     if (v === 'ch') { verified = false; blankPw(); K().resetEyes($('nxa')); }
     setTimeout(() => { const el = $({ ch: 'nxlEm', pw: 'nxlPw', nw: 'nxlName', ph: 'nxlPh' }[v]); if (el && !$('authModal').classList.contains('hidden')) el.focus(); }, 40);
     return;
   }
-  Object.keys(VIEWS).forEach(k => { const f = $(VIEWS[k]); if (f) f.hidden = true; });
+  Object.keys(VIEWS).forEach(k => { const f = $(VIEWS[k]); if (f) { f.hidden = true; f.style.display = 'none'; } });
   return _view.apply(this, arguments);
 };
 /* role tabs: ignored until the first step is done; Librarian / Admin only ever ask for their ID and password */
@@ -24238,21 +24325,6 @@ window.nxlPwGo = async function (e) {
   } catch (err) { kit.banner('Login failed: ' + (err && err.message ? err.message : 'unexpected error') + '. Please try again.', 'bad'); }
   finally { busy = false; b.disabled = false; b.textContent = 'Log in'; }
 };
-/* ---- book preference constants ---- */
-window.NX_QUIZ = window.NX_QUIZ || [
-  { q: 'What pulls you into a book?', w: 2, opts: [['a', 'A story to get lost in', ['Fiction', 'Literature']], ['b', 'Something real that happened', ['Non-fiction', 'History', 'Biography']], ['c', 'How things work', ['Science', 'Engineering', 'Computer Science']], ['d', 'Ideas that change how I think', ['Philosophy', 'Literature']], ['e', 'Ways to improve my life', ['Self-help', 'Non-fiction']], ['f', 'Clear explanations for my course', ['Academic/Textbook', 'Mathematics']]] },
-  { q: 'It’s midnight and the library is yours. Where do you wander?', w: 2, opts: [['a', 'Fantasy, novels and classics', ['Fiction', 'Literature']], ['b', 'Old maps and dusty archives', ['History', 'Biography']], ['c', 'Circuit boards and lab manuals', ['Engineering', 'Science', 'Computer Science']], ['d', 'A quiet corner with big questions', ['Philosophy', 'Literature']], ['e', 'A study desk piled with notes', ['Academic/Textbook', 'Mathematics']], ['f', 'The self-growth shelf', ['Self-help', 'Non-fiction']]] },
-  { q: 'Which subjects do you enjoy most?', w: 2, opts: [['a', 'Numbers and logic', ['Mathematics', 'Computer Science']], ['b', 'Machines and building things', ['Engineering', 'Science']], ['c', 'The past and its people', ['History', 'Biography']], ['d', 'Life and the universe', ['Science', 'Philosophy']], ['e', 'Language and storytelling', ['Fiction', 'Literature']], ['f', 'The mind and habits', ['Self-help', 'Philosophy']]] },
-  { q: 'Who would you invite to dinner?', w: 1, opts: [['a', 'A scientist who just made a discovery', ['Science', 'Mathematics']], ['b', 'A historian with wild stories', ['History', 'Non-fiction']], ['c', 'A philosopher who loves to argue', ['Philosophy', 'Literature']], ['d', 'A founder who built something big', ['Biography', 'Self-help', 'Non-fiction']], ['e', 'An inventor with a toolbox', ['Engineering', 'Computer Science']], ['f', 'A novelist with a plot twist', ['Fiction', 'Literature']]] },
-  { q: 'A free rainy afternoon. What are you doing?', w: 1, opts: [['a', 'Curled up with a gripping novel', ['Fiction', 'Literature']], ['b', 'Watching a documentary, then reading more about it', ['Non-fiction', 'History', 'Science']], ['c', 'Solving puzzles or writing code', ['Mathematics', 'Computer Science']], ['d', 'Journaling and planning my goals', ['Self-help', 'Philosophy']], ['e', 'Taking something apart to see how it works', ['Engineering', 'Science']], ['f', 'Reading someone’s life story', ['Biography']]] },
-  { q: 'What do you usually read for?', w: 1, opts: [['a', 'Exams and coursework', ['Academic/Textbook']], ['b', 'Skills for my career', ['Computer Science', 'Engineering', 'Non-fiction']], ['c', 'Personal growth', ['Self-help', 'Biography']], ['d', 'Escape and relaxation', ['Fiction']], ['e', 'Pure curiosity', ['Science', 'History', 'Philosophy', 'Non-fiction']]] }
-];
-window.NX_QUIZ.forEach(Q => { Q.max = Q.opts.length; Q.hint = 'Choose as many as you like'; });
-const NX_QUIZ = window.NX_QUIZ;
-window.NX_GENRES = window.NX_GENRES || ['Fiction', 'Non-fiction', 'Science', 'Mathematics', 'Computer Science', 'Engineering', 'Literature', 'Philosophy', 'History', 'Academic/Textbook', 'Self-help', 'Biography'];
-const NX_GENRES = window.NX_GENRES;
-function profQuizScores(ans) { const sc = {}; NX_QUIZ.forEach((Q, qi) => (ans[qi] || []).forEach(id => { const o = Q.opts.find(x => x[0] === id); if (o) o[2].forEach(g => sc[g] = (sc[g] || 0) + Q.w); })); return sc; }
-window.profQuizScores = profQuizScores;
 /* ---- sign-up step 2: the same three questions as Edit Profile (name, about me, books you like) ---- */
 let nwStep = 1; const SU = { genres: [], answers: {}, cur: {}, mode: 'view', q: 0 };
 const suEsc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -24288,7 +24360,7 @@ document.addEventListener('input', e => { if (e.target && e.target.id === 'nxlBi
 function nwShow(n, quiet) {
   nwStep = n; const two = n === 2;
   $('nxlS1').hidden = two; $('nxlS2').hidden = !two; $('nxlBk').hidden = !two; $('nxlP2').className = two ? 'on' : '';
-  $('nxlStepLbl').textContent = two ? 'STEP 2 OF 2 · ABOUT YOU' : 'STEP 1 OF 2 · COLLEGE DETAILS';
+  $('nxlStepLbl').textContent = two ? 'Step 2 of 2 · About you' : 'Step 1 of 2 · College details';
   $('nxlNwBtn').textContent = two ? 'Create account' : 'Continue';
   const h = $('authModal') && $('authModal').querySelector('h3'), u = $('nxaSub');
   if (h) h.textContent = two ? 'Make it yours' : HEAD.nw[0]; if (u) u.textContent = two ? 'Three quick questions so fellow readers know you. All required, and you can change them anytime from your profile.' : HEAD.nw[1];
@@ -25926,6 +25998,7 @@ html.dark #authModal .mg-card .nxa-in{color-scheme:dark}
   document.addEventListener('click', e => {
     if (e.target && e.target.closest && e.target.closest('#nxSoYes')) { fly('out'); }
   }, true);
+  window.nxStarFlight = fly;
 })();
 </script>
 <style id="nxEyeFix">
@@ -26194,20 +26267,24 @@ html.dark #nxHello{--nxh-a:#dcb872;--nxh-b:#f6e3b0;--nxh-c:#fff8e4;--nxh-veil:rg
   /* who is signing out (read before the session is cleared): nickname first, otherwise first name */
   function whoNick() {
     try {
-      const S = typeof window.nxSession === 'function' ? window.nxSession() : null; if (!S) return null;
-      if (S.role === 'student') {
-        const p = (typeof nxProfile !== 'undefined' && nxProfile) || {}, cu = (typeof currentUser !== 'undefined' && currentUser) || {};
-        return String(p.nickname || '').trim() || String(p.name || cu.name || cu.fullName || S.name || '').trim().split(' ')[0] || '';
+      const cu = (typeof currentUser !== 'undefined' && currentUser) || (window.currentUser) || (function () {
+        try { return JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('booknexus_user') || '{}'); } catch (e) { return {}; }
+      })();
+      const p = (typeof nxProfile !== 'undefined' && nxProfile) || {};
+      const S = typeof window.nxSession === 'function' ? window.nxSession() : null;
+      if (!S || S.role === 'student') {
+        const n = String(p.nickname || cu.anonId || cu.preferredName || cu.name || cu.fullName || (S && S.name) || '').trim().split(' ')[0];
+        return n || '';
       }
       const sv = (typeof nxStaffSaved !== 'undefined' && nxStaffSaved && nxStaffSaved[S.id]) || {};
       let nn = String(sv.nickname || '').trim() || String(S.name || '').trim().split(' ')[0];
       if (!nn || /^library$/i.test(nn)) nn = S.role === 'admin' ? 'Admin' : 'Librarian';
-      return nn;
+      return nn || '';
     } catch (e) { return ''; }
   }
   document.addEventListener('click', e => {
     if (!(e.target && e.target.closest && e.target.closest('#nxSoYes'))) return;
-    const nm = whoNick(); if (nm === null) return;
+    const nm = whoNick() || '';
     const bus = window.__nxSo;
     if (bus && !bus.dead && !bus.used) { bus.used = true; try { window.nxFarewell(nm, bus); } catch (x) { bus.dead = true; } }   /* the star flies to where the words appear, stops, becomes them, then carries on */
     else setTimeout(() => { try { window.nxFarewell(nm); } catch (x) { } }, 150);

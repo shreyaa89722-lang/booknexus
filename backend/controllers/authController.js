@@ -688,8 +688,8 @@ const roleLogin = asyncHandler(async (req, res) => {
     }
 
     // 3. Compare password
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
+    const isPasswordMatch = await user.comparePassword(password);
+    if (!isPasswordMatch) {
         res.status(401);
         throw new Error("Invalid password");
     }
@@ -887,7 +887,7 @@ const registerStep2 = asyncHandler(async (req, res) => {
             const jwt = require("jsonwebtoken");
             const decoded = jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET);
             authId = decoded.id;
-        } catch (e) {}
+        } catch (e) { }
     }
 
     if (authId) {
@@ -935,7 +935,7 @@ const registerStep2 = asyncHandler(async (req, res) => {
     try {
         const emailEventService = require("../services/emailEventService");
         emailEventService.onUserRegistered(user).catch((e) => console.warn("Welcome email note:", e.message));
-    } catch (error) {}
+    } catch (error) { }
 
     const token = generateToken(user._id, user.role);
     res.json({
@@ -961,16 +961,24 @@ const registerStep2 = asyncHandler(async (req, res) => {
         },
     });
 });
-// @route  POST /api/auth/check-email
+// @route  GET or POST /api/auth/check-email
 const checkEmail = asyncHandler(async (req, res) => {
-    const rawEmail = (req.body.email || "").trim().toLowerCase();
+    const rawEmail = ((req.query && req.query.email) || (req.body && req.body.email) || "").toString().trim().toLowerCase();
     if (!rawEmail) {
         res.status(400);
         throw new Error("Email address is required");
     }
-    const cleanEmail = rawEmail.trim().toLowerCase();
+    const cleanEmail = rawEmail;
     const existing = await User.findOne({ email: cleanEmail });
     if (existing) {
+        let studentUsn = existing.usn || "";
+        if (!studentUsn) {
+            try {
+                const { findApprovedByEmail } = require("../services/collegeRosterService");
+                const roster = await findApprovedByEmail(cleanEmail);
+                if (roster && roster.usn) studentUsn = roster.usn;
+            } catch (e) { }
+        }
         return res.json({
             success: true,
             isRegistered: true,
@@ -979,7 +987,7 @@ const checkEmail = asyncHandler(async (req, res) => {
                 name: existing.name,
                 email: existing.email,
                 role: existing.role,
-                usn: existing.usn || "",
+                usn: studentUsn,
             },
         });
     }
@@ -988,7 +996,7 @@ const checkEmail = asyncHandler(async (req, res) => {
     try {
         const { findApprovedByEmail } = require("../services/collegeRosterService");
         rosterStudent = await findApprovedByEmail(cleanEmail);
-    } catch (e) {}
+    } catch (e) { }
 
     return res.json({
         success: true,
@@ -1001,6 +1009,190 @@ const checkEmail = asyncHandler(async (req, res) => {
             branch: rosterStudent.branch || "",
             college: rosterStudent.college || "",
         } : null,
+    });
+});
+
+function validatePasswordRules(pw) {
+    if (!pw || typeof pw !== "string") return "Password is required.";
+    if (pw.length < 8 || pw.length > 64) return "Password must be between 8 and 64 characters.";
+    if (!/[A-Z]/.test(pw)) return "Password must contain at least one uppercase letter.";
+    if (!/[a-z]/.test(pw)) return "Password must contain at least one lowercase letter.";
+    if (!/[0-9]/.test(pw)) return "Password must contain at least one number.";
+    if (!/[^A-Za-z0-9]/.test(pw)) return "Password must contain at least one special character.";
+    if (/\s/.test(pw)) return "Password must not contain spaces.";
+    return null;
+}
+
+// @desc   Request 6-digit OTP for Forgot Password
+// @route  POST /api/auth/forgot-password/request-otp
+const forgotPasswordRequestOtp = asyncHandler(async (req, res) => {
+    const rawEmail = (req.body.email || "").trim().toLowerCase();
+    if (!rawEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawEmail)) {
+        return res.status(400).json({ success: false, message: "Please enter a valid email address." });
+    }
+    const cleanEmail = rawEmail;
+    const user = await User.findOne({ email: cleanEmail }).select("+resetPasswordLastRequested +resetPasswordOtpExpires +resetPasswordOtpHash +resetPasswordOtpAttempts");
+
+    // Generic success response to avoid email enumeration
+    const genericSuccess = {
+        success: true,
+        message: "If an account exists with this email, a 6-digit verification code has been sent.",
+    };
+
+    if (!user) {
+        // Constant-time delay to prevent timing attacks
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        return res.json(genericSuccess);
+    }
+
+    // Cooldown check (60 seconds)
+    if (user.resetPasswordLastRequested) {
+        const timeSince = Date.now() - user.resetPasswordLastRequested.getTime();
+        if (timeSince < 60 * 1000) {
+            const waitSec = Math.ceil((60 * 1000 - timeSince) / 1000);
+            return res.status(429).json({
+                success: false,
+                message: `Please wait ${waitSec} seconds before requesting a new code.`,
+            });
+        }
+    }
+
+    // Generate random 6-digit OTP
+    const crypto = require("crypto");
+    const otp = crypto.randomInt(100000, 1000000).toString(); // 6 digits: 100000 to 999999
+    const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
+
+    user.resetPasswordOtpHash = otpHash;
+    user.resetPasswordOtpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    user.resetPasswordOtpAttempts = 0;
+    user.resetPasswordLastRequested = new Date();
+    user.passwordResetTokenHash = undefined;
+    user.passwordResetTokenExpires = undefined;
+    await user.save();
+
+    // Send email using existing emailService (Resend)
+    try {
+        const { sendOtpNotification } = require("../services/emailService");
+        await sendOtpNotification(user, otp, "BookNexus Account Password Reset", {
+            expiryMinutes: 10,
+        });
+    } catch (err) {
+        console.error("[ForgotPassword] Failed to send OTP email:", err.message);
+    }
+
+    return res.json(genericSuccess);
+});
+
+// @desc   Verify 6-digit OTP for Forgot Password
+// @route  POST /api/auth/forgot-password/verify-otp
+const forgotPasswordVerifyOtp = asyncHandler(async (req, res) => {
+    const rawEmail = (req.body.email || "").trim().toLowerCase();
+    const cleanOtp = String(req.body.otp || "").trim();
+
+    if (!rawEmail || !cleanOtp) {
+        return res.status(400).json({ success: false, message: "Email and verification code are required." });
+    }
+    if (!/^\d{6}$/.test(cleanOtp)) {
+        return res.status(400).json({ success: false, message: "Verification code must be 6 digits." });
+    }
+
+    const cleanEmail = rawEmail;
+    const user = await User.findOne({ email: cleanEmail }).select("+resetPasswordOtpHash +resetPasswordOtpExpires +resetPasswordOtpAttempts");
+
+    if (!user || !user.resetPasswordOtpHash || !user.resetPasswordOtpExpires) {
+        return res.status(400).json({ success: false, message: "Invalid or expired verification code. Please request a new code." });
+    }
+
+    // Expiry check
+    if (user.resetPasswordOtpExpires.getTime() < Date.now()) {
+        user.resetPasswordOtpHash = undefined;
+        user.resetPasswordOtpExpires = undefined;
+        await user.save();
+        return res.status(400).json({ success: false, message: "Verification code has expired. Please request a new code." });
+    }
+
+    // Attempts limit check (max 5 attempts)
+    if (user.resetPasswordOtpAttempts >= 5) {
+        user.resetPasswordOtpHash = undefined;
+        user.resetPasswordOtpExpires = undefined;
+        await user.save();
+        return res.status(429).json({ success: false, message: "Too many failed attempts. Please request a new verification code." });
+    }
+
+    user.resetPasswordOtpAttempts = (user.resetPasswordOtpAttempts || 0) + 1;
+
+    const crypto = require("crypto");
+    const candidateHash = crypto.createHash("sha256").update(cleanOtp).digest("hex");
+
+    const isOtpValid = candidateHash === user.resetPasswordOtpHash;
+
+    if (!isOtpValid) {
+        await user.save();
+        const remaining = Math.max(0, 5 - user.resetPasswordOtpAttempts);
+        return res.status(400).json({
+            success: false,
+            message: `Invalid verification code. ${remaining} attempt${remaining === 1 ? "" : "s"} remaining.`,
+        });
+    }
+
+    // OTP match! Clear OTP fields (single use) and issue single-use resetToken
+    user.resetPasswordOtpHash = undefined;
+    user.resetPasswordOtpExpires = undefined;
+    user.resetPasswordOtpAttempts = 0;
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    user.passwordResetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
+    user.passwordResetTokenExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins to set password
+    await user.save();
+
+    return res.json({
+        success: true,
+        message: "Code verified successfully.",
+        resetToken,
+    });
+});
+
+// @desc   Reset BookNexus account password
+// @route  POST /api/auth/forgot-password/reset-password
+const forgotPasswordReset = asyncHandler(async (req, res) => {
+    const rawEmail = (req.body.email || "").trim().toLowerCase();
+    const resetToken = String(req.body.resetToken || "").trim();
+    const newPassword = String(req.body.newPassword || "");
+    const confirmPassword = String(req.body.confirmPassword || "");
+
+    if (!rawEmail || !resetToken || !newPassword) {
+        return res.status(400).json({ success: false, message: "All fields are required." });
+    }
+    if (newPassword !== confirmPassword) {
+        return res.status(400).json({ success: false, message: "Passwords do not match." });
+    }
+
+    const pwError = validatePasswordRules(newPassword);
+    if (pwError) {
+        return res.status(400).json({ success: false, message: pwError });
+    }
+
+    const crypto = require("crypto");
+    const tokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+    const user = await User.findOne({ email: rawEmail }).select("+password +passwordResetTokenHash +passwordResetTokenExpires");
+
+    if (!user || !user.passwordResetTokenHash || user.passwordResetTokenHash !== tokenHash || !user.passwordResetTokenExpires || user.passwordResetTokenExpires.getTime() < Date.now()) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid or expired reset session. Please request a new verification code.",
+        });
+    }
+
+    // Update password (triggers User pre-save bcrypt hash!)
+    user.password = newPassword;
+    user.passwordResetTokenHash = undefined;
+    user.passwordResetTokenExpires = undefined;
+    await user.save();
+
+    return res.json({
+        success: true,
+        message: "Your BookNexus password has been reset successfully. You can now log in with your new password.",
     });
 });
 
@@ -1018,4 +1210,7 @@ module.exports = {
     getEmailPreferences,
     updateEmailPreferences,
     logoutUser,
+    forgotPasswordRequestOtp,
+    forgotPasswordVerifyOtp,
+    forgotPasswordReset,
 };

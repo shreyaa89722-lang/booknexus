@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema(
             enum: ["details", "quiz", "completed"],
             default: "details",
         },
+        resetPasswordOtpHash: { type: String, select: false },
+        resetPasswordOtpExpires: { type: Date, select: false },
+        resetPasswordOtpAttempts: { type: Number, default: 0, select: false },
+        resetPasswordLastRequested: { type: Date, select: false },
+        passwordResetTokenHash: { type: String, select: false },
+        passwordResetTokenExpires: { type: Date, select: false },
     },
     { timestamps: true }
 );

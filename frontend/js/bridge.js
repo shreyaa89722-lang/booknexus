@@ -2420,6 +2420,10 @@
       if (pwForm) { pwForm.hidden = true; pwForm.style.display = 'none'; }
       const phForm = document.getElementById('nxaVPh');
       if (phForm) { phForm.hidden = true; phForm.style.display = 'none'; }
+      const fpForm = document.getElementById('nxaVFp');
+      if (fpForm) { fpForm.hidden = true; fpForm.style.display = 'none'; }
+      const usnBadge = document.getElementById('nxlPwUsn');
+      if (usnBadge) usnBadge.style.display = 'none';
       const h3 = document.querySelector('#authModal h3');
       if (h3) h3.textContent = 'Log in or sign up';
       const sub = document.getElementById('nxaSub');
@@ -2533,12 +2537,317 @@
       }
     }
 
-    // SIGN-OUT BEHAVIOUR
-    window.nxSignOut = function () {
+    // SESSION ENTRY HELPERS
+    function enterSignedInStudent(u, msg) {
+      if (!u) return;
+      if (u.token) {
+        authToken = u.token;
+        localStorage.setItem('booknexus_token', u.token);
+      }
+      localStorage.setItem('currentUser', JSON.stringify(u));
+      localStorage.setItem('booknexus_user', JSON.stringify(u));
+
+      const studentUsn = u.usn || ('USN-' + (u.email || '').split('@')[0].toUpperCase().slice(0, 8));
+      if (!window.NX_COLLEGE) window.NX_COLLEGE = {};
+      window.NX_COLLEGE[studentUsn] = {
+        usn: studentUsn,
+        name: u.name,
+        email: u.email,
+        dept: u.branch || 'Computer Science',
+        branch: u.branch || 'Computer Science',
+        semester: u.semester || '1',
+        college: u.college || 'Engineering Campus',
+        phone: u.mobile || u.phone || '',
+        dob: u.dob || '',
+        secretId: u.preferredName || (u.name ? u.name.split(' ')[0] : 'Student')
+      };
+
+      currentUser = {
+        name: u.name,
+        rollNo: studentUsn,
+        email: u.email,
+        dept: u.branch || 'Computer Science',
+        year: u.semester || '',
+        phone: u.mobile || u.phone || '',
+        anonId: u.preferredName || (u.name ? u.name.split(' ')[0] : 'Student')
+      };
+      window.currentUser = currentUser;
+
+      if (typeof window.nxLinkUSN === 'function') {
+        try { window.nxLinkUSN(window.NX_COLLEGE[studentUsn]); } catch (e) { }
+      }
+
+      if (typeof window.nxSessionSet === 'function') {
+        window.bnSessionUser = u;
+        window.nxSessionSet('student', studentUsn, u.name, u.email);
+      }
+      document.body.classList.remove('nx-guest');
+
+      if (typeof setUserRole === 'function') {
+        try { setUserRole('student'); } catch (e) { }
+      }
+      if (typeof switchNav === 'function') {
+        try { switchNav('home'); } catch (e) { }
+      }
+      if (typeof renderNavLinks === 'function') {
+        try { renderNavLinks(); } catch (e) { }
+      }
+      if (typeof closeModal === 'function') {
+        try { closeModal('authModal'); } catch (e) { }
+      }
+      const authModal = document.getElementById('authModal');
+      if (authModal) {
+        authModal.classList.add('hidden');
+        authModal.style.display = 'none';
+      }
+
+      // Update profile & auth buttons
+      const aLbl = document.getElementById('userAuthLabel');
+      if (aLbl) aLbl.textContent = 'Sign out';
+      const aBtn = document.getElementById('userAuthBtn');
+      if (aBtn) aBtn.setAttribute('onclick', 'nxSignOut()');
+      const pBtn = document.getElementById('profileBtn');
+      if (pBtn) {
+        const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
+        if (span) span.textContent = u.preferredName || (u.name ? u.name.split(' ')[0] : 'Student');
+      }
+
+      // Refresh original animated homepage displays
+      if (typeof gxRender === 'function') { try { gxRender(); } catch (e) { } }
+      if (typeof renderHomeShelf === 'function') { try { renderHomeShelf(); } catch (e) { } }
+      if (typeof renderHomeStats === 'function') { try { renderHomeStats(); } catch (e) { } }
+      if (typeof renderBookGrid === 'function') { try { renderBookGrid(); } catch (e) { } }
+
+      if (typeof showToast === 'function') {
+        showToast(msg || `Welcome back, ${u.preferredName || u.name}!`, 'success');
+      }
+      if (typeof window.updateNavProfile === 'function') {
+        try { window.updateNavProfile(); } catch (e) { }
+      }
+    }
+
+    function enterSignedInStaff(u) {
+      if (!u) return;
+      if (u.token) {
+        authToken = u.token;
+        localStorage.setItem('booknexus_token', u.token);
+      }
+      localStorage.setItem('currentUser', JSON.stringify(u));
+      localStorage.setItem('booknexus_user', JSON.stringify(u));
+      const role = (u.role === 'admin') ? 'admin' : 'librarian';
+      const staffId = u.staffId || u.id || u._id || ('STF-' + (u.email || '').split('@')[0].toUpperCase());
+
+      document.body.classList.remove('nx-guest');
+      if (typeof enterStaff === 'function') {
+        try { enterStaff(role, staffId); } catch (e) { }
+      } else {
+        if (window.nxSessionSet) window.nxSessionSet(role, staffId, u.name, u.email);
+        if (typeof setUserRole === 'function') { try { setUserRole(role); } catch (e) { } }
+        window.nxCurStaff = staffId;
+        if (typeof closeModal === 'function') { try { closeModal('authModal'); } catch (e) { } }
+        const authModal = document.getElementById('authModal');
+        if (authModal) {
+          authModal.classList.add('hidden');
+          authModal.style.display = 'none';
+        }
+      }
+      if (typeof switchNav === 'function') {
+        try { switchNav('home'); } catch (e) { }
+      }
+      if (typeof showToast === 'function') {
+        showToast(`Welcome, ${u.name}! Signed in as ${role === 'admin' ? 'Admin' : 'Librarian'}.`, 'success');
+      }
+    }
+
+    // SESSION ENTRY HELPERS
+    function enterSignedInStudent(u, msg) {
+      if (!u) return;
+      if (u.token) {
+        authToken = u.token;
+        localStorage.setItem('booknexus_token', u.token);
+      }
+      localStorage.setItem('currentUser', JSON.stringify(u));
+      localStorage.setItem('booknexus_user', JSON.stringify(u));
+
+      const studentUsn = u.usn || ('USN-' + (u.email || '').split('@')[0].toUpperCase().slice(0, 8));
+      if (!window.NX_COLLEGE) window.NX_COLLEGE = {};
+      window.NX_COLLEGE[studentUsn] = {
+        usn: studentUsn,
+        name: u.name,
+        email: u.email,
+        dept: u.branch || 'Computer Science',
+        branch: u.branch || 'Computer Science',
+        semester: u.semester || '1',
+        college: u.college || 'Engineering Campus',
+        phone: u.mobile || u.phone || '',
+        dob: u.dob || '',
+        secretId: u.preferredName || (u.name ? u.name.split(' ')[0] : 'Student')
+      };
+
+      currentUser = {
+        name: u.name,
+        rollNo: studentUsn,
+        email: u.email,
+        dept: u.branch || 'Computer Science',
+        year: u.semester || '',
+        phone: u.mobile || u.phone || '',
+        anonId: u.preferredName || (u.name ? u.name.split(' ')[0] : 'Student')
+      };
+      window.currentUser = currentUser;
+
+      if (typeof window.nxLinkUSN === 'function') {
+        try { window.nxLinkUSN(window.NX_COLLEGE[studentUsn]); } catch (e) { }
+      }
+
+      if (typeof window.nxSessionSet === 'function') {
+        window.bnSessionUser = u;
+        window.nxSessionSet('student', studentUsn, u.name, u.email);
+      }
+      document.body.classList.remove('nx-guest');
+
+      if (typeof setUserRole === 'function') {
+        try { setUserRole('student'); } catch (e) { }
+      }
+      if (typeof switchNav === 'function') {
+        try { switchNav('home'); } catch (e) { }
+      }
+      if (typeof renderNavLinks === 'function') {
+        try { renderNavLinks(); } catch (e) { }
+      }
+      if (typeof closeModal === 'function') {
+        try { closeModal('authModal'); } catch (e) { }
+      } else {
+        const authModal = document.getElementById('authModal');
+        if (authModal) {
+          authModal.classList.add('hidden');
+          authModal.style.display = 'none';
+        }
+      }
+
+      // Update profile & auth buttons
+      const aLbl = document.getElementById('userAuthLabel');
+      if (aLbl) aLbl.textContent = 'Sign out';
+      const aBtn = document.getElementById('userAuthBtn');
+      if (aBtn) aBtn.setAttribute('onclick', 'nxSignOut()');
+      const pBtn = document.getElementById('profileBtn');
+      const nick = (u.preferredName || (u.name ? u.name.split(' ')[0] : 'Student')).trim();
+      if (pBtn) {
+        const span = pBtn.querySelector('span:not(.material-symbols-outlined)');
+        if (span) span.textContent = nick;
+      }
+
+      // Trigger original shooting star animation & personalized welcome banner
+      setTimeout(() => {
+        try {
+          if (typeof window.nxStarFlight === 'function') {
+            window.nxStarFlight('in');
+          }
+          if (typeof window.nxHello === 'function') {
+            window.nxHello(nick);
+          }
+        } catch (e) {
+          console.warn('Welcome animation notice:', e);
+        }
+      }, 350);
+
+      // Refresh original animated homepage displays
+      if (typeof gxRender === 'function') { try { gxRender(); } catch (e) { } }
+      if (typeof renderHomeShelf === 'function') { try { renderHomeShelf(); } catch (e) { } }
+      if (typeof renderHomeStats === 'function') { try { renderHomeStats(); } catch (e) { } }
+      if (typeof renderBookGrid === 'function') { try { renderBookGrid(); } catch (e) { } }
+
+      if (typeof showToast === 'function') {
+        showToast(msg || `Welcome back, ${u.preferredName || u.name}!`, 'success');
+      }
+      if (typeof window.updateNavProfile === 'function') {
+        try { window.updateNavProfile(); } catch (e) { }
+      }
+    }
+
+    function enterSignedInStaff(u) {
+      if (!u) return;
+      if (u.token) {
+        authToken = u.token;
+        localStorage.setItem('booknexus_token', u.token);
+      }
+      localStorage.setItem('currentUser', JSON.stringify(u));
+      localStorage.setItem('booknexus_user', JSON.stringify(u));
+      const role = (u.role === 'admin') ? 'admin' : 'librarian';
+      const staffId = u.staffId || u.id || u._id || ('STF-' + (u.email || '').split('@')[0].toUpperCase());
+
+      document.body.classList.remove('nx-guest');
+      if (typeof enterStaff === 'function') {
+        try { enterStaff(role, staffId); } catch (e) { }
+      } else {
+        if (window.nxSessionSet) window.nxSessionSet(role, staffId, u.name, u.email);
+        if (typeof setUserRole === 'function') { try { setUserRole(role); } catch (e) { } }
+        window.nxCurStaff = staffId;
+        if (typeof closeModal === 'function') { try { closeModal('authModal'); } catch (e) { } }
+        else {
+          const authModal = document.getElementById('authModal');
+          if (authModal) {
+            authModal.classList.add('hidden');
+            authModal.style.display = 'none';
+          }
+        }
+      }
+
+      const nick = (u.name ? u.name.split(' ')[0] : (role === 'admin' ? 'Admin' : 'Librarian')).trim();
+      setTimeout(() => {
+        try {
+          if (typeof window.nxStarFlight === 'function') {
+            window.nxStarFlight('in');
+          }
+          if (typeof window.nxHello === 'function') {
+            window.nxHello(nick);
+          }
+        } catch (e) { }
+      }, 350);
+
+      if (typeof switchNav === 'function') {
+        try { switchNav('home'); } catch (e) { }
+      }
+      if (typeof showToast === 'function') {
+        showToast(`Welcome, ${u.name}! Signed in as ${role === 'admin' ? 'Admin' : 'Librarian'}.`, 'success');
+      }
+    }
+
+    // SIGN-OUT BEHAVIOUR WITH SHOOTING STAR FAREWELL
+    function executeSecureSignOut() {
+      const who = (function () {
+        try {
+          const cu = window.currentUser || {};
+          const p = (typeof nxProfile !== 'undefined' && nxProfile) || {};
+          return String(p.nickname || cu.anonId || cu.preferredName || (cu.name ? cu.name.split(' ')[0] : '')).trim();
+        } catch (e) { return ''; }
+      })();
+
+      // 1. Play the shooting-star animation travelling across the top section
+      try {
+        if (typeof window.nxStarFlight === 'function') {
+          window.nxStarFlight('out');
+        }
+      } catch (e) { console.warn('Sign-out star notice:', e); }
+
+      // 2. Play the farewell message: "Thank you, <name>" -> dissolves -> "Please visit again"
+      try {
+        if (typeof window.nxFarewell === 'function') {
+          const bus = window.__nxSo;
+          if (bus && !bus.dead && !bus.used) {
+            bus.used = true;
+            try { window.nxFarewell(who, bus); } catch (x) { bus.dead = true; }
+          } else {
+            setTimeout(() => { try { window.nxFarewell(who); } catch (x) { } }, 150);
+          }
+        }
+      } catch (e) { console.warn('Sign-out farewell notice:', e); }
+
+      // 3. Clear session and return to guest homepage
       authToken = null;
       window.__googleOnboardingData = null;
       localStorage.removeItem('booknexus_token');
       localStorage.removeItem('currentUser');
+      localStorage.removeItem('booknexus_user');
       sessionStorage.clear();
       if (window.google && window.google.accounts && window.google.accounts.id) {
         try { window.google.accounts.id.disableAutoSelect(); } catch (e) { }
@@ -2572,7 +2881,38 @@
 
       if (typeof setUserRole === 'function') setUserRole('student');
       if (typeof switchNav === 'function') switchNav('home');
-      if (typeof showToast === 'function') showToast('You have signed out.', 'info');
+      if (typeof renderNavLinks === 'function') renderNavLinks();
+    }
+
+    window.nxSignOut = function (direct) {
+      if (direct === true) {
+        executeSecureSignOut();
+        return;
+      }
+      document.getElementById('nxSoDlg')?.remove();
+      document.body.insertAdjacentHTML('beforeend', '<div id="nxSoDlg" role="dialog" aria-modal="true" aria-labelledby="nxSoT" class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"><div class="bg-brand-cream dark:bg-brand-darkCard rounded-3xl border border-brand-rosewood/20 shadow-2xl max-w-sm w-full p-6 space-y-4"><h4 id="nxSoT" class="font-display text-lg font-bold text-brand-rosewood dark:text-white">Sign out of Book NEXUS?</h4><p class="text-xs text-gray-600 dark:text-gray-300 font-medium">Are you sure you want to sign out? You will need to sign in again to continue.</p><div class="flex justify-end gap-2"><button type="button" id="nxSoNo" class="px-4 py-2 rounded-full text-xs font-bold text-brand-rosewood dark:text-white border border-brand-rosewood/20">Cancel</button><button type="button" id="nxSoYes" class="px-5 py-2 rounded-full text-xs font-bold bg-brand-rosewood text-white shadow">Yes, sign out</button></div></div></div>');
+      const close = () => { document.getElementById('nxSoDlg')?.remove(); document.removeEventListener('keydown', esc); };
+      const esc = e => { if (e.key === 'Escape') close(); };
+      document.addEventListener('keydown', esc);
+      const noBtn = document.getElementById('nxSoNo');
+      if (noBtn) noBtn.onclick = close;
+      const yesBtn = document.getElementById('nxSoYes');
+      if (yesBtn) {
+        yesBtn.onclick = () => {
+          close();
+          window.__nxQuiet = true;
+          try {
+            executeSecureSignOut();
+          } finally {
+            setTimeout(() => { window.__nxQuiet = false; }, 1500);
+          }
+        };
+      }
+      const dlg = document.getElementById('nxSoDlg');
+      if (dlg) {
+        dlg.addEventListener('click', e => { if (e.target.id === 'nxSoDlg') close(); });
+      }
+      if (noBtn) noBtn.focus();
     };
 
     // FORM SUBMISSION & NAVIGATION FOR PAGE 2 & PAGE 3
@@ -2879,6 +3219,18 @@
           if (span) span.textContent = user.preferredName || nick || user.name.split(' ')[0];
         }
 
+        // Trigger original shooting star animation & personalized welcome banner
+        setTimeout(() => {
+          try {
+            if (typeof window.nxStarFlight === 'function') {
+              window.nxStarFlight('in');
+            }
+            if (typeof window.nxHello === 'function') {
+              window.nxHello(user.preferredName || nick || (user.name ? user.name.split(' ')[0] : 'Student'));
+            }
+          } catch (e) { }
+        }, 350);
+
         // Refresh original animated homepage displays
         if (typeof gxRender === 'function') gxRender();
         if (typeof renderHomeShelf === 'function') renderHomeShelf();
@@ -3089,6 +3441,24 @@
           if (pwForm) { pwForm.hidden = false; pwForm.style.display = 'block'; }
           const pwChip = document.getElementById('nxlPwEm');
           if (pwChip) pwChip.textContent = raw;
+          const usnBadge = document.getElementById('nxlPwUsn');
+          const usnRow = document.getElementById('nxlPwUsnRow');
+          const usnMissing = document.getElementById('nxlPwUsnMissing');
+          const studentUsn = (data && data.data && data.data.usn) ? String(data.data.usn).trim() : '';
+          window.__currentAuthUsn = studentUsn;
+
+          if (studentUsn) {
+            if (usnBadge) usnBadge.textContent = studentUsn;
+            if (usnRow) usnRow.style.display = 'flex';
+            if (usnMissing) usnMissing.style.display = 'none';
+          } else {
+            if (usnBadge) usnBadge.textContent = '';
+            if (usnRow) usnRow.style.display = 'none';
+            if (usnMissing) {
+              usnMissing.style.display = 'block';
+              usnMissing.textContent = '⚠️ USN not found in records. Please contact the administrator.';
+            }
+          }
           const h3 = document.querySelector('#authModal h3');
           if (h3) h3.textContent = 'Welcome back';
           const sub = document.getElementById('nxaSub');
@@ -3156,9 +3526,354 @@
         console.error('Login error:', err);
         if (banner) {
           banner.className = 'nxa-banner bad';
-          banner.textContent = 'Could not reach server. Please try again.';
+          banner.textContent = (err && err.name === 'TypeError') ? 'Could not reach server. Please check your connection.' : ('Login error: ' + (err.message || 'unexpected error'));
           banner.hidden = false;
         }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    // ============================================================
+    // FORGOT PASSWORD FLOW (3 Steps: Email -> 6-Digit OTP -> New Password)
+    // ============================================================
+    let fpCooldownTimer = null;
+    function startFpCooldown(seconds = 60) {
+      clearInterval(fpCooldownTimer);
+      const resendBtn = document.getElementById('fpResendBtn');
+      const cooldownEl = document.getElementById('fpCooldown');
+      if (resendBtn) resendBtn.disabled = true;
+      if (cooldownEl) {
+        cooldownEl.style.display = 'inline';
+        cooldownEl.textContent = `(${seconds}s)`;
+      }
+      let left = seconds;
+      fpCooldownTimer = setInterval(() => {
+        left--;
+        if (left <= 0) {
+          clearInterval(fpCooldownTimer);
+          if (resendBtn) resendBtn.disabled = false;
+          if (cooldownEl) cooldownEl.style.display = 'none';
+        } else {
+          if (cooldownEl) cooldownEl.textContent = `(${left}s)`;
+        }
+      }, 1000);
+    }
+
+    window.nxaFpStart = function () {
+      const email = window.__currentAuthEmail || document.getElementById('nxlPwEm')?.textContent || document.getElementById('nxlEm')?.value || '';
+      const fpEmail = document.getElementById('fpEmail');
+      if (fpEmail && email) fpEmail.value = email;
+
+      const nxaUser = document.getElementById('nxaUser');
+      if (nxaUser) { nxaUser.hidden = false; nxaUser.style.display = 'block'; }
+      const nxaStaff = document.getElementById('nxaStaff');
+      if (nxaStaff) nxaStaff.hidden = true;
+      const nxaRp = document.getElementById('nxaRp');
+      if (nxaRp) nxaRp.hidden = true;
+      const nxa = document.getElementById('nxa');
+      if (nxa) nxa.classList.remove('nx-roles');
+
+      ['nxaVCh', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVPw', 'nxaVNew'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.hidden = true; el.style.display = 'none'; }
+      });
+
+      const fpForm = document.getElementById('nxaVFp');
+      if (fpForm) {
+        fpForm.hidden = false;
+        fpForm.style.display = 'block';
+      }
+
+      const s1 = document.getElementById('fpS1'); if (s1) { s1.hidden = false; s1.style.display = 'block'; }
+      const s2 = document.getElementById('fpS2'); if (s2) { s2.hidden = true; s2.style.display = 'none'; }
+      const s3 = document.getElementById('fpS3'); if (s3) { s3.hidden = true; s3.style.display = 'none'; }
+
+      const h3 = document.querySelector('#authModal h3');
+      if (h3) h3.textContent = 'Reset your password';
+      const sub = document.getElementById('nxaSub');
+      if (sub) sub.textContent = 'Enter your registered college email to receive a 6-digit code.';
+
+      ['fpEmailE', 'fpOtpE', 'fpPwE', 'fpPw2E'].forEach(id => {
+        const e = document.getElementById(id);
+        if (e) { e.hidden = true; e.textContent = ''; }
+      });
+
+      setTimeout(() => {
+        if (fpEmail) fpEmail.focus();
+      }, 60);
+    };
+
+    // Hook nxaView for 'fp'
+    const prevNxaView = window.nxaView;
+    window.nxaView = function (v) {
+      if (v === 'fp') {
+        window.nxaFpStart();
+        return;
+      }
+      if (typeof prevNxaView === 'function') return prevNxaView.apply(this, arguments);
+    };
+
+    window.nxaFpSendOtp = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const emailInput = document.getElementById('fpEmail');
+      const errEl = document.getElementById('fpEmailE');
+      const btn = document.getElementById('fpSendBtn');
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+
+      if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (errEl) { errEl.textContent = 'Please enter a valid email address.'; errEl.hidden = false; }
+        if (emailInput) emailInput.focus();
+        return;
+      }
+
+      const origText = btn ? btn.textContent : 'Send verification code';
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending code…'; }
+
+      try {
+        const apiBase = window.API_BASE || API_BASE;
+        const res = await fetch(`${apiBase}/auth/forgot-password/request-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok && res.status !== 200) {
+          const msg = data.message || 'Unable to send verification code. Please try again.';
+          if (errEl) { errEl.textContent = msg; errEl.hidden = false; }
+          return;
+        }
+
+        window.__fpEmail = email;
+        const chip = document.getElementById('fpChipEm');
+        if (chip) chip.textContent = email;
+
+        const s1 = document.getElementById('fpS1'); if (s1) { s1.hidden = true; s1.style.display = 'none'; }
+        const s2 = document.getElementById('fpS2'); if (s2) { s2.hidden = false; s2.style.display = 'block'; }
+        const h3 = document.querySelector('#authModal h3'); if (h3) h3.textContent = 'Enter verification code';
+        const sub = document.getElementById('nxaSub'); if (sub) sub.textContent = `We sent a 6-digit code to ${email}.`;
+
+        startFpCooldown(60);
+        const otpInput = document.getElementById('fpOtp');
+        if (otpInput) { otpInput.value = ''; setTimeout(() => otpInput.focus(), 60); }
+      } catch (err) {
+        if (errEl) { errEl.textContent = 'Network problem. Check your connection and try again.'; errEl.hidden = false; }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    window.nxaFpResendOtp = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const email = window.__fpEmail;
+      if (!email) return window.nxaFpChangeEmail();
+      const resendBtn = document.getElementById('fpResendBtn');
+      const errEl = document.getElementById('fpOtpE');
+      if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+
+      if (resendBtn) resendBtn.disabled = true;
+
+      try {
+        const apiBase = window.API_BASE || API_BASE;
+        const res = await fetch(`${apiBase}/auth/forgot-password/request-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          if (errEl) { errEl.textContent = data.message || 'Could not resend code. Please wait.'; errEl.hidden = false; }
+          if (resendBtn) resendBtn.disabled = false;
+          return;
+        }
+        startFpCooldown(60);
+        if (typeof showToast === 'function') showToast('Verification code resent.', 'info');
+      } catch (err) {
+        if (errEl) { errEl.textContent = 'Network error. Please try again.'; errEl.hidden = false; }
+        if (resendBtn) resendBtn.disabled = false;
+      }
+    };
+
+    window.nxaFpChangeEmail = function () {
+      const s1 = document.getElementById('fpS1'); if (s1) { s1.hidden = false; s1.style.display = 'block'; }
+      const s2 = document.getElementById('fpS2'); if (s2) { s2.hidden = true; s2.style.display = 'none'; }
+      const s3 = document.getElementById('fpS3'); if (s3) { s3.hidden = true; s3.style.display = 'none'; }
+      const h3 = document.querySelector('#authModal h3'); if (h3) h3.textContent = 'Reset your password';
+      const sub = document.getElementById('nxaSub'); if (sub) sub.textContent = 'Enter your registered college email to receive a 6-digit code.';
+      const emailInput = document.getElementById('fpEmail');
+      if (emailInput) setTimeout(() => emailInput.focus(), 60);
+    };
+
+    window.nxaFpVerifyOtp = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const otpInput = document.getElementById('fpOtp');
+      const errEl = document.getElementById('fpOtpE');
+      const btn = document.getElementById('fpVerifyBtn');
+      const otp = otpInput ? otpInput.value.trim() : '';
+
+      if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+      if (!otp || !/^\d{6}$/.test(otp)) {
+        if (errEl) { errEl.textContent = 'Enter the 6-digit verification code.'; errEl.hidden = false; }
+        if (otpInput) otpInput.focus();
+        return;
+      }
+
+      const origText = btn ? btn.textContent : 'Verify code';
+      if (btn) { btn.disabled = true; btn.textContent = 'Verifying…'; }
+
+      try {
+        const apiBase = window.API_BASE || API_BASE;
+        const res = await fetch(`${apiBase}/auth/forgot-password/verify-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: window.__fpEmail, otp })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) {
+          const msg = data.message || 'Invalid verification code.';
+          if (errEl) { errEl.textContent = msg; errEl.hidden = false; }
+          if (otpInput) { otpInput.focus(); otpInput.select(); }
+          return;
+        }
+
+        window.__fpResetToken = data.resetToken;
+
+        // Ensure ALL other forms are strictly hidden
+        ['nxaVCh', 'nxaVPh', 'nxaVIn', 'nxaVUp', 'nxaVPw', 'nxaVNew'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) { el.hidden = true; el.style.display = 'none'; }
+        });
+
+        const fpForm = document.getElementById('nxaVFp');
+        if (fpForm) { fpForm.hidden = false; fpForm.style.display = 'block'; }
+
+        const s1 = document.getElementById('fpS1'); if (s1) { s1.hidden = true; s1.style.display = 'none'; }
+        const s2 = document.getElementById('fpS2'); if (s2) { s2.hidden = true; s2.style.display = 'none'; }
+        const s3 = document.getElementById('fpS3'); if (s3) { s3.hidden = false; s3.style.display = 'block'; }
+
+        // Populate read-only email and USN
+        const resetEm = document.getElementById('fpResetEm');
+        if (resetEm) resetEm.textContent = window.__fpEmail || '';
+
+        const resetUsn = document.getElementById('fpResetUsn');
+        const resetUsnRow = document.getElementById('fpResetUsnRow');
+        const savedUsn = window.__currentAuthUsn || (document.getElementById('nxlPwUsn')?.textContent || '').trim();
+        if (savedUsn && resetUsn) {
+          resetUsn.textContent = savedUsn;
+          if (resetUsnRow) resetUsnRow.style.display = 'flex';
+        } else if (resetUsnRow) {
+          resetUsnRow.style.display = 'none';
+        }
+
+        const h3 = document.querySelector('#authModal h3'); if (h3) h3.textContent = 'Reset Password';
+        const sub = document.getElementById('nxaSub'); if (sub) sub.textContent = 'Enter your new password below.';
+
+        if (typeof window.nxAuthKit === 'object' && window.nxAuthKit.mountRules) {
+          window.nxAuthKit.mountRules('fpPw', 'fpPwX');
+        }
+
+        const pwInput = document.getElementById('fpPw');
+        if (pwInput) { pwInput.value = ''; setTimeout(() => pwInput.focus(), 60); }
+        const pw2Input = document.getElementById('fpPw2');
+        if (pw2Input) { pw2Input.value = ''; }
+      } catch (err) {
+        if (errEl) { errEl.textContent = 'Network error. Please try again.'; errEl.hidden = false; }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
+    };
+
+    window.nxaFpResetPassword = async function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const pwInput = document.getElementById('fpPw');
+      const pw2Input = document.getElementById('fpPw2');
+      const errEl = document.getElementById('fpPwE');
+      const btn = document.getElementById('fpResetBtn');
+
+      const pw = pwInput ? pwInput.value : '';
+      const pw2 = pw2Input ? pw2Input.value : '';
+
+      if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+
+      if (!pw) {
+        if (errEl) { errEl.textContent = 'Enter a new password.'; errEl.hidden = false; }
+        if (pwInput) pwInput.focus();
+        return;
+      }
+      if (pw.length < 8 || pw.length > 64) {
+        if (errEl) { errEl.textContent = 'Password must be between 8 and 64 characters.'; errEl.hidden = false; }
+        if (pwInput) pwInput.focus();
+        return;
+      }
+      if (!/[A-Z]/.test(pw) || !/[a-z]/.test(pw) || !/[0-9]/.test(pw) || !/[^A-Za-z0-9]/.test(pw) || /\s/.test(pw)) {
+        if (errEl) { errEl.textContent = 'Password must have uppercase, lowercase, number, special character and no spaces.'; errEl.hidden = false; }
+        if (pwInput) pwInput.focus();
+        return;
+      }
+      if (pw !== pw2) {
+        if (errEl) { errEl.textContent = 'Passwords do not match.'; errEl.hidden = false; }
+        if (pw2Input) pw2Input.focus();
+        return;
+      }
+
+      const origText = btn ? btn.textContent : 'Reset password';
+      if (btn) { btn.disabled = true; btn.textContent = 'Resetting password…'; }
+
+      try {
+        const apiBase = window.API_BASE || API_BASE;
+        const res = await fetch(`${apiBase}/auth/forgot-password/reset-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: window.__fpEmail,
+            resetToken: window.__fpResetToken,
+            newPassword: pw,
+            confirmPassword: pw2
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) {
+          const msg = data.message || 'Could not reset password. Please try again.';
+          if (errEl) { errEl.textContent = msg; errEl.hidden = false; }
+          return;
+        }
+
+        // Success!
+        if (typeof showToast === 'function') {
+          showToast('Password reset successful! Please log in with your new password.', 'success');
+        }
+
+        const savedEmail = window.__fpEmail;
+        window.__fpEmail = null;
+        window.__fpResetToken = null;
+
+        // Cleanly hide the Forgot Password form and clear inputs
+        const fpForm = document.getElementById('nxaVFp');
+        if (fpForm) { fpForm.hidden = true; fpForm.style.display = 'none'; }
+        if (pwInput) pwInput.value = '';
+        if (pw2Input) pw2Input.value = '';
+
+        if (savedEmail) {
+          window.__currentAuthEmail = savedEmail;
+          const emInput = document.getElementById('nxlEm');
+          if (emInput) emInput.value = savedEmail;
+          const banner = document.getElementById('nxaBanner');
+          if (banner) {
+            banner.className = 'nxa-banner ok';
+            banner.textContent = 'Password reset successfully. Sign in with your new password.';
+            banner.hidden = false;
+          }
+          if (typeof window.nxlEmail === 'function') {
+            window.nxlEmail({ preventDefault: () => {} });
+          } else {
+            window.nxlBack();
+          }
+        } else {
+          window.nxlBack();
+        }
+      } catch (err) {
+        if (errEl) { errEl.textContent = 'Network error. Please try again.'; errEl.hidden = false; }
       } finally {
         if (btn) { btn.disabled = false; btn.textContent = origText; }
       }
